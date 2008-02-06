@@ -78,22 +78,16 @@ void Evolution::handlekey(const KeySym& key)
 
 		// Critter controls
 		case XK_z:
-			world.critters[0]->moveForward();
 		break;
 		case XK_s:
-			world.critters[0]->moveBackward();
 		break;
 		case XK_q:
-			world.critters[0]->moveLeft();
 		break;
 		case XK_d:
-			world.critters[0]->moveRight();
 		break;
 		case XK_a:
-			world.critters[0]->rotateLeft();
 		break;
 		case XK_e:
-			world.critters[0]->rotateRight();
 		break;
 
 
