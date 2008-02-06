@@ -1,0 +1,9 @@
+INCLUDES = $(all_includes) -I..
+METASOURCES = AUTO
+libgl_la_LDFLAGS = -avoid-version -no-undefined
+noinst_LTLIBRARIES = libgl.la
+noinst_HEADERS = glwindow.h glscene.h
+libgl_la_SOURCES = glwindow.cpp glscene.cpp
+
+
+libgl_la_LIBADD = -L/usr/X11R6/lib -lGL -lX11 -lXxf86vm
