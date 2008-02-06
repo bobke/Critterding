@@ -272,8 +272,8 @@ void World::processCritter(unsigned int i)
 			// increase energyLevel of critter, decrease of food
 			//float eaten = ( c->maxEnergyLevel - c->energyLevel ) / 10.0f;
 
-			//if (  )
 			float eaten = c->maxEnergyLevel / 20.0f;
+			if ( c->energyLevel + eaten > c->maxEnergyLevel ) eaten -= (c->energyLevel + eaten) - c->maxEnergyLevel;
 
 			c->energyLevel			+= eaten;
 			food[c->touchedFoodID]->energy	-= eaten;
