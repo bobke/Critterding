@@ -8,7 +8,11 @@ bool Dir::exists(string &directory)
 {
 	DIR *pdir;
 	pdir = opendir(directory.c_str());
-	if (pdir)	return true;
+	if (pdir)
+	{
+		closedir(pdir);
+		return true;
+	}
 	else		return false;
 }
 
