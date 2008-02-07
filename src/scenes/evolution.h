@@ -3,7 +3,6 @@
 
 #include "../gl/glscene.h"
 #include "entities/camera.h"
-#include "entities/mesh.h"
 #include "entities/sleeper.h"
 #include "entities/world.h"
 
