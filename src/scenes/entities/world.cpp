@@ -194,7 +194,7 @@ World::World()
 	createDirs();
 
 	// threading prep
-	nthreads		= 1;
+	nthreads		= 0;
 
 	// init mutexes
 	pthread_mutex_init (&freeEnergy_mutex, NULL);
