@@ -36,7 +36,7 @@ Critter::Critter()
 
 	// old age death
 	totalFrames		= 0;
-	maxtotalFrames		= 1000;
+	maxtotalFrames		= 1500;
 
 	procreateTimeCount	= 0;
 	procreateTimeTrigger	= maxtotalFrames / 5;

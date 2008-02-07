@@ -174,21 +174,21 @@ World::World()
 {
 //	Infobar *infobar	= Infobar::instance();
 
-	size			= 3;
+	size			= 7;
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
 	freeEnergy		= 0.0f;
 
 	maxcritters		= 1000;
-	mincritters		= 0;
+	mincritters		= 5;
 
 	mutationRate		= 20;
 
 	grid.resize(size);
 	floor.resize(size);
 
-	insertRandomFood(27, foodenergy); // size^x = 
+	insertRandomFood(40, foodenergy); // size^x = 
 
 	// home & program directory
 	createDirs();
