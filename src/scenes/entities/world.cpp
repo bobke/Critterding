@@ -207,7 +207,7 @@ World::World()
 
 	if ( nthreads > 0 )
 	{
-		for ( unsigned int i=0; i < nthreads; i++ )
+		for ( int i=0; i < nthreads; i++ )
 		{
 			bgthreads.push_back( pthread_t() );
 			pthread_create( &bgthreads[i], NULL, ::procCritters, (void *) this);
@@ -446,7 +446,7 @@ void World::process()
 //				if ( bccounter == nthreads )
 //				{
 					pthread_mutex_lock( &condition_startthreads_mutex );
-						for( unsigned int t=0; t < nthreads; t++) pthread_cond_signal( &condition_startthreads );
+						for( int t=0; t < nthreads; t++) pthread_cond_signal( &condition_startthreads );
 					pthread_mutex_unlock( &condition_startthreads_mutex );
 
 //					bccounter=0;
@@ -460,7 +460,7 @@ void World::process()
 		{
 			pthread_mutex_unlock( &cqueue_mutex );
 				pthread_mutex_lock( &condition_startthreads_mutex );
-					for( unsigned int t=0; t < nthreads; t++) pthread_cond_signal( &condition_startthreads );
+					for( int t=0; t < nthreads; t++) pthread_cond_signal( &condition_startthreads );
 //					pthread_cond_broadcast( &condition_startthreads );
 			//		cerr << "queue at end: " << cqueue.size() << "while critters: " << critters.size() << endl;
 				pthread_mutex_unlock( &condition_startthreads_mutex );
@@ -694,7 +694,7 @@ void World::increaseBGthreads()
 {
 	nthreads++;
 
-	if ( nthreads > bgthreads.size() && nthreads < 20 )
+	if ( nthreads > (int)bgthreads.size() && nthreads < 20 )
 	{
 		unsigned int i = bgthreads.size();
 		bgthreads.push_back( pthread_t() );
