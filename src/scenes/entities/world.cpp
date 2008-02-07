@@ -381,7 +381,7 @@ void World::process()
 	{
 		insertRandomFood(1, foodenergy);
 		freeEnergy -= foodenergy;
-		cerr << "food: " << food.size() << endl;
+		//cerr << "food: " << food.size() << endl;
 	}
 
 	// insert critter if < minimum
