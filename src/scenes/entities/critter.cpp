@@ -36,7 +36,7 @@ Critter::Critter()
 
 	// old age death
 	totalFrames		= 0;
-	maxtotalFrames		= 1500;
+	maxtotalFrames		= 3000;
 
 	procreateTimeCount	= 0;
 	procreateTimeTrigger	= maxtotalFrames / 5;
@@ -237,7 +237,7 @@ void Critter::procNeurons()
 		{
 			// decrease energy
 			//energyLevel -= volume;
-			float cost = size;
+			float cost = 1.0f;
 			energyLevel	-= cost;
 			energyUsed	+= cost;
 
@@ -350,8 +350,6 @@ void Critter::resizeByArch()
 //	cerr << "S: " << newsize;
 
 	resize(newsize);
-
-	speedfactor = (maxSize-newsize) / 10.0f; // FIXME HACK lower me :)
 
 //	cerr << "Speed: " << speedfactor;
 }
@@ -657,8 +655,13 @@ void Critter::resize(float newsize)
 	size		= newsize;
 	halfsize	= (newsize / 2.0f);
 
+	volume		= size * size * size * 100.0f;
 
-	volume		= newsize * newsize * newsize * 100.0f;
+	speedfactor	= (maxSize-size) / 10.0f; // FIXME HACK lower me :)
+//	speedfactor	= 100.0f / (volume*10000.0f);
+
+// 	maxEnergyLevel	= 50000.0f * size;
+//	maxtotalFrames	= 50000.0f * size;
 
 	// change position according to height
 	position.y	= halfsize;
