@@ -20,7 +20,7 @@ using std::endl;
 class GLScene {
 	public:
 		GLScene();
-		~GLScene();
+		virtual ~GLScene();
 
 		virtual void init();
 		// This is the drawing function. Whatever needs to be drawn, goes in this function
