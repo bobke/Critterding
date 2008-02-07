@@ -7,7 +7,9 @@ using namespace std;
 
 Camera::Camera()
 {
-	position	= Vector3f(-1.5, -10.0, -4.5);
+	// for 7*7 use 				position	= Vector3f(-3.5, -8.0, -5.2);
+
+	position	= Vector3f(-3.5, -8.0, -5.2);
 	rotation	= Vector3f( 80.0,  0.0, 0.0);
 }
 

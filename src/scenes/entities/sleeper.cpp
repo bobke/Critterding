@@ -2,7 +2,7 @@
 
 Sleeper::Sleeper()
 {
- 	active		= true;
+ 	active		= false;
 	optimal		= 5000;
 	stepsize	= 250;
 	sleeptime	= 10000;
