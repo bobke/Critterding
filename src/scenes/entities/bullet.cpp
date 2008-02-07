@@ -2,11 +2,11 @@
 
 Bullet::Bullet()
 {
-	size		= 0.05f;
-	speed		= 0.03f;
+	size		= 0.02f;
+	speed		= 0.025f;
 	resize(size);
 
-	maxSteps	= 30;
+	maxSteps	= 10;
 	totalSteps	= 0;
 
 	color[0]	= 1.0f;

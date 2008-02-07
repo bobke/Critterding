@@ -286,7 +286,7 @@ void World::processCritter(unsigned int i)
 		{
 			//cerr << "critter " << i << "(ad:" << c->adamdist << ") FIRES\n";
 			c->fireTimeCount = 0;
-			float used = c->maxEnergyLevel * 0.05f;
+			float used = c->maxEnergyLevel * 0.01f;
 			c->energyLevel	-= used;
 			freeEnergy			+= used;
 
@@ -307,7 +307,7 @@ void World::processCritter(unsigned int i)
 			float avgSize = (c->size + b->size) / 2;
 			if ( fabs(c->position.x - b->position.x) <= avgSize && fabs(c->position.z - b->position.z) <= avgSize )
 			{
-				c->totalFrames += (c->maxtotalFrames/3) ;
+				c->totalFrames += (c->maxtotalFrames/10) ;
 				c->wasShot = true;
 				delete b;
 				bullets.erase(bullets.begin()+f);

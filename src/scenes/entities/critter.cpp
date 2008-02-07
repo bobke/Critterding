@@ -44,8 +44,8 @@ Critter::Critter()
 
 	// fire limits
 	fireTimeCount		= 0;
-	fireTimeTrigger		= 50;
-	minfireenergyLevel	= maxEnergyLevel * 0.3f;
+	fireTimeTrigger		= 5;
+	minfireenergyLevel	= maxEnergyLevel * 0.0f;
 
 	// neural properties
 	percentSensoryConns	= 20;
