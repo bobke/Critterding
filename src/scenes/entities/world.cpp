@@ -9,157 +9,21 @@ extern "C" void *procCritters( void *ptr )
 
 	for(;;)
 	{
+		pthread_mutex_lock( &w->condition_startthreads_mutex );
 		pthread_cond_wait( &w->condition_startthreads, &w->condition_startthreads_mutex );
+		pthread_mutex_unlock( &w->condition_startthreads_mutex );
 
 		pthread_mutex_lock( &w->cqueue_mutex );
-		for ( unsigned int z = 0; z < w->cqueue.size(); z++ )
+		while ( !w->cqueue.empty() )
 		{
-			unsigned int i = w->cqueue[z];
-			w->cqueue.erase(w->cqueue.begin()+z);
+ 			unsigned int i = w->cqueue[0];
+//			cerr << " in thread: i: " << i;
+ 			w->cqueue.erase(w->cqueue.begin());
+//			if ( !w->cqueue.empty() )	cerr << "  NEXT: " << w->cqueue[0] << endl;
+//			else				cerr << "  NEXT: nothing" << endl;
 			pthread_mutex_unlock( &w->cqueue_mutex );
 
 			w->processCritter(i);
-
-// 			Critter *c = w->critters[i];
-// 
-// 			// over food input neuron
-// 				c->touchingFood = false;
-// 				for( unsigned int f=0; f < w->food.size() && !c->touchingFood; f++)
-// 				{
-// 					Food *fo = w->food[f];
-// 					float avgSize = (c->size + fo->size) / 2;
-// 					if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
-// 					{
-// 						c->touchingFood = true;
-// 						c->touchedFoodID = f;
-// 					}
-// 				}
-// 
-// 			// process
-// 				c->process();
-// 
-// 			// record critter used energy
-// 				pthread_mutex_lock( &w->freeEnergy_mutex );
-// 				w->freeEnergy += w->critters[i]->energyUsed;
-// 				pthread_mutex_unlock( &w->freeEnergy_mutex );
-// 
-// 			// move
-// 				// wall crawler movement
-// 					// left border
-// 					if ( c->newposition.x - c->halfsize <= 0 )		c->newposition.x = c->halfsize;
-// 					// right border
-// 					else if ( c->newposition.x + c->halfsize >= w->size )	c->newposition.x = w->size - c->halfsize;
-// 					// bottom border
-// 					if ( c->newposition.z - c->halfsize <= 0 )		c->newposition.z = c->halfsize;
-// 					// top border
-// 					else if ( c->newposition.z + c->halfsize >= w->size )	c->newposition.z = w->size - c->halfsize;
-// 
-// 				// unless WILL TOUCH other creature, move
-// 					bool touch = false;
-// 					for ( unsigned int j=0; j < w->critters.size() && !touch; j++ )
-// 					{
-// 						if ( j != i )
-// 						{
-// 							Critter *c2 = w->critters[j];
-// 
-// 							float avgSize = (c->size + c2->size) / 2.0f;
-// 							pthread_mutex_lock( &c2->position_mutex );
-// 							if ( fabs( c->newposition.x - c2->position.x ) <= avgSize &&  fabs( c->newposition.z - c2->position.z ) <= avgSize )
-// 							{
-// 								touch = true;
-// 							}
-// 							pthread_mutex_unlock( &c2->position_mutex );
-// 						}
-// 					}
-// 					pthread_mutex_lock( &c->position_mutex );
-// 					if (!touch) c->moveToNewPoss();
-// 					pthread_mutex_unlock( &c->position_mutex );
-// 
-// 				// eat
-// 					if ( c->touchingFood && c->eat )
-// 					{
-// 						// increase energyLevel of critter, decrease of food
-// 						//float eaten = ( c->maxEnergyLevel - c->energyLevel ) / 10.0f;
-// 						float eaten = c->maxEnergyLevel / 20.0f;
-// 		
-// 						c->energyLevel				+= eaten;
-// 
-// 						pthread_mutex_lock( &w->food[c->touchedFoodID]->energy_mutex );
-// 						w->food[c->touchedFoodID]->energy	-= eaten;
-// 						pthread_mutex_unlock( &w->food[c->touchedFoodID]->energy_mutex );
-// 
-// 						//cerr << "post E: " << critters[i]->energyLevel << endl;
-// 					}
-// 
-// 				// fire
-// 					if ( c->fire && c->canFire )
-// 					{
-// 						//cerr << "critter " << i << "(ad:" << critters[i]->adamdist << ") FIRES\n";
-// 						c->fireTimeCount	= 0;
-// 						float used		= c->maxEnergyLevel * 0.05f;
-// 						c->energyLevel		-= used;
-// 						w->freeEnergy		+= used;
-// 		
-// 						Bullet *b = new Bullet;
-// 		
-// 						b->calcDirection(c->rotation);
-// 						float reused = c->rotation * 0.0174532925f;
-// 						b->position.x = c->position.x - sin(reused) * (c->halfsize + b->size+0.1);
-// 						b->position.z = c->position.z - cos(reused) * (c->halfsize + b->size+0.1);
-// 
-// 						pthread_mutex_lock( &w->bulletsV_mutex );
-// 						w->bullets.push_back( b );
-// 						pthread_mutex_unlock( &w->bulletsV_mutex );
-// 					}
-// 
-// 				// hit by bullet?
-// 					pthread_mutex_lock( &w->bulletsV_mutex );
-// 					for( unsigned int f=0; f < w->bullets.size(); f++)
-// 					{
-// 						Bullet *b = w->bullets[f];
-// 						pthread_mutex_unlock( &w->bulletsV_mutex );
-// 						float avgSize = (c->size + b->size) / 2;
-// 
-// 						if ( fabs(c->position.x - b->position.x) <= avgSize && fabs(c->position.z - b->position.z) <= avgSize )
-// 						{
-// 							c->totalFrames += (c->maxtotalFrames/3) ;
-// 							c->wasShot = true;
-// 							delete b;
-// 							pthread_mutex_lock( &w->bulletsV_mutex );
-// 							w->bullets.erase(w->bullets.begin()+f);
-// 							pthread_mutex_unlock( &w->bulletsV_mutex );
-// 						}
-// 						pthread_mutex_lock( &w->bulletsV_mutex );
-// 					}
-// 					pthread_mutex_unlock( &w->bulletsV_mutex );
-// 
-// 				// procreate
-// 		
-// 					//procreation if procreation energy trigger is hit
-// 					if ( c->procreateTimeCount > c->procreateTimeTrigger )
-// 					{
-// 						// if sufficient energy
-// 						if ( c->energyLevel > c->minprocenergyLevel )
-// 						{
-// 							cerr << "critter " << i << "(ad:" << c->adamdist << ") PROCREATES";
-// 							// reset procreation energy count
-// 							c->procreateTimeCount = 0;
-// 		
-// 								unsigned int newcritter = w->copyCritter(i);
-// 		
-// 								// mutate or not
-// 								if ( w->randgen.get(1,100) <= w->mutationRate )
-// 								{
-// 									cerr << ": MUTANT";
-// 									w->critters[newcritter]->mutate();
-// 								}
-// 		
-// 								w->critters[newcritter]->setup();
-// 								w->positionCritter(newcritter);
-// 
-// 							cerr << endl;
-// 						}
-// 					}
 
 			pthread_mutex_lock( &w->cqueue_mutex );
 		}
@@ -194,26 +58,14 @@ World::World()
 	createDirs();
 
 	// threading prep
-	nthreads		= 0;
+	bgthreadActive		= false;
+	bgthreadIsSpawned	= false;
 
 	// init mutexes
-	pthread_mutex_init (&freeEnergy_mutex, NULL);
-	pthread_mutex_init (&bulletsV_mutex, NULL);
-
 	pthread_mutex_init (&cqueue_mutex, NULL);
 
 	pthread_mutex_init (&condition_startthreads_mutex, NULL);
 	pthread_cond_init (&condition_startthreads, NULL);
-
-	if ( nthreads > 0 )
-	{
-		for ( int i=0; i < nthreads; i++ )
-		{
-			bgthreads.push_back( pthread_t() );
-			pthread_create( &bgthreads[i], NULL, ::procCritters, (void *) this);
-			pthread_detach( bgthreads[i] );
-		}
-	}
 }
 
 void World::processCritter(unsigned int i)
@@ -256,14 +108,14 @@ void World::processCritter(unsigned int i)
 			{
 				if ( j != i )
 				{
-					float avgSize = (critters[i]->size + critters[j]->size) / 2.0f;
-					if ( fabs( critters[i]->newposition.x - critters[j]->position.x ) <= avgSize &&  fabs( critters[i]->newposition.z - critters[j]->position.z ) <= avgSize )
+					float avgSize = (c->size + critters[j]->size) / 2.0f;
+					if ( fabs( c->newposition.x - critters[j]->position.x ) <= avgSize &&  fabs( c->newposition.z - critters[j]->position.z ) <= avgSize )
 					{
 						touch = true;
 					}
 				}
 			}
-			if (!touch) critters[i]->moveToNewPoss();
+			if (!touch) c->moveToNewPoss();
 
 	// eat
 		if ( c->touchingFood && c->eat )
@@ -295,7 +147,7 @@ void World::processCritter(unsigned int i)
 			b->calcDirection(c->rotation);
 			float reused = c->rotation * 0.0174532925f;
 			b->position.x = c->position.x - sin(reused) * (c->halfsize + b->size+0.1);
-			b->position.z = c->position.z - cos(reused) * (critters[i]->halfsize + b->size+0.1);
+			b->position.z = c->position.z - cos(reused) * (c->halfsize + b->size+0.1);
 
 			bullets.push_back( b );
 		}
@@ -417,18 +269,18 @@ void World::process()
 
 	unsigned int lmax = critters.size();
 
- 	if ( nthreads > 0 )
+ 	if ( bgthreadActive )
  	{
-
-//		unsigned int bccounter = 0;
-
 		// for all critters do
 		for( unsigned int i=0; i < lmax; i++)
 		{
 			Critter *c = critters[i];
 
-			// vision preparation
+// 			pthread_mutex_lock( &condition_startthreads_mutex );
+// 				pthread_cond_signal( &condition_startthreads );
+// 			pthread_mutex_unlock( &condition_startthreads_mutex );
 
+			// vision preparation
 				if ( c->drawedAgo == c->drawEvery )
 				{
 					c->place();
@@ -440,32 +292,29 @@ void World::process()
 
 				pthread_mutex_lock( &cqueue_mutex );
 					cqueue.push_back( i );
+//					cerr << "PUSHED: " << i << "on queue" << endl;
 				pthread_mutex_unlock( &cqueue_mutex );
 
-//				bccounter++;
-//				if ( bccounter == nthreads )
-//				{
-					pthread_mutex_lock( &condition_startthreads_mutex );
-						for( int t=0; t < nthreads; t++) pthread_cond_signal( &condition_startthreads );
-					pthread_mutex_unlock( &condition_startthreads_mutex );
-
-//					bccounter=0;
-//				}
-
+				pthread_mutex_lock( &condition_startthreads_mutex );
+					pthread_cond_signal( &condition_startthreads );
+				pthread_mutex_unlock( &condition_startthreads_mutex );
 		}
 
+//		cerr << "queue at end: " << cqueue.size() << "while critters: " << critters.size() << endl;
+		unsigned int counter = 0;
 		// broadcast until cqueue is empty
 		pthread_mutex_lock( &cqueue_mutex );
-		while ( cqueue.size() > 0 )
+		while ( !cqueue.empty() )
 		{
 			pthread_mutex_unlock( &cqueue_mutex );
 				pthread_mutex_lock( &condition_startthreads_mutex );
-					for( int t=0; t < nthreads; t++) pthread_cond_signal( &condition_startthreads );
-//					pthread_cond_broadcast( &condition_startthreads );
-			//		cerr << "queue at end: " << cqueue.size() << "while critters: " << critters.size() << endl;
+					pthread_cond_signal( &condition_startthreads );
+					counter++;
 				pthread_mutex_unlock( &condition_startthreads_mutex );
 			pthread_mutex_lock( &cqueue_mutex );
+			//usleep (0);
 		}
+//		cerr << "DONE " << "queue at end: " << cqueue.size() << "  SIGNALS SENT: " << counter << endl;
 		pthread_mutex_unlock( &cqueue_mutex );
 	}
 
@@ -486,24 +335,10 @@ void World::process()
 					c->drawedAgo = 0;
 				}
 				else c->drawedAgo++;
-// 		}
-// 
-// 		// for all critters do
-// 		for( unsigned int i=0; i < lmax; i++)
-// 		{
-// 			Critter *c = critters[i];
 
-			processCritter(i);
+				processCritter(i);
 		}
 	}
-
-// 	// remove oldest critter if > maxcritters
-// 	if ( critters.size() > maxcritters )
-// 	{
-// 		cerr << "critter 0" << " DIES: pushed out" << endl;
-// 		removeCritter(0);
-// 	}
-
 
 	//critters[0].printVision();
 
@@ -690,34 +525,23 @@ void World::decreaseMaxcritters()
 	cerr << "min c: " << mincritters << "max c: " << maxcritters << endl;
 }
 
-void World::increaseBGthreads()
+void World::toggleBGthread()
 {
-	nthreads++;
 
-	if ( nthreads > (int)bgthreads.size() && nthreads < 20 )
+	if ( bgthreadActive ) bgthreadActive = false;
+	else
 	{
-		unsigned int i = bgthreads.size();
-		bgthreads.push_back( pthread_t() );
-		pthread_create( &bgthreads[i], NULL, ::procCritters, (void *) this );
-		pthread_detach( bgthreads[i] );
+		if ( !bgthreadIsSpawned )
+		{
+cerr << "CREATING THREAD" << endl;
+			pthread_create( &bgthread, NULL, ::procCritters, (void *) this );
+cerr << "DONE" << endl;
+			pthread_detach( bgthread );
+			bgthreadIsSpawned = true;
+		}
+		bgthreadActive = true;
 	}
-	cerr << "THREADS: " << nthreads << " :-: "<< bgthreads.size() << endl;
-}
-
-void World::decreaseBGthreads()
-{
-	if ( nthreads > 0 )
-	{
-/*		unsigned int i = bgthreads.size() - 1;
-
-		cerr << "oingk to cancel t " << i << "    " << nthreads << " :-: "<< bgthreads.size() << endl;
-		pthread_exit( bgthreads[i] );
-		cerr << "cancelled " << nthreads << " :-: "<< bgthreads.size() << endl;
-
-		bgthreads.erase( bgthreads.end()+i );*/
-		nthreads--;
-	}
-	cerr << "THREADS: " << nthreads << " :-: "<< bgthreads.size() << endl;
+	cerr << "BACKGROUND THREAD: " << bgthreadActive << endl;
 }
 
 void World::loadAllCritters()
