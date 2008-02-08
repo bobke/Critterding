@@ -1,13 +1,41 @@
-theze are dze buttonz
+BUTTONS
 
-F1	: fullscreen (leaks mem)
+ - Engine / World Operations
 
-F2	: fps toggle (console)
+   F1            : fullscreen
+                   (leaks mem, old crufty X code needs replacement)
 
-F3	: decrease Minimum Critters
-F4	: increase Minimum Critters
+   F2            : fps toggle
+                   (console)
 
-F7	: insert Adam
+   F3            : decrease Minimum Critters
+   F4            : increase Minimum Critters
 
-F11	: load all critters from "~/.critterding/load" directory
-F12	: save all critters into "~/.critterding/save/(time)" directory
+   F7            : insert Adam
+
+   F11           : load all critters from "~/.critterding/load" directory
+   F12           : save all critters into "~/.critterding/save/(time)" directory
+
+   Insert        : toggle critter vision
+
+ - Camera Operations
+
+   Arrow Up      : move forward
+   Arrow Down    : move backward
+   Arrow Left    : strafe left
+   Arrow Right   : strafe right
+   Home          : move up
+   End           : move down
+   NumKey 2      : look up
+   NumKey 8      : look down
+   NumKey 4      : look left
+   NumKey 6      : look right
+
+TERMINOLOGY
+
+ - Adam
+      : new (100% random) critter
+
+ - Adam Distance (ad)
+      : mutations since adam
+
