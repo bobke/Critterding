@@ -1,5 +1,4 @@
-bin_PROGRAMS = bengine
-bengine_SOURCES = bengine.cpp
+bin_PROGRAMS = critterding
 
 # set the include path found by configure
 INCLUDES = $(all_includes)
@@ -9,7 +8,8 @@ INCLUDES = $(all_includes)
 
 SUBDIRS = gl utils scenes
 
-bengine_LDFLAGS = -avoid-version -no-undefined
 
-bengine_LDADD = $(top_builddir)/src/scenes/libscenes.la \
-	$(top_builddir)/src/gl/libgl.la
+critterding_SOURCES = critterding.cpp
+critterding_LDADD = $(top_builddir)/src/gl/libgl.la \
+	$(top_builddir)/src/scenes/libscenes.la $(top_builddir)/src/utils/libutils.la -lGL
+critterding_LDFLAGS = -avoid-version -no-undefined

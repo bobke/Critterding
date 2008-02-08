@@ -35,12 +35,19 @@
       <envvars/>
       <runarguments>
         <bengine/>
+        <critterding></critterding>
       </runarguments>
       <globaldebugarguments>bengine</globaldebugarguments>
       <globalcwd>/projects/attick/c++/bengine-test/debug</globalcwd>
       <useglobalprogram>true</useglobalprogram>
       <autoinstall>false</autoinstall>
       <autokdesu>false</autokdesu>
+      <debugarguments>
+        <critterding></critterding>
+      </debugarguments>
+      <cwd>
+        <critterding>/projects/attick/c++/bengine-test/debug/./src/scenes</critterding>
+      </cwd>
     </run>
     <configurations>
       <optimized>

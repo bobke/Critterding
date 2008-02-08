@@ -14,7 +14,7 @@ BUTTONS
    F7            : insert Adam
                    alternatively this can be used as a population reduce mechanism,
                    by inserting a considering amount of adams, the current population size
-                   will drop.
+                   will drop.  Use with care.
 
    F11           : load all critters from "~/.critterding/load" directory
    F12           : save all critters into "~/.critterding/save/(time)" directory
