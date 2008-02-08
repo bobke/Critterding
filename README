@@ -1,0 +1,13 @@
+theze are dze buttonz
+
+F1	: fullscreen (leaks mem)
+
+F2	: fps toggle (console)
+
+F3	: decrease Minimum Critters
+F4	: increase Minimum Critters
+
+F7	: insert Adam
+
+F11	: load all critters from "~/.critterding/load" directory
+F12	: save all critters into "~/.critterding/save/(time)" directory
