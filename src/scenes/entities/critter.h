@@ -113,6 +113,7 @@ class Critter
 		unsigned int		itemsPerRow;
 
 		unsigned char		*outputImage;
+		unsigned int		visionDivider;
 		Vector3f		cameraposition;
 
 		bool			moved;

@@ -27,6 +27,7 @@ Critter::Critter()
 	framePosX		= 0;
 	framePosY		= 0;
 	itemsPerRow		= 10;
+	visionDivider		= 4;
 	calcFramePos(0);
 
 	// energy
@@ -76,6 +77,7 @@ Critter::Critter()
 
 	// Allocate the neccessary memory.
 	outputImage = (unsigned char*)malloc(items);
+
 }
 
 Critter::Critter(Critter &other)
@@ -106,6 +108,7 @@ Critter::Critter(Critter &other)
 	framePosX		= 0;
 	framePosY		= 0;
 	itemsPerRow		= other.itemsPerRow;
+	visionDivider		= other.visionDivider;
 	calcFramePos(0);
 
 	// energy
@@ -192,14 +195,31 @@ void Critter::setup()
 void Critter::procSensorNeurons()
 {
 	// link vision array directly to the sensor neurons' output
-	for ( unsigned int i=0; i < items; i++ )
+
+	if ( visionDivider == 1 )
 	{
-		if ( outputImage[i] ) SensorNeurons[i]->output = 1;
-		else  SensorNeurons[i]->output = 0;
+		for ( unsigned int i=0; i < items; i++ )
+		{
+			if ( outputImage[i] ) SensorNeurons[i]->output = 1;
+			else  SensorNeurons[i]->output = 0;
+		}
+	}
+	else
+	{
+		for ( unsigned int i=0; i < items; i++ )
+		{
+			unsigned target = i * visionDivider;
+			unsigned int NeuronToFire = (unsigned int)(((float)outputImage[i] / 256.0f) * (float)visionDivider);
+			for ( unsigned int z=0; z < visionDivider; z++ )
+			{
+				if ( z == NeuronToFire ) SensorNeurons[target+z]->output = 1;
+				else SensorNeurons[target+z]->output = 0;
+			}
+		}
 	}
 
 	// over food sensor neuron
-	unsigned int overstep = items;
+	unsigned int overstep = items*visionDivider;
 	if ( touchingFood ) SensorNeurons[overstep]->output = 1;
 	else SensorNeurons[overstep]->output = 0;
 
@@ -291,9 +311,8 @@ void Critter::setupSensors()
 	SensorNeurons.clear();
 
 	// Vision Sensors
-	for ( unsigned int i=0; i < items; i++ )
+	for ( unsigned int i=0; i < (items*visionDivider); i++ )
 	{
-		// vertices of left plane
 		SensorNeurons.push_back( new NeuronSensor );
 	}
 
