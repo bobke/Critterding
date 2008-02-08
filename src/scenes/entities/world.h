@@ -50,9 +50,9 @@ class World{
 		unsigned int		mutationRate;
 
 		// THREADING
-		int			nthreads;
 		pthread_t		bgthread;
-		vector<pthread_t>	bgthreads;
+		bool			bgthreadActive;
+		bool			bgthreadIsSpawned;
 
 		pthread_cond_t		condition_startthreads;
 		pthread_mutex_t		condition_startthreads_mutex;
@@ -79,8 +79,7 @@ class World{
 		void			increaseMaxcritters();
 		void			decreaseMaxcritters();
 
-		void			increaseBGthreads();
-		void			decreaseBGthreads();
+		void			toggleBGthread();
 
 	private:
 

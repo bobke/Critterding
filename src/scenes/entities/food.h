@@ -17,7 +17,6 @@ class Food
 		float			size;
 		float			halfsize;
 		float			energy;
-		pthread_mutex_t		energy_mutex;
 
 		Vector3f		position;
 		float			color[4];

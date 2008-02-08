@@ -10,9 +10,6 @@ Food::Food()
 	color[1]	= 1.0f;
 	color[2]	= 0.0f;
 	color[3]	= 1.0f;
-
-	// initialize mutexes
-	pthread_mutex_init (&energy_mutex, NULL);
 }
 
 void Food::draw()
