@@ -1,4 +1,3 @@
-
 #include "evolution.h"
 
 Evolution::Evolution()
@@ -14,7 +13,6 @@ void Evolution::draw()
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 		world.process();
-
 
 	if ( !drawCVNeurons )
 	{
@@ -135,9 +133,7 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_Right:
 			camera.moveRight(0.2f);
 		break;
-
 	}
-
 }
 
 Evolution::~Evolution()

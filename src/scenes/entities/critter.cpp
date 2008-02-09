@@ -212,7 +212,7 @@ void Critter::procSensorNeurons()
 			unsigned int NeuronToFire = (unsigned int)(((float)outputImage[i] / 256.0f) * (float)visionDivider);
 			for ( unsigned int z=0; z < visionDivider; z++ )
 			{
-				if ( z == NeuronToFire ) SensorNeurons[target+z]->output = 1;
+				if ( outputImage[i] && z == NeuronToFire  ) SensorNeurons[target+z]->output = 1;
 				else SensorNeurons[target+z]->output = 0;
 			}
 		}
