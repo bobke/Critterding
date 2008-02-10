@@ -42,8 +42,6 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= 0.0f;
-
 	maxcritters		= 1000;
 	mincritters		= 5;
 
@@ -53,7 +51,9 @@ World::World()
 	floor.resize(size);
 
 	// insert food
-	insertRandomFood(40, foodenergy); // size^x = 
+//	insertRandomFood(80, foodenergy); // size^x = 
+
+	freeEnergy		= foodenergy * 80.0f;
 
 	// home & program directory
 	createDirs();
@@ -208,10 +208,10 @@ void World::processCritter(unsigned int i)
 
 					if (spotIsFree(nc->newposition, nc->size, i))
 					{
-						cerr << "critter " << i << " (ad:" << c->adamdist << ") PROCREATES";
+						cerr << "critter " << setw(3) << i << " (ad:" << setw(4) << c->adamdist << ") PROCREATES";
 
 						c->doNeuronConnCount();
-						cerr << " N: " << c->totalneurons << " C: " << c->totalconnections;
+						cerr << " N: " << setw(4) << c->totalneurons << " C: " << setw(4) << c->totalconnections;
 						if ( mutant ) cerr << " ( mutant )";
 
 
@@ -387,21 +387,21 @@ void World::process()
 		// see if energy level isn't below 0 -> die, or die of old age
 		if ( critters[i]->energyLevel < 0 )
 		{
-			cerr << "critter " << i << " DIES: starvation" << endl;
+			cerr << "critter " << setw(3) << i << " DIES: starvation" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// see if died from bullet
 		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames && critters[i]->wasShot )
 		{
-			cerr << "critter " << i << " DIES: KILLED" << endl;
+			cerr << "critter " << setw(3) << i << " DIES: KILLED" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// die of old age
 		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames )
 		{
-			cerr << "critter " << i << " DIES: old age" << endl;
+			cerr << "critter " << setw(3) << i << " DIES: old age" << endl;
 			removeCritter(i);
 			i--;
 		}
