@@ -53,7 +53,7 @@ World::World()
 	// insert food
 //	insertRandomFood(80, foodenergy); // size^x = 
 
-	freeEnergy		= foodenergy * 100.0f;
+	freeEnergy		= foodenergy * 40.0f;
 
 	// home & program directory
 	createDirs();
