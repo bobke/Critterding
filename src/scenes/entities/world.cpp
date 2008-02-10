@@ -53,7 +53,7 @@ World::World()
 	// insert food
 //	insertRandomFood(80, foodenergy); // size^x = 
 
-	freeEnergy		= foodenergy * 80.0f;
+	freeEnergy		= foodenergy * 100.0f;
 
 	// home & program directory
 	createDirs();
@@ -211,7 +211,7 @@ void World::processCritter(unsigned int i)
 						cerr << "critter " << setw(3) << i << " (ad:" << setw(4) << c->adamdist << ") PROCREATES";
 
 						c->doNeuronConnCount();
-						cerr << " N: " << setw(4) << c->totalneurons << " C: " << setw(4) << c->totalconnections;
+						cerr << " N: " << setw(4) << c->totalneurons << " C: " << setw(5) << c->totalconnections;
 						if ( mutant ) cerr << " ( mutant )";
 
 
