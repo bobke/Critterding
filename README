@@ -21,6 +21,11 @@ BUTTONS
 
    Insert        : toggle critter vision
 
+   w             : create a horizontal wall
+   x             : destroy the wall
+   c             : toggle gate in wall center
+
+
  - Camera Operations
 
    Arrow Up      : move forward

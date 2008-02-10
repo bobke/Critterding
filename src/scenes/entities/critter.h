@@ -60,8 +60,12 @@ class Critter
 		unsigned int		touchedFoodID;
 		bool			fire;
 		bool			canFire;
+		bool			procreate;
+		bool			canProcreate;
 		bool			wasShot;
 		vector<ArchNeuron*>	NeuronArch;
+		unsigned int		totalneurons;
+		unsigned int		totalconnections;
 
 		void			draw();
 		void			place();
@@ -82,10 +86,12 @@ class Critter
 		void 			rotateRight();
 		void			rotateLeft();
 		void			randomArchitecture();
+		void			prepNewPoss();
 		void			moveToNewPoss();
 
 		void			setArch(string &content);
 		string			getArch();
+		void			doNeuronConnCount();
 
 
 	private:
@@ -107,8 +113,6 @@ class Critter
 		unsigned int		maxneurons;
 		unsigned int		minconns;
 		unsigned int		maxconns;
-		unsigned int		totalneurons;
-		unsigned int		totalconnections;
 		unsigned int		mutatepercent;
 		unsigned int		itemsPerRow;
 
@@ -129,13 +133,11 @@ class Critter
 		unsigned int		addRandomArchConnection(unsigned int parentneuron);
 		unsigned int		addRandomArchNeuron();
 		
-		void			prepNewPoss();
 		void			procSensorNeurons();
 		void			procNeurons();
 		void			setupSensors();
 		void			setupArchitecture();
 		void			resizeByArch();
-		void			doNeuronConnCount();
 
 
 };

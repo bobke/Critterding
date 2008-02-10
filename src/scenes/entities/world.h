@@ -27,6 +27,7 @@
 #include "floor.h"
 #include "infobar.h"
 #include "food.h"
+#include "wall.h"
 #include "bullet.h"
 #include "critter.h"
 
@@ -39,6 +40,7 @@ class World{
 
 		vector<Critter*>	critters;
 		vector<Food*>		food;
+		vector<Wall*>		walls;
 		vector<Bullet*>		bullets;
 		pthread_mutex_t		bulletsV_mutex;
 
@@ -68,7 +70,6 @@ class World{
 
 
 		void			insertCritter();
-		unsigned int		copyCritter(unsigned int cid);
 		void			positionCritter(unsigned int cid);
 		void			saveAllCritters();
 		void			loadAllCritters();
@@ -80,6 +81,9 @@ class World{
 		void			decreaseMaxcritters();
 
 		void			toggleBGthread();
+		void			createWall();
+		void			destroyWall();
+		void			toggleGate(unsigned int wid);
 
 	private:
 
@@ -105,6 +109,8 @@ class World{
 		bool			isTouchingAnything(float size, float x, float z);
 		Vector3f		findEmptySpace(float objectsize);
 		void			createDirs();
+		bool			spotIsFree(Vector3f &position, float osize, unsigned int exclude);
+		bool			spotIsFree(Vector3f &position, float osize);
 };
 
 #endif

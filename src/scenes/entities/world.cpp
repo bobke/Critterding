@@ -52,6 +52,7 @@ World::World()
 	grid.resize(size);
 	floor.resize(size);
 
+	// insert food
 	insertRandomFood(40, foodenergy); // size^x = 
 
 	// home & program directory
@@ -66,6 +67,33 @@ World::World()
 
 	pthread_mutex_init (&condition_startthreads_mutex, NULL);
 	pthread_cond_init (&condition_startthreads, NULL);
+}
+
+void World::createWall()
+{
+	walls.clear();
+	for ( unsigned int i=0; i < (unsigned int)(4.0f*size); i++ )
+	{
+		Wall *w = new Wall();
+		walls.push_back( w );
+		walls[i]->resize(0.25f);
+		walls[i]->position.x = 0.125 + ((float)i*0.25);
+		walls[i]->position.z = size/2.0f;
+	}
+}
+
+void World::destroyWall()
+{
+	while ( !walls.empty() )
+	{
+		delete walls[0];
+		walls.erase( walls.begin() );
+	}
+}
+
+void World::toggleGate(unsigned int wid)
+{
+	if ( wid < walls.size() ) walls[wid]->toggle();
 }
 
 void World::processCritter(unsigned int i)
@@ -92,30 +120,7 @@ void World::processCritter(unsigned int i)
 		freeEnergy += c->energyUsed;
 
 	// move
-		// wall crawler movement
-			// left border
-			if ( c->newposition.x - c->halfsize <= 0 )		c->newposition.x = c->halfsize;
-			// right border
-			else if ( c->newposition.x + c->halfsize >= size )	c->newposition.x = size - c->halfsize;
-			// bottom border
-			if ( c->newposition.z - c->halfsize <= 0 )		c->newposition.z = c->halfsize;
-			// top border
-			else if ( c->newposition.z + c->halfsize >= size )	c->newposition.z = size - c->halfsize;
-
-	// unless WILL TOUCH other creature, move
-			bool touch = false;
-			for ( unsigned int j=0; j < critters.size() && !touch; j++ )
-			{
-				if ( j != i )
-				{
-					float avgSize = (c->size + critters[j]->size) / 2.0f;
-					if ( fabs( c->newposition.x - critters[j]->position.x ) <= avgSize &&  fabs( c->newposition.z - critters[j]->position.z ) <= avgSize )
-					{
-						touch = true;
-					}
-				}
-			}
-			if (!touch) c->moveToNewPoss();
+		if (spotIsFree(c->newposition, c->size, i)) c->moveToNewPoss();
 
 	// eat
 		if ( c->touchingFood && c->eat )
@@ -167,34 +172,171 @@ void World::processCritter(unsigned int i)
 		}
 
 	// procreate
-
 		//procreation if procreation energy trigger is hit
-		if ( c->procreateTimeCount > c->procreateTimeTrigger )
+		if ( c->procreate && c->canProcreate )
 		{
-			// if sufficient energy
-			if ( c->energyLevel > c->minprocenergyLevel )
-			{
-				cerr << "critter " << i << "(ad:" << c->adamdist << ") PROCREATES";
-				// reset procreation energy count
-				c->procreateTimeCount = 0;
 
-					unsigned int newcritter = copyCritter(i);
+			// move critter it's half size to the left
+			float reused = (90.0f+c->rotation) * 0.0174532925f;
+			c->prepNewPoss();
+			c->newposition.x -= sin(reused) * c->halfsize;
+			c->newposition.z -= cos(reused) * c->halfsize;
+
+			if (spotIsFree(c->newposition, c->size, i))
+			{
+					Critter *nc = new Critter(*c);
 
 					// mutate or not
+					bool mutant = false;
 					if ( randgen.get(1,100) <= mutationRate )
 					{
-						cerr << ": MUTANT";
-						critters[newcritter]->mutate();
+						mutant = true;
+						nc->mutate();
+					}
+					nc->setup();
+
+					// same positions / rotation
+					nc->position = c->position;
+					nc->rotation = c->rotation;
+
+					// move new critter to the right by sum of halfsizes
+					float reused = (270.0f+nc->rotation) * 0.0174532925f;
+					Vector3f newpos;
+					nc->prepNewPoss();
+					nc->newposition.x -= sin(reused) * (c->halfsize + nc->halfsize + 0.01);
+					nc->newposition.z -= cos(reused) * (c->halfsize + nc->halfsize + 0.01);
+
+					if (spotIsFree(nc->newposition, nc->size, i))
+					{
+						cerr << "critter " << i << " (ad:" << c->adamdist << ") PROCREATES";
+
+						c->doNeuronConnCount();
+						cerr << " N: " << c->totalneurons << " C: " << c->totalconnections;
+						if ( mutant ) cerr << " ( mutant )";
+
+
+						// split energies in half
+						nc->energyLevel = c->energyLevel/2.0f;
+						c->energyLevel = nc->energyLevel;
+
+						// reset procreation energy count
+						c->procreateTimeCount = 0;
+	
+						//exit(0);
+//						unsigned int newcritter = critters.size();
+						critters.push_back( nc );
+
+						c->moveToNewPoss();
+						nc->moveToNewPoss();
+
+						cerr << endl;
+					}
+					else
+					{
+						delete nc;
 					}
 
-					critters[newcritter]->setup();
-					positionCritter(newcritter);
-				cerr << endl;
 			}
-		}
+ 		}
 
 }
 
+bool World::spotIsFree(Vector3f &position, float osize, unsigned int exclude)
+{
+
+	float halfsize = osize/2.0f;
+
+// within world borders?
+
+	// left border
+	if ( position.x - halfsize <= 0 )		return false;
+	// right border
+	else if ( position.x + halfsize >= size )	return false;
+	// bottom border
+	if ( position.z - halfsize <= 0 )		return false;
+	// top border
+	else if ( position.z + halfsize >= size )	return false;
+
+// check for touch walls
+
+	for ( unsigned int j=0; j < walls.size(); j++ )
+	{
+		Wall *w = walls[j];
+
+		if ( !w->disabled )
+		{
+			float avgSize = (osize + w->size) / 2.0f;
+			if ( fabs( position.x - w->position.x ) <= avgSize &&  fabs( position.z - w->position.z ) <= avgSize )
+			{
+				return false;
+			}
+		}
+	}
+
+// check for touch other creatures
+
+	for ( unsigned int j=0; j < critters.size(); j++ )
+	{
+		if ( j != exclude )
+		{
+			Critter *cj = critters[j];
+			float avgSize = (osize + cj->size) / 2.0f;
+			if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+bool World::spotIsFree(Vector3f &position, float osize)
+{
+
+	float halfsize = osize/2.0f;
+
+// within world borders?
+
+	// left border
+	if ( position.x - halfsize <= 0 )		return false;
+	// right border
+	else if ( position.x + halfsize >= size )	return false;
+	// bottom border
+	if ( position.z - halfsize <= 0 )		return false;
+	// top border
+	else if ( position.z + halfsize >= size )	return false;
+
+// check for touch walls
+
+	for ( unsigned int j=0; j < walls.size(); j++ )
+	{
+		Wall *w = walls[j];
+
+		if ( !w->disabled )
+		{
+			float avgSize = (osize + w->size) / 2.0f;
+			if ( fabs( position.x - w->position.x ) <= avgSize &&  fabs( position.z - w->position.z ) <= avgSize )
+			{
+				return false;
+			}
+		}
+	}
+
+// check for touch other creatures
+
+	for ( unsigned int j=0; j < critters.size(); j++ )
+	{
+		Critter *cj = critters[j];
+		float avgSize = (osize + cj->size) / 2.0f;
+		if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
 
 void World::process()
 {
@@ -409,22 +551,6 @@ void World::removeCritter(unsigned int cid)
 	}
 }
 
-unsigned int World::copyCritter(unsigned int cid)
-{
-
-	unsigned int newcritterid = critters.size();
-	Critter *c = new Critter(*critters[cid]);
-
-	// split energies in half
-	c->energyLevel = critters[cid]->energyLevel/2.0f;
-	critters[cid]->energyLevel = c->energyLevel;
-
-	critters.push_back( c );
-	return newcritterid;
-}
-
-
-
 
 bool World::isTouchingAnything(float size, float x, float z)
 {
@@ -456,19 +582,21 @@ Vector3f World::findEmptySpace(float objectsize)
 	pos.x = (float)randgen.get( 0, 100*size ) / 100;
 	pos.z = (float)randgen.get( 0, 100*size ) / 100;
 
-	float halfsize = objectsize/2;
-	while ( isTouchingAnything( objectsize, pos.x, pos.z )
-	|| 	(
-			// left border
-			pos.x - halfsize <= 0 ||
-			// right border
-			pos.x + halfsize >= size ||
-			// bottom border
-			pos.z - halfsize <= 0 ||
-			// top border
-			pos.z + halfsize >= size
-		)
-	)
+//	float halfsize = objectsize/2;
+
+	while ( !spotIsFree(pos, objectsize) )
+// 	while ( isTouchingAnything( objectsize, pos.x, pos.z )
+// 	|| 	(
+// 			// left border
+// 			pos.x - halfsize <= 0 ||
+// 			// right border
+// 			pos.x + halfsize >= size ||
+// 			// bottom border
+// 			pos.z - halfsize <= 0 ||
+// 			// top border
+// 			pos.z + halfsize >= size
+// 		)
+// 	)
 
 	{
 		pos.x = (float)randgen.get( 0, 100*size ) / 100;
@@ -483,6 +611,7 @@ void World::drawWithGrid()
 	grid.draw();
 
 	// draw food
+	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
 	for( unsigned int i=0; i < food.size(); i++) food[i]->draw();
 	for( unsigned int i=0; i < bullets.size(); i++) bullets[i]->draw();
 	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();
@@ -494,6 +623,7 @@ void World::drawWithFloor()
 	floor.draw();
 
 	// draw food
+	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
 	for( unsigned int i=0; i < food.size(); i++) food[i]->draw();
 	for( unsigned int i=0; i < bullets.size(); i++) bullets[i]->draw();
 	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();

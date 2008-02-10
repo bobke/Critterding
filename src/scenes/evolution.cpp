@@ -86,6 +86,19 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 		case XK_e:
 		break;
+		case XK_w:
+			world.createWall();
+		break;
+		case XK_x:
+			world.destroyWall();
+		break;
+		case XK_c:
+			world.toggleGate((unsigned int)(world.size*2.0f)-2);
+			world.toggleGate((unsigned int)(world.size*2.0f)-1);
+			world.toggleGate((unsigned int)(world.size*2.0f));
+			world.toggleGate((unsigned int)(world.size*2.0f)+1);
+		break;
+
 
 
 		// Camera Looking
