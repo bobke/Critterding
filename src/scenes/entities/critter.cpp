@@ -73,6 +73,9 @@ Critter::Critter()
 	canFire			= false;
 	fire			= false;
 
+	canProcreate		= false;
+	procreate		= false;
+
 	setupSensors();
 
 	// Allocate the neccessary memory.
@@ -154,6 +157,9 @@ Critter::Critter(Critter &other)
 	canFire			= false;
 	fire			= false;
 
+	canProcreate		= false;
+	procreate		= false;
+
 	setupSensors();
 
 	// Allocate the neccessary memory.
@@ -174,10 +180,11 @@ void Critter::process()
 	energyUsed = 0.0f;
 
 	// reset extern motor neurons
-	eat = false;
-	fire = false;
-	canFire = false;
-	wasShot = false;
+	eat		= false;
+	fire		= false;
+	procreate	= false;
+
+	wasShot		= false;
 
 	prepNewPoss();
 	procSensorNeurons();
@@ -190,6 +197,32 @@ void Critter::setup()
 {
 	setupArchitecture();
 	resizeByArch();
+}
+
+void Critter::setupSensors()
+{
+	SensorNeurons.clear();
+
+	// Vision Sensors
+	for ( unsigned int i=0; i < (items*visionDivider); i++ )
+	{
+		SensorNeurons.push_back( new NeuronSensor );
+	}
+
+	// is over food sensor neuron, it doesn't even need to know what or where it is, it should find it, it should learn to use it
+	SensorNeurons.push_back( new NeuronSensor );
+
+	// ready to fire a bullet neuron
+	SensorNeurons.push_back( new NeuronSensor );
+
+	// ready to procreate neuron
+	SensorNeurons.push_back( new NeuronSensor );
+
+	// a couple of energy status neurons
+	for ( unsigned int i=0; i < 10; i++ )
+	{
+		SensorNeurons.push_back( new NeuronSensor );
+	}
 }
 
 void Critter::procSensorNeurons()
@@ -224,13 +257,22 @@ void Critter::procSensorNeurons()
 	else SensorNeurons[overstep]->output = 0;
 
 	// can fire a bullet
-
-
 	overstep++;
+	canFire		= false;
 	if ( fireTimeCount > fireTimeTrigger && energyLevel > minfireenergyLevel )
 	{
 		SensorNeurons[overstep]->output = 1;
 		canFire = true;
+	}
+	else SensorNeurons[overstep]->output = 0;
+
+	// can procreate sensor neuron
+	overstep++;
+	canProcreate	= false;
+	if ( procreateTimeCount > procreateTimeTrigger && energyLevel > minprocenergyLevel )
+	{
+		SensorNeurons[overstep]->output = 1;
+		canProcreate = true;
 	}
 	else SensorNeurons[overstep]->output = 0;
 
@@ -297,6 +339,9 @@ void Critter::procNeurons()
 					case 7:
 						fire = true;
 						break;
+					case 8:
+						procreate = true;
+						break;
 				}
 			}
 		}
@@ -304,29 +349,6 @@ void Critter::procNeurons()
 
 	// commit outputs at the end
 	for ( unsigned int i=0; i < Neurons.size(); i++ ) Neurons[i]->output = Neurons[i]->waitoutput;
-}
-
-void Critter::setupSensors()
-{
-	SensorNeurons.clear();
-
-	// Vision Sensors
-	for ( unsigned int i=0; i < (items*visionDivider); i++ )
-	{
-		SensorNeurons.push_back( new NeuronSensor );
-	}
-
-	// is over food sensor neuron, it doesn't even need to know what or where it is, it should find it, it should learn to use it
-	SensorNeurons.push_back( new NeuronSensor );
-
-	// ready to fire a bullet neuron
-	SensorNeurons.push_back( new NeuronSensor );
-
-	// a couple of energy status neurons
-	for ( unsigned int i=0; i < 10; i++ )
-	{
-		SensorNeurons.push_back( new NeuronSensor );
-	}
 }
 
 void Critter::setupArchitecture()
@@ -435,7 +457,7 @@ unsigned int Critter::addRandomArchNeuron()
 	if ( randgen.get( 1, 100 ) <= percentMotor )
 	{
 		n->isMotor = true;
-		n->MotorFunc = randgen.get( 0, 7 );
+		n->MotorFunc = randgen.get( 0, 8 );
 	}
 
 	NeuronArch.push_back( n );
@@ -481,7 +503,7 @@ void Critter::mutate()
 	doNeuronConnCount();
 	unsigned int runs = randgen.get(1, (int)(totalconnections/(100/mutatepercent)));
 
-	cerr << " N: " << totalneurons << " C: " << totalconnections;
+//	cerr << " N: " << totalneurons << " C: " << totalconnections;
 
 	for ( unsigned int i=0; i < runs; i++ )
 	{
