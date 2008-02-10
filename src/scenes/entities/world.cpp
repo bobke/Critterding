@@ -208,7 +208,7 @@ void World::processCritter(unsigned int i)
 
 					if (spotIsFree(nc->newposition, nc->size, i))
 					{
-						cerr << "critter " << setw(3) << i << " (ad:" << setw(4) << c->adamdist << ") PROCREATES";
+						cerr << "critter " << setw(3) << i << " PROCREATES (ad:" << setw(4) << c->adamdist << ")";
 
 						c->doNeuronConnCount();
 						cerr << " N: " << setw(4) << c->totalneurons << " C: " << setw(5) << c->totalconnections;
