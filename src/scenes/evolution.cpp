@@ -62,7 +62,7 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_F8:
 		break;
 		case XK_F9:
-			//world.toggleBGthread();
+			world.toggleBGthread();
 		break;
 		case XK_F10:
 		break;

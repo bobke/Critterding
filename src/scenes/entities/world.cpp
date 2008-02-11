@@ -42,18 +42,15 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
+	freeEnergy		= foodenergy * 50.0f;
+
 	maxcritters		= 1000;
 	mincritters		= 5;
 
-	mutationRate		= 20;
+	mutationRate		= 15; // %
 
 	grid.resize(size);
 	floor.resize(size);
-
-	// insert food
-//	insertRandomFood(80, foodenergy); // size^x = 
-
-	freeEnergy		= foodenergy * 40.0f;
 
 	// home & program directory
 	createDirs();
@@ -67,33 +64,6 @@ World::World()
 
 	pthread_mutex_init (&condition_startthreads_mutex, NULL);
 	pthread_cond_init (&condition_startthreads, NULL);
-}
-
-void World::createWall()
-{
-	walls.clear();
-	for ( unsigned int i=0; i < (unsigned int)(4.0f*size); i++ )
-	{
-		Wall *w = new Wall();
-		walls.push_back( w );
-		walls[i]->resize(0.25f);
-		walls[i]->position.x = 0.125 + ((float)i*0.25);
-		walls[i]->position.z = size/2.0f;
-	}
-}
-
-void World::destroyWall()
-{
-	while ( !walls.empty() )
-	{
-		delete walls[0];
-		walls.erase( walls.begin() );
-	}
-}
-
-void World::toggleGate(unsigned int wid)
-{
-	if ( wid < walls.size() ) walls[wid]->toggle();
 }
 
 void World::processCritter(unsigned int i)
@@ -241,102 +211,6 @@ void World::processCritter(unsigned int i)
 
 }
 
-bool World::spotIsFree(Vector3f &position, float osize, unsigned int exclude)
-{
-
-	float halfsize = osize/2.0f;
-
-// within world borders?
-
-	// left border
-	if ( position.x - halfsize <= 0 )		return false;
-	// right border
-	else if ( position.x + halfsize >= size )	return false;
-	// bottom border
-	if ( position.z - halfsize <= 0 )		return false;
-	// top border
-	else if ( position.z + halfsize >= size )	return false;
-
-// check for touch walls
-
-	for ( unsigned int j=0; j < walls.size(); j++ )
-	{
-		Wall *w = walls[j];
-
-		if ( !w->disabled )
-		{
-			float avgSize = (osize + w->size) / 2.0f;
-			if ( fabs( position.x - w->position.x ) <= avgSize &&  fabs( position.z - w->position.z ) <= avgSize )
-			{
-				return false;
-			}
-		}
-	}
-
-// check for touch other creatures
-
-	for ( unsigned int j=0; j < critters.size(); j++ )
-	{
-		if ( j != exclude )
-		{
-			Critter *cj = critters[j];
-			float avgSize = (osize + cj->size) / 2.0f;
-			if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
-			{
-				return false;
-			}
-		}
-	}
-
-	return true;
-}
-
-bool World::spotIsFree(Vector3f &position, float osize)
-{
-
-	float halfsize = osize/2.0f;
-
-// within world borders?
-
-	// left border
-	if ( position.x - halfsize <= 0 )		return false;
-	// right border
-	else if ( position.x + halfsize >= size )	return false;
-	// bottom border
-	if ( position.z - halfsize <= 0 )		return false;
-	// top border
-	else if ( position.z + halfsize >= size )	return false;
-
-// check for touch walls
-
-	for ( unsigned int j=0; j < walls.size(); j++ )
-	{
-		Wall *w = walls[j];
-
-		if ( !w->disabled )
-		{
-			float avgSize = (osize + w->size) / 2.0f;
-			if ( fabs( position.x - w->position.x ) <= avgSize &&  fabs( position.z - w->position.z ) <= avgSize )
-			{
-				return false;
-			}
-		}
-	}
-
-// check for touch other creatures
-
-	for ( unsigned int j=0; j < critters.size(); j++ )
-	{
-		Critter *cj = critters[j];
-		float avgSize = (osize + cj->size) / 2.0f;
-		if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
 
 void World::process()
 {
@@ -430,7 +304,11 @@ void World::process()
 					c->procFrame();
 					c->drawedAgo = 0;
 				}
-				else c->drawedAgo++;
+				else
+				{
+					if ( c->drawedAgo == 0 ) memset(c->outputImage, 0, c->items);
+					c->drawedAgo++;
+				}
 
 				pthread_mutex_lock( &cqueue_mutex );
 					cqueue.push_back( i );
@@ -476,7 +354,11 @@ void World::process()
 					c->procFrame();
 					c->drawedAgo = 0;
 				}
-				else c->drawedAgo++;
+				else
+				{
+					if ( c->drawedAgo == 0 ) memset(c->outputImage, 0, c->items);
+					c->drawedAgo++;
+				}
 
 				processCritter(i);
 		}
@@ -551,59 +433,33 @@ void World::removeCritter(unsigned int cid)
 	}
 }
 
-
-bool World::isTouchingAnything(float size, float x, float z)
+void World::createWall()
 {
-	// touches food?
-		for( unsigned int i=0; i < food.size(); i++)
-		{
-			float avgSize = (size + food[i]->size) / 2;
-			if ( fabs(x - food[i]->position.x) <= avgSize && fabs(z - food[i]->position.z) <= avgSize )
-			{
-				return true;
-			}
-		}
-	// touches critter?
-		for( unsigned int i=0; i < critters.size(); i++)
-		{
-			float avgSize = (size + critters[i]->size) / 2;
-			if ( fabs(x - critters[i]->position.x) <= avgSize && fabs(z - critters[i]->position.z) <= avgSize )
-			{
-				return true;
-			}
-		}
-
-	return false;
-}
-
-Vector3f World::findEmptySpace(float objectsize)
-{
-	Vector3f pos;
-	pos.x = (float)randgen.get( 0, 100*size ) / 100;
-	pos.z = (float)randgen.get( 0, 100*size ) / 100;
-
-//	float halfsize = objectsize/2;
-
-	while ( !spotIsFree(pos, objectsize) )
-// 	while ( isTouchingAnything( objectsize, pos.x, pos.z )
-// 	|| 	(
-// 			// left border
-// 			pos.x - halfsize <= 0 ||
-// 			// right border
-// 			pos.x + halfsize >= size ||
-// 			// bottom border
-// 			pos.z - halfsize <= 0 ||
-// 			// top border
-// 			pos.z + halfsize >= size
-// 		)
-// 	)
-
+	walls.clear();
+	for ( unsigned int i=0; i < (unsigned int)(4.0f*size); i++ )
 	{
-		pos.x = (float)randgen.get( 0, 100*size ) / 100;
-		pos.z = (float)randgen.get( 0, 100*size ) / 100;
+		Wall *w = new Wall();
+		walls.push_back( w );
+		walls[i]->resize(0.25f);
+		walls[i]->position.x = 0.125 + ((float)i*0.25);
+		walls[i]->position.z = size/2.0f;
 	}
-	return pos;
 }
+
+void World::destroyWall()
+{
+	while ( !walls.empty() )
+	{
+		delete walls[0];
+		walls.erase( walls.begin() );
+	}
+}
+
+void World::toggleGate(unsigned int wid)
+{
+	if ( wid < walls.size() ) walls[wid]->toggle();
+}
+
 
 void World::drawWithGrid()
 {
@@ -740,6 +596,156 @@ void World::createDirs()
 
 	if ( !dirH.exists(progdir) ) dirH.make(progdir);
 	if ( !dirH.exists(loaddir) ) dirH.make(loaddir);
+}
+
+bool World::spotIsFree(Vector3f &position, float osize, unsigned int exclude)
+{
+
+	float halfsize = osize/2.0f;
+
+// within world borders?
+
+	// left border
+	if ( position.x - halfsize <= 0 )		return false;
+	// right border
+	else if ( position.x + halfsize >= size )	return false;
+	// bottom border
+	if ( position.z - halfsize <= 0 )		return false;
+	// top border
+	else if ( position.z + halfsize >= size )	return false;
+
+// check for touch walls
+
+	for ( unsigned int j=0; j < walls.size(); j++ )
+	{
+		Wall *w = walls[j];
+
+		if ( !w->disabled )
+		{
+			float avgSize = (osize + w->size) / 2.0f;
+			if ( fabs( position.x - w->position.x ) <= avgSize &&  fabs( position.z - w->position.z ) <= avgSize )
+			{
+				return false;
+			}
+		}
+	}
+
+// check for touch other creatures
+
+	for ( unsigned int j=0; j < critters.size(); j++ )
+	{
+		if ( j != exclude )
+		{
+			Critter *cj = critters[j];
+			float avgSize = (osize + cj->size) / 2.0f;
+			if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+bool World::spotIsFree(Vector3f &position, float osize)
+{
+
+	float halfsize = osize/2.0f;
+
+// within world borders?
+
+	// left border
+	if ( position.x - halfsize <= 0 )		return false;
+	// right border
+	else if ( position.x + halfsize >= size )	return false;
+	// bottom border
+	if ( position.z - halfsize <= 0 )		return false;
+	// top border
+	else if ( position.z + halfsize >= size )	return false;
+
+// check for touch walls
+
+	for ( unsigned int j=0; j < walls.size(); j++ )
+	{
+		Wall *w = walls[j];
+
+		if ( !w->disabled )
+		{
+			float avgSize = (osize + w->size) / 2.0f;
+			if ( fabs( position.x - w->position.x ) <= avgSize &&  fabs( position.z - w->position.z ) <= avgSize )
+			{
+				return false;
+			}
+		}
+	}
+
+// check for touch other creatures
+
+	for ( unsigned int j=0; j < critters.size(); j++ )
+	{
+		Critter *cj = critters[j];
+		float avgSize = (osize + cj->size) / 2.0f;
+		if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool World::isTouchingAnything(float size, float x, float z)
+{
+	// touches food?
+		for( unsigned int i=0; i < food.size(); i++)
+		{
+			float avgSize = (size + food[i]->size) / 2;
+			if ( fabs(x - food[i]->position.x) <= avgSize && fabs(z - food[i]->position.z) <= avgSize )
+			{
+				return true;
+			}
+		}
+	// touches critter?
+		for( unsigned int i=0; i < critters.size(); i++)
+		{
+			float avgSize = (size + critters[i]->size) / 2;
+			if ( fabs(x - critters[i]->position.x) <= avgSize && fabs(z - critters[i]->position.z) <= avgSize )
+			{
+				return true;
+			}
+		}
+
+	return false;
+}
+
+Vector3f World::findEmptySpace(float objectsize)
+{
+	Vector3f pos;
+	pos.x = (float)randgen.get( 0, 100*size ) / 100;
+	pos.z = (float)randgen.get( 0, 100*size ) / 100;
+
+//	float halfsize = objectsize/2;
+
+	while ( !spotIsFree(pos, objectsize) )
+// 	while ( isTouchingAnything( objectsize, pos.x, pos.z )
+// 	|| 	(
+// 			// left border
+// 			pos.x - halfsize <= 0 ||
+// 			// right border
+// 			pos.x + halfsize >= size ||
+// 			// bottom border
+// 			pos.z - halfsize <= 0 ||
+// 			// top border
+// 			pos.z + halfsize >= size
+// 		)
+// 	)
+
+	{
+		pos.x = (float)randgen.get( 0, 100*size ) / 100;
+		pos.z = (float)randgen.get( 0, 100*size ) / 100;
+	}
+	return pos;
 }
 
 

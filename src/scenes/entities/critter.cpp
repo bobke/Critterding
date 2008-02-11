@@ -64,7 +64,7 @@ Critter::Critter()
 	totalneurons		= 0;
 	totalconnections	= 0;
 
-	mutatepercent		= 5;
+	mutatepercent		= 3;
 
 	eat			= false;
 	touchingFood		= false;
@@ -388,28 +388,21 @@ void Critter::resizeByArch()
 
 	float newsize = ((maxSize/2) / absmaxneurons) * totalneurons + (((maxSize/2)/(absmaxneurons*absmaxconns))*totalconnections);
 
-//	cerr << "S: " << newsize;
-
 	resize(newsize);
-
-//	cerr << "Speed: " << speedfactor;
 }
 
 void Critter::doNeuronConnCount()
 {
 	totalneurons		= NeuronArch.size();
 	totalconnections	= 0;
-
-	for ( unsigned int i = 0; i < totalneurons; i++ )
-	{
-		totalconnections += NeuronArch[i]->connections.size();
-	}
+	for ( unsigned int i = 0; i < totalneurons; i++ ) totalconnections += NeuronArch[i]->connections.size();
 }
 
 void Critter::procFrame()
 {
 	// Clear the variable.
-	memset(outputImage, 0, items);
+	// done in world now
+	//memset(outputImage, 0, items);
 
 	// read from front buffer
 //	glReadBuffer(GL_FRONT);
@@ -522,7 +515,7 @@ void Critter::mutate()
 				if ( color[ncolor] < 0.0f ) color[ncolor] = 0.0f;
 			}
 
-		mode = randgen.get(1,20);
+		mode = randgen.get(1,30);
 
 		// add a new neuron
 			if ( mode == 1 )

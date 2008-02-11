@@ -66,6 +66,8 @@ class Critter
 		vector<ArchNeuron*>	NeuronArch;
 		unsigned int		totalneurons;
 		unsigned int		totalconnections;
+		unsigned char		*outputImage;
+		unsigned int		items;
 
 		void			draw();
 		void			place();
@@ -102,7 +104,6 @@ class Critter
 		float			maxSize;
 		float			speedfactor;
 		unsigned int		components;
-		unsigned int		items;
 		unsigned int		framePosX;
 		unsigned int		framePosY;
 		unsigned int		percentSensoryConns;
@@ -116,7 +117,6 @@ class Critter
 		unsigned int		mutatepercent;
 		unsigned int		itemsPerRow;
 
-		unsigned char		*outputImage;
 		unsigned int		visionDivider;
 		Vector3f		cameraposition;
 
