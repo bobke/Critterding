@@ -26,7 +26,7 @@ Critter::Critter()
 	items			= frameWidth * frameHeight * components;
 	framePosX		= 0;
 	framePosY		= 0;
-	itemsPerRow		= 5;
+	itemsPerRow		= 4;
 	visionDivider		= 4;
 	calcFramePos(0);
 
