@@ -93,7 +93,6 @@ class Critter
 
 		void			setArch(string &content);
 		string			getArch();
-		void			doNeuronConnCount();
 
 
 	private:
@@ -138,6 +137,7 @@ class Critter
 		void			setupSensors();
 		void			setupArchitecture();
 		void			resizeByArch();
+		void			doNeuronConnCount();
 
 
 };

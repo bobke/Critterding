@@ -180,7 +180,6 @@ void World::processCritter(unsigned int i)
 					{
 						cerr << "critter " << setw(3) << i << " PROCREATES (ad:" << setw(4) << c->adamdist << ")";
 
-						c->doNeuronConnCount();
 						cerr << " N: " << setw(4) << c->totalneurons << " C: " << setw(5) << c->totalconnections;
 						if ( mutant ) cerr << " ( mutant )";
 
