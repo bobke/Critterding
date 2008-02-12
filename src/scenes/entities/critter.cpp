@@ -49,8 +49,8 @@ Critter::Critter()
 	minfireenergyLevel	= maxEnergyLevel * 0.0f;
 
 	// neural properties
-	percentSensoryConns	= 20;
-	percentMotor		= 20;
+	percentSensoryConns	= 10;
+	percentMotor		= 10;
 
 	absmaxneurons		= 150;
 	absmaxconns		= 150;
