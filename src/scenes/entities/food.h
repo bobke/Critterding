@@ -21,6 +21,9 @@ class Food
 		Vector3f		position;
 		float			color[4];
 
+		unsigned int		totalFrames;
+		unsigned int		maxtotalFrames;
+
 		void			draw();
 		void			resize(float size);
 

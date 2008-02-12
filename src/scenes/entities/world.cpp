@@ -17,10 +17,7 @@ extern "C" void *procCritters( void *ptr )
 		while ( !w->cqueue.empty() )
 		{
  			unsigned int i = w->cqueue[0];
-//			cerr << " in thread: i: " << i;
  			w->cqueue.erase(w->cqueue.begin());
-//			if ( !w->cqueue.empty() )	cerr << "  NEXT: " << w->cqueue[0] << endl;
-//			else				cerr << "  NEXT: nothing" << endl;
 			pthread_mutex_unlock( &w->cqueue_mutex );
 
 			w->processCritter(i);
@@ -29,7 +26,6 @@ extern "C" void *procCritters( void *ptr )
 		}
 		pthread_mutex_unlock( &w->cqueue_mutex );
 	}
-
 	return 0;
 }
 
@@ -42,7 +38,7 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 50.0f;
+	freeEnergy		= foodenergy * 60.0f;
 
 	maxcritters		= 1000;
 	mincritters		= 5;
@@ -128,7 +124,7 @@ void World::processCritter(unsigned int i)
 		}
 
 	// hit by bullet?
-		for( unsigned int f=0; f < bullets.size(); f++)
+		for( unsigned int f=0; f < bullets.size() && !c->wasShot; f++)
 		{
 			Bullet *b = bullets[f];
 			float avgSize = (c->size + b->size) / 2;
@@ -183,6 +179,7 @@ void World::processCritter(unsigned int i)
 						cerr << " N: " << setw(4) << c->totalneurons << " C: " << setw(5) << c->totalconnections;
 						if ( mutant ) cerr << " ( mutant )";
 
+//						nc->rotation = nc->rotation * 180.0f;
 
 						// split energies in half
 						nc->energyLevel = c->energyLevel/2.0f;
@@ -226,21 +223,31 @@ void World::process()
 			{
 				delete bullets[i];
 				bullets.erase(bullets.begin()+i);
+				i--;
 			}
+		
 	}
 
 	// Remove food
 	for( unsigned int i=0; i < food.size(); i++)
 	{
+		// food was eaten
+		if ( food[i]->energy < 0 )
+		{
+			freeEnergy += food[i]->energy;
+			delete food[i];
+			food.erase(food.begin()+i);
+			i--;
+		}
 
-		// check if outside world
-			// left border
-			if ( food[i]->energy < 0 ) //bullets[i]->position.x - bullets[i]->halfsize <= 0 || bullets[i]->position.x + bullets[i]->halfsize >= size || bullets[i]->position.z - bullets[i]->halfsize <= 0 || bullets[i]->position.z + bullets[i]->halfsize >= size || 
-			{
-				freeEnergy += food[i]->energy;
-				delete food[i];
-				food.erase(food.begin()+i);
-			}
+		// this should remove stuff from corners
+		else if ( ++food[i]->totalFrames >= food[i]->maxtotalFrames )
+		{
+			freeEnergy += food[i]->energy;
+			delete food[i];
+			food.erase(food.begin()+i);
+			i--;
+		}
 	}
 
 	// Insert Food

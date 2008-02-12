@@ -6,6 +6,9 @@ Food::Food()
  	energy		= 1000.0f;
 	resize(size);
 
+	totalFrames		= 0;
+	maxtotalFrames		= 15000;
+
 	color[0]	= 0.0f;
 	color[1]	= 1.0f;
 	color[2]	= 0.0f;
