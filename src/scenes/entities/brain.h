@@ -43,6 +43,9 @@ class Brain
 		vector<ArchNeuron*>	NeuronArch;
 		vector<NeuronInter*>	Neurons;
 
+		unsigned int		totalInputs;
+		unsigned int		totalOutputs;
+
 		unsigned int		percentSensoryConns;
 		unsigned int		percentMotor;
 
