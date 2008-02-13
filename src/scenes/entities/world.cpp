@@ -86,7 +86,12 @@ void World::processCritter(unsigned int i)
 		freeEnergy += c->energyUsed;
 
 	// move
-		if (spotIsFree(c->newposition, c->size, i)) c->moveToNewPoss();
+		if (spotIsFree(c->newposition, c->size, i))
+		{
+			//pthread_mutex_lock( &c->position_mutex );
+			c->moveToNewPoss();
+			//pthread_mutex_unlock( &c->position_mutex );
+		}
 
 	// eat
 		if ( c->touchingFood && c->eat )

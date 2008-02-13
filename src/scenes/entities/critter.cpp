@@ -162,7 +162,7 @@ void Critter::process()
 
 	// calc used energy
 		energyUsed = 0.0f;
-		energyUsed += (float)brain.neuronsfired;
+		energyUsed += (float)brain.neuronsfired * ( 2 * size );
 		energyUsed += (float)motorneuronsfired * volume;
 
 		energyLevel -= energyUsed;
@@ -418,7 +418,10 @@ void Critter::draw()
 	
 	glPushMatrix();
 
-		glTranslatef( position.x, position.y, position.z );
+		//pthread_mutex_lock( &position_mutex );
+			glTranslatef( position.x, position.y, position.z );
+		//pthread_mutex_unlock( &position_mutex );
+
 		glRotatef( rotation, 0.0, 1.0, 0.0 );
 
 		glColor4f( color[0], color[1], color[2], color[3] );
