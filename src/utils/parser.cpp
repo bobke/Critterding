@@ -34,6 +34,12 @@ bool Parser::beginMatchesStrip(string stop, string &line)
 	else return false;
 }
 
+bool Parser::beginMatches(string stop, string &line)
+{
+	if ( line.substr( 0, stop.size() ) == stop ) return true;
+	else return false;
+}
+
 Parser::~Parser()
 {
 }

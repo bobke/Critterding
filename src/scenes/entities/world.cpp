@@ -38,7 +38,7 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 60.0f;
+	freeEnergy		= foodenergy * 40.0f;
 
 	maxcritters		= 1000;
 	mincritters		= 5;
@@ -158,6 +158,7 @@ void World::processCritter(unsigned int i)
 					{
 						mutant = true;
 						nc->mutate();
+
 					}
 					nc->setup();
 
@@ -176,7 +177,7 @@ void World::processCritter(unsigned int i)
 					{
 						cerr << "critter " << setw(3) << i << " PROCREATES (ad:" << setw(4) << c->adamdist << ")";
 
-						cerr << " N: " << setw(4) << c->totalneurons << " C: " << setw(5) << c->totalconnections;
+						cerr << " N: " << setw(4) << c->brain.totalneurons << " C: " << setw(5) << c->brain.totalconnections;
 						if ( mutant ) cerr << " ( mutant )";
 
 //						nc->rotation = nc->rotation * 180.0f;
@@ -240,7 +241,7 @@ void World::process()
 			i--;
 		}
 
-		// this should remove stuff from corners
+		// old food, this should remove stuff from corners
 		else if ( ++food[i]->totalFrames >= food[i]->maxtotalFrames )
 		{
 			freeEnergy += food[i]->energy;
@@ -265,7 +266,7 @@ void World::process()
 	for( unsigned int i=0; i < critters.size(); i++)
 	{
 		// see if energy level isn't below 0 -> die, or die of old age
-		if ( critters[i]->energyLevel < 0 )
+		if ( critters[i]->energyLevel < 0.0f )
 		{
 			cerr << "critter " << setw(3) << i << " DIES: starvation" << endl;
 			removeCritter(i);
@@ -397,7 +398,7 @@ void World::insertCritter()
 	c->color[2] = (float)randgen.get( 0,1000 ) / 1000;
 	c->color[3] = 0.0f;
 
-	c->randomArchitecture();
+	c->brain.randomArchitecture();
 	c->setup();
 
 	// record it's energy
@@ -405,7 +406,6 @@ void World::insertCritter()
 
 	critters.push_back( c );
 	positionCritter(critters.size()-1);
-
 }
 
 void World::positionCritter(unsigned int cid)
@@ -419,7 +419,6 @@ void World::positionCritter(unsigned int cid)
 
 void World::removeCritter(unsigned int cid)
 {
-
 	if ( critters[cid]->energyLevel > 0 )
 	{
 		Food *f = new Food;
@@ -548,7 +547,7 @@ void World::loadAllCritters()
 		fileH.open( files[i], content );
 
 		Critter *c = new Critter;
-		c->setArch(content);
+		c->loadCritter(content);
 		c->setup();
 		// record it's energy
 		freeEnergy -= c->energyLevel;
@@ -573,7 +572,7 @@ void World::saveAllCritters()
 	{
 		for ( unsigned int i = 0; i < critters.size(); i++ )
 		{
-			string content = critters[i]->getArch();
+			string content = critters[i]->saveCritter();
 		
 			// determine filename
 			stringstream filename;
