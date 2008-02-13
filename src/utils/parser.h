@@ -14,6 +14,7 @@ class Parser
 		string		returnUntillStrip(string stop, string &line);
 		string		returnUntill(string stop, string &line);
 
+		bool		beginMatches(string stop, string &line);
 		bool		beginMatchesStrip(string stop, string &line);
 };
 

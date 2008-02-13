@@ -48,24 +48,6 @@ Critter::Critter()
 	fireTimeTrigger		= 5;
 	minfireenergyLevel	= maxEnergyLevel * 0.0f;
 
-	// neural properties
-	percentSensoryConns	= 10;
-	percentMotor		= 10;
-
-	absmaxneurons		= 150;
-	absmaxconns		= 150;
-
-	minneurons		= 20;
-	maxneurons		= randgen.get( minneurons, absmaxneurons );
-
-	minconns		= 1;
-	maxconns		= randgen.get( minconns, absmaxconns );
-
-	totalneurons		= 0;
-	totalconnections	= 0;
-
-	mutatepercent		= 3;
-
 	eat			= false;
 	touchingFood		= false;
 	wasShot			= false;
@@ -76,7 +58,8 @@ Critter::Critter()
 	canProcreate		= false;
 	procreate		= false;
 
-	setupSensors();
+	brain.setupInputs( (items*visionDivider)+1+1+1+10 );
+	brain.setupOutputs(9);
 
 	// Allocate the neccessary memory.
 	outputImage = (unsigned char*)malloc(items);
@@ -132,24 +115,6 @@ Critter::Critter(Critter &other)
 	fireTimeTrigger		= other.fireTimeTrigger;
 	minfireenergyLevel	= other.minfireenergyLevel;
 
-	// neural properties
-	percentSensoryConns	= other.percentSensoryConns;
-	percentMotor		= other.percentMotor;
-
-	absmaxneurons		= other.absmaxneurons;
-	absmaxconns		= other.absmaxconns;
-
-	minneurons		= other.minneurons;
-	maxneurons		= other.maxneurons;
-
-	minconns		= other.minconns;
-	maxconns		= other.maxconns;
-
-	totalneurons		= 0;
-	totalconnections	= 0;
-
-	mutatepercent		= other.mutatepercent;
-
 	eat			= false;
 	touchingFood		= false;
 	wasShot			= false;
@@ -160,72 +125,61 @@ Critter::Critter(Critter &other)
 	canProcreate		= false;
 	procreate		= false;
 
-	setupSensors();
+	brain.setupInputs( (items*visionDivider)+1+1+1+10 );
+	brain.setupOutputs(9);
 
 	// Allocate the neccessary memory.
 	outputImage = (unsigned char*)malloc(items);
 
-	string arch = other.getArch();
-	setArch(arch);
+	string arch = other.saveCritter();
+	loadCritter(arch);
 }
 
 void Critter::process()
 {
 	// increase counters
-	totalFrames++;
-	procreateTimeCount++;
-	fireTimeCount++;
+		totalFrames++;
+		procreateTimeCount++;
+		fireTimeCount++;
 
-	// energy used
-	energyUsed = 0.0f;
+	// reset motor bools
+		eat		= false;
+		fire		= false;
+		procreate	= false;
 
-	// reset extern motor neurons
-	eat		= false;
-	fire		= false;
-	procreate	= false;
+	// wasShot (used in world)
+		wasShot		= false;
 
-	wasShot		= false;
+	// newpos = pos
+		prepNewPoss();
 
-	prepNewPoss();
-	procSensorNeurons();
-	procNeurons();
+	// reset energy used
+		energyUsed = 0.0f;
 
-//	for ( unsigned int i=0; i < 300; i++ ) procNeurons();
+	// SENSOR
+		procInputNeurons();
+
+	// INTER
+		brain.process();
+
+	// MOTOR
+		procOutputNeurons();
+
+	// calc used energy
+		energyUsed += (float)brain.neuronsfired;
+		energyUsed += (float)motorneuronsfired * volume;
 }
 
 void Critter::setup()
 {
-	setupArchitecture();
-	resizeByArch();
+	brain.setupArchitecture();
+
+	// resize by brain architecture properties
+	float newsize = ((maxSize/2) / brain.absmaxneurons) * brain.totalneurons + (((maxSize/2)/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
+	resize(newsize);
 }
 
-void Critter::setupSensors()
-{
-	SensorNeurons.clear();
-
-	// Vision Sensors
-	for ( unsigned int i=0; i < (items*visionDivider); i++ )
-	{
-		SensorNeurons.push_back( new NeuronSensor );
-	}
-
-	// is over food sensor neuron, it doesn't even need to know what or where it is, it should find it, it should learn to use it
-	SensorNeurons.push_back( new NeuronSensor );
-
-	// ready to fire a bullet neuron
-	SensorNeurons.push_back( new NeuronSensor );
-
-	// ready to procreate neuron
-	SensorNeurons.push_back( new NeuronSensor );
-
-	// a couple of energy status neurons
-	for ( unsigned int i=0; i < 10; i++ )
-	{
-		SensorNeurons.push_back( new NeuronSensor );
-	}
-}
-
-void Critter::procSensorNeurons()
+void Critter::procInputNeurons()
 {
 	// link vision array directly to the sensor neurons' output
 
@@ -233,8 +187,8 @@ void Critter::procSensorNeurons()
 	{
 		for ( unsigned int i=0; i < items; i++ )
 		{
-			if ( outputImage[i] ) SensorNeurons[i]->output = 1;
-			else  SensorNeurons[i]->output = 0;
+			if ( outputImage[i] )	brain.Inputs[i]->output = 1;
+			else			brain.Inputs[i]->output = 0;
 		}
 	}
 	else
@@ -245,36 +199,36 @@ void Critter::procSensorNeurons()
 			unsigned int NeuronToFire = (unsigned int)(((float)outputImage[i] / 256.0f) * (float)visionDivider);
 			for ( unsigned int z=0; z < visionDivider; z++ )
 			{
-				if ( outputImage[i] && z == NeuronToFire  ) SensorNeurons[target+z]->output = 1;
-				else SensorNeurons[target+z]->output = 0;
+				if ( outputImage[i] && z == NeuronToFire  )	brain.Inputs[target+z]->output = 1;
+				else						brain.Inputs[target+z]->output = 0;
 			}
 		}
 	}
 
 	// over food sensor neuron
 	unsigned int overstep = items*visionDivider;
-	if ( touchingFood ) SensorNeurons[overstep]->output = 1;
-	else SensorNeurons[overstep]->output = 0;
+	if ( touchingFood )	brain.Inputs[overstep]->output = 1;
+	else			brain.Inputs[overstep]->output = 0;
 
 	// can fire a bullet
 	overstep++;
 	canFire		= false;
 	if ( fireTimeCount > fireTimeTrigger && energyLevel > minfireenergyLevel )
 	{
-		SensorNeurons[overstep]->output = 1;
+		brain.Inputs[overstep]->output = 1;
 		canFire = true;
 	}
-	else SensorNeurons[overstep]->output = 0;
+	else brain.Inputs[overstep]->output = 0;
 
 	// can procreate sensor neuron
 	overstep++;
 	canProcreate	= false;
 	if ( procreateTimeCount > procreateTimeTrigger && energyLevel > minprocenergyLevel )
 	{
-		SensorNeurons[overstep]->output = 1;
+		brain.Inputs[overstep]->output = 1;
 		canProcreate = true;
 	}
-	else SensorNeurons[overstep]->output = 0;
+	else brain.Inputs[overstep]->output = 0;
 
 	// over energy neurons
 	overstep++;
@@ -282,120 +236,72 @@ void Critter::procSensorNeurons()
 	unsigned int count = 10 + overstep;
 	for ( unsigned int i = overstep; i < count; i++ )
 	{
-		if ( i == NeuronToFire ) SensorNeurons[i]->output = 1;
-		else SensorNeurons[i]->output = 0;
+		if ( i == NeuronToFire )	brain.Inputs[i]->output = 1;
+		else 				brain.Inputs[i]->output = 0;
 	}
 }
 
-void Critter::procNeurons()
+void Critter::procOutputNeurons()
 {
-	unsigned int nsize = Neurons.size();
-	for ( unsigned int i=0; i < nsize; i++ )
+
+	motorneuronsfired = 0;
+
+	// there are 9 motor neurons
+
+	if ( brain.Outputs[0]->output > 0 )
 	{
-		Neurons[i]->process();
-
-		// if neuron fires
-		if ( Neurons[i]->waitoutput != 0 )
-		{
-			// decrease energy
-			//energyLevel -= volume;
-			float cost = 1.0f;
-			energyLevel	-= cost;
-			energyUsed	+= cost;
-
-			// motor neuron check & exec
-			if ( Neurons[i]->isMotor )
-			{
-				float cost = volume;
-
-				// decrease energy again
-				energyLevel	-= cost;
-				energyUsed	+= cost;
-
-				// exec motor func
-				switch ( Neurons[i]->MotorFunc )
-				{
-					case 0:
-						moveForward();
-						break;
-					case 1:
-						moveBackward();
-						break;
-					case 2:
-						moveLeft();
-						break;
-					case 3:
-						moveRight();
-						break;
-					case 4:
-						rotateLeft();
-						break;
-					case 5:
-						rotateRight();
-						break;
-					case 6:
-						eat = true;
-						break;
-					case 7:
-						fire = true;
-						break;
-					case 8:
-						procreate = true;
-						break;
-				}
-			}
-		}
+		moveForward();
+		motorneuronsfired++;
 	}
 
-	// commit outputs at the end
-	for ( unsigned int i=0; i < Neurons.size(); i++ ) Neurons[i]->output = Neurons[i]->waitoutput;
-}
-
-void Critter::setupArchitecture()
-{
-	Neurons.clear();
-
-	// first create all neurons
-	for ( unsigned int i=0; i < NeuronArch.size(); i++ )
+	if ( brain.Outputs[1]->output > 0 )
 	{
-		NeuronInter *n = new NeuronInter;
-		n->fireThresh	= NeuronArch[i]->fireThresh;
-		n->iWeightRange	= NeuronArch[i]->iWeightRange;
-		n->isMotor	= NeuronArch[i]->isMotor;
-		n->MotorFunc	= NeuronArch[i]->MotorFunc;
-		Neurons.push_back( n );
+		moveBackward();
+		motorneuronsfired++;
 	}
 
-	for ( unsigned int i=0; i < NeuronArch.size(); i++ )
+	if ( brain.Outputs[2]->output > 0 )
 	{
-		for ( unsigned int j=0; j < NeuronArch[i]->connections.size(); j++ )
-		{
-			if ( NeuronArch[i]->connections[j]->type == 'n' )
-			{
-				Neurons[i]->connec( &Neurons[ NeuronArch[i]->connections[j]->id ]->output, NeuronArch[i]->connections[j]->weight );
-			}
-			else if ( NeuronArch[i]->connections[j]->type == 's' )
-			{
-				Neurons[i]->connec( &SensorNeurons[ NeuronArch[i]->connections[j]->id ]->output, NeuronArch[i]->connections[j]->weight );
-			}
-		}
+		moveLeft();
+		motorneuronsfired++;
 	}
-}
 
-void Critter::resizeByArch()
-{
-	doNeuronConnCount();
+	if ( brain.Outputs[3]->output > 0 )
+	{
+		moveRight();
+		motorneuronsfired++;
+	}
 
-	float newsize = ((maxSize/2) / absmaxneurons) * totalneurons + (((maxSize/2)/(absmaxneurons*absmaxconns))*totalconnections);
+	if ( brain.Outputs[4]->output > 0 )
+	{
+		rotateLeft();
+		motorneuronsfired++;
+	}
 
-	resize(newsize);
-}
+	if ( brain.Outputs[5]->output > 0 )
+	{
+		rotateRight();
+		motorneuronsfired++;
+	}
 
-void Critter::doNeuronConnCount()
-{
-	totalneurons		= NeuronArch.size();
-	totalconnections	= 0;
-	for ( unsigned int i = 0; i < totalneurons; i++ ) totalconnections += NeuronArch[i]->connections.size();
+	if ( brain.Outputs[6]->output > 0 )
+	{
+		eat = true;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[7]->output > 0 )
+	{
+		fire = true;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[8]->output > 0 )
+	{
+		procreate = true;
+		motorneuronsfired++;
+	}
+
 }
 
 void Critter::procFrame()
@@ -410,205 +316,27 @@ void Critter::procFrame()
 	glReadPixels(framePosX, framePosY, frameWidth, frameHeight, GL_RGBA, GL_UNSIGNED_BYTE, outputImage);
 }
 
-void Critter::randomArchitecture()
-{
-	NeuronArch.clear();
-
-	// random amount of neurons
-	unsigned int nAmount = randgen.get( minneurons, maxneurons );
-
-	// create the neurons
-	for ( unsigned i = 0; i < nAmount; i++ )
-	{
-		addRandomArchNeuron();
-	}
-
-	// link the neurons
-	for ( unsigned i = 0; i < nAmount; i++ )
-	{
-		// random amount of connections
-		unsigned int cAmount = randgen.get( minconns, maxconns );
-		for ( unsigned j = 0; j < cAmount; j++ )
-		{
-			addRandomArchConnection(i);
-		}
-	}
-
-}
-
-unsigned int Critter::addRandomArchNeuron()
-{
-	unsigned int ThreshMin = 10;
-	unsigned int ThreshMax = 100;
-	unsigned int MaxWeightRange = 20;
-
-	ArchNeuron *n = new ArchNeuron;
-	n->fireThresh	= randgen.get( ThreshMin, ThreshMax );
-	n->iWeightRange	= randgen.get( 1, MaxWeightRange );
-	n->isMotor = false;
-
-	if ( randgen.get( 1, 100 ) <= percentMotor )
-	{
-		n->isMotor = true;
-		n->MotorFunc = randgen.get( 0, 8 );
-	}
-
-	NeuronArch.push_back( n );
- 	return (NeuronArch.size()-1);
-}
-
-unsigned int Critter::addRandomArchConnection(unsigned int parentneuron)
-{
-	ArchConnection *c = new ArchConnection;
-
-	// type
-	c->type = 'n';
-	if ( randgen.get( 1, 100 ) <= percentSensoryConns ) c->type = 's';
-
-	// id
-	if ( c->type == 's' ) c->id = randgen.get( 0, SensorNeurons.size()-1 );
-	else if ( c->type == 'n' )
-	{
-		c->id = randgen.get( 0, NeuronArch.size()-1 );
-		while ( c->id == parentneuron )
-		{
-			c->id = randgen.get( 0, NeuronArch.size()-1 );
-		}
-	}
-	else exit(0);
-
-	// weight
-	c->weight = randgen.get( 1, NeuronArch[parentneuron]->iWeightRange );
-
-//	cerr << NeuronArch[parentneuron].iWeightRange << "  > " << c.weight << endl;
-
-	// reverse 1 in 2;
-	if ( randgen.get(1,2)==1 ) c->weight = (c->weight * -1);
-
-	NeuronArch[parentneuron]->connections.push_back( c );
- 	return (NeuronArch[parentneuron]->connections.size()-1);
-}
-
 void Critter::mutate()
 {
 	adamdist++;
 
-	doNeuronConnCount();
-	unsigned int runs = randgen.get(1, (int)(totalconnections/(100/mutatepercent)));
+	// mutate color
+	unsigned int mode = randgen.get(1,2);
 
-//	cerr << " N: " << totalneurons << " C: " << totalconnections;
-
-	for ( unsigned int i=0; i < runs; i++ )
+	unsigned int ncolor = randgen.get(0,2);
+	if ( mode == 1 )
 	{
-		// mutate color
-		unsigned int mode = randgen.get(1,2);
-
-			unsigned int ncolor = randgen.get(0,2);
-			if ( mode == 1 )
-			{
-				color[ncolor] += (float)randgen.get(1,3)/100.0f;
-				if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
-			}
-			else
-			{
-				color[ncolor] -= (float)randgen.get(1,3)/100.0f;
-				if ( color[ncolor] < 0.0f ) color[ncolor] = 0.0f;
-			}
-
-		mode = randgen.get(1,30);
-
-		// add a new neuron
-			if ( mode == 1 )
-			{
-				if ( NeuronArch.size() < absmaxneurons )
-				{
-					//cerr << "\t+N " << nid << endl;
-					unsigned int nid = addRandomArchNeuron();
-
-					// random amount of connections
-					unsigned int cAmount = randgen.get( minconns, maxconns );
-					for ( unsigned j = 0; j < cAmount; j++ )
-					{
-						addRandomArchConnection(nid);
-					}
-				}
-			}
-
-		// remove a neuron
-			else if ( mode == 2 )
-			{
-				// don't go under minimum neurons
-				//if ( NeuronArch.size() > minneurons )
-				//{
-					// pick a random neuron
-					unsigned int nid = randgen.get( 0, NeuronArch.size()-1 );
-					//cerr << "\t-N " << nid << endl;
-
-					// first remove all connections to this neuron, FIXME remove neuron too if no connections are left
-					for ( unsigned int i=0; i < NeuronArch.size(); i++ )
-					{
-						for ( unsigned int j=0; j < NeuronArch[i]->connections.size(); j++ )
-						{
-							if ( NeuronArch[i]->connections[j]->type == 'n' )
-							{
-								if ( NeuronArch[i]->connections[j]->id == nid )
-								{
-									delete NeuronArch[i]->connections[j];
-									NeuronArch[i]->connections.erase(NeuronArch[i]->connections.begin()+j);
-									j--;
-								}
-								// if higher id drop one
-								else if ( NeuronArch[i]->connections[j]->id > nid )
-								{
-									NeuronArch[i]->connections[j]->id--;
-								}
-							}
-						}
-					}
-
-					// remove the neuron itself, and all its connections
-//					for ( unsigned int c=0; c < NeuronArch[nid]->connections.size(); c++ ) delete NeuronArch[nid]->connections[c];
-					delete NeuronArch[nid];
-					NeuronArch.erase(NeuronArch.begin()+nid);
-				//}
-			}
-
-		// do something to a random input
-			else
-			{
-				// pick a random neuron
-				unsigned int nid = randgen.get( 0, NeuronArch.size()-1 );
-
-				unsigned int imode = randgen.get(1,2);
-
-				// add a new connection
-				if ( imode == 1 )
-				{
-					// don't go over maximum connections
-					if ( NeuronArch[nid]->connections.size() < absmaxconns )
-					{
-						//cerr << "\t+C " << nid << endl;
-						addRandomArchConnection(nid);
-					}
-				}
-				// remove a random connection
-				else
-				{
-					// don't go under minimum connections
-					if ( NeuronArch[nid]->connections.size() > minconns )
-					{
-						//cerr << "\t-C " << nid << endl;
-						unsigned int connid = randgen.get(0, NeuronArch[nid]->connections.size()-1);
-						delete NeuronArch[nid]->connections[connid];
-						NeuronArch[nid]->connections.erase(NeuronArch[nid]->connections.begin()+connid);
-					}
-				}
-
-			}
-
+		color[ncolor] += (float)randgen.get(1,3)/100.0f;
+		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
 	}
-}
+	else
+	{
+		color[ncolor] -= (float)randgen.get(1,3)/100.0f;
+		if ( color[ncolor] < 0.0f ) color[ncolor] = 0.0f;
+	}
 
+	brain.mutate();
+}
 
 
 void Critter::calcCamPos()
@@ -790,10 +518,10 @@ void Critter::resize(float newsize)
 
 // LOAD critter
 
-	void Critter::setArch(string &content)
+	void Critter::loadCritter(string &content)
 	{
-	
 		string line = parseH.returnUntillStrip( "\n", content );
+		string passToBrain;
 		while ( !line.empty() )
 		{
 			// color=0.03,0.82,0.12,0;
@@ -830,93 +558,29 @@ void Critter::resize(float newsize)
 					//cerr << "AD: " << AD  << endl;
 					if(EOF == sscanf(AD.c_str(), "%d", &adamdist)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
-	
+
+
 			// neuron(ft=24|iwr=20|mtr=4|inputs(|s,78,6|s,186,-12|s,123,10|n,19,5|n,3,3|n,11,-19));
-				else if ( parseH.beginMatchesStrip( "neuron(", line ) )
+				else if ( parseH.beginMatches( "neuron(", line ) )
 				{
-					ArchNeuron *n = new ArchNeuron;
-					NeuronArch.push_back( n );
-					unsigned int nid = (NeuronArch.size()-1);
-	
-					if ( parseH.beginMatchesStrip( "ft=", line ) )
-					{
-						string FT = parseH.returnUntillStrip( "|", line );
-						//cerr << "FT: " << FT  << endl;
-						if(EOF == sscanf(FT.c_str(), "%d", &NeuronArch[nid]->fireThresh)) cerr << "ERROR INSERTING CRITTER" << endl;
-					}
-	
-					if ( parseH.beginMatchesStrip( "iwr=", line ) )
-					{
-						string IWR = parseH.returnUntillStrip( "|", line );
-						//cerr << "IWR: " << IWR  << endl;
-						if(EOF == sscanf(IWR.c_str(), "%d", &NeuronArch[nid]->iWeightRange)) cerr << "ERROR INSERTING CRITTER" << endl;
-					}
-	
-					if ( parseH.beginMatchesStrip( "mtr=", line ) )
-					{
-						string MTR = parseH.returnUntillStrip( "|", line );
-						//cerr << "MTR: " << MTR  << endl;
-						if(EOF == sscanf(MTR.c_str(), "%d", &NeuronArch[nid]->MotorFunc)) cerr << "ERROR INSERTING CRITTER" << endl;
-						NeuronArch[nid]->isMotor = true;
-					}
-	
-					if ( parseH.beginMatchesStrip( "inputs(|", line ) )
-					{
-						string INPUTS = parseH.returnUntillStrip( ")", line );
-						INPUTS.append("|");
-						//cerr << "INPUTS: " << INPUTS  << endl;
-	
-						string inp = parseH.returnUntillStrip( "|", INPUTS );
-						while ( !inp.empty() )
-						{
-							ArchConnection *c = new ArchConnection;
-							NeuronArch[nid]->connections.push_back( c );
-							unsigned int cid = (NeuronArch[nid]->connections.size()-1);
-	
-	
-							string TYPE = parseH.returnUntillStrip( ",", inp );
-							string ID = parseH.returnUntillStrip( ",", inp );
-							string WEIGHT = inp;
-	// 						cerr << "TYPE: " << TYPE  << endl;
-	// 						cerr << "ID: " << ID << endl;
-	// 						cerr << "WEIGHT: " << WEIGHT << endl;
-							if(EOF == sscanf(TYPE.c_str(), "%c", &NeuronArch[nid]->connections[cid]->type)) cerr << "ERROR INSERTING CRITTER" << endl;
-							if(EOF == sscanf(ID.c_str(), "%d", &NeuronArch[nid]->connections[cid]->id)) cerr << "ERROR INSERTING CRITTER" << endl;
-							if(EOF == sscanf(WEIGHT.c_str(), "%d", &NeuronArch[nid]->connections[cid]->weight)) cerr << "ERROR INSERTING CRITTER" << endl;
-	
-							inp = parseH.returnUntillStrip( "|", INPUTS );
-						}
-					}
+					passToBrain.append(line);
+					passToBrain.append("\n");
+					//line.clear();
 				}
 	
 			line = parseH.returnUntillStrip( "\n", content );
 		}
+		brain.setArch(passToBrain);
 	}
 
-	string Critter::getArch()
+	string Critter::saveCritter()
 	{
 		stringstream buf;
 		buf << "color=" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << ";\n";
 		buf << "visionres=" << frameWidth << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
-	
-		// neuronal arch & connections
-		for ( unsigned int i = 0; i < NeuronArch.size(); i++ )
-		{
-			// neuron info
-			buf << "neuron(";
-			buf << "ft=" << NeuronArch[i]->fireThresh;
-			buf << "|iwr=" << NeuronArch[i]->iWeightRange;
-			if ( NeuronArch[i]->isMotor ) buf << "|mtr=" << NeuronArch[i]->MotorFunc;
-	
-			// inputs
-			buf << "|inputs(";
-			for ( unsigned int j = 0; j < NeuronArch[i]->connections.size(); j++ )
-			{
-				buf << "|" << NeuronArch[i]->connections[j]->type << "," << NeuronArch[i]->connections[j]->id << "," << NeuronArch[i]->connections[j]->weight;
-			}
-			buf << "));\n";
-		}
+
+		buf << brain.getArch();
 
 		return buf.str();
 	}
@@ -925,9 +589,6 @@ void Critter::resize(float newsize)
 Critter::~Critter()
 {
 	free(outputImage);
-	for ( unsigned int i=0; i < NeuronArch.size(); i++ )	delete NeuronArch[i];
-	for ( unsigned int i=0; i < SensorNeurons.size(); i++ )	delete SensorNeurons[i];
-	for ( unsigned int i=0; i < Neurons.size(); i++ )	delete Neurons[i];
 }
 
 
