@@ -168,13 +168,67 @@ void Critter::process()
 		energyLevel -= energyUsed;
 }
 
-void Critter::setup()
+void Critter::procOutputNeurons()
 {
-	brain.setupArchitecture();
 
-	// resize by brain architecture properties
-	float newsize = ((maxSize/2) / brain.absmaxneurons) * brain.totalneurons + (((maxSize/2)/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
-	resize(newsize);
+	motorneuronsfired = 0;
+
+	// there are 9 motor neurons
+
+	if ( brain.Outputs[0]->output > 0 )
+	{
+		moveForward();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[1]->output > 0 )
+	{
+		moveBackward();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[2]->output > 0 )
+	{
+		moveLeft();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[3]->output > 0 )
+	{
+		moveRight();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[4]->output > 0 )
+	{
+		rotateLeft();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[5]->output > 0 )
+	{
+		rotateRight();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[6]->output > 0 )
+	{
+		eat = true;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[7]->output > 0 )
+	{
+		fire = true;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[8]->output > 0 )
+	{
+		procreate = true;
+		motorneuronsfired++;
+	}
+
 }
 
 void Critter::procInputNeurons()
@@ -239,69 +293,6 @@ void Critter::procInputNeurons()
 	}
 }
 
-void Critter::procOutputNeurons()
-{
-
-	motorneuronsfired = 0;
-
-	// there are 9 motor neurons
-
-	if ( brain.Outputs[0]->output > 0 )
-	{
-		moveForward();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[1]->output > 0 )
-	{
-		moveBackward();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[2]->output > 0 )
-	{
-		moveLeft();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[3]->output > 0 )
-	{
-		moveRight();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[4]->output > 0 )
-	{
-		rotateLeft();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[5]->output > 0 )
-	{
-		rotateRight();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[6]->output > 0 )
-	{
-		eat = true;
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[7]->output > 0 )
-	{
-		fire = true;
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[8]->output > 0 )
-	{
-		procreate = true;
-		motorneuronsfired++;
-	}
-
-}
-
 void Critter::procFrame()
 {
 	// Clear the variable.
@@ -312,6 +303,24 @@ void Critter::procFrame()
 //	glReadBuffer(GL_FRONT);
 	
 	glReadPixels(framePosX, framePosY, frameWidth, frameHeight, GL_RGBA, GL_UNSIGNED_BYTE, outputImage);
+}
+
+void Critter::setup()
+{
+	brain.setupArchitecture();
+
+	// resize by brain architecture properties
+	float newsize = ((maxSize/2) / brain.absmaxneurons) * brain.totalneurons + (((maxSize/2)/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
+	resize(newsize);
+
+	volume		= size * size * size * 100.0f;
+
+	speedfactor	= (maxSize-size) / 10.0f; // FIXME HACK lower me :)
+//	speedfactor	= 100.0f / (volume*10000.0f);
+
+// 	maxEnergyLevel	= 50000.0f * size;
+//	maxtotalFrames	= 50000.0f * size;
+
 }
 
 void Critter::mutate()
@@ -414,14 +423,6 @@ void Critter::resize(float newsize)
 {
 	size		= newsize;
 	halfsize	= (newsize / 2.0f);
-
-	volume		= size * size * size * 100.0f;
-
-	speedfactor	= (maxSize-size) / 10.0f; // FIXME HACK lower me :)
-//	speedfactor	= 100.0f / (volume*10000.0f);
-
-// 	maxEnergyLevel	= 50000.0f * size;
-//	maxtotalFrames	= 50000.0f * size;
 
 	// change position according to height
 	position.y	= halfsize;
