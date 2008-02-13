@@ -33,7 +33,6 @@ Critter::Critter()
 	// energy
 	maxEnergyLevel		= 5000.0f;
 	energyLevel		= maxEnergyLevel / 2.0f;
-	energyUsed		= 0.0f;
 
 	// old age death
 	totalFrames		= 0;
@@ -100,7 +99,6 @@ Critter::Critter(Critter &other)
 	// energy
 	maxEnergyLevel		= other.maxEnergyLevel;
 	energyLevel		= other.energyLevel;
-	energyUsed		= 0.0f;
 
 	// old age death
 	totalFrames		= 0;
@@ -153,9 +151,6 @@ void Critter::process()
 	// newpos = pos
 		prepNewPoss();
 
-	// reset energy used
-		energyUsed = 0.0f;
-
 	// SENSOR
 		procInputNeurons();
 
@@ -166,8 +161,11 @@ void Critter::process()
 		procOutputNeurons();
 
 	// calc used energy
+		energyUsed = 0.0f;
 		energyUsed += (float)brain.neuronsfired;
 		energyUsed += (float)motorneuronsfired * volume;
+
+		energyLevel -= energyUsed;
 }
 
 void Critter::setup()
