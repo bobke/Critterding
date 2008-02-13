@@ -3,6 +3,9 @@
 Brain::Brain()
 {
 
+	// brain properties
+	symmetric		= true;
+
 	// neural properties
 	percentSensoryConns	= 10;
 	percentMotor		= 10;
@@ -16,7 +19,7 @@ Brain::Brain()
 	minconns		= 1;
 	maxconns		= randgen.get( minconns, absmaxconns );
 
-	mutatepercent		= 3;
+	mutatepercent		= 5;
 }
 
 void Brain::process()
@@ -95,9 +98,16 @@ void Brain::setupArchitecture()
 			{
 				n->connec( &Neurons[ an->connections[j]->id ]->output, an->connections[j]->weight );
 			}
-			else if ( an->connections[j]->type == 's' )
+			else if ( an->connections[j]->id < totalInputs )
 			{
-				n->connec( &Inputs[ an->connections[j]->id ]->output, an->connections[j]->weight );
+				if ( an->connections[j]->type == 's' )
+				{
+					n->connec( &Inputs[ an->connections[j]->id ]->output, an->connections[j]->weight );
+				}
+			}
+			else
+			{
+				cerr << "error, cannot link to input neuron " << an->connections[j]->id << endl;
 			}
 
 			// count connections

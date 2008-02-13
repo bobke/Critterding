@@ -38,12 +38,12 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 40.0f;
+	freeEnergy		= foodenergy * 100.0f;
 
 	maxcritters		= 1000;
 	mincritters		= 5;
 
-	mutationRate		= 15; // %
+	mutationRate		= 20; // %
 
 	grid.resize(size);
 	floor.resize(size);
