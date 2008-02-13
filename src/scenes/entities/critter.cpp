@@ -151,84 +151,23 @@ void Critter::process()
 	// newpos = pos
 		prepNewPoss();
 
-	// SENSOR
+	// SENSORS
 		procInputNeurons();
 
-	// INTER
+	// INTERS
 		brain.process();
 
-	// MOTOR
+	// MOTORS
 		procOutputNeurons();
 
-	// calc used energy
+	// calc used energy, energyUsed is used in world aswell, don't remove
 		energyUsed = 0.0f;
-		energyUsed += (float)brain.neuronsfired * ( 2 * size );
-		energyUsed += (float)motorneuronsfired * volume;
 
-		energyLevel -= energyUsed;
-}
+		energyUsed += (float)brain.neuronsfired	* size;
+		energyUsed += (float)motorneuronsfired	* volume;
 
-void Critter::procOutputNeurons()
-{
-
-	motorneuronsfired = 0;
-
-	// there are 9 motor neurons
-
-	if ( brain.Outputs[0]->output > 0 )
-	{
-		moveForward();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[1]->output > 0 )
-	{
-		moveBackward();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[2]->output > 0 )
-	{
-		moveLeft();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[3]->output > 0 )
-	{
-		moveRight();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[4]->output > 0 )
-	{
-		rotateLeft();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[5]->output > 0 )
-	{
-		rotateRight();
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[6]->output > 0 )
-	{
-		eat = true;
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[7]->output > 0 )
-	{
-		fire = true;
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[8]->output > 0 )
-	{
-		procreate = true;
-		motorneuronsfired++;
-	}
-
+	// apply energy usage
+	energyLevel -= energyUsed;
 }
 
 void Critter::procInputNeurons()
@@ -302,6 +241,69 @@ void Critter::procInputNeurons()
 		cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
 		exit(0);
 	}*/
+}
+
+void Critter::procOutputNeurons()
+{
+
+	motorneuronsfired = 0;
+
+	// there are 9 motor neurons
+
+	if ( brain.Outputs[0]->output > 0 )
+	{
+		moveForward();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[1]->output > 0 )
+	{
+		moveBackward();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[2]->output > 0 )
+	{
+		moveLeft();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[3]->output > 0 )
+	{
+		moveRight();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[4]->output > 0 )
+	{
+		rotateLeft();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[5]->output > 0 )
+	{
+		rotateRight();
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[6]->output > 0 )
+	{
+		eat = true;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[7]->output > 0 )
+	{
+		fire = true;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[8]->output > 0 )
+	{
+		procreate = true;
+		motorneuronsfired++;
+	}
+
 }
 
 void Critter::procFrame()
@@ -572,6 +574,21 @@ void Critter::resize(float newsize)
 					if(EOF == sscanf(AD.c_str(), "%d", &adamdist)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 
+			// drawevery=1;
+				else if ( parseH.beginMatchesStrip( "drawevery=", line ) )
+				{
+					string DE = parseH.returnUntillStrip( ";", line );
+					//cerr << "AD: " << AD  << endl;
+					if(EOF == sscanf(DE.c_str(), "%d", &drawEvery)) cerr << "ERROR INSERTING CRITTER" << endl;
+				}
+
+			// visiondivider=1;
+				else if ( parseH.beginMatchesStrip( "visiondivider=", line ) )
+				{
+					string VD = parseH.returnUntillStrip( ";", line );
+					//cerr << "AD: " << AD  << endl;
+					if(EOF == sscanf(VD.c_str(), "%d", &visionDivider)) cerr << "ERROR INSERTING CRITTER" << endl;
+				}
 
 			// neuron(ft=24|iwr=20|mtr=4|inputs(|s,78,6|s,186,-12|s,123,10|n,19,5|n,3,3|n,11,-19));
 				else if ( parseH.beginMatches( "neuron(", line ) )
@@ -592,6 +609,8 @@ void Critter::resize(float newsize)
 		buf << "color=" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << ";\n";
 		buf << "visionres=" << frameWidth << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
+		buf << "drawevery=" << drawEvery << ";\n";
+		buf << "visiondivider=" << visionDivider << ";\n";
 
 		buf << brain.getArch();
 
