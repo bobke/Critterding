@@ -234,63 +234,74 @@ void Critter::procOutputNeurons()
 void Critter::procInputNeurons()
 {
 	// link vision array directly to the sensor neurons' output
-
-	if ( visionDivider == 1 )
-	{
-		for ( unsigned int i=0; i < items; i++ )
+		if ( visionDivider == 1 )
 		{
-			if ( outputImage[i] )	brain.Inputs[i]->output = 1;
-			else			brain.Inputs[i]->output = 0;
-		}
-	}
-	else
-	{
-		for ( unsigned int i=0; i < items; i++ )
-		{
-			unsigned target = i * visionDivider;
-			unsigned int NeuronToFire = (unsigned int)(((float)outputImage[i] / 256.0f) * (float)visionDivider);
-			for ( unsigned int z=0; z < visionDivider; z++ )
+			for ( unsigned int i=0; i < items; i++ )
 			{
-				if ( outputImage[i] && z == NeuronToFire  )	brain.Inputs[target+z]->output = 1;
-				else						brain.Inputs[target+z]->output = 0;
+				if ( outputImage[i] )	brain.Inputs[i]->output = 1;
+				else			brain.Inputs[i]->output = 0;
 			}
 		}
-	}
+		else
+		{
+			for ( unsigned int i=0; i < items; i++ )
+			{
+				unsigned target = i * visionDivider;
+				unsigned int NeuronToFire = (unsigned int)(((float)outputImage[i] / 256.0f) * (float)visionDivider);
+				for ( unsigned int z=0; z < visionDivider; z++ )
+				{
+					if ( outputImage[i] && z == NeuronToFire  )	brain.Inputs[target+z]->output = 1;
+					else						brain.Inputs[target+z]->output = 0;
+				}
+			}
+		}
+
+	unsigned int overstep = items*visionDivider;
 
 	// over food sensor neuron
-	unsigned int overstep = items*visionDivider;
-	if ( touchingFood )	brain.Inputs[overstep]->output = 1;
-	else			brain.Inputs[overstep]->output = 0;
+		if ( touchingFood )	brain.Inputs[overstep]->output = 1;
+		else			brain.Inputs[overstep]->output = 0;
+
+	overstep++;
 
 	// can fire a bullet
+		canFire		= false;
+		if ( fireTimeCount > fireTimeTrigger && energyLevel > minfireenergyLevel )
+		{
+			brain.Inputs[overstep]->output = 1;
+			canFire = true;
+		}
+		else brain.Inputs[overstep]->output = 0;
+
 	overstep++;
-	canFire		= false;
-	if ( fireTimeCount > fireTimeTrigger && energyLevel > minfireenergyLevel )
-	{
-		brain.Inputs[overstep]->output = 1;
-		canFire = true;
-	}
-	else brain.Inputs[overstep]->output = 0;
 
 	// can procreate sensor neuron
-	overstep++;
-	canProcreate	= false;
-	if ( procreateTimeCount > procreateTimeTrigger && energyLevel > minprocenergyLevel )
-	{
-		brain.Inputs[overstep]->output = 1;
-		canProcreate = true;
-	}
-	else brain.Inputs[overstep]->output = 0;
+		canProcreate	= false;
+		if ( procreateTimeCount > procreateTimeTrigger && energyLevel > minprocenergyLevel )
+		{
+			brain.Inputs[overstep]->output = 1;
+			canProcreate = true;
+		}
+		else brain.Inputs[overstep]->output = 0;
 
-	// over energy neurons
 	overstep++;
-	unsigned int NeuronToFire = (int)((energyLevel / maxEnergyLevel) * 10) + overstep;
-	unsigned int count = 10 + overstep;
-	for ( unsigned int i = overstep; i < count; i++ )
+
+		// over energy neurons
+		unsigned int NeuronToFire = (int)((energyLevel / maxEnergyLevel) * 10) + overstep;
+		unsigned int count = 10 + overstep;
+		while ( overstep < count )
+		{
+			if ( overstep == NeuronToFire )	brain.Inputs[overstep]->output = 1;
+			else 				brain.Inputs[overstep]->output = 0;
+			overstep++;
+		}
+
+	// debugging check
+/*	if ( overstep != brain.Inputs.size() )
 	{
-		if ( i == NeuronToFire )	brain.Inputs[i]->output = 1;
-		else 				brain.Inputs[i]->output = 0;
-	}
+		cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
+		exit(0);
+	}*/
 }
 
 void Critter::procFrame()

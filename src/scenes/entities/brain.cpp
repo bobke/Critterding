@@ -24,45 +24,44 @@ void Brain::process()
 	neuronsfired = 0;
 
 	// clear Motor Outputs
-	for ( unsigned int i=0; i < Outputs.size(); i++ )
-	{
-		Outputs[i]->output = 0;
-		//cerr << "output " << i << " set to " << Outputs[i]->output << endl;
-	}
+	for ( unsigned int i=0; i < totalOutputs; i++ ) Outputs[i]->output = 0;
 
-	unsigned int nsize = Neurons.size();
-	for ( unsigned int i=0; i < nsize; i++ )
+	for ( unsigned int i=0; i < totalneurons; i++ )
 	{
-		Neurons[i]->process();
+		NeuronInter *n = Neurons[i];
+
+		n->process();
 
 		// if neuron fires
-		if ( Neurons[i]->waitoutput != 0 )
+		if ( n->waitoutput != 0 )
 		{
 			neuronsfired++;
 
 			// motor neuron check & exec
-			if ( Neurons[i]->isMotor )
+			if ( n->isMotor )
 			{
-				Outputs[Neurons[i]->MotorFunc]->output++;
+				Outputs[n->MotorFunc]->output++;
 				//cerr << "neuron " << i << " fired, motor is " << Neurons[i]->MotorFunc << " total now " << Outputs[Neurons[i]->MotorFunc]->output << endl;
 			}
 		}
 	}
 
 	// commit outputs at the end
-	for ( unsigned int i=0; i < Neurons.size(); i++ ) Neurons[i]->output = Neurons[i]->waitoutput;
+	for ( unsigned int i=0; i < totalneurons; i++ ) Neurons[i]->output = Neurons[i]->waitoutput;
 }
 
 void Brain::setupInputs(unsigned int number)
 {
 	Inputs.clear();
 	for ( unsigned int i=0; i < number; i++ ) Inputs.push_back( new NeuronSensor() );
+	totalInputs = number;
 }
 
 void Brain::setupOutputs(unsigned int number)
 {
 	Outputs.clear();
 	for ( unsigned int i=0; i < number; i++ ) Outputs.push_back( new NeuronSensor() );
+	totalOutputs = number;
 }
 
 void Brain::setupArchitecture()
@@ -72,8 +71,11 @@ void Brain::setupArchitecture()
 	totalneurons = 0;
 	totalconnections = 0;
 
+	// count neurons, which is neuronArch size
+	totalneurons = NeuronArch.size();
+
 	// first create all neurons
-	for ( unsigned int i=0; i < NeuronArch.size(); i++ )
+	for ( unsigned int i=0; i < totalneurons; i++ )
 	{
 		NeuronInter *n = new NeuronInter;
 		n->fireThresh	= NeuronArch[i]->fireThresh;
@@ -83,27 +85,25 @@ void Brain::setupArchitecture()
 		Neurons.push_back( n );
 	}
 
-	for ( unsigned int i=0; i < NeuronArch.size(); i++ )
+	for ( unsigned int i=0; i < totalneurons; i++ )
 	{
-		for ( unsigned int j=0; j < NeuronArch[i]->connections.size(); j++ )
+		ArchNeuron *an = NeuronArch[i];
+		NeuronInter *n = Neurons[i];
+		for ( unsigned int j=0; j < an->connections.size(); j++ )
 		{
-			if ( NeuronArch[i]->connections[j]->type == 'n' )
+			if ( an->connections[j]->type == 'n' )
 			{
-				Neurons[i]->connec( &Neurons[ NeuronArch[i]->connections[j]->id ]->output, NeuronArch[i]->connections[j]->weight );
+				n->connec( &Neurons[ an->connections[j]->id ]->output, an->connections[j]->weight );
 			}
-			else if ( NeuronArch[i]->connections[j]->type == 's' )
+			else if ( an->connections[j]->type == 's' )
 			{
-				Neurons[i]->connec( &Inputs[ NeuronArch[i]->connections[j]->id ]->output, NeuronArch[i]->connections[j]->weight );
+				n->connec( &Inputs[ an->connections[j]->id ]->output, an->connections[j]->weight );
 			}
 
 			// count connections
 			totalconnections++;
 		}
 	}
-
-	// count neurons, which is neuronArch size
-	totalneurons = NeuronArch.size();
-
 }
 
 void Brain::randomArchitecture()
@@ -114,20 +114,15 @@ void Brain::randomArchitecture()
 	unsigned int nAmount = randgen.get( minneurons, maxneurons );
 
 	// create the neurons
-	for ( unsigned i = 0; i < nAmount; i++ )
-	{
-		addRandomArchNeuron();
-	}
+	for ( unsigned i = 0; i < nAmount; i++ ) addRandomArchNeuron();
 
 	// link the neurons
 	for ( unsigned i = 0; i < nAmount; i++ )
 	{
 		// random amount of connections
 		unsigned int cAmount = randgen.get( minconns, maxconns );
-		for ( unsigned j = 0; j < cAmount; j++ )
-		{
-			addRandomArchConnection(i);
-		}
+
+		for ( unsigned j = 0; j < cAmount; j++ ) addRandomArchConnection(i);
 	}
 }
 
@@ -145,7 +140,7 @@ unsigned int Brain::addRandomArchNeuron()
 	if ( randgen.get( 1, 100 ) <= percentMotor )
 	{
 		n->isMotor = true;
-		n->MotorFunc = randgen.get( 0, 8 );
+		n->MotorFunc = randgen.get( 0, totalOutputs-1 );
 	}
 
 	NeuronArch.push_back( n );
@@ -161,7 +156,7 @@ unsigned int Brain::addRandomArchConnection(unsigned int parentneuron)
 	if ( randgen.get( 1, 100 ) <= percentSensoryConns ) c->type = 's';
 
 	// id
-	if ( c->type == 's' ) c->id = randgen.get( 0, Inputs.size()-1 );
+	if ( c->type == 's' ) c->id = randgen.get( 0, totalInputs-1 );
 	else if ( c->type == 'n' )
 	{
 		c->id = randgen.get( 0, NeuronArch.size()-1 );
@@ -175,8 +170,6 @@ unsigned int Brain::addRandomArchConnection(unsigned int parentneuron)
 	// weight
 	c->weight = randgen.get( 1, NeuronArch[parentneuron]->iWeightRange );
 
-//	cerr << NeuronArch[parentneuron].iWeightRange << "  > " << c.weight << endl;
-
 	// reverse 1 in 2;
 	if ( randgen.get(1,2)==1 ) c->weight = (c->weight * -1);
 
@@ -186,14 +179,12 @@ unsigned int Brain::addRandomArchConnection(unsigned int parentneuron)
 
 void Brain::mutate()
 {
+	// have to do count cuz setupArch not done yet
 	totalneurons		= NeuronArch.size();
 	totalconnections	= 0;
 	for ( unsigned int i = 0; i < totalneurons; i++ ) totalconnections += NeuronArch[i]->connections.size();
 
 	unsigned int runs = randgen.get(1, (int)(totalconnections/(100/mutatepercent)));
-
-//	cerr << " N: " << totalneurons << " C: " << totalconnections;
-
 	for ( unsigned int i=0; i < runs; i++ )
 	{
 
