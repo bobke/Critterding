@@ -120,8 +120,6 @@ class Critter
 
 		void			procInputNeurons();
 		void			procOutputNeurons();
-		void			procNeurons();
-
 };
 
 #endif
