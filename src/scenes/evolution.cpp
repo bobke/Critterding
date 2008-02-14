@@ -19,8 +19,16 @@ void Evolution::draw()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 	}
-	
-		camera.place(width, height);
+
+
+		if ( world.isSelected )
+		{
+			camera.follow(width, height, world.critters[world.selectedCritter]);
+		}
+		else
+		{
+			camera.place(width, height);
+		}
 	
 		world.drawWithGrid();
 	
@@ -85,6 +93,18 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_a:
 		break;
 		case XK_e:
+		break;
+		case XK_f:
+			if ( world.isSelected )
+			{
+				world.selectedCritter = 0;
+				world.isSelected = false;
+			}
+			else if ( !world.critters.empty() )
+			{
+				world.selectedCritter = world.critters.size()-1;
+				world.isSelected = true;
+			}
 		break;
 		case XK_w:
 			world.createWall();

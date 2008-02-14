@@ -25,6 +25,7 @@ BUTTONS
    x             : destroy the wall
    c             : toggle gate in wall center
 
+   f             : follow the newest critter untill it's death
 
  - Camera Operations
 

@@ -63,6 +63,9 @@ class World{
 		vector<unsigned int>	cqueue;
 		pthread_mutex_t		cqueue_mutex;
 
+		unsigned int		selectedCritter;
+		bool			isSelected;
+
 		void			process();
 		void			drawWithGrid();
 		void			drawWithFloor();
