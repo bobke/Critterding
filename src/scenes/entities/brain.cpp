@@ -19,7 +19,7 @@ Brain::Brain()
 	minconns		= 1;
 	maxconns		= randgen.get( minconns, absmaxconns );
 
-	mutatepercent		= 5;
+	mutatepercent		= 10;
 }
 
 void Brain::process()
