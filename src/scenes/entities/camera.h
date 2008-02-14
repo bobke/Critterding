@@ -8,6 +8,7 @@
 #define CAMERA_H
 #include "GL/gl.h"
 #include "vector3f.h"
+#include "critter.h"
 
 class Camera{
 public:
@@ -22,6 +23,7 @@ public:
 	Vector3f rotation;
 
 	void place(unsigned int *width, unsigned int *height);
+	void follow(unsigned int *width, unsigned int *height, Critter *c);
 
 	void lookRight(const float& factor);
 	void lookLeft(const float& factor);

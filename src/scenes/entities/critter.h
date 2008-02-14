@@ -68,6 +68,7 @@ class Critter
 		bool			wasShot;
 		unsigned char		*outputImage;
 		unsigned int		items;
+		Vector3f		cameraposition;
 
 		void			draw();
 		void			place();
@@ -107,7 +108,6 @@ class Critter
 		unsigned int		itemsPerRow;
 
 		unsigned int		visionDivider;
-		Vector3f		cameraposition;
 
 		bool			moved;
 		unsigned int		motorneuronsfired;

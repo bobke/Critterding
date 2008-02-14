@@ -34,11 +34,14 @@ World::World()
 {
 //	Infobar *infobar	= Infobar::instance();
 
+	selectedCritter		= 0;
+	isSelected		= false;
+
 	size			= 7;
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 60.0f;
+	freeEnergy		= foodenergy * 40.0f;
 
 	maxcritters		= 1000;
 	mincritters		= 5;
@@ -182,7 +185,7 @@ void World::processCritter(unsigned int i)
 
 					if (spotIsFree(nc->newposition, nc->size, i))
 					{
-						cerr << "critter " << setw(3) << i << " PROCREATES (ad:" << setw(4) << c->adamdist << ")";
+						cerr << "critter " << setw(3) << i << " PROCREATES (ad: " << setw(4) << c->adamdist << ")";
 
 						cerr << " N: " << setw(4) << c->brain.totalneurons << " C: " << setw(5) << c->brain.totalconnections;
 						if ( mutant ) cerr << " ( mutant )";
@@ -437,10 +440,25 @@ void World::removeCritter(unsigned int cid)
 	}
 	else freeEnergy += critters[cid]->energyLevel;
 
+	// adapt selection
+	if ( isSelected )
+	{
+		if ( selectedCritter == cid )
+		{
+//			selectedCritter = critters.size()-1;
+			selectedCritter = 0;
+			isSelected = false;
+		}
+		else if ( selectedCritter > cid )
+		{
+			selectedCritter--;
+		}
+	}
+
 	delete critters[cid];
 	critters.erase(critters.begin()+cid);
 
-	for ( unsigned int c = 0; c < critters.size(); c++ )
+	for ( unsigned int c = cid; c < critters.size(); c++ )
 	{
 		critters[c]->calcFramePos(c);
 	}
