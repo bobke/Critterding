@@ -38,12 +38,14 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 100.0f;
+	freeEnergy		= foodenergy * 60.0f;
 
 	maxcritters		= 1000;
 	mincritters		= 5;
 
-	mutationRate		= 20; // %
+	mutationRate		= 33; // %
+
+	flipnewbornes		= true;
 
 	grid.resize(size);
 	floor.resize(size);
@@ -185,7 +187,8 @@ void World::processCritter(unsigned int i)
 						cerr << " N: " << setw(4) << c->brain.totalneurons << " C: " << setw(5) << c->brain.totalconnections;
 						if ( mutant ) cerr << " ( mutant )";
 
-//						nc->rotation = nc->rotation * 180.0f;
+						// optional rotate 180 of new borne
+						if ( flipnewbornes ) nc->rotation = nc->rotation + 180.0f;
 
 						// split energies in half
 						nc->energyLevel = c->energyLevel/2.0f;

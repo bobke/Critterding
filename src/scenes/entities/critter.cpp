@@ -163,8 +163,8 @@ void Critter::process()
 	// calc used energy, energyUsed is used in world aswell, don't remove
 		energyUsed = 0.0f;
 
-		energyUsed += (float)brain.neuronsfired	* size;
-		energyUsed += (float)motorneuronsfired	* volume;
+		energyUsed += (float)brain.neuronsfired * (2*size);
+		energyUsed += (float)motorneuronsfired * volume;
 
 	// apply energy usage
 	energyLevel -= energyUsed;
@@ -245,7 +245,6 @@ void Critter::procInputNeurons()
 
 void Critter::procOutputNeurons()
 {
-
 	motorneuronsfired = 0;
 
 	// there are 9 motor neurons
@@ -346,13 +345,13 @@ void Critter::mutate()
 	unsigned int ncolor = randgen.get(0,2);
 	if ( mode == 1 )
 	{
-		color[ncolor] += (float)randgen.get(1,3)/100.0f;
+		color[ncolor] += (float)randgen.get(1,20)/100.0f;
 		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
 	}
 	else
 	{
-		color[ncolor] -= (float)randgen.get(1,3)/100.0f;
-		if ( color[ncolor] < 0.0f ) color[ncolor] = 0.0f;
+		color[ncolor] -= (float)randgen.get(1,20)/100.0f;
+		if ( color[ncolor] < 0.05f ) color[ncolor] = 0.05f;
 	}
 
 	brain.mutate();

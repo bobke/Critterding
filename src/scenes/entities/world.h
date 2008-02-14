@@ -92,6 +92,8 @@ class World{
 		File			fileH;
 		Parser			parseH;
 
+		bool			flipnewbornes;
+
 		Grid			grid;
 		Floor			floor;
 		Infobar			*infobar;
