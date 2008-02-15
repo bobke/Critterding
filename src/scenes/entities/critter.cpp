@@ -333,6 +333,10 @@ void Critter::calcFramePos(unsigned int pos)
 		framePosY += frameHeight;
 	}
 	framePosX = (pos * frameWidth) + pos;
+
+// cerr << framePosX << " : " << framePosY << endl;
+// usleep (1000);
+
 }
 
 void Critter::printVision()
