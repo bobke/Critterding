@@ -54,10 +54,8 @@ class Brain
 		unsigned int		mutatepercent;
 
 		unsigned int		minneurons;
-		unsigned int		maxneurons;
 
 		unsigned int		minconns;
-		unsigned int		maxconns;
 
 		unsigned int		addRandomArchConnection(unsigned int parentneuron);
 		unsigned int		addRandomArchNeuron();

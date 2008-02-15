@@ -14,10 +14,8 @@ Brain::Brain()
 	absmaxconns		= 150;
 
 	minneurons		= 20;
-	maxneurons		= randgen.get( minneurons, absmaxneurons );
 
 	minconns		= 1;
-	maxconns		= randgen.get( minconns, absmaxconns );
 
 	mutatepercent		= 2;
 }
@@ -121,7 +119,7 @@ void Brain::randomArchitecture()
 	NeuronArch.clear();
 
 	// random amount of neurons
-	unsigned int nAmount = randgen.get( minneurons, maxneurons );
+	unsigned int nAmount = randgen.get( minneurons, absmaxneurons );
 
 	// create the neurons
 	for ( unsigned i = 0; i < nAmount; i++ ) addRandomArchNeuron();
@@ -130,7 +128,7 @@ void Brain::randomArchitecture()
 	for ( unsigned i = 0; i < nAmount; i++ )
 	{
 		// random amount of connections
-		unsigned int cAmount = randgen.get( minconns, maxconns );
+		unsigned int cAmount = randgen.get( minconns, absmaxconns );
 
 		for ( unsigned j = 0; j < cAmount; j++ ) addRandomArchConnection(i);
 	}
@@ -209,7 +207,7 @@ void Brain::mutate()
 					unsigned int nid = addRandomArchNeuron();
 
 					// random amount of connections
-					unsigned int cAmount = randgen.get( minconns, maxconns );
+					unsigned int cAmount = randgen.get( minconns, absmaxconns );
 					for ( unsigned j = 0; j < cAmount; j++ )
 					{
 						addRandomArchConnection(nid);
