@@ -207,6 +207,9 @@ void World::processCritter(unsigned int i)
 						c->moveToNewPoss();
 						nc->moveToNewPoss();
 
+						nc->calcFramePos(critters.size()-1);
+						nc->calcCamPos();
+
 						cerr << endl;
 					}
 					else
@@ -222,7 +225,6 @@ void World::processCritter(unsigned int i)
 
 void World::process()
 {
-
 	// Bullets
 	for( unsigned int i=0; i < bullets.size(); i++)
 	{
@@ -367,14 +369,18 @@ void World::process()
 			// vision preparation
 				if ( c->drawedAgo == c->drawEvery )
 				{
+					//if ( i == 0 ) cerr << "drawing " << c->drawedAgo << "==" << c->drawEvery << endl;
+
 					c->place();
 					drawWithFloor();
 					c->procFrame();
-					c->drawedAgo = 0;
+					c->drawedAgo = 1;
 				}
 				else
 				{
-					if ( c->drawedAgo == 0 ) memset(c->retina, 0, c->items);
+					//if ( i == 0 ) cerr << "not drawing " << c->drawedAgo << "!=" << c->drawEvery << endl;
+
+					if ( c->drawedAgo == 1 ) memset(c->retina, 0, c->items);
 					c->drawedAgo++;
 				}
 
