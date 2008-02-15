@@ -5,132 +5,95 @@ Critter::Critter()
 	adamdist	= 0;
 	// size & color
 	maxSize		= 1.0f;
-	size		= 0.1f;
-	rotation	= 0.0f;
-	resize(size);
-	color[0]	= 1.0f;
-	color[1]	= 0.0f;
-	color[2]	= 0.0f;
-	color[3]	= 0.0f;
 
 	drawEvery	= 3;
-	drawedAgo	= drawEvery;
-
-	// initialize mutexes
-	pthread_mutex_init (&position_mutex, NULL);
 
 	// frame capturing options
 	frameWidth		= 9;
 	frameHeight		= frameWidth; // must be same as frameWidth
 	components		= 4;
 	items			= frameWidth * frameHeight * components;
-	framePosX		= 0;
-	framePosY		= 0;
-	itemsPerRow		= 5;
 	visionDivider		= 4;
-	calcFramePos(0);
 
 	// energy
 	maxEnergyLevel		= 5000.0f;
 	energyLevel		= maxEnergyLevel / 2.0f;
 
 	// old age death
-	totalFrames		= 0;
 	maxtotalFrames		= 5000;
 
-	procreateTimeCount	= 0;
 	procreateTimeTrigger	= maxtotalFrames / 5;
 	minprocenergyLevel	= maxEnergyLevel * 0.8f;
 
 	// fire limits
-	fireTimeCount		= 0;
 	fireTimeTrigger		= 5;
 	minfireenergyLevel	= maxEnergyLevel * 0.0f;
 
-	eat			= false;
-	touchingFood		= false;
-	wasShot			= false;
-
-	canFire			= false;
-	fire			= false;
-
-	canProcreate		= false;
-	procreate		= false;
-
+	// register input/output neurons
 	brain.setupInputs( (items*visionDivider)+1+1+1+10 );
 	brain.setupOutputs(9);
-
-	// Allocate the neccessary memory.
-	outputImage = (unsigned char*)malloc(items);
 
 }
 
 Critter::Critter(Critter &other)
 {
-	adamdist	= other.adamdist;
+	string arch = other.saveCritter();
+	loadCritter(arch);
 
-	// size & color
-	maxSize		= other.maxSize;
-	size		= other.size;
-	rotation	= 0.0f;
-	resize(size);
-	color[0]	= other.color[0];
-	color[1]	= other.color[1];
-	color[2]	= other.color[2];
-	color[3]	= other.color[3];
-
-	drawEvery	= other.drawEvery;
-	drawedAgo	= other.drawEvery;
-
-	// initialize mutexes
-	pthread_mutex_init (&position_mutex, NULL);
-
-	// frame capturing options
-	frameWidth		= other.frameWidth;
-	frameHeight		= other.frameHeight; // must be same as frameWidth
 	components		= 4;
 	items			= frameWidth * frameHeight * components;
-	framePosX		= 0;
-	framePosY		= 0;
-	itemsPerRow		= other.itemsPerRow;
-	visionDivider		= other.visionDivider;
-	calcFramePos(0);
+
+	// size
+	maxSize			= other.maxSize;
 
 	// energy
 	maxEnergyLevel		= other.maxEnergyLevel;
 	energyLevel		= other.energyLevel;
 
 	// old age death
-	totalFrames		= 0;
 	maxtotalFrames		= other.maxtotalFrames;
 
-	procreateTimeCount	= 0;
 	procreateTimeTrigger	= other.procreateTimeTrigger;
 	minprocenergyLevel	= other.minprocenergyLevel;
 
 	// fire limits
-	fireTimeCount		= 0;
 	fireTimeTrigger		= other.fireTimeTrigger;
 	minfireenergyLevel	= other.minfireenergyLevel;
 
-	eat			= false;
-	touchingFood		= false;
-	wasShot			= false;
-
-	canFire			= false;
-	fire			= false;
-
-	canProcreate		= false;
-	procreate		= false;
-
+	// register input/output neurons
 	brain.setupInputs( (items*visionDivider)+1+1+1+10 );
 	brain.setupOutputs(9);
+}
 
-	// Allocate the neccessary memory.
-	outputImage = (unsigned char*)malloc(items);
+void Critter::setup()
+{
+	// initialize mutexes
+	pthread_mutex_init (&position_mutex, NULL);
 
-	string arch = other.saveCritter();
-	loadCritter(arch);
+	drawedAgo		= drawEvery;
+
+	totalFrames		= 0;
+	procreateTimeCount	= 0;
+	fireTimeCount		= 0;
+
+	// Allocate the neccessary memory for our retina.
+	retina = (unsigned char*)malloc(items);
+
+	// setup brain from architecture
+	brain.setupArchitecture();
+
+	// resize by brain architecture properties
+	float newsize		= ((maxSize/2) / brain.absmaxneurons) * brain.totalneurons + (((maxSize/2)/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
+	resize(newsize);
+
+	volume			= size * size * size * 100.0f;
+
+	speedfactor		= (maxSize-size) / 10.0f; // FIXME HACK lower me :)
+//	speedfactor		= 100.0f / (volume*10000.0f);
+
+// 	maxEnergyLevel		= 50000.0f * size;
+//	maxtotalFrames		= 50000.0f * size;
+
 }
 
 void Critter::process()
@@ -177,7 +140,7 @@ void Critter::procInputNeurons()
 		{
 			for ( unsigned int i=0; i < items; i++ )
 			{
-				if ( outputImage[i] )	brain.Inputs[i]->output = 1;
+				if ( retina[i] )	brain.Inputs[i]->output = 1;
 				else			brain.Inputs[i]->output = 0;
 			}
 		}
@@ -186,10 +149,10 @@ void Critter::procInputNeurons()
 			for ( unsigned int i=0; i < items; i++ )
 			{
 				unsigned target = i * visionDivider;
-				unsigned int NeuronToFire = (unsigned int)(((float)outputImage[i] / 256.0f) * (float)visionDivider);
+				unsigned int NeuronToFire = (unsigned int)(((float)retina[i] / 256.0f) * (float)visionDivider);
 				for ( unsigned int z=0; z < visionDivider; z++ )
 				{
-					if ( outputImage[i] && z == NeuronToFire  )	brain.Inputs[target+z]->output = 1;
+					if ( retina[i] && z == NeuronToFire  )	brain.Inputs[target+z]->output = 1;
 					else						brain.Inputs[target+z]->output = 0;
 				}
 			}
@@ -309,30 +272,12 @@ void Critter::procFrame()
 {
 	// Clear the variable.
 	// done in world now
-	//memset(outputImage, 0, items);
+	//memset(retina, 0, items);
 
 	// read from front buffer
 //	glReadBuffer(GL_FRONT);
 	
-	glReadPixels(framePosX, framePosY, frameWidth, frameHeight, GL_RGBA, GL_UNSIGNED_BYTE, outputImage);
-}
-
-void Critter::setup()
-{
-	brain.setupArchitecture();
-
-	// resize by brain architecture properties
-	float newsize = ((maxSize/2) / brain.absmaxneurons) * brain.totalneurons + (((maxSize/2)/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
-	resize(newsize);
-
-	volume		= size * size * size * 100.0f;
-
-	speedfactor	= (maxSize-size) / 10.0f; // FIXME HACK lower me :)
-//	speedfactor	= 100.0f / (volume*10000.0f);
-
-// 	maxEnergyLevel	= 50000.0f * size;
-//	maxtotalFrames	= 50000.0f * size;
-
+	glReadPixels(framePosX, framePosY, frameWidth, frameHeight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 }
 
 void Critter::mutate()
@@ -382,9 +327,9 @@ void Critter::place()
 void Critter::calcFramePos(unsigned int pos)
 {
 	framePosY = 0;
-	while ( pos >= itemsPerRow )
+	while ( pos >= 5 )
 	{
-		pos -= itemsPerRow;
+		pos -= 5;
 		framePosY += frameHeight;
 	}
 	framePosX = (pos * frameWidth) + pos;
@@ -399,13 +344,13 @@ void Critter::printVision()
 	{
 		for ( int w=h; w < (int)(frameWidth*components)+h; w += components )
 		{
-			if ( (int)outputImage[w+2] ) cerr << "\033[1;31mR\033[0m";
+			if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
 			else cerr << ".";
-			if ( (int)outputImage[w+1] ) cerr << "\033[1;32mG\033[0m";
+			if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
 			else cerr << ".";
-			if ( (int)outputImage[w] ) cerr << "\033[1;34mB\033[0m";
+			if ( (int)retina[w] ) cerr << "\033[1;34mB\033[0m";
 			else cerr << ".";
-			if ( (int)outputImage[w+3] ) cerr << "\033[1;35mA\033[0m";
+			if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
 			else cerr << ".";
 		}
 		cerr << "" << endl;
@@ -602,6 +547,8 @@ void Critter::resize(float newsize)
 		brain.setArch(passToBrain);
 	}
 
+
+
 	string Critter::saveCritter()
 	{
 		stringstream buf;
@@ -619,7 +566,7 @@ void Critter::resize(float newsize)
 
 Critter::~Critter()
 {
-	free(outputImage);
+	free(retina);
 }
 
 

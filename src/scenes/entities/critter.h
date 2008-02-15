@@ -66,7 +66,7 @@ class Critter
 		bool			procreate;
 		bool			canProcreate;
 		bool			wasShot;
-		unsigned char		*outputImage;
+		unsigned char		*retina;
 		unsigned int		items;
 		Vector3f		cameraposition;
 
@@ -105,7 +105,6 @@ class Critter
 		unsigned int		components;
 		unsigned int		framePosX;
 		unsigned int		framePosY;
-		unsigned int		itemsPerRow;
 
 		unsigned int		visionDivider;
 
