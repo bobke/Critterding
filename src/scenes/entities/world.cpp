@@ -37,16 +37,16 @@ World::World()
 	selectedCritter		= 0;
 	isSelected		= false;
 
-	size			= 7;
+	size			= 12;
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 40.0f;
+	freeEnergy		= foodenergy * 30.0f;
 
 	maxcritters		= 1000;
 	mincritters		= 5;
 
-	mutationRate		= 33; // %
+	mutationRate		= 20; // %
 
 	flipnewbornes		= true;
 
@@ -324,7 +324,7 @@ void World::process()
 				}
 				else
 				{
-					if ( c->drawedAgo == 0 ) memset(c->outputImage, 0, c->items);
+					if ( c->drawedAgo == 0 ) memset(c->retina, 0, c->items);
 					c->drawedAgo++;
 				}
 
@@ -374,7 +374,7 @@ void World::process()
 				}
 				else
 				{
-					if ( c->drawedAgo == 0 ) memset(c->outputImage, 0, c->items);
+					if ( c->drawedAgo == 0 ) memset(c->retina, 0, c->items);
 					c->drawedAgo++;
 				}
 
