@@ -8,9 +8,9 @@ Wall::Wall()
 
 	disabled	= false;
 
-	color[0]	= 0.0f;
-	color[1]	= 0.0f;
-	color[2]	= 1.0f;
+	color[0]	= 0.5f;
+	color[1]	= 0.5f;
+	color[2]	= 0.0f;
 	color[3]	= 0.0f;
 }
 
