@@ -445,9 +445,9 @@ void World::removeCritter(unsigned int cid)
 	{
 		if ( selectedCritter == cid )
 		{
-//			selectedCritter = critters.size()-1;
-			selectedCritter = 0;
-			isSelected = false;
+			selectedCritter = critters.size()-1;
+//			selectedCritter = 0;
+//			isSelected = false;
 		}
 		else if ( selectedCritter > cid )
 		{
