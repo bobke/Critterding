@@ -322,11 +322,11 @@ void World::process()
 					c->place();
 					drawWithFloor();
 					c->procFrame();
-					c->drawedAgo = 0;
+					c->drawedAgo = 1;
 				}
 				else
 				{
-					if ( c->drawedAgo == 0 ) memset(c->retina, 0, c->items);
+					if ( c->drawedAgo == 1 ) memset(c->retina, 0, c->items);
 					c->drawedAgo++;
 				}
 
