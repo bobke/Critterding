@@ -37,7 +37,7 @@ World::World()
 	selectedCritter		= 0;
 	isSelected		= false;
 
-	size			= 12;
+	size			= 15;
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
