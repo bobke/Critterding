@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I..
+INCLUDES = $(all_includes)
 METASOURCES = AUTO
 libgl_la_LDFLAGS = -avoid-version -no-undefined
 noinst_LTLIBRARIES = libgl.la

@@ -13,7 +13,7 @@
 #include <iostream>
 #include <cstring>
 
-#include "gl/glscene.h"
+#include "glscene.h"
 
 using std::cerr;
 using std::endl;
