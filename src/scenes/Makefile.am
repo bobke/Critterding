@@ -1,4 +1,5 @@
-INCLUDES = $(all_includes) -I$(top_srcdir)/src/entities
+INCLUDES = -I$(top_srcdir)/src/utils $(all_includes) \
+	-I$(top_srcdir)/src/entities
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libscenes.la
 libscenes_la_SOURCES = evolution.cpp

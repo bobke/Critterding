@@ -6,7 +6,7 @@
 #include "neuronsensor.h"
 #include "neuroninter.h"
 #include "archneuron.h"
-#include "randgen.h"
+#include "../../utils/randgen.h"
 #include "../../utils/parser.h"
 
 class Brain

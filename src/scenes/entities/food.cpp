@@ -7,7 +7,7 @@ Food::Food()
 	resize(size);
 
 	totalFrames		= 0;
-	maxtotalFrames		= 15000;
+	maxtotalFrames		= 5000;
 
 	color[0]	= 0.0f;
 	color[1]	= 1.0f;

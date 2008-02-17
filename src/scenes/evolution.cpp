@@ -16,6 +16,7 @@ void Evolution::draw()
 
 	if ( !drawCVNeurons )
 	{
+		glDisable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -151,8 +152,14 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_Page_Up:
+			world.freeEnergyInfo += world.foodenergy;
+			world.freeEnergy += world.foodenergy;
+			cerr << "total energy in system: " << world.freeEnergyInfo << " (" << world.freeEnergyInfo / world.foodenergy << ")" << endl;
 		break;
 		case XK_Page_Down:
+			world.freeEnergyInfo -= world.foodenergy;
+			world.freeEnergy -= world.foodenergy;
+			cerr << "total energy in system: " << world.freeEnergyInfo << " (" << world.freeEnergyInfo / world.foodenergy << ")" << endl;
 		break;
 		case XK_Up:
 			camera.moveForward(0.2f);

@@ -3,16 +3,16 @@
 RandGen::RandGen()
 {
 	gettimeofday(&now, &timer_tz);
+	srand(now.tv_usec);
 	count = 0;
 }
 
 unsigned int RandGen::get(unsigned int minimum, unsigned int maximum)
 {
-	count += 7;
-	if (count > 200)
+	if (++count > 1000)
 	{
-		srand(now.tv_usec + count);
 		gettimeofday(&now, &timer_tz);
+		srand(now.tv_usec);
 		count = 0;
 	}
 

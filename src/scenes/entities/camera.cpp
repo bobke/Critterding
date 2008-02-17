@@ -56,6 +56,7 @@ void Camera::moveForward(const float& factor)
 	float reused = (360.0f-rotation.y) * 0.0174532925f;
         position.x += sin(reused) * factor;
         position.z += cos(reused) * factor;
+//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveBackward(const float& factor)
@@ -63,6 +64,7 @@ void Camera::moveBackward(const float& factor)
 	float reused = (360.0f-rotation.y) * 0.0174532925f;
         position.x -= sin(reused) * factor;
         position.z -= cos(reused) * factor;
+//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveRight(const float& factor)
@@ -70,6 +72,7 @@ void Camera::moveRight(const float& factor)
 	float reused = (90.0f-rotation.y) * 0.0174532925f;
         position.x -= sin(reused) * factor;
         position.z -= cos(reused) * factor;
+//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveLeft(const float& factor)
@@ -77,16 +80,19 @@ void Camera::moveLeft(const float& factor)
 	float reused = (270.0f-rotation.y) * 0.0174532925f;
         position.x -= sin(reused) * factor;
         position.z -= cos(reused) * factor;
+//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveUp(const float& factor)
 {
 	position.y -= factor;
+//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveDown(const float& factor)
 {
 	position.y += factor;
+//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 

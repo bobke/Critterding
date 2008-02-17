@@ -1,11 +1,6 @@
-
-#ifndef ___CAMERA__
-#define ___CAMERA__
-
-
-#endif // ___CAMERA__
 #ifndef CAMERA_H
 #define CAMERA_H
+
 #include "GL/gl.h"
 #include "vector3f.h"
 #include "critter.h"
