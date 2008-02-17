@@ -1,18 +1,6 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-// [19:55] <Ingar> btw een tof truukske
-// [19:55] <Ingar> #include <iomanip>
-// [19:55] <Ingar> std::cout << "FPS (altijd 3 posities): " << setw(3) << fps << std::endl;
-
-// #include <sys/stat.h>
-// #include <sys/types.h>
-// #include <errno.h>
-// #include <dirent.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <fstream>
-
 #include <sstream>
 #include <iomanip>
 #include <pthread.h>
@@ -23,7 +11,7 @@
 #include "../../utils/dir.h"
 #include "../../utils/file.h"
 #include "../../utils/parser.h"
-#include "randgen.h"
+#include "../../utils/randgen.h"
 #include "grid.h"
 #include "floor.h"
 #include "infobar.h"
@@ -48,6 +36,7 @@ class World{
 		RandGen			randgen;
 
 		float			freeEnergy;
+		float			freeEnergyInfo;
 		pthread_mutex_t		freeEnergy_mutex;
 		int			size;
 		unsigned int		mutationRate;

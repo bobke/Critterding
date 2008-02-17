@@ -37,11 +37,12 @@ World::World()
 	selectedCritter		= 0;
 	isSelected		= false;
 
-	size			= 15;
+	size			= 10;
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
 	freeEnergy		= foodenergy * 30.0f;
+	freeEnergyInfo		= freeEnergy;
 
 	maxcritters		= 1000;
 	mincritters		= 5;
@@ -168,7 +169,6 @@ void World::processCritter(unsigned int i)
 					{
 						mutant = true;
 						nc->mutate();
-
 					}
 					nc->setup();
 

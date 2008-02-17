@@ -2,8 +2,8 @@
 #define CRITTER_H
 
 #include "../../utils/parser.h"
+#include "../../utils/randgen.h"
 #include "vector3f.h"
-#include "randgen.h"
 #include "brain.h"
 #include "neuronsensor.h"
 #include "neuroninter.h"

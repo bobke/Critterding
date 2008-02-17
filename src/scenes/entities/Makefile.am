@@ -1,9 +1,9 @@
-INCLUDES = -I$(top_srcdir)/src/entities $(all_includes)
+INCLUDES = -I$(top_srcdir)/src/utils $(all_includes) \
+	-I$(top_srcdir)/src/entities
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libentities.la
 noinst_HEADERS = archneuron.h brain.h bullet.h camera.h critter.h floor.h \
-	food.h grid.h infobar.h neuroninter.h neuronsensor.h randgen.h sleeper.h \
-	vector3f.h wall.h world.h
+	food.h grid.h infobar.h neuroninter.h neuronsensor.h vector3f.h wall.h world.h
 libentities_la_SOURCES = archneuron.cpp brain.cpp bullet.cpp camera.cpp \
 	critter.cpp floor.cpp food.cpp grid.cpp infobar.cpp neuroninter.cpp \
-	neuronsensor.cpp randgen.cpp sleeper.cpp vector3f.cpp wall.cpp world.cpp
+	neuronsensor.cpp vector3f.cpp wall.cpp world.cpp
