@@ -37,11 +37,11 @@ World::World()
 	selectedCritter		= 0;
 	isSelected		= false;
 
-	size			= 10;
+	size			= 15;
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 30.0f;
+	freeEnergy		= foodenergy * 40.0f;
 	freeEnergyInfo		= freeEnergy;
 
 	maxcritters		= 1000;
