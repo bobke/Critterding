@@ -1,5 +1,4 @@
-INCLUDES = -I$(top_srcdir)/src/utils $(all_includes) \
-	-I$(top_srcdir)/src/entities
+INCLUDES = $(all_includes) -I$(top_srcdir)/src/entities
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libentities.la
 noinst_HEADERS = archneuron.h brain.h bullet.h camera.h critter.h floor.h \
