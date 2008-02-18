@@ -81,8 +81,7 @@ void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fs
 		dpyHeight = modes[bestMode]->vdisplay;
 		XFree(modes);
 		GLWin.attr.override_redirect = True;
-		GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
-			StructureNotifyMask;
+		GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask;
 		GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
 			0, 0, dpyWidth, dpyHeight, 0, vi->depth, InputOutput, vi->visual,
 			CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect,
@@ -122,8 +121,14 @@ void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fs
 
 void GLWindow::destroy()
 {
-	printf("Exiting\n");
-	if(GLWin.ctx)
+//	printf("Exiting\n");
+
+	glXMakeCurrent(GLWin.dpy, None, NULL);
+	glXDestroyContext(GLWin.dpy, GLWin.ctx);
+	XDestroyWindow(GLWin.dpy, GLWin.win);
+	XCloseDisplay(GLWin.dpy);
+
+/*	if(GLWin.ctx)
 	{
 		if(!glXMakeCurrent(GLWin.dpy, None, NULL))
 		{
@@ -138,26 +143,14 @@ void GLWindow::destroy()
 		XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, &GLWin.deskMode);
 		XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
 	}
-	XCloseDisplay(GLWin.dpy);
+	XCloseDisplay(GLWin.dpy);*/
 }
 
 
 void GLWindow::resize()
 {
-	if(GLWin.height == 0)
-		GLWin.height = 1;
-	if(GLWin.width == 0)
-		GLWin.width = 1;
-	glMatrixMode(GL_PROJECTION);
-	//glOrtho(-3,3,3,-3,-20,20);
-	glLoadIdentity();
-	glViewport(0,0,GLWin.width,GLWin.height);
-
-	float width = 0.5f;
-	float height = 0.5f * ((float)(GLWin.height)/GLWin.width);
-
-	glFrustum(-width,width,-height,height,1.0f,10000.0f);
-	glMatrixMode(GL_MODELVIEW);
+	if ( GLWin.height == 0 ) GLWin.height = 1;
+	if ( GLWin.width == 0 ) GLWin.width = 1;
 }
 
 
@@ -166,7 +159,7 @@ void GLWindow::runGLScene(GLScene &glscene)
 	XEvent event;
 	int running = 1;
 
-	glscene.init();
+//	glscene.init();
 	glscene.width = &GLWin.width;
 	glscene.height = &GLWin.height;
 
@@ -198,11 +191,35 @@ void GLWindow::runGLScene(GLScene &glscene)
 								GLWin.fs = !GLWin.fs;
 								create("", GLWin.owidth, GLWin.oheight, GLWin.bpp, GLWin.fs);
 							}
-							else
-								running = 0;
+							else running = 0;
 						break;
 						case XK_F1:			// Switch Fullscreen/Windowed mode
+
+	cerr << "BEFORE" << endl;
+	cerr << GLWin.dpy << endl;
+	cerr << GLWin.win << endl;
+	cerr << GLWin.screen << endl;
+	cerr << GLWin.ctx << endl;
+	cerr << &GLWin.attr << endl;
+	cerr << &GLWin.deskMode << endl;
+
+
+
 							destroy();
+
+	GLWin.dpy = 0;
+	GLWin.win = 0;
+	GLWin.ctx = 0;
+//	GLWin.attr = 0;
+
+	cerr << "\nAFTER" << endl;
+	cerr << GLWin.dpy << endl;
+	cerr << GLWin.win << endl;
+	cerr << GLWin.screen << endl;
+	cerr << GLWin.ctx << endl;
+	cerr << &GLWin.attr << endl;
+	cerr << &GLWin.deskMode << endl;
+
 							GLWin.fs = !GLWin.fs;
 							create("", GLWin.owidth, GLWin.oheight, GLWin.bpp, GLWin.fs);
 						break;
@@ -228,7 +245,7 @@ void GLWindow::runGLScene(GLScene &glscene)
 		glXSwapBuffers(GLWin.dpy, GLWin.win);
 	}
 
-	glscene.clean();
+	//glscene.clean();
 
 }
 

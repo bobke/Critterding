@@ -21,18 +21,18 @@ using std::endl;
 
 struct Structure {
 
-	Display 			*dpy;			// The display. In X Windows, a display considers everything. Monitor, Mouse, Keyboard.
-	int				screen;			// Window we are rendering too
-	Window				win	;		// Drawable surrface
-	GLXContext			ctx;			// Stores information about our OpenGL Context
+	Display 			*dpy;		// The display. In X Windows, a display considers everything. Monitor, Mouse, Keyboard.
+	int				screen;		// Window we are rendering too
+	Window				win;		// Drawable surrface
+	GLXContext			ctx;		// Stores information about our OpenGL Context
 	XSetWindowAttributes		attr;
-	BOOL				fs;			// Fullscreen flag
+	BOOL				fs;		// Fullscreen flag
 	XF86VidModeModeInfo		deskMode;	
 	int				x,y;
-	unsigned int			width, height;		// Width/Height of the window
-	unsigned int			bpp;			// Bits Per Pixel. With XFree86, highest = 24
-	unsigned int			owidth, oheight;	// Original Width/Height of the window
-// 	unsigned int			obpp;			// Original Bits Per Pixel, no need yet
+	unsigned int			width, height;	// Width/Height of the window
+	unsigned int			bpp;		// Bits Per Pixel. With XFree86, highest = 24
+	unsigned int			owidth, oheight;// Original Width/Height of the window
+// 	unsigned int			obpp;		// Original Bits Per Pixel, no need yet
 
 };
 

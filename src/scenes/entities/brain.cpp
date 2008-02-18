@@ -196,10 +196,10 @@ void Brain::mutate()
 	for ( unsigned int i=0; i < runs; i++ )
 	{
 
-		unsigned int mode = randgen.get(1,100);
+		unsigned int mode = randgen.get(1,30);
 
 		// remove a neuron
-			if ( mode <= 3 )
+			if ( mode == 1 )
 			{
 				// don't go under minimum neurons
 				//if ( NeuronArch.size() > minneurons )
@@ -238,7 +238,7 @@ void Brain::mutate()
 			}
 
 		// add a new neuron
-			else if ( mode <= 5 )
+			else if ( mode == 2 )
 			{
 				if ( NeuronArch.size() < absmaxneurons )
 				{
@@ -260,7 +260,7 @@ void Brain::mutate()
 				// pick a random neuron
 				unsigned int nid = randgen.get( 0, NeuronArch.size()-1 );
 
-				unsigned int imode = randgen.get(1,3);
+				unsigned int imode = randgen.get(1,2);
 
 				// add a new connection
 				if ( imode == 1 )
