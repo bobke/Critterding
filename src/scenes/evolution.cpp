@@ -12,28 +12,39 @@ void Evolution::draw()
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-		world.process();
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+	glHint(GL_FOG_HINT, GL_FASTEST);
+	glDisable(GL_COLOR_MATERIAL);
+	glDisable(GL_DITHER);
+	glDisable(GL_POLYGON_SMOOTH);
+
+	world.process();
 
 	if ( !drawCVNeurons )
 	{
 		glDisable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
+
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+		glHint(GL_FOG_HINT, GL_FASTEST);
+		glDisable(GL_COLOR_MATERIAL);
+		glDisable(GL_DITHER);
+		glDisable(GL_POLYGON_SMOOTH);
 	}
 
+	if ( world.isSelected )
+	{
+		camera.follow(width, height, world.critters[world.selectedCritter]);
+	}
+	else
+	{
+		camera.place(width, height);
+	}
 
-		if ( world.isSelected )
-		{
-			camera.follow(width, height, world.critters[world.selectedCritter]);
-		}
-		else
-		{
-			camera.place(width, height);
-		}
-	
-		world.drawWithGrid();
-	
-		sleeper.mark();
+	world.drawWithGrid();
+
+	sleeper.mark();
 
 	glDisableClientState(GL_VERTEX_ARRAY);  // disable vertex arrays
 }

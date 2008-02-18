@@ -24,13 +24,15 @@ class Food
 		unsigned int		totalFrames;
 		unsigned int		maxtotalFrames;
 
+		GLfloat 		vertices[24];
+
 		void			draw();
 		void			resize(float size);
 
+
 	private:
 
-		GLfloat 		vertices[24];
-		GLubyte			indices[24];
+		GLubyte			indices[20];
 
 
 };

@@ -1,72 +1,69 @@
 #include "critter.h"
 
+void Critter::initConst()
+{
+	maxSize			= 1.0f;
+	components		= 4;
+	maxEnergyLevel		= 5000.0f;
+	maxtotalFrames		= 5000;
+	procreateTimeTrigger	= maxtotalFrames / 5;
+	minprocenergyLevel	= maxEnergyLevel * 0.8f;
+	fireTimeTrigger		= 5;
+	minfireenergyLevel	= maxEnergyLevel * 0.0f;
+}
+
+void Critter::initInputOutputs()
+{
+	// register input/output neurons
+	items = frameWidth * frameHeight * components;
+	brain.setupInputs( (items*visionDivider)+1+1+1+10+1 );
+	brain.setupOutputs(9);
+}
+
 Critter::Critter()
 {
-	adamdist	= 0;
-	// size & color
-	maxSize		= 1.0f;
-
-	drawEvery	= 3;
+	initConst();
 
 	// frame capturing options
+	adamdist		= 0;
+	drawEvery		= 3;
 	frameWidth		= 9;
 	frameHeight		= frameWidth; // must be same as frameWidth
-	components		= 4;
-	items			= frameWidth * frameHeight * components;
 	visionDivider		= 4;
 
 	// energy
-	maxEnergyLevel		= 5000.0f;
 	energyLevel		= maxEnergyLevel / 2.0f;
 
-	// old age death
-	maxtotalFrames		= 5000;
+	initInputOutputs();
+}
 
-	procreateTimeTrigger	= maxtotalFrames / 5;
-	minprocenergyLevel	= maxEnergyLevel * 0.8f;
+Critter::Critter(string &critterstring)
+{
+	initConst();
 
-	// fire limits
-	fireTimeTrigger		= 5;
-	minfireenergyLevel	= maxEnergyLevel * 0.0f;
+	loadCritter(critterstring);
 
-	// register input/output neurons
-	brain.setupInputs( (items*visionDivider)+1+1+1+10 );
-	brain.setupOutputs(9);
+	// energy
+	energyLevel		= maxEnergyLevel / 2.0f;
 
+	initInputOutputs();
 }
 
 Critter::Critter(Critter &other)
 {
+	initConst();
+
 	string arch = other.saveCritter();
 	loadCritter(arch);
 
-	components		= 4;
-	items			= frameWidth * frameHeight * components;
-
-	// size
-	maxSize			= other.maxSize;
-
 	// energy
-	maxEnergyLevel		= other.maxEnergyLevel;
 	energyLevel		= other.energyLevel;
-
-	// old age death
-	maxtotalFrames		= other.maxtotalFrames;
-
-	procreateTimeTrigger	= other.procreateTimeTrigger;
-	minprocenergyLevel	= other.minprocenergyLevel;
-
-	// fire limits
-	fireTimeTrigger		= other.fireTimeTrigger;
-	minfireenergyLevel	= other.minfireenergyLevel;
-
-	// register input/output neurons
-	brain.setupInputs( (items*visionDivider)+1+1+1+10 );
-	brain.setupOutputs(9);
+	initInputOutputs();
 }
 
 void Critter::setup()
 {
+
 	// initialize mutexes
 	pthread_mutex_init (&position_mutex, NULL);
 
@@ -198,12 +195,15 @@ void Critter::procInputNeurons()
 			overstep++;
 		}
 
+	// the always firing neuron
+	brain.Inputs[overstep]->output = 1;
+
 	// debugging check
-/*	if ( overstep != brain.Inputs.size() )
+	if ( overstep != brain.Inputs.size()-1 )
 	{
 		cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
 		exit(0);
-	}*/
+	}
 }
 
 void Critter::procOutputNeurons()
@@ -316,12 +316,13 @@ void Critter::place()
 	glViewport(framePosX, framePosY, frameWidth, frameHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, 10.0f);
+	glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, 5.0f);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	glRotatef(rotation, 0.0f, -1.0f, 0.0f);
 	glTranslatef(-cameraposition.x, -cameraposition.y, -cameraposition.z);
-
-//	glMatrixMode(GL_MODELVIEW);
 }
 
 void Critter::calcFramePos(unsigned int pos)
@@ -375,7 +376,7 @@ void Critter::draw()
 		glRotatef( rotation, 0.0, 1.0, 0.0 );
 
 		glColor4f( color[0], color[1], color[2], color[3] );
-		glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, indices);
+		glDrawElements(GL_QUADS, 20, GL_UNSIGNED_BYTE, indices);
 
  		glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, tindices);
@@ -404,11 +405,17 @@ void Critter::resize(float newsize)
 	vertices[21] = halfsize; vertices[22] = halfsize; vertices[23] = -halfsize;
 
 	indices[0] = 0; indices[1] = 3; indices[2] = 7; indices[3] = 4;
-	indices[4] = 1; indices[5] = 2; indices[6] = 6; indices[7] = 5;
-	indices[8] = 2; indices[9] = 3; indices[10] = 7; indices[11] = 6;
-	indices[12] = 1; indices[13] = 0; indices[14] = 4; indices[15] = 5;
-	indices[16] = 1; indices[17] = 2; indices[18] = 3; indices[19] = 0;
-	indices[20] = 5; indices[21] = 6; indices[22] = 7; indices[23] = 4;
+	indices[4] = 2; indices[5] = 3; indices[6] = 7; indices[7] = 6;
+	indices[8] = 1; indices[9] = 0; indices[10] = 4; indices[11] = 5;
+	indices[12] = 1; indices[13] = 2; indices[14] = 3; indices[15] = 0;
+	indices[16] = 5; indices[17] = 6; indices[18] = 7; indices[19] = 4;
+
+// 	indices[0] = 0; indices[1] = 3; indices[2] = 7; indices[3] = 4;
+// 	indices[4] = 1; indices[5] = 2; indices[6] = 6; indices[7] = 5;
+// 	indices[8] = 2; indices[9] = 3; indices[10] = 7; indices[11] = 6;
+// 	indices[12] = 1; indices[13] = 0; indices[14] = 4; indices[15] = 5;
+// 	indices[16] = 1; indices[17] = 2; indices[18] = 3; indices[19] = 0;
+// 	indices[20] = 5; indices[21] = 6; indices[22] = 7; indices[23] = 4;
 
 	// nose
 	vertices[24] = 0; vertices[25] = halfsize; vertices[26] = -halfsize*1.3f;
@@ -483,8 +490,8 @@ void Critter::resize(float newsize)
 
 	void Critter::loadCritter(string &content)
 	{
-		string line = parseH.returnUntillStrip( "\n", content );
 		string passToBrain;
+		string line = parseH.returnUntillStrip( "\n", content );
 		while ( !line.empty() )
 		{
 			// color=0.03,0.82,0.12,0;
@@ -511,7 +518,8 @@ void Critter::resize(float newsize)
 					string RES = parseH.returnUntillStrip( ";", line );
 					//cerr << "RES: " << RES  << endl;
 					if(EOF == sscanf(RES.c_str(), "%d", &frameWidth)) cerr << "ERROR INSERTING CRITTER" << endl;
-					if(EOF == sscanf(RES.c_str(), "%d", &frameHeight)) cerr << "ERROR INSERTING CRITTER" << endl;
+					frameHeight = frameWidth;
+					//if(EOF == sscanf(RES.c_str(), "%d", &frameHeight)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
 			// adamdist=690;
@@ -548,7 +556,16 @@ void Critter::resize(float newsize)
 	
 			line = parseH.returnUntillStrip( "\n", content );
 		}
+
+	// register input/output neurons
+//  	cerr << frameWidth << " : " << frameHeight  << " : " <<  components << endl;
+//  	items			= frameWidth * frameHeight * components;
+//  	cerr << "new conn ordering total inputs" << (items*visionDivider)+1+1+1+10+1 << endl;
+//  	brain.setupInputs( (items*visionDivider)+1+1+1+10+1 );
+//  	brain.setupOutputs(9);
+
 		brain.setArch(passToBrain);
+
 	}
 
 
