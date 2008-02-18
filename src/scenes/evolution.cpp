@@ -145,8 +145,7 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_Insert:
-			if ( drawCVNeurons ) drawCVNeurons = false;
-			else drawCVNeurons = true;
+			drawCVNeurons = !drawCVNeurons;
 		break;
 		case XK_Delete:
 		break;

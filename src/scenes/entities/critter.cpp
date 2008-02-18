@@ -286,16 +286,16 @@ void Critter::mutate()
 
 	// mutate color
 	unsigned int mode = randgen.get(1,2);
-
 	unsigned int ncolor = randgen.get(0,2);
+
 	if ( mode == 1 )
 	{
-		color[ncolor] += (float)randgen.get(1,20)/100.0f;
+		color[ncolor] += (float)randgen.get(1,10)/100.0f;
 		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
 	}
 	else
 	{
-		color[ncolor] -= (float)randgen.get(1,20)/100.0f;
+		color[ncolor] -= (float)randgen.get(1,10)/100.0f;
 		if ( color[ncolor] < 0.05f ) color[ncolor] = 0.05f;
 	}
 
