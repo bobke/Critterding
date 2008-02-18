@@ -20,33 +20,39 @@ Camera::~Camera()
 
 void Camera::place(unsigned int *width, unsigned int *height)
 {
+	glViewport(0,0,*width,*height);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glViewport(0,0,*width,*height);
 
 	float nheight = 0.5f * ((float)(*height) / *width);
 	glFrustum(-0.5f,0.5f,-nheight,nheight,1.0f,10000.0f);
 
-//	glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, 100.0f);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
 	glRotatef(rotation.y, 0.0f, 1.0f, 0.0f);
 	glTranslatef(position.x, position.y, position.z);
+
 }
 
 void Camera::follow(unsigned int *width, unsigned int *height, Critter *c)
 {
+	glViewport(0,0,*width,*height);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glViewport(0,0,*width,*height);
 
 	float nheight = 0.05f * ((float)(*height) / *width);
 	glFrustum(-0.05f,0.05f,-nheight,nheight,0.1f,100.0f);
-//	glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, 100.0f);
 
 	glRotatef(0.0f, -1.0f, 0.0f, 0.0f);
 	glRotatef(c->rotation, 0.0f, -1.0f, 0.0f);
 	glTranslatef(-c->cameraposition.x, -c->cameraposition.y, -c->cameraposition.z);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 // Moving

@@ -41,11 +41,11 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 30.0f;
+	freeEnergy		= foodenergy * 35.0f;
 	freeEnergyInfo		= freeEnergy;
 
 	maxcritters		= 1000;
-	mincritters		= 5;
+	mincritters		= 0;
 
 	mutationRate		= 20; // %
 
@@ -503,9 +503,11 @@ void World::drawWithGrid()
 	// draw floor
 	grid.draw();
 
-	// draw food
-	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
+	glVertexPointer(3, GL_FLOAT, 0, food[0]->vertices);
+	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
 	for( unsigned int i=0; i < food.size(); i++) food[i]->draw();
+
+	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
 	for( unsigned int i=0; i < bullets.size(); i++) bullets[i]->draw();
 	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();
 }
@@ -515,9 +517,11 @@ void World::drawWithFloor()
 	// draw floor
 	floor.draw();
 
-	// draw food
-	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
+	glVertexPointer(3, GL_FLOAT, 0, food[0]->vertices);
+	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
 	for( unsigned int i=0; i < food.size(); i++) food[i]->draw();
+
+	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
 	for( unsigned int i=0; i < bullets.size(); i++) bullets[i]->draw();
 	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();
 }
@@ -578,8 +582,7 @@ void World::loadAllCritters()
 		string content;
 		fileH.open( files[i], content );
 
-		Critter *c = new Critter;
-		c->loadCritter(content);
+		Critter *c = new Critter(content);
 		c->setup();
 		// record it's energy
 		freeEnergy -= c->energyLevel;
@@ -762,22 +765,7 @@ Vector3f World::findEmptySpace(float objectsize)
 	pos.x = (float)randgen.get( 0, 100*size ) / 100;
 	pos.z = (float)randgen.get( 0, 100*size ) / 100;
 
-//	float halfsize = objectsize/2;
-
 	while ( !spotIsFree(pos, objectsize) )
-// 	while ( isTouchingAnything( objectsize, pos.x, pos.z )
-// 	|| 	(
-// 			// left border
-// 			pos.x - halfsize <= 0 ||
-// 			// right border
-// 			pos.x + halfsize >= size ||
-// 			// bottom border
-// 			pos.z - halfsize <= 0 ||
-// 			// top border
-// 			pos.z + halfsize >= size
-// 		)
-// 	)
-
 	{
 		pos.x = (float)randgen.get( 0, 100*size ) / 100;
 		pos.z = (float)randgen.get( 0, 100*size ) / 100;

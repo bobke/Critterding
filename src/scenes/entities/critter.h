@@ -22,6 +22,7 @@ class Critter
 	public:
 		Critter();
 		Critter(Critter &other);
+		Critter(string &critterstring);
 		~Critter();
 
 		Brain			brain;
@@ -112,13 +113,16 @@ class Critter
 		unsigned int		motorneuronsfired;
 
 		GLfloat 		vertices[27];
-		GLubyte			indices[24];
+		GLubyte			indices[20];
 		GLubyte			tindices[3];
 
 		RandGen			randgen;
 
+		void			initConst();
+		void			initInputOutputs();
 		void			procInputNeurons();
 		void			procOutputNeurons();
+		void			createInputOutputNeurons();
 };
 
 #endif
