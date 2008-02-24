@@ -8,6 +8,10 @@ Sleeper::Sleeper()
 	sleeptime	= 10000;
 	cps		= optimal;
 
+	dispcounter	= 0;
+	dispevery	= 10;
+	dispsum		= 0.0f;
+
 	// calc lasttiem for first time
 	gettimeofday(&lasttime, &timer_tz);
 }
@@ -35,11 +39,15 @@ void Sleeper::mark()
 		}
 	
 		if (sleeptime > 0 ) usleep(sleeptime);
-	
-		// debugging
-	// 	cerr << "elapsed: " << elapsed << endl;
-		cerr << "cps:     " << cps << endl;
-	// 	cerr << "sleeptime:     " << sleeptime << endl;
+
+		dispsum += cps;
+		dispcounter++;
+		if ( dispcounter == dispevery )
+		{
+			cerr << "cps:     " << (dispsum/dispevery) << endl;
+			dispcounter = 0;
+			dispsum = 0.0f;
+		}
 	
 		// lasttime becomes now
 		lasttime = now;

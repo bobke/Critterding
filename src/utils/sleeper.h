@@ -24,6 +24,10 @@ class Sleeper
 		unsigned int	sleeptime;
 		float		cps;
 
+		int		dispcounter;
+		int		dispevery;
+		float		dispsum;
+
 		struct timezone	timer_tz;
 		struct timeval	lasttime;
 

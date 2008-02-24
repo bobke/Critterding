@@ -123,7 +123,7 @@ void Critter::process()
 	// calc used energy, energyUsed is used in world aswell, don't remove
 		energyUsed = 0.0f;
 
-		energyUsed += (float)brain.neuronsfired * (2*size);
+		energyUsed += (float)brain.neuronsfired * (size/2.0f);
 		energyUsed += (float)motorneuronsfired * volume;
 
 	// apply energy usage
@@ -290,12 +290,12 @@ void Critter::mutate()
 
 	if ( mode == 1 )
 	{
-		color[ncolor] += (float)randgen.get(1,10)/100.0f;
+		color[ncolor] += (float)randgen.get(1,5)/100.0f;
 		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
 	}
 	else
 	{
-		color[ncolor] -= (float)randgen.get(1,10)/100.0f;
+		color[ncolor] -= (float)randgen.get(1,5)/100.0f;
 		if ( color[ncolor] < 0.05f ) color[ncolor] = 0.05f;
 	}
 

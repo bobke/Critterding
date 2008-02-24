@@ -18,8 +18,6 @@ class Brain
 		vector<NeuronSensor*>	Inputs;
 		vector<NeuronSensor*>	Outputs;
 
-		bool			symmetric;
-
 		unsigned int		absmaxneurons;
 		unsigned int		absmaxconns;
 

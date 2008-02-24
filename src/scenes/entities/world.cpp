@@ -41,7 +41,7 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 35.0f;
+	freeEnergy		= foodenergy * 30.0f;
 	freeEnergyInfo		= freeEnergy;
 
 	maxcritters		= 1000;
@@ -312,15 +312,11 @@ void World::process()
 		{
 			Critter *c = critters[i];
 
-// 			pthread_mutex_lock( &condition_startthreads_mutex );
-// 				pthread_cond_signal( &condition_startthreads );
-// 			pthread_mutex_unlock( &condition_startthreads_mutex );
-
 			// vision preparation
 				if ( c->drawedAgo == c->drawEvery )
 				{
 					c->place();
-					drawWithFloor();
+					drawWithFloor(c);
 					c->procFrame();
 					c->drawedAgo = 1;
 				}
@@ -342,6 +338,7 @@ void World::process()
 
 //		cerr << "queue at end: " << cqueue.size() << "while critters: " << critters.size() << endl;
 		unsigned int counter = 0;
+
 		// broadcast until cqueue is empty
 		pthread_mutex_lock( &cqueue_mutex );
 		while ( !cqueue.empty() )
@@ -352,7 +349,6 @@ void World::process()
 					counter++;
 				pthread_mutex_unlock( &condition_startthreads_mutex );
 			pthread_mutex_lock( &cqueue_mutex );
-			//usleep (0);
 		}
 //		cerr << "DONE " << "queue at end: " << cqueue.size() << "  SIGNALS SENT: " << counter << endl;
 		pthread_mutex_unlock( &cqueue_mutex );
@@ -372,7 +368,7 @@ void World::process()
 					//if ( i == 0 ) cerr << "drawing " << c->drawedAgo << "==" << c->drawEvery << endl;
 
 					c->place();
-					drawWithFloor();
+					drawWithFloor(c);
 					c->procFrame();
 					c->drawedAgo = 1;
 				}
@@ -512,18 +508,56 @@ void World::drawWithGrid()
 	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();
 }
 
-void World::drawWithFloor()
+void World::drawWithFloor(Critter *c)
 {
 	// draw floor
 	floor.draw();
 
 	glVertexPointer(3, GL_FLOAT, 0, food[0]->vertices);
 	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
-	for( unsigned int i=0; i < food.size(); i++) food[i]->draw();
+	for( unsigned int i=0; i < food.size(); i++)
+	{
+		Food *f = food[i];
+		float avgSize = 6.0 - (f->halfsize + c->halfsize);
+		if ( fabs( c->position.x - f->position.x ) <= avgSize && fabs( c->position.z - f->position.z ) <= avgSize )
+		{
+			f->draw();
+		}
+//		f->draw();
+	}
 
-	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
-	for( unsigned int i=0; i < bullets.size(); i++) bullets[i]->draw();
-	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();
+	for( unsigned int i=0; i < critters.size(); i++)
+	{
+		Critter *oc = critters[i];
+		float avgSize = 6.0 - (oc->halfsize + c->halfsize);
+		if ( fabs( c->position.x - oc->position.x ) <= avgSize && fabs( c->position.z - oc->position.z ) <= avgSize )
+		{
+			oc->draw();
+		}
+//		oc->draw();
+	}
+
+	for( unsigned int i=0; i < walls.size(); i++)
+	{
+		Wall *w = walls[i];
+		float avgSize = 6.0 - (w->halfsize + c->halfsize);
+		if ( fabs( c->position.x - w->position.x ) <= avgSize && fabs( c->position.z - w->position.z ) <= avgSize )
+		{
+			w->draw();
+		}
+//		w->draw();
+	}
+
+	for( unsigned int i=0; i < bullets.size(); i++)
+	{
+		Bullet *b = bullets[i];
+		float avgSize = 6.0 - (b->halfsize + c->halfsize);
+		if ( fabs( c->position.x - b->position.x ) <= avgSize && fabs( c->position.z - b->position.z ) <= avgSize )
+		{
+			b->draw();
+		}
+//		b->draw();
+	}
 }
 
 // min/max critter control
@@ -663,7 +697,7 @@ bool World::spotIsFree(Vector3f &position, float osize, unsigned int exclude)
 		if ( !w->disabled )
 		{
 			float avgSize = (osize + w->size) / 2.0f;
-			if ( fabs( position.x - w->position.x ) <= avgSize &&  fabs( position.z - w->position.z ) <= avgSize )
+			if ( fabs( position.x - w->position.x ) <= avgSize && fabs( position.z - w->position.z ) <= avgSize )
 			{
 				return false;
 			}
