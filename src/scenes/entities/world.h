@@ -57,10 +57,8 @@ class World{
 
 		void			process();
 		void			drawWithGrid();
-		void			drawWithFloor();
 
 		float			foodenergy;
-
 
 		void			insertCritter();
 		void			positionCritter(unsigned int cid);
@@ -106,6 +104,8 @@ class World{
 		void			createDirs();
 		bool			spotIsFree(Vector3f &position, float osize, unsigned int exclude);
 		bool			spotIsFree(Vector3f &position, float osize);
+
+		void			drawWithFloor(Critter *c);
 };
 
 #endif

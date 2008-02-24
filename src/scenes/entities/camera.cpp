@@ -45,7 +45,7 @@ void Camera::follow(unsigned int *width, unsigned int *height, Critter *c)
 	glLoadIdentity();
 
 	float nheight = 0.05f * ((float)(*height) / *width);
-	glFrustum(-0.05f,0.05f,-nheight,nheight,0.1f,100.0f);
+	glFrustum(-0.05f,0.05f,-nheight,nheight,0.1f,5.0f);
 
 	glRotatef(0.0f, -1.0f, 0.0f, 0.0f);
 	glRotatef(c->rotation, 0.0f, -1.0f, 0.0f);

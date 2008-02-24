@@ -2,10 +2,6 @@
 
 Brain::Brain()
 {
-
-	// brain properties
-	symmetric		= true;
-
 	// neural properties
 	percentSensoryConns	= 10;
 	percentMotor		= 10;
@@ -17,7 +13,7 @@ Brain::Brain()
 
 	minconns		= 1;
 
-	mutatepercent		= 2;
+	mutatepercent		= 1;
 }
 
 void Brain::process()
