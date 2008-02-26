@@ -51,6 +51,8 @@ class Brain
 
 		unsigned int		mutatepercent;
 
+		unsigned int		newNmaxconns;
+
 		unsigned int		minneurons;
 
 		unsigned int		minconns;

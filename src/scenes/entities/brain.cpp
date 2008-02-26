@@ -9,7 +9,9 @@ Brain::Brain()
 	absmaxneurons		= 150;
 	absmaxconns		= 150;
 
-	minneurons		= 20;
+	newNmaxconns		= 100;
+
+	minneurons		= 10;
 
 	minconns		= 1;
 
@@ -192,7 +194,7 @@ void Brain::mutate()
 	for ( unsigned int i=0; i < runs; i++ )
 	{
 
-		unsigned int mode = randgen.get(1,30);
+		unsigned int mode = randgen.get(1,50);
 
 		// remove a neuron
 			if ( mode == 1 )
@@ -242,7 +244,7 @@ void Brain::mutate()
 					unsigned int nid = addRandomArchNeuron();
 
 					// random amount of connections
-					unsigned int cAmount = randgen.get( minconns, absmaxconns );
+					unsigned int cAmount = randgen.get( minconns, newNmaxconns );
 					for ( unsigned j = 0; j < cAmount; j++ )
 					{
 						addRandomArchConnection(nid);

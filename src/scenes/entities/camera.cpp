@@ -107,13 +107,17 @@ void Camera::moveDown(const float& factor)
 void Camera::lookRight(const float& factor)
 {
         rotation.y += factor;
-//	cout << rotation.y << endl;
+	if ( rotation.y > 360.0f ) rotation.y -= 360.0f;
+
+	cout << rotation.y << endl;
 }
 
 void Camera::lookLeft(const float& factor)
 {
         rotation.y -= factor;
-//	cout << rotation.y << endl;
+	if ( rotation.y < 0.0f ) rotation.y += 360.0f;
+
+	cout << rotation.y << endl;
 }
 
 void Camera::lookUp(const float& factor)

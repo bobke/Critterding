@@ -41,7 +41,7 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 30.0f;
+	freeEnergy		= foodenergy * 40.0f;
 	freeEnergyInfo		= freeEnergy;
 
 	maxcritters		= 1000;
@@ -106,13 +106,16 @@ void World::processCritter(unsigned int i)
 			// increase energyLevel of critter, decrease of food
 			//float eaten = ( c->maxEnergyLevel - c->energyLevel ) / 10.0f;
 
-			float eaten = c->maxEnergyLevel / 20.0f;
+			float eaten = c->maxEnergyLevel / 50.0f;
 			if ( c->energyLevel + eaten > c->maxEnergyLevel ) eaten -= (c->energyLevel + eaten) - c->maxEnergyLevel;
 
-			c->energyLevel			+= eaten;
-			food[c->touchedFoodID]->energy	-= eaten;
+			c->energyLevel		+= eaten;
 
-			//cerr << "post E: " << critters[i]->energyLevel << endl;
+			Food *fo = food[c->touchedFoodID];
+
+			fo->energy		-= eaten;
+
+			if ( fo->energy > 0.0f ) fo->resize((foodsize/2.0f) + (foodsize/foodenergy/2.0f) * fo->energy);
 		}
 
 	// fire
@@ -187,7 +190,7 @@ void World::processCritter(unsigned int i)
 					{
 						cerr << "critter " << setw(3) << i << " PROCREATES (ad: " << setw(4) << c->adamdist << ")";
 
-						cerr << " N: " << setw(4) << c->brain.totalneurons << " C: " << setw(5) << c->brain.totalconnections;
+						cerr << " N: " << setw(4) << nc->brain.totalneurons << " C: " << setw(5) << nc->brain.totalconnections;
 						if ( mutant ) cerr << " ( mutant )";
 
 						// optional rotate 180 of new borne
@@ -200,15 +203,12 @@ void World::processCritter(unsigned int i)
 						// reset procreation energy count
 						c->procreateTimeCount = 0;
 	
-						//exit(0);
-//						unsigned int newcritter = critters.size();
+						nc->calcFramePos(critters.size());
+
 						critters.push_back( nc );
 
 						c->moveToNewPoss();
 						nc->moveToNewPoss();
-
-						nc->calcFramePos(critters.size()-1);
-						nc->calcCamPos();
 
 						cerr << endl;
 					}
@@ -397,7 +397,9 @@ void World::insertRandomFood(int amount, float energy)
 		Food *f = new Food;
 		f->position	= findEmptySpace(foodsize);
 		f->energy	= energy;
-		f->resize(foodsize);
+
+		f->resize((foodsize/2.0f) + (foodsize/foodenergy/2.0f) * energy);
+		//f->resize((foodsize/foodenergy) * energy);
 		food.push_back( f );
 	}
 }
@@ -499,10 +501,7 @@ void World::drawWithGrid()
 	// draw floor
 	grid.draw();
 
-	glVertexPointer(3, GL_FLOAT, 0, food[0]->vertices);
-	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
 	for( unsigned int i=0; i < food.size(); i++) food[i]->draw();
-
 	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
 	for( unsigned int i=0; i < bullets.size(); i++) bullets[i]->draw();
 	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();
@@ -513,8 +512,6 @@ void World::drawWithFloor(Critter *c)
 	// draw floor
 	floor.draw();
 
-	glVertexPointer(3, GL_FLOAT, 0, food[0]->vertices);
-	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
 	for( unsigned int i=0; i < food.size(); i++)
 	{
 		Food *f = food[i];
