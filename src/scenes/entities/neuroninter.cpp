@@ -10,7 +10,7 @@ NeuronInter::NeuronInter()
 	potential	= 0;
 
 	// forbidden firing time
-	nofiretime	= 5;
+	nofiretime	= 2;
 	nofirecount	= 0;
 
 	// output
@@ -30,7 +30,21 @@ void NeuronInter::process()
 	unsigned int isize = inputs.size();
 	for ( unsigned int i=0; i < isize; i++ )
 	{
-		if ( *inputs[i]->ref > 0 ) potential += inputs[i]->weight;
+		if ( *inputs[i]->ref > 0 )
+//		{
+			potential += inputs[i]->weight;
+
+//			// neuron plasticity test
+// 			if ( inputs[i]->weight < 0 && inputs[i]->weight > (-1*(int)iWeightRange) ) inputs[i]->weight--;
+// 			else if ( inputs[i]->weight > 0 && inputs[i]->weight < (int)iWeightRange ) inputs[i]->weight++;
+// 		}
+// 		else
+// 		{
+// 			// neuron plasticity test
+// 			if ( inputs[i]->weight < 0 && inputs[i]->weight > (-1*(int)iWeightRange) ) inputs[i]->weight++;
+// 			else if ( inputs[i]->weight > 0 && inputs[i]->weight < (int)iWeightRange ) inputs[i]->weight--;
+// 		}
+
 	}
 
 	// do we spike/fire

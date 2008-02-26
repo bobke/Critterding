@@ -5,7 +5,7 @@ void Critter::initConst()
 	maxSize			= 1.0f;
 	components		= 4;
 	maxEnergyLevel		= 5000.0f;
-	maxtotalFrames		= 5000;
+	maxtotalFrames		= 10000;
 	procreateTimeTrigger	= maxtotalFrames / 5;
 	minprocenergyLevel	= maxEnergyLevel * 0.8f;
 	fireTimeTrigger		= 5;
@@ -80,7 +80,9 @@ void Critter::setup()
 	brain.setupArchitecture();
 
 	// resize by brain architecture properties
-	float newsize		= ((maxSize/2) / brain.absmaxneurons) * brain.totalneurons + (((maxSize/2)/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
+	//float newsize		= ((maxSize/2) / brain.absmaxneurons) * brain.totalneurons + (((maxSize/2)/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
+	float newsize		= ((maxSize/3) / brain.absmaxneurons) * brain.totalneurons + (((maxSize/3)/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections*2);
+	//float newsize		= ((maxSize/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
 	resize(newsize);
 
 	volume			= size * size * size * 100.0f;
@@ -124,7 +126,7 @@ void Critter::process()
 		energyUsed = 0.0f;
 
 		energyUsed += (float)brain.neuronsfired * (size/2.0f);
-		energyUsed += (float)motorneuronsfired * volume;
+		energyUsed += (float)motorneuronsfired * (volume);
 
 	// apply energy usage
 	energyLevel -= energyUsed;
@@ -284,20 +286,20 @@ void Critter::mutate()
 {
 	adamdist++;
 
-	// mutate color
-	unsigned int mode = randgen.get(1,2);
-	unsigned int ncolor = randgen.get(0,2);
-
-	if ( mode == 1 )
-	{
-		color[ncolor] += (float)randgen.get(1,5)/100.0f;
-		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
-	}
-	else
-	{
-		color[ncolor] -= (float)randgen.get(1,5)/100.0f;
-		if ( color[ncolor] < 0.05f ) color[ncolor] = 0.05f;
-	}
+// 	// mutate color
+// 	unsigned int mode = randgen.get(1,2);
+// 	unsigned int ncolor = randgen.get(0,2);
+// 
+// 	if ( mode == 1 )
+// 	{
+// 		color[ncolor] += (float)randgen.get(1,5)/100.0f;
+// 		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
+// 	}
+// 	else
+// 	{
+// 		color[ncolor] -= (float)randgen.get(1,5)/100.0f;
+// 		if ( color[ncolor] < 0.05f ) color[ncolor] = 0.05f;
+// 	}
 
 	brain.mutate();
 }
@@ -477,12 +479,14 @@ void Critter::resize(float newsize)
 	void Critter::rotateLeft()
 	{
 		rotation += speedfactor*20.0f;
+		if ( rotation > 360.0f ) rotation -= 360.0f;
 		calcCamPos();
 	}
 	
 	void Critter::rotateRight()
 	{
 		rotation -= speedfactor*20.0f;
+		if ( rotation < 0.0f ) rotation += 360.0f;
 		calcCamPos();
 	}
 
