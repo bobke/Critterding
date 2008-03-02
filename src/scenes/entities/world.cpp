@@ -41,7 +41,7 @@ World::World()
 	foodsize		= 0.1f;
 	foodenergy		= 5000.0f;
 
-	freeEnergy		= foodenergy * 40.0f;
+	freeEnergy		= foodenergy * 60.0f;
 	freeEnergyInfo		= freeEnergy;
 
 	maxcritters		= 1000;

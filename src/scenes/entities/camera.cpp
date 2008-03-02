@@ -28,13 +28,12 @@ void Camera::place(unsigned int *width, unsigned int *height)
 	float nheight = 0.5f * ((float)(*height) / *width);
 	glFrustum(-0.5f,0.5f,-nheight,nheight,1.0f,10000.0f);
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
 	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
 	glRotatef(rotation.y, 0.0f, 1.0f, 0.0f);
 	glTranslatef(position.x, position.y, position.z);
 
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 void Camera::follow(unsigned int *width, unsigned int *height, Critter *c)
@@ -47,7 +46,6 @@ void Camera::follow(unsigned int *width, unsigned int *height, Critter *c)
 	float nheight = 0.05f * ((float)(*height) / *width);
 	glFrustum(-0.05f,0.05f,-nheight,nheight,0.1f,5.0f);
 
-	glRotatef(0.0f, -1.0f, 0.0f, 0.0f);
 	glRotatef(c->rotation, 0.0f, -1.0f, 0.0f);
 	glTranslatef(-c->cameraposition.x, -c->cameraposition.y, -c->cameraposition.z);
 

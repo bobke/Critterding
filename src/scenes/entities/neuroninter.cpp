@@ -2,6 +2,9 @@
 
 NeuronInter::NeuronInter()
 {
+
+	maxconns	= 150;
+
 	// input weight range, 5 = -5 <-> +5	-> 10 in total because 0 will be excluded
 	iWeightRange	= 10;
 
@@ -17,9 +20,13 @@ NeuronInter::NeuronInter()
 	output		= 0;
 	waitoutput	= 0;
 
-	// SPECIALO optional reference that makes this a motor neuron, but it depends on not being defined
+	// SPECIALO optional reference that makes this a MOTOR neuron, but it depends on not being defined
 	isMotor		= false;
 	MotorFunc	= 0;
+
+	// SPECIALO optional reference that makes this a PLASTIC neuron, but it depends on not being defined
+	isPlastic	= false;
+	plasticity	= 0;
 
 
 }
@@ -31,20 +38,7 @@ void NeuronInter::process()
 	for ( unsigned int i=0; i < isize; i++ )
 	{
 		if ( *inputs[i]->ref > 0 )
-//		{
 			potential += inputs[i]->weight;
-
-//			// neuron plasticity test
-// 			if ( inputs[i]->weight < 0 && inputs[i]->weight > (-1*(int)iWeightRange) ) inputs[i]->weight--;
-// 			else if ( inputs[i]->weight > 0 && inputs[i]->weight < (int)iWeightRange ) inputs[i]->weight++;
-// 		}
-// 		else
-// 		{
-// 			// neuron plasticity test
-// 			if ( inputs[i]->weight < 0 && inputs[i]->weight > (-1*(int)iWeightRange) ) inputs[i]->weight++;
-// 			else if ( inputs[i]->weight > 0 && inputs[i]->weight < (int)iWeightRange ) inputs[i]->weight--;
-// 		}
-
 	}
 
 	// do we spike/fire
@@ -59,6 +53,80 @@ void NeuronInter::process()
 			// fire the neuron
 			waitoutput = 1;
 			nofirecount = nofiretime;
+
+			// SYNAPTIC PLASTICITY
+			if ( isPlastic )
+			{
+
+				float proAm = ((float)iWeightRange/plasticity);
+				float connAm = proAm / 100.0f;
+
+				// loop all connections
+				unsigned int isize = inputs.size();
+				for ( unsigned int i=0; i < isize; i++ )
+				{
+					// this input fired
+					if ( *inputs[i]->ref > 0 )
+					{
+						// this input was excitatory
+						if ( inputs[i]->weight > 0.0f )
+						{
+							// increase weight if possible, else SPLIT THE INPUT
+							inputs[i]->weight += proAm;
+							if ( inputs[i]->weight > (float)iWeightRange )
+							{
+
+								if ( inputs[i]->weight > 1000.0f )
+								{
+									cerr << inputs[i]->weight << " yez " << (float)iWeightRange << endl;
+									sleep (5);
+								}
+
+								if ( i > 160 )
+								{
+									cerr << i << " yez " << inputs.size() << endl;
+									sleep (5);
+								}
+
+								if ( inputs.size() < maxconns )
+								{
+									//cerr << "splitting input " << i << endl;
+									inputs[i]->weight = inputs[i]->weight/2.0f;
+	
+									input *in = new input;
+									in->ref = inputs[i]->ref;
+									in->weight = inputs[i]->weight;
+									inputs.push_back( in );
+								}
+								else
+								{
+									inputs[i]->weight = (float)iWeightRange;
+								}
+							}
+						}
+					}
+					// this input did not fire
+					else
+					{
+						// this input was excitatory
+						if ( inputs[i]->weight > 0.0f )
+						{
+							// decrease weight if possible, else REMOVE INPUT
+							inputs[i]->weight -= connAm;
+							if ( inputs[i]->weight < 0.0f )
+							{
+								cerr << "removing input " << i << endl;
+								delete inputs[i];
+								inputs.erase(inputs.begin()+i);
+								i--;
+								isize--;
+							}
+						}
+					}
+
+				}
+			}
+
 		}
 		else
 		{

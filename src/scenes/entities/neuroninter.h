@@ -9,7 +9,7 @@ using namespace std;
 struct input
 {
 	unsigned int *ref;
-	int weight;
+	float weight;
 };
 
 class NeuronInter
@@ -20,10 +20,17 @@ class NeuronInter
 
 		unsigned int		output;
 		unsigned int		waitoutput;
+		unsigned int		maxconns;
+
 		int			fireThresh;
 		unsigned int		iWeightRange;
+		unsigned int		nofiretime;
+
 		bool			isMotor;
 		unsigned int		MotorFunc;
+
+		bool			isPlastic;
+		unsigned int		plasticity;
 
 		void			process();
 		void			connec(unsigned int *output, int weight);
@@ -31,8 +38,7 @@ class NeuronInter
 		vector<struct input*>	inputs;
 
 	private:
-		int			potential;
-		unsigned int		nofiretime;
+		float			potential;
 		unsigned int		nofirecount;
 
 
