@@ -6,7 +6,7 @@ INCLUDES = $(all_includes)
 # the library search path.
 
 
-SUBDIRS = gl utils scenes
+SUBDIRS = utils brain gl scenes
 
 
 critterding_SOURCES = critterding.cpp

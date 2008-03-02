@@ -4,10 +4,11 @@
 #include "../../utils/parser.h"
 #include "../../utils/randgen.h"
 #include "vector3f.h"
-#include "brain.h"
-#include "neuronsensor.h"
-#include "neuroninter.h"
-#include "archneuron.h"
+#include "../../brain/brain.h"
+
+//#include "brain/neuronsensor.h"
+//#include "brain/neuroninter.h"
+//#include "brain/archneuron.h"
 
 #include "GL/gl.h"
 #include <cmath>
