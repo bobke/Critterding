@@ -5,6 +5,7 @@ Brain::Brain()
 	// neural properties
 	percentSensoryConns	= 10;
 	percentMotor		= 10;
+	percentPlastic		= 25;
 
 	absmaxneurons		= 150;
 	absmaxconns		= 150;
@@ -77,10 +78,16 @@ void Brain::setupArchitecture()
 	for ( unsigned int i=0; i < totalneurons; i++ )
 	{
 		NeuronInter *n = new NeuronInter;
+
+		n->maxconns	= absmaxconns;
+
 		n->fireThresh	= NeuronArch[i]->fireThresh;
 		n->iWeightRange	= NeuronArch[i]->iWeightRange;
+		n->nofiretime	= NeuronArch[i]->nofiretime;
 		n->isMotor	= NeuronArch[i]->isMotor;
 		n->MotorFunc	= NeuronArch[i]->MotorFunc;
+		n->isPlastic	= NeuronArch[i]->isPlastic;
+		n->plasticity	= NeuronArch[i]->plasticity;
 		Neurons.push_back( n );
 	}
 
@@ -134,19 +141,27 @@ void Brain::randomArchitecture()
 
 unsigned int Brain::addRandomArchNeuron()
 {
-	unsigned int ThreshMin = 10;
-	unsigned int ThreshMax = 100;
-	unsigned int MaxWeightRange = 20;
-
 	ArchNeuron *n = new ArchNeuron;
-	n->fireThresh	= randgen.get( ThreshMin, ThreshMax );
-	n->iWeightRange	= randgen.get( 1, MaxWeightRange );
-	n->isMotor = false;
 
+	n->fireThresh	= randgen.get( 20, 100 );
+
+	n->iWeightRange	= randgen.get( 1, 20 );
+
+	n->nofiretime	= randgen.get( 0, 2 );
+//	n->nofiretime	= 0;
+
+	n->isMotor = false;
 	if ( randgen.get( 1, 100 ) <= percentMotor )
 	{
 		n->isMotor = true;
 		n->MotorFunc = randgen.get( 0, totalOutputs-1 );
+	}
+
+	n->isPlastic = false;
+	if ( randgen.get( 1, 100 ) <= percentPlastic )
+	{
+		n->isPlastic = true;
+		n->plasticity = randgen.get( 100, 1000 );
 	}
 
 	NeuronArch.push_back( n );
@@ -194,7 +209,7 @@ void Brain::mutate()
 	for ( unsigned int i=0; i < runs; i++ )
 	{
 
-		unsigned int mode = randgen.get(1,50);
+		unsigned int mode = randgen.get(1,30);
 
 		// remove a neuron
 			if ( mode == 1 )
@@ -315,12 +330,27 @@ void Brain::setArch(string &content)
 				if(EOF == sscanf(IWR.c_str(), "%d", &NeuronArch[nid]->iWeightRange)) cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
+			if ( parseH.beginMatchesStrip( "nft=", line ) )
+			{
+				string NFT = parseH.returnUntillStrip( "|", line );
+				//cerr << "IWR: " << IWR  << endl;
+				if(EOF == sscanf(NFT.c_str(), "%d", &NeuronArch[nid]->nofiretime)) cerr << "ERROR INSERTING CRITTER" << endl;
+			}
+
 			if ( parseH.beginMatchesStrip( "mtr=", line ) )
 			{
 				string MTR = parseH.returnUntillStrip( "|", line );
 				//cerr << "MTR: " << MTR  << endl;
 				if(EOF == sscanf(MTR.c_str(), "%d", &NeuronArch[nid]->MotorFunc)) cerr << "ERROR INSERTING CRITTER" << endl;
 				NeuronArch[nid]->isMotor = true;
+			}
+
+			if ( parseH.beginMatchesStrip( "pla=", line ) )
+			{
+				string PLA = parseH.returnUntillStrip( "|", line );
+				//cerr << "MTR: " << MTR  << endl;
+				if(EOF == sscanf(PLA.c_str(), "%d", &NeuronArch[nid]->plasticity)) cerr << "ERROR INSERTING CRITTER" << endl;
+				NeuronArch[nid]->isPlastic = true;
 			}
 
 			if ( parseH.beginMatchesStrip( "inputs(|", line ) )
@@ -368,7 +398,9 @@ string Brain::getArch()
 		buf << "neuron(";
 		buf << "ft=" << NeuronArch[i]->fireThresh;
 		buf << "|iwr=" << NeuronArch[i]->iWeightRange;
+		buf << "|nft=" << NeuronArch[i]->nofiretime;
 		if ( NeuronArch[i]->isMotor ) buf << "|mtr=" << NeuronArch[i]->MotorFunc;
+		if ( NeuronArch[i]->isPlastic ) buf << "|pla=" << NeuronArch[i]->plasticity;
 
 		// inputs
 		buf << "|inputs(";

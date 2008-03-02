@@ -5,7 +5,7 @@ void Critter::initConst()
 	maxSize			= 1.0f;
 	components		= 4;
 	maxEnergyLevel		= 5000.0f;
-	maxtotalFrames		= 10000;
+	maxtotalFrames		= 2000;
 	procreateTimeTrigger	= maxtotalFrames / 5;
 	minprocenergyLevel	= maxEnergyLevel * 0.8f;
 	fireTimeTrigger		= 5;
@@ -320,11 +320,12 @@ void Critter::place()
 	glLoadIdentity();
 	glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, 5.0f);
 
+	glRotatef(rotation, 0.0f, -1.0f, 0.0f);
+	glTranslatef(-cameraposition.x, -cameraposition.y, -cameraposition.z);
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glRotatef(rotation, 0.0f, -1.0f, 0.0f);
-	glTranslatef(-cameraposition.x, -cameraposition.y, -cameraposition.z);
 }
 
 void Critter::calcFramePos(unsigned int pos)

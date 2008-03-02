@@ -17,11 +17,17 @@ class ArchNeuron
 		ArchNeuron();
 		~ArchNeuron();
 
-		unsigned int fireThresh;
-		unsigned int iWeightRange;
-		bool isMotor;
-		unsigned int MotorFunc;
-		vector<struct ArchConnection*> connections;
+		unsigned int			fireThresh;
+		unsigned int			iWeightRange;
+		unsigned int			nofiretime;
+
+		bool				isMotor;
+		unsigned int			MotorFunc;
+
+		bool				isPlastic;
+		unsigned int			plasticity;
+
+		vector<struct ArchConnection*>	connections;
 
 };
 

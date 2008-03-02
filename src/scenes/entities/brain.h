@@ -48,6 +48,7 @@ class Brain
 
 		unsigned int		percentSensoryConns;
 		unsigned int		percentMotor;
+		unsigned int		percentPlastic;
 
 		unsigned int		mutatepercent;
 
