@@ -11,6 +11,13 @@ void File::save(string &filename, string &content)
 	file_op.close();
 }
 
+void File::save(string &filename, string* content)
+{
+	fstream file_op(filename.c_str(),ios::out);
+	file_op << *content;
+	file_op.close();
+}
+
 void File::open(string &filename, string &content)
 {
 	content.clear();

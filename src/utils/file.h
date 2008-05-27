@@ -21,6 +21,7 @@ class File
 		~File();
 
 		void		save(string &filename, string &content);
+		void		save(string &filename, string* content);
 		void		open(string &filename, string &content);
 };
 

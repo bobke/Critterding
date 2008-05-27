@@ -4,7 +4,7 @@
 #include "../gl/glscene.h"
 #include "../utils/sleeper.h"
 #include "entities/camera.h"
-#include "entities/world.h"
+#include "entities/worldb.h"
 
 
 using std::cerr;
@@ -27,7 +27,7 @@ class Evolution : public GLScene {
 	private:
 		Sleeper sleeper;
 
-		World world;
+		WorldB world;
 
 		bool drawCVNeurons;
 };
