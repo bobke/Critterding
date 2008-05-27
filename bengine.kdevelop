@@ -22,7 +22,7 @@
   </general>
   <kdevautoproject>
     <general>
-      <activetarget>src/brain/libbrain.la</activetarget>
+      <activetarget>ocr/ocr</activetarget>
       <useconfiguration>debug</useconfiguration>
     </general>
     <run>
@@ -36,6 +36,8 @@
       <runarguments>
         <bengine/>
         <critterding/>
+        <libbrain/>
+        <ocr/>
       </runarguments>
       <globaldebugarguments>bengine</globaldebugarguments>
       <globalcwd>/projects/attick/c++/bengine-test/debug</globalcwd>
@@ -44,9 +46,13 @@
       <autokdesu>false</autokdesu>
       <debugarguments>
         <critterding/>
+        <libbrain/>
+        <ocr/>
       </debugarguments>
       <cwd>
         <critterding>/projects/attick/c++/bengine-test/debug/./src/scenes</critterding>
+        <libbrain>/projects/attick/c++/bengine-test/debug/./src/brain-B</libbrain>
+        <ocr>/projects/attick/c++/bengine-test/debug/./ocr</ocr>
       </cwd>
     </run>
     <configurations>
