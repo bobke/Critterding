@@ -2,7 +2,7 @@
 
 Evolution::Evolution()
 {
-	drawCVNeurons = false;
+	drawCVNeurons = true;
 }
 
 void Evolution::draw()
@@ -70,10 +70,14 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_F5:
-			world.decreaseMaxcritters();
+			world.freeEnergyInfo -= world.foodenergy * 50.0f;
+			world.freeEnergy -= world.foodenergy * 50.0f;
+			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
 		break;
 		case XK_F6:
-			world.increaseMaxcritters();
+			world.freeEnergyInfo += world.foodenergy * 50.0f;
+			world.freeEnergy += world.foodenergy * 50.0f;
+			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
 		break;
 
 		case XK_F7:
@@ -146,6 +150,12 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_KP_Down:
 			camera.lookDown(1.1f);
 		break;
+		case XK_KP_Page_Down:
+			camera.rollLeft(1.0f);
+		break;
+		case XK_KP_End:
+			camera.rollRight(1.0f);
+		break;
 
 		// Camera Moving
 		case XK_Home:
@@ -160,28 +170,28 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 		case XK_Delete:
 		break;
-
+// << "/" << setw(3) << critters.size()-1
 		case XK_Page_Up:
 			world.freeEnergyInfo += world.foodenergy;
 			world.freeEnergy += world.foodenergy;
-			cerr << "total energy in system: " << world.freeEnergyInfo << " (" << world.freeEnergyInfo / world.foodenergy << ")" << endl;
+			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
 		break;
 		case XK_Page_Down:
 			world.freeEnergyInfo -= world.foodenergy;
 			world.freeEnergy -= world.foodenergy;
-			cerr << "total energy in system: " << world.freeEnergyInfo << " (" << world.freeEnergyInfo / world.foodenergy << ")" << endl;
+			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
 		break;
 		case XK_Up:
-			camera.moveForward(0.2f);
+			camera.moveForward(0.1f);
 		break;
 		case XK_Down:
-			camera.moveBackward(0.2f);
+			camera.moveBackward(0.1f);
 		break;
 		case XK_Left:
-			camera.moveLeft(0.2f);
+			camera.moveLeft(0.1f);
 		break;
 		case XK_Right:
-			camera.moveRight(0.2f);
+			camera.moveRight(0.1f);
 		break;
 	}
 }

@@ -3,7 +3,7 @@
 
 #include "GL/gl.h"
 #include "vector3f.h"
-#include "critter.h"
+#include "critterb.h"
 
 class Camera{
 public:
@@ -18,7 +18,7 @@ public:
 	Vector3f rotation;
 
 	void place(unsigned int *width, unsigned int *height);
-	void follow(unsigned int *width, unsigned int *height, Critter *c);
+	void follow(unsigned int *width, unsigned int *height, CritterB *c);
 
 	void lookRight(const float& factor);
 	void lookLeft(const float& factor);
@@ -33,6 +33,8 @@ public:
 	void moveUp(const float& factor);
 	void moveDown(const float& factor);
 	void moveRollLeft(const float& factor);
+	void rollRight(const float& factor);
+	void rollLeft(const float& factor);
 
 };
 

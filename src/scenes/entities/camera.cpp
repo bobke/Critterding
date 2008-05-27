@@ -9,8 +9,8 @@ Camera::Camera()
 {
 	// for 7*7 use 				position	= Vector3f(-3.5, -8.0, -5.2);
 
-	position	= Vector3f(-3.5, -8.0, -5.2);
-	rotation	= Vector3f( 80.0,  0.0, 0.0);
+	position	= Vector3f(-3.5, -0.2, -5.2);
+	rotation	= Vector3f( 0.0,  0.0, 0.0);
 }
 
 
@@ -30,13 +30,14 @@ void Camera::place(unsigned int *width, unsigned int *height)
 
 	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
 	glRotatef(rotation.y, 0.0f, 1.0f, 0.0f);
+	glRotatef(rotation.z, 0.0f, 0.0f, 1.0f);
 	glTranslatef(position.x, position.y, position.z);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
 
-void Camera::follow(unsigned int *width, unsigned int *height, Critter *c)
+void Camera::follow(unsigned int *width, unsigned int *height, CritterB *c)
 {
 	glViewport(0,0,*width,*height);
 
@@ -57,46 +58,74 @@ void Camera::follow(unsigned int *width, unsigned int *height, Critter *c)
 
 void Camera::moveForward(const float& factor)
 {
-	float reused = (360.0f-rotation.y) * 0.0174532925f;
-        position.x += sin(reused) * factor;
-        position.z += cos(reused) * factor;
-//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
+	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
+	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
+
+	position.x += sin(reusedY) * cos(reusedX) * factor;
+	position.y -= sin(reusedX) * factor;
+	position.z += cos(reusedY) * cos(reusedX) * factor;
+
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveBackward(const float& factor)
 {
-	float reused = (360.0f-rotation.y) * 0.0174532925f;
-        position.x -= sin(reused) * factor;
-        position.z -= cos(reused) * factor;
-//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
+	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
+	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
+
+	position.x -= sin(reusedY) * cos(reusedX) * factor;
+	position.y += sin(reusedX) * factor;
+	position.z -= cos(reusedY) * cos(reusedX) * factor;
+
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveRight(const float& factor)
 {
 	float reused = (90.0f-rotation.y) * 0.0174532925f;
-        position.x -= sin(reused) * factor;
-        position.z -= cos(reused) * factor;
-//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
+	position.x -= sin(reused) * factor;
+	position.z -= cos(reused) * factor;
+
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveLeft(const float& factor)
 {
 	float reused = (270.0f-rotation.y) * 0.0174532925f;
-        position.x -= sin(reused) * factor;
-        position.z -= cos(reused) * factor;
-//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
+	position.x -= sin(reused) * factor;
+	position.z -= cos(reused) * factor;
+
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveUp(const float& factor)
 {
 	position.y -= factor;
-//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
+
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveDown(const float& factor)
 {
 	position.y += factor;
-//	cerr << " camera: " << position.x << ":" << position.y << ":" << position.z << endl;
+
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
+}
+
+void Camera::rollLeft(const float& factor)
+{
+	rotation.z += factor;
+}
+
+void Camera::rollRight(const float& factor)
+{
+	rotation.z -= factor;
 }
 
 
@@ -107,7 +136,8 @@ void Camera::lookRight(const float& factor)
         rotation.y += factor;
 	if ( rotation.y > 360.0f ) rotation.y -= 360.0f;
 
-	cout << rotation.y << endl;
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::lookLeft(const float& factor)
@@ -115,18 +145,24 @@ void Camera::lookLeft(const float& factor)
         rotation.y -= factor;
 	if ( rotation.y < 0.0f ) rotation.y += 360.0f;
 
-	cout << rotation.y << endl;
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::lookUp(const float& factor)
 {
         rotation.x += factor;
-//	cout << rotateX << endl;
+	if ( rotation.x > 360.0f ) rotation.x -= 360.0f;
+
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::lookDown(const float& factor)
 {
         rotation.x -= factor;
-//	cout << rotateX << endl;
+	if ( rotation.x < 0.0f ) rotation.x += 360.0f;
 
+	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }

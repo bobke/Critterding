@@ -3,7 +3,7 @@
 Sleeper::Sleeper()
 {
  	active		= false;
-	optimal		= 300;
+	optimal		= 3000;
 	stepsize	= 250;
 	sleeptime	= 10000;
 	cps		= optimal;
