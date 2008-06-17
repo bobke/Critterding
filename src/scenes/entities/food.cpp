@@ -2,7 +2,7 @@
 
 Food::Food()
 {
-	size		= 0.1f;
+	size		= 0.2f;
  	energy		= 1000.0f;
 	resize(size);
 

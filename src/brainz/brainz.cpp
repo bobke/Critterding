@@ -175,8 +175,8 @@ Brainz::Brainz()
 	 		else
 			{
 				as.neuronID = randgen.get( 0, ArchNeurons.size()-1 );
-				// make sure we aren't connected to ourself
-					while ( as.neuronID == parentneuron ) as.neuronID = randgen.get( 0, ArchNeurons.size()-1 );
+				// make sure we aren't connected to ourself FIXME DISABLED
+				//	while ( as.neuronID == parentneuron ) as.neuronID = randgen.get( 0, ArchNeurons.size()-1 );
 	 		}
 	
 		// dendrite branch number
@@ -270,7 +270,6 @@ Brainz::Brainz()
 
 	}
 
-	// TODO mutate(unsigned int runs)
 	void Brainz::mutate(unsigned int runs)
 	{
 
@@ -298,8 +297,11 @@ Brainz::Brainz()
 						unsigned int nid = ArchNeurons.size()-1;
 						//cerr << "\t+N " << nid << endl;
 
-						// random amount of connections
-						unsigned int cAmount = randgen.get( minSynapsesAtBuildtime, maxSynapsesAtBuildtime );
+						// random amount of connections, at mutation time we take the average syns / neuron *2 as a maximum
+						int maxSynapsesAtMutation = (2*(totalSynapses/totalNeurons)) + minSynapsesAtBuildtime;
+						//cerr << "2*(" << totalSynapses << "/" << totalNeurons << "):" << maxSynapsesAtMutation << endl;
+
+						unsigned int cAmount = randgen.get( minSynapsesAtBuildtime, maxSynapsesAtMutation );
 						for ( unsigned j = 0; j < cAmount; j++ )
 						{
 							addRandomArchSynapse(nid);

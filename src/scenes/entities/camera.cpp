@@ -9,8 +9,11 @@ Camera::Camera()
 {
 	// for 7*7 use 				position	= Vector3f(-3.5, -8.0, -5.2);
 
-	position	= Vector3f(-3.5, -0.2, -5.2);
-	rotation	= Vector3f( 0.0,  0.0, 0.0);
+//  camera rot: 74:0:0
+//  camera pos: -5:-10.507:-8.66153
+
+	position	= Vector3f(-5.0, -10.5, -8.66);
+	rotation	= Vector3f( 74.0,  0.0, 0.0);
 }
 
 
