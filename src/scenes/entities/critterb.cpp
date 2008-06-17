@@ -7,9 +7,9 @@ void CritterB::initConst()
 	maxSize			= 1.0f;
 	components		= 4;
 	maxEnergyLevel		= 5000.0f;
-	maxtotalFrames		= 2500;
-	procreateTimeTrigger	= 500;
-	minprocenergyLevel	= maxEnergyLevel * 0.8f;
+	maxtotalFrames		= 1000;
+	procreateTimeTrigger	= 100;
+	minprocenergyLevel	= maxEnergyLevel * 0.6f;
 	fireTimeTrigger		= 5;
 	minfireenergyLevel	= maxEnergyLevel * 0.0f;
 }
@@ -18,33 +18,9 @@ CritterB::CritterB()
 {
 	initConst();
 
-// 	brain.minSynapses				= 1;
-// 	brain.minNeuronsAtBuildtime			= 10;
-// 	brain.maxNeurons				= 200;
-// 	brain.maxNeuronsAtBuildtime			= 100;
-// 	brain.minSynapsesAtBuildtime			= 1;
-// 	brain.maxSynapses				= 200;
-// 	brain.maxSynapsesAtBuildtime			= 100;
-// 	brain.percentMutation				= 1;
-// 	brain.percentChanceInhibitoryNeuron		= 50;
-// 	brain.percentChanceConsistentSynapses		= 0;
-// 	brain.percentChanceInhibitorySynapses		= 50;
-// 	brain.percentChanceMotorNeuron			= 50;
-// 	brain.percentChancePlasticNeuron		= 0;
-// 	brain.percentChanceSensorySynapse		= 50;
-// 	brain.minFiringThreshold			= 3;
-// 	brain.maxFiringThreshold			= 10;
-// 	brain.maxDendridicBranches			= 3;
-// 	brain.percentMutateEffectAddNeuron		= 39;
-// 	brain.percentMutateEffectRemoveNeuron		= 1;
-// 	brain.percentMutateEffectAlterNeuron		= 20;
-// 	brain.percentMutateEffectAddSynapse		= 39;
-// 	brain.percentMutateEffectRemoveSynapse		= 1;
-
-
 		brain.maxNeurons					= 200;
 		brain.minSynapses					= 1;
-		brain.maxSynapses					= 200;
+		brain.maxSynapses					= 100;
 
 		brain.minNeuronsAtBuildtime				= 10;
 		brain.maxNeuronsAtBuildtime				= 100;
@@ -54,10 +30,10 @@ CritterB::CritterB()
 		brain.percentMutation					= 5;
 			brain.mutate_percentMutation			= false;
 
-		brain.minSynapsesAtBuildtime				= 3;
+		brain.minSynapsesAtBuildtime				= 1;
 			brain.mutate_minSynapsesAtBuildtime		= false;
 
-		brain.maxSynapsesAtBuildtime				= 50;
+		brain.maxSynapsesAtBuildtime				= 100;
 			brain.mutate_maxSynapsesAtBuildtime		= false;
 
 		brain.percentChanceInhibitoryNeuron			= 50;
@@ -78,13 +54,13 @@ CritterB::CritterB()
 		brain.percentChanceSensorySynapse			= 50;
 			brain.mutate_percentChanceSensorySynapse	= false;
 
-		brain.minFiringThreshold				= 1;
+		brain.minFiringThreshold				= 6;
 			brain.mutate_minFiringThreshold			= false;
 
-		brain.maxFiringThreshold				= 5;
+		brain.maxFiringThreshold				= 18;
 			brain.mutate_maxFiringThreshold			= false;
 
-		brain.maxDendridicBranches				= 1;
+		brain.maxDendridicBranches				= 3;
 			brain.mutate_maxDendridicBranches		= false;
 
 		brain.percentMutateEffectAddNeuron			= 20;
@@ -97,7 +73,7 @@ CritterB::CritterB()
 
 	// frame capturing options
 	adamdist		= 0;
-	drawEvery		= 3;
+	drawEvery		= 1;
 	frameWidth		= 9;
 	frameHeight		= frameWidth; // must be same as frameWidth
 	visionDivider		= 4;
@@ -157,10 +133,9 @@ void CritterB::setup()
 	brain.wireArch();
 
 	// resize by brain architecture properties
-	//float newsize		= ((maxSize/2) / brain.absmaxneurons) * brain.totalneurons + (((maxSize/2)/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
-	float newsize		= ((maxSize/3) / brain.maxNeurons) * brain.totalNeurons + (((maxSize/3)/(brain.maxNeurons*brain.maxSynapses))*brain.totalSynapses*2);
-	//float newsize		= ((maxSize/(brain.absmaxneurons*brain.absmaxconns))*brain.totalconnections);
-	resize(newsize);
+	//float newsize		= ((maxSize/3) / brain.maxNeurons) * brain.totalNeurons + (((maxSize/3)/(brain.maxNeurons*brain.maxSynapses))*brain.totalSynapses*2);
+	//resize(newsize);
+	resize(0.12f);
 
 	volume			= size * size * size * 100.0f;
 
@@ -363,20 +338,20 @@ void CritterB::mutate()
 {
 	adamdist++;
 
-// 	// mutate color
-// 	unsigned int mode = randgen.get(1,2);
-// 	unsigned int ncolor = randgen.get(0,2);
-// 
-// 	if ( mode == 1 )
-// 	{
-// 		color[ncolor] += (float)randgen.get(1,5)/100.0f;
-// 		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
-// 	}
-// 	else
-// 	{
-// 		color[ncolor] -= (float)randgen.get(1,5)/100.0f;
-// 		if ( color[ncolor] < 0.05f ) color[ncolor] = 0.05f;
-// 	}
+	// mutate color
+	unsigned int mode = randgen.get(1,2);
+	//unsigned int ncolor = randgen.get(0,2);
+
+	if ( mode == 1 )
+	{
+		color[2] += (float)randgen.get(1,10)/1000.0f;
+		if ( color[2] > 1.0f ) color[2] = 1.0f;
+	}
+	else
+	{
+		color[2] -= (float)randgen.get(1,10)/1000.0f;
+		if ( color[2] < 0.05f ) color[2] = 0.05f;
+	}
 
 	brain.mutate(0);
 }

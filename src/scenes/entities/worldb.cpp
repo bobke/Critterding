@@ -37,19 +37,19 @@ WorldB::WorldB()
 	selectedCritter		= 0;
 	isSelected		= false;
 
-	size			= 20;
+	size			= 5;
 	foodsize		= 0.1f;
-	foodenergy		= 5000.0f;
+	foodenergy		= 1000.0f;
 
 	freeEnergy		= foodenergy * 100.0f;
 	freeEnergyInfo		= freeEnergy;
 
 	maxcritters		= 1000;
-	mincritters		= 0;
+	mincritters		= 5;
 
-	mutationRate		= 15; // %
+	mutationRate		= 10; // %
 
-	flipnewbornes		= true;
+	flipnewbornes		= false;
 
 	grid.resize(size);
 	floor.resize(size);
@@ -408,8 +408,8 @@ void WorldB::insertCritter()
 {
 	CritterB *c = new CritterB;
 
-	c->color[0] = (float)randgen.get( 0,1000 ) / 1000;
-	c->color[1] = (float)randgen.get( 0,1000 ) / 1000;
+	c->color[0] = 1.0f;
+	c->color[1] = 0.0f;
 	c->color[2] = (float)randgen.get( 0,1000 ) / 1000;
 	c->color[3] = 0.0f;
 
@@ -438,8 +438,13 @@ void WorldB::removeCritter(unsigned int cid)
 	{
 		Food *f = new Food;
 		f->position	= critters[cid]->position;
-		f->energy	= critters[cid]->energyLevel;
-		f->resize(foodsize);
+		f->energy	= critters[cid]->energyLevel / 2;
+		freeEnergy += (critters[cid]->energyLevel - f->energy);
+
+		// put 50% of energy in food, rest back in space
+
+		//f->resize(foodsize);
+		f->resize((foodsize/2.0f) + (foodsize/foodenergy/2.0f) * f->energy);
 		food.push_back( f );
 	}
 	else freeEnergy += critters[cid]->energyLevel;

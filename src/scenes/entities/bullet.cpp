@@ -2,8 +2,8 @@
 
 Bullet::Bullet()
 {
-	size		= 0.02f;
-	speed		= 0.025f;
+	size		= 0.04f;
+	speed		= 0.1f;
 	resize(size);
 
 	maxSteps	= 10;
