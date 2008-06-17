@@ -12,12 +12,12 @@ BUTTONS
    F4            : increase Minimum Critters
 
    F7            : insert Adam
-                   alternatively this can be used as a population reduce mechanism,
+                   alternatively this can be used as a population reduction mechanism,
                    by inserting a considering amount of adams, the current population size
-                   will drop.  Use with care.
+                   will drop.
 
    F11           : load all critters from "~/.critterding/load" directory
-   F12           : save all critters into "~/.critterding/save/(time)" directory
+   F12           : save all critters into "~/.critterding/save/(timestamp)" directory
 
    Insert        : toggle critter vision
 
