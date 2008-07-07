@@ -39,7 +39,7 @@ WorldB::WorldB()
 
 	size			= 5;
 	foodsize		= 0.1f;
-	foodenergy		= 1000.0f;
+	foodenergy		= 1500.0f;
 
 	freeEnergy		= foodenergy * 100.0f;
 	freeEnergyInfo		= freeEnergy;

@@ -70,13 +70,16 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_F5:
-			world.freeEnergyInfo -= world.foodenergy * 50.0f;
-			world.freeEnergy -= world.foodenergy * 50.0f;
-			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
+			if ( (world.freeEnergyInfo-(world.foodenergy*25.0f)) / world.foodenergy >= 0.0f )
+			{
+				world.freeEnergyInfo -= world.foodenergy * 25.0f;
+				world.freeEnergy -= world.foodenergy * 25.0f;
+				cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
+			}
 		break;
 		case XK_F6:
-			world.freeEnergyInfo += world.foodenergy * 50.0f;
-			world.freeEnergy += world.foodenergy * 50.0f;
+			world.freeEnergyInfo += world.foodenergy * 25.0f;
+			world.freeEnergy += world.foodenergy * 25.0f;
 			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
 		break;
 
@@ -177,9 +180,12 @@ void Evolution::handlekey(const KeySym& key)
 			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
 		break;
 		case XK_Page_Down:
-			world.freeEnergyInfo -= world.foodenergy;
-			world.freeEnergy -= world.foodenergy;
-			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
+			if ( (world.freeEnergyInfo-world.foodenergy)/world.foodenergy > 0.0f )
+			{
+				world.freeEnergyInfo -= world.foodenergy;
+				world.freeEnergy -= world.foodenergy;
+				cerr << (world.freeEnergyInfo-world.foodenergy)/world.foodenergy << " food in system" << endl;
+			}
 		break;
 		case XK_Up:
 			camera.moveForward(0.1f);
