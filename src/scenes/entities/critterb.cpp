@@ -18,22 +18,22 @@ CritterB::CritterB()
 {
 	initConst();
 
-		brain.maxNeurons					= 200;
+		brain.maxNeurons					= 500;
 		brain.minSynapses					= 1;
-		brain.maxSynapses					= 100;
+		brain.maxSynapses					= 50;
 
 		brain.minNeuronsAtBuildtime				= 10;
-		brain.maxNeuronsAtBuildtime				= 100;
+		brain.maxNeuronsAtBuildtime				= brain.maxNeurons;
 
 			brain.mutate_PlasticityFactors			= false;
 
-		brain.percentMutation					= 5;
+		brain.percentMutation					= 1;
 			brain.mutate_percentMutation			= false;
 
 		brain.minSynapsesAtBuildtime				= 1;
 			brain.mutate_minSynapsesAtBuildtime		= false;
 
-		brain.maxSynapsesAtBuildtime				= 100;
+		brain.maxSynapsesAtBuildtime				= brain.maxSynapses;
 			brain.mutate_maxSynapsesAtBuildtime		= false;
 
 		brain.percentChanceInhibitoryNeuron			= 50;
@@ -51,16 +51,16 @@ CritterB::CritterB()
 		brain.percentChancePlasticNeuron			= 50;
 			brain.mutate_percentChancePlasticNeuron		= false;
 
-		brain.percentChanceSensorySynapse			= 50;
+		brain.percentChanceSensorySynapse			= 25;
 			brain.mutate_percentChanceSensorySynapse	= false;
 
-		brain.minFiringThreshold				= 6;
+		brain.minFiringThreshold				= 2;
 			brain.mutate_minFiringThreshold			= false;
 
-		brain.maxFiringThreshold				= 18;
+		brain.maxFiringThreshold				= 10;
 			brain.mutate_maxFiringThreshold			= false;
 
-		brain.maxDendridicBranches				= 3;
+		brain.maxDendridicBranches				= 2;
 			brain.mutate_maxDendridicBranches		= false;
 
 		brain.percentMutateEffectAddNeuron			= 20;

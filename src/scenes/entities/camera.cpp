@@ -7,12 +7,8 @@ using namespace std;
 
 Camera::Camera()
 {
-	// for 7*7 use 				position	= Vector3f(-3.5, -8.0, -5.2);
-
-//  camera rot: 74:0:0
-//  camera pos: -5:-10.507:-8.66153
-
-	position	= Vector3f(-5.0, -10.5, -8.66);
+	position	= Vector3f(-2.5, -5.36942, -4.60814);
+//	position	= Vector3f(-5.0, -10.5, -8.66);
 	rotation	= Vector3f( 74.0,  0.0, 0.0);
 }
 
