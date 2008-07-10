@@ -147,10 +147,13 @@ Brainz::Brainz()
 			}
 
 		// determine firing threshold
-			an.firingThreshold = randgen.get( minFiringThreshold, maxFiringThreshold );
+			if ( an.isMotor ) an.firingThreshold = maxFiringThreshold;
+			else an.firingThreshold = randgen.get( minFiringThreshold, maxFiringThreshold );
 
 		// determine dendritic branches
-			an.dendridicBranches = randgen.get( 1, maxDendridicBranches );
+			if ( an.isMotor ) an.dendridicBranches = maxDendridicBranches;
+			else an.dendridicBranches = randgen.get( 1, maxDendridicBranches );
+			
 
 		// push it on the vector
 			ArchNeurons.push_back( an );
