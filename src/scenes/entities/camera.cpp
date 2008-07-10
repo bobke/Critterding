@@ -7,7 +7,16 @@ using namespace std;
 
 Camera::Camera()
 {
-	position	= Vector3f(-2.5, -5.36942, -4.60814);
+// world=5
+//	position	= Vector3f(-2.5, -5.36942, -4.60814);
+
+// world=6
+//	position	= Vector3f(-3.0, -6.6222, -5.6555);
+
+// world=7
+	position	= Vector3f(-3.5, -7.7059, -6.48241);
+
+// world=10
 //	position	= Vector3f(-5.0, -10.5, -8.66);
 	rotation	= Vector3f( 74.0,  0.0, 0.0);
 }

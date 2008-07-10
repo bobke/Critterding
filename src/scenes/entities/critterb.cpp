@@ -7,7 +7,7 @@ void CritterB::initConst()
 	maxSize			= 1.0f;
 	components		= 4;
 	maxEnergyLevel		= 5000.0f;
-	maxtotalFrames		= 1000;
+	maxtotalFrames		= 2000;
 	procreateTimeTrigger	= 100;
 	minprocenergyLevel	= maxEnergyLevel * 0.6f;
 	fireTimeTrigger		= 5;
@@ -22,8 +22,8 @@ CritterB::CritterB()
 		brain.minSynapses					= 1;
 		brain.maxSynapses					= 50;
 
-		brain.minNeuronsAtBuildtime				= 10;
-		brain.maxNeuronsAtBuildtime				= brain.maxNeurons;
+		brain.minNeuronsAtBuildtime				= 20;
+		brain.maxNeuronsAtBuildtime				= 60;
 
 			brain.mutate_PlasticityFactors			= false;
 
@@ -51,7 +51,7 @@ CritterB::CritterB()
 		brain.percentChancePlasticNeuron			= 50;
 			brain.mutate_percentChancePlasticNeuron		= false;
 
-		brain.percentChanceSensorySynapse			= 25;
+		brain.percentChanceSensorySynapse			= 20;
 			brain.mutate_percentChanceSensorySynapse	= false;
 
 		brain.minFiringThreshold				= 2;
@@ -60,14 +60,14 @@ CritterB::CritterB()
 		brain.maxFiringThreshold				= 10;
 			brain.mutate_maxFiringThreshold			= false;
 
-		brain.maxDendridicBranches				= 2;
+		brain.maxDendridicBranches				= 3;
 			brain.mutate_maxDendridicBranches		= false;
 
-		brain.percentMutateEffectAddNeuron			= 20;
-		brain.percentMutateEffectRemoveNeuron			= 20;
+		brain.percentMutateEffectAddNeuron			= 5;
+		brain.percentMutateEffectRemoveNeuron			= 5;
 		brain.percentMutateEffectAlterNeuron			= 20;
-		brain.percentMutateEffectAddSynapse			= 20;
-		brain.percentMutateEffectRemoveSynapse			= 20;
+		brain.percentMutateEffectAddSynapse			= 35;
+		brain.percentMutateEffectRemoveSynapse			= 35;
 			brain.mutate_MutateEffects			= false;
 
 
@@ -177,8 +177,11 @@ void CritterB::process()
 	// calc used energy, energyUsed is used in world aswell, don't remove
 		energyUsed = 0.0f;
 
-		energyUsed += (float)brain.neuronsFired * size * 2.0f;
-		energyUsed += (float)motorneuronsfired * volume;
+// 		energyUsed += (float)brain.neuronsFired * size * 2.0f;
+// 		energyUsed += (float)motorneuronsfired * volume;
+
+		//cerr << "energy used " << ((float)brain.neuronsFired+(float)motorneuronsfired) / 20.0f << endl;
+		energyUsed += ((float)brain.neuronsFired+(float)motorneuronsfired) / 20.0f;
 
 	// apply energy usage
 	energyLevel -= energyUsed;

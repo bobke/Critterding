@@ -3,7 +3,7 @@
 Food::Food()
 {
 	size		= 0.2f;
- 	energy		= 1500.0f;
+ 	energy		= 1750.0f;
 	resize(size);
 
 	totalFrames		= 0;
