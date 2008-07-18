@@ -140,6 +140,7 @@ void CritterB::setup()
 	volume			= size * size * size * 100.0f;
 
 	speedfactor		= (maxSize-size) / 10.0f; // FIXME HACK lower me :)
+
 //	speedfactor		= 100.0f / (volume*10000.0f);
 
 // 	maxEnergyLevel		= 50000.0f * size;
