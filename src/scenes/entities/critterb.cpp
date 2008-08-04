@@ -73,7 +73,6 @@ CritterB::CritterB()
 
 	// frame capturing options
 	adamdist		= 0;
-	drawEvery		= 1;
 	frameWidth		= 9;
 	frameHeight		= frameWidth; // must be same as frameWidth
 	visionDivider		= 4;
@@ -120,8 +119,6 @@ void CritterB::setup()
 	// initialize mutexes
 	pthread_mutex_init (&position_mutex, NULL);
 
-	drawedAgo		= drawEvery;
-
 	totalFrames		= 0;
 	procreateTimeCount	= 0;
 	fireTimeCount		= 0;
@@ -130,7 +127,7 @@ void CritterB::setup()
 	retina = (unsigned char*)malloc(items);
 
 	// initialize retina
-	for ( int i=0; i < items; i++ ) retina[i] = 0;
+	for ( unsigned int i=0; i < items; i++ ) retina[i] = 0;
 
 	// setup brain from architecture
 	brain.wireArch();
@@ -607,14 +604,6 @@ void CritterB::resize(float newsize)
 					if(EOF == sscanf(AD.c_str(), "%d", &adamdist)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 
-			// drawevery=1;
-				else if ( parseH.beginMatchesStrip( "drawevery=", line ) )
-				{
-					string DE = parseH.returnUntillStrip( ";", line );
-					//cerr << "AD: " << AD  << endl;
-					if(EOF == sscanf(DE.c_str(), "%d", &drawEvery)) cerr << "ERROR INSERTING CRITTER" << endl;
-				}
-
 			// visiondivider=1;
 				else if ( parseH.beginMatchesStrip( "visiondivider=", line ) )
 				{
@@ -652,7 +641,6 @@ void CritterB::resize(float newsize)
 		buf << "color=" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << ";\n";
 		buf << "visionres=" << frameWidth << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
-		buf << "drawevery=" << drawEvery << ";\n";
 		buf << "visiondivider=" << visionDivider << ";\n";
 
 		string* arch = brain.getArch();
