@@ -23,7 +23,7 @@ CritterB::CritterB()
 		brain.maxSynapses					= 50;
 
 		brain.minNeuronsAtBuildtime				= 20;
-		brain.maxNeuronsAtBuildtime				= 60;
+		brain.maxNeuronsAtBuildtime				= 80;
 
 			brain.mutate_PlasticityFactors			= false;
 
@@ -33,7 +33,7 @@ CritterB::CritterB()
 		brain.minSynapsesAtBuildtime				= 1;
 			brain.mutate_minSynapsesAtBuildtime		= false;
 
-		brain.maxSynapsesAtBuildtime				= brain.maxSynapses;
+		brain.maxSynapsesAtBuildtime				= 40;
 			brain.mutate_maxSynapsesAtBuildtime		= false;
 
 		brain.percentChanceInhibitoryNeuron			= 50;
@@ -63,11 +63,11 @@ CritterB::CritterB()
 		brain.maxDendridicBranches				= 3;
 			brain.mutate_maxDendridicBranches		= false;
 
-		brain.percentMutateEffectAddNeuron			= 5;
-		brain.percentMutateEffectRemoveNeuron			= 5;
+		brain.percentMutateEffectAddNeuron			= 10;
+		brain.percentMutateEffectRemoveNeuron			= 10;
 		brain.percentMutateEffectAlterNeuron			= 20;
-		brain.percentMutateEffectAddSynapse			= 35;
-		brain.percentMutateEffectRemoveSynapse			= 35;
+		brain.percentMutateEffectAddSynapse			= 30;
+		brain.percentMutateEffectRemoveSynapse			= 30;
 			brain.mutate_MutateEffects			= false;
 
 
@@ -129,6 +129,9 @@ void CritterB::setup()
 	// Allocate the neccessary memory for our retina.
 	retina = (unsigned char*)malloc(items);
 
+	// initialize retina
+	for ( int i=0; i < items; i++ ) retina[i] = 0;
+
 	// setup brain from architecture
 	brain.wireArch();
 
@@ -176,13 +179,13 @@ void CritterB::process()
 		procOutputNeurons();
 
 	// calc used energy, energyUsed is used in world aswell, don't remove
-		energyUsed = 0.0f;
 
 // 		energyUsed += (float)brain.neuronsFired * size * 2.0f;
 // 		energyUsed += (float)motorneuronsfired * volume;
 
 		//cerr << "energy used " << ((float)brain.neuronsFired+(float)motorneuronsfired) / 20.0f << endl;
-		energyUsed += ((float)brain.neuronsFired+(float)motorneuronsfired) / 20.0f;
+
+		energyUsed = ( (float)brain.neuronsFired + (2.0f*(float)motorneuronsfired) + ((float)brain.totalSynapses/50.0) ) / 50.0f;
 
 	// apply energy usage
 	energyLevel -= energyUsed;
@@ -195,20 +198,33 @@ void CritterB::procInputNeurons()
 		{
 			for ( unsigned int i=0; i < items; i++ )
 			{
-				if ( retina[i] )	brain.Inputs[i].output = 1;
+				if ( retina[i]>0 )	brain.Inputs[i].output = 1;
 				else			brain.Inputs[i].output = 0;
 			}
 		}
 		else
 		{
-			for ( unsigned int i=0; i < items; i++ )
+/*			for ( unsigned int i=0; i < items; i++ )
 			{
 				unsigned target = i * visionDivider;
 				unsigned int NeuronToFire = (unsigned int)(((float)retina[i] / 256.0f) * visionDivider);
 				for ( unsigned int z=0; z < visionDivider; z++ )
 				{
-					if ( retina[i] && z == NeuronToFire  )	brain.Inputs[target+z].output = 1;
-					else					brain.Inputs[target+z].output = 0;
+					if ( retina[i]>0 && z == NeuronToFire  )	brain.Inputs[target+z].output = 1;
+					else						brain.Inputs[target+z].output = 0;
+				}
+			}*/
+			for ( unsigned int i=0; i < items; i++ )
+			{
+				unsigned target = i * visionDivider;
+				for ( unsigned int z=0; z < visionDivider; z++ )
+				{
+					brain.Inputs[target+z].output = 0;
+				}
+				if ( retina[i]>0 )
+				{
+					unsigned int NeuronToFire = (unsigned int)(((float)retina[i] / 256.0f) * visionDivider);
+					brain.Inputs[target+NeuronToFire].output = 1;
 				}
 			}
 		}

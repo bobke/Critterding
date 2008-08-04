@@ -173,20 +173,21 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 		case XK_Delete:
 		break;
-// << "/" << setw(3) << critters.size()-1
+
+		case XK_Page_Down:
+			if ( (world.freeEnergyInfo-world.foodenergy) / world.foodenergy >= 0.0f )
+			{
+				world.freeEnergyInfo -= world.foodenergy;
+				world.freeEnergy -= world.foodenergy;
+				cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
+			}
+		break;
 		case XK_Page_Up:
 			world.freeEnergyInfo += world.foodenergy;
 			world.freeEnergy += world.foodenergy;
 			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
 		break;
-		case XK_Page_Down:
-			if ( (world.freeEnergyInfo-world.foodenergy)/world.foodenergy > 0.0f )
-			{
-				world.freeEnergyInfo -= world.foodenergy;
-				world.freeEnergy -= world.foodenergy;
-				cerr << (world.freeEnergyInfo-world.foodenergy)/world.foodenergy << " food in system" << endl;
-			}
-		break;
+
 		case XK_Up:
 			camera.moveForward(0.1f);
 		break;

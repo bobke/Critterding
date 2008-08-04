@@ -37,15 +37,14 @@ WorldB::WorldB()
 	selectedCritter		= 0;
 	isSelected		= false;
 
-	size			= 15;
+	size			= 30;
 	foodsize		= 0.1f;
 	foodenergy		= 1750.0f;
 
-	freeEnergy		= foodenergy * 150.0f;
+	freeEnergy		= foodenergy * 0.0f;
 	freeEnergyInfo		= freeEnergy;
 
-	maxcritters		= 1000;
-	mincritters		= 5;
+	mincritters		= 0;
 
 	mutationRate		= 10; // %
 
@@ -520,45 +519,41 @@ void WorldB::drawWithFloor(CritterB *c)
 	for( unsigned int i=0; i < food.size(); i++)
 	{
 		Food *f = food[i];
-		float avgSize = 6.0 - (f->halfsize + c->halfsize);
+		float avgSize = 5.0 - (f->halfsize + c->halfsize);
 		if ( fabs( c->position.x - f->position.x ) <= avgSize && fabs( c->position.z - f->position.z ) <= avgSize )
 		{
 			f->draw();
 		}
-//		f->draw();
 	}
 
 	for( unsigned int i=0; i < critters.size(); i++)
 	{
 		CritterB *oc = critters[i];
-		float avgSize = 6.0 - (oc->halfsize + c->halfsize);
+		float avgSize = 5.0 - (oc->halfsize + c->halfsize);
 		if ( fabs( c->position.x - oc->position.x ) <= avgSize && fabs( c->position.z - oc->position.z ) <= avgSize )
 		{
 			oc->draw();
 		}
-//		oc->draw();
 	}
 
 	for( unsigned int i=0; i < walls.size(); i++)
 	{
 		Wall *w = walls[i];
-		float avgSize = 6.0 - (w->halfsize + c->halfsize);
+		float avgSize = 5.0 - (w->halfsize + c->halfsize);
 		if ( fabs( c->position.x - w->position.x ) <= avgSize && fabs( c->position.z - w->position.z ) <= avgSize )
 		{
 			w->draw();
 		}
-//		w->draw();
 	}
 
 	for( unsigned int i=0; i < bullets.size(); i++)
 	{
 		Bullet *b = bullets[i];
-		float avgSize = 6.0 - (b->halfsize + c->halfsize);
+		float avgSize = 5.0 - (b->halfsize + c->halfsize);
 		if ( fabs( c->position.x - b->position.x ) <= avgSize && fabs( c->position.z - b->position.z ) <= avgSize )
 		{
 			b->draw();
 		}
-//		b->draw();
 	}
 }
 
@@ -566,26 +561,14 @@ void WorldB::drawWithFloor(CritterB *c)
 
 void WorldB::increaseMincritters()
 {
-	if ( mincritters < maxcritters ) mincritters++;
-	cerr << "min c: " << mincritters << "max c: " << maxcritters << endl;
+	mincritters++;
+	cerr << "min c: " << mincritters << endl;
 }
 
 void WorldB::decreaseMincritters()
 {
 	if ( mincritters > 0 ) mincritters--;
-	cerr << "min c: " << mincritters << "max c: " << maxcritters << endl;
-}
-
-void WorldB::increaseMaxcritters()
-{
-	maxcritters++;
-	cerr << "min c: " << mincritters << "max c: " << maxcritters << endl;
-}
-
-void WorldB::decreaseMaxcritters()
-{
-	if ( maxcritters > mincritters ) maxcritters--;
-	cerr << "min c: " << mincritters << "max c: " << maxcritters << endl;
+	cerr << "min c: " << mincritters << endl;
 }
 
 void WorldB::toggleBGthread()
