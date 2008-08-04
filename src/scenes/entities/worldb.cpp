@@ -1,35 +1,5 @@
 #include "worldb.h"
 
-// THREADED FUNC
-extern "C" void *procCritters( void *ptr )
-{
-
-//	WorldB *w = static_cast<WorldB *>(ptr);
-	WorldB *w = (WorldB *)ptr;
-
-	for(;;)
-	{
-		pthread_mutex_lock( &w->condition_startthreads_mutex );
-		pthread_cond_wait( &w->condition_startthreads, &w->condition_startthreads_mutex );
-		pthread_mutex_unlock( &w->condition_startthreads_mutex );
-
-		pthread_mutex_lock( &w->cqueue_mutex );
-		while ( !w->cqueue.empty() )
-		{
- 			unsigned int i = w->cqueue[0];
- 			w->cqueue.erase(w->cqueue.begin());
-			pthread_mutex_unlock( &w->cqueue_mutex );
-
-			w->processCritter(i);
-
-			pthread_mutex_lock( &w->cqueue_mutex );
-		}
-		pthread_mutex_unlock( &w->cqueue_mutex );
-	}
-	return 0;
-}
-
-
 WorldB::WorldB()
 {
 //	Infobar *infobar	= Infobar::instance();
@@ -55,172 +25,7 @@ WorldB::WorldB()
 
 	// home & program directory
 	createDirs();
-
-	// threading prep
-	bgthreadActive		= false;
-	bgthreadIsSpawned	= false;
-
-	// init mutexes
-	pthread_mutex_init (&cqueue_mutex, NULL);
-
-	pthread_mutex_init (&condition_startthreads_mutex, NULL);
-	pthread_cond_init (&condition_startthreads, NULL);
 }
-
-void WorldB::processCritter(unsigned int i)
-{
-	CritterB *c = critters[i];
-
-	// over food input neuron
-		c->touchingFood = false;
-		for( unsigned int f=0; f < food.size() && !c->touchingFood; f++)
-		{
-			Food *fo = food[f];
-			float avgSize = (c->size + fo->size) / 2;
-			if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
-			{
-				c->touchingFood = true;
-				c->touchedFoodID = f;
-			}
-		}
-
-	// process
-		c->process();
-
-	// record critter used energy
-		freeEnergy += c->energyUsed;
-
-	// move
-		if (spotIsFree(c->newposition, c->size, i))
-		{
-			//pthread_mutex_lock( &c->position_mutex );
-			c->moveToNewPoss();
-			//pthread_mutex_unlock( &c->position_mutex );
-		}
-
-	// eat
-		if ( c->touchingFood && c->eat )
-		{
-			//cerr << "pre E: " << critters[i]->energyLevel << endl;
-			// increase energyLevel of critter, decrease of food
-			//float eaten = ( c->maxEnergyLevel - c->energyLevel ) / 10.0f;
-
-			float eaten = c->maxEnergyLevel / 50.0f;
-			if ( c->energyLevel + eaten > c->maxEnergyLevel ) eaten -= (c->energyLevel + eaten) - c->maxEnergyLevel;
-
-			c->energyLevel		+= eaten;
-
-			Food *fo = food[c->touchedFoodID];
-
-			fo->energy		-= eaten;
-
-			if ( fo->energy > 0.0f ) fo->resize((foodsize/2.0f) + (foodsize/foodenergy/2.0f) * fo->energy);
-		}
-
-	// fire
-		if ( c->fire && c->canFire )
-		{
-			//cerr << "critter " << i << "(ad:" << c->adamdist << ") FIRES\n";
-			c->fireTimeCount = 0;
-			float used = c->maxEnergyLevel * 0.01f;
-			c->energyLevel	-= used;
-			freeEnergy			+= used;
-
-			Bullet *b = new Bullet;
-
-			b->calcDirection(c->rotation);
-			float reused = c->rotation * 0.0174532925f;
-			b->position.x = c->position.x - sin(reused) * (c->halfsize + b->size+0.1);
-			b->position.z = c->position.z - cos(reused) * (c->halfsize + b->size+0.1);
-
-			bullets.push_back( b );
-		}
-
-	// hit by bullet?
-		for( unsigned int f=0; f < bullets.size() && !c->wasShot; f++)
-		{
-			Bullet *b = bullets[f];
-			float avgSize = (c->size + b->size) / 2;
-			if ( fabs(c->position.x - b->position.x) <= avgSize && fabs(c->position.z - b->position.z) <= avgSize )
-			{
-				c->totalFrames += (c->maxtotalFrames/10) ;
-				c->wasShot = true;
-				delete b;
-				bullets.erase(bullets.begin()+f);
-			}
-		}
-
-	// procreate
-		//procreation if procreation energy trigger is hit
-		if ( c->procreate && c->canProcreate )
-		{
-
-			// move critter it's half size to the left
-			float reused = (90.0f+c->rotation) * 0.0174532925f;
-			c->prepNewPoss();
-			c->newposition.x -= sin(reused) * c->halfsize;
-			c->newposition.z -= cos(reused) * c->halfsize;
-
-			if (spotIsFree(c->newposition, c->size, i))
-			{
-					CritterB *nc = new CritterB(*c);
-
-					// mutate or not
-					bool mutant = false;
-					if ( randgen.get(1,100) <= mutationRate )
-					{
-						mutant = true;
-						nc->mutate();
-					}
-					nc->setup();
-
-					// same positions / rotation
-					nc->position = c->position;
-					nc->rotation = c->rotation;
-
-					// move new critter to the right by sum of halfsizes
-					float reused = (270.0f+nc->rotation) * 0.0174532925f;
-					Vector3f newpos;
-					nc->prepNewPoss();
-					nc->newposition.x -= sin(reused) * (c->halfsize + nc->halfsize + 0.01);
-					nc->newposition.z -= cos(reused) * (c->halfsize + nc->halfsize + 0.01);
-
-					if (spotIsFree(nc->newposition, nc->size, i))
-					{
-						cerr << "critter " << setw(3) << i << "/" << setw(3) << critters.size()-1 << " PROCREATES (ad: " << setw(4) << c->adamdist << ")";
-
-						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
-						if ( mutant ) cerr << " ( mutant )";
-
-						// optional rotate 180 of new borne
-						if ( flipnewbornes ) nc->rotation = nc->rotation + 180.0f;
-
-						// split energies in half
-						nc->energyLevel = c->energyLevel/2.0f;
-						c->energyLevel = nc->energyLevel;
-
-						// reset procreation energy count
-						c->procreateTimeCount = 0;
-	
-						nc->calcFramePos(critters.size());
-
-						critters.push_back( nc );
-
-						c->moveToNewPoss();
-						nc->moveToNewPoss();
-
-						cerr << endl;
-					}
-					else
-					{
-						delete nc;
-					}
-
-			}
- 		}
-
-}
-
 
 void WorldB::process()
 {
@@ -300,87 +105,212 @@ void WorldB::process()
 		}
 	}
 
-	// threads or no threads
+	// for all critters do
+	for( unsigned int i=0; i < critters.size(); i++)
+	{
+		CritterB *c = critters[i];
 
-	unsigned int lmax = critters.size();
+		c->place();
 
- 	if ( bgthreadActive )
- 	{
-		// for all critters do
-		for( unsigned int i=0; i < lmax; i++)
-		{
-			CritterB *c = critters[i];
-
-			// vision preparation
-				if ( c->drawedAgo == c->drawEvery )
+		// draw everything in it's sight
+			floor.draw();
+		
+			for( unsigned int j=0; j < critters.size(); j++)
+			{
+				CritterB *oc = critters[j];
+				float avgSize = 5.0 - (oc->halfsize + c->halfsize);
+				if ( fabs( c->position.x - oc->position.x ) <= avgSize && fabs( c->position.z - oc->position.z ) <= avgSize )
 				{
-					c->place();
-					drawWithFloor(c);
-					c->procFrame();
-					c->drawedAgo = 1;
+					oc->draw();
 				}
-				else
+			}
+		
+			for( unsigned int j=0; j < food.size(); j++)
+			{
+				Food *f = food[j];
+				float avgSize = 5.0 - (f->halfsize + c->halfsize);
+				if ( fabs( c->position.x - f->position.x ) <= avgSize && fabs( c->position.z - f->position.z ) <= avgSize )
 				{
-					if ( c->drawedAgo == 1 ) memset(c->retina, 0, c->items);
-					c->drawedAgo++;
+					f->draw();
 				}
+			}
+		
+			for( unsigned int j=0; j < walls.size(); j++)
+			{
+				Wall *w = walls[j];
+				float avgSize = 5.0 - (w->halfsize + c->halfsize);
+				if ( fabs( c->position.x - w->position.x ) <= avgSize && fabs( c->position.z - w->position.z ) <= avgSize )
+				{
+					w->draw();
+				}
+			}
+		
+			for( unsigned int j=0; j < bullets.size(); j++)
+			{
+				Bullet *b = bullets[j];
+				float avgSize = 5.0 - (b->halfsize + c->halfsize);
+				if ( fabs( c->position.x - b->position.x ) <= avgSize && fabs( c->position.z - b->position.z ) <= avgSize )
+				{
+					b->draw();
+				}
+			}
 
-				pthread_mutex_lock( &cqueue_mutex );
-					cqueue.push_back( i );
-//					cerr << "PUSHED: " << i << "on queue" << endl;
-				pthread_mutex_unlock( &cqueue_mutex );
-
-				pthread_mutex_lock( &condition_startthreads_mutex );
-					pthread_cond_signal( &condition_startthreads );
-				pthread_mutex_unlock( &condition_startthreads_mutex );
-		}
-
-//		cerr << "queue at end: " << cqueue.size() << "while critters: " << critters.size() << endl;
-		unsigned int counter = 0;
-
-		// broadcast until cqueue is empty
-		pthread_mutex_lock( &cqueue_mutex );
-		while ( !cqueue.empty() )
-		{
-			pthread_mutex_unlock( &cqueue_mutex );
-				pthread_mutex_lock( &condition_startthreads_mutex );
-					pthread_cond_signal( &condition_startthreads );
-					counter++;
-				pthread_mutex_unlock( &condition_startthreads_mutex );
-			pthread_mutex_lock( &cqueue_mutex );
-		}
-//		cerr << "DONE " << "queue at end: " << cqueue.size() << "  SIGNALS SENT: " << counter << endl;
-		pthread_mutex_unlock( &cqueue_mutex );
+		c->procFrame();
 	}
 
-	// exec without threads
-	else
+	// seems to go faster in 2 loops, caching wise
+	unsigned int lmax = critters.size();
+	for( unsigned int i=0; i < lmax; i++)
 	{
-		// for all critters do
-		for( unsigned int i=0; i < lmax; i++)
-		{
-			CritterB *c = critters[i];
+		CritterB *c = critters[i];
 
-			// vision preparation
-				if ( c->drawedAgo == c->drawEvery )
+
+		// over food input neuron
+			c->touchingFood = false;
+			for( unsigned int f=0; f < food.size() && !c->touchingFood; f++)
+			{
+				Food *fo = food[f];
+				float avgSize = (c->size + fo->size) / 2;
+				if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
 				{
-					//if ( i == 0 ) cerr << "drawing " << c->drawedAgo << "==" << c->drawEvery << endl;
-
-					c->place();
-					drawWithFloor(c);
-					c->procFrame();
-					c->drawedAgo = 1;
+					c->touchingFood = true;
+					c->touchedFoodID = f;
 				}
-				else
+			}
+	
+		// process
+			c->process();
+	
+		// record critter used energy
+			freeEnergy += c->energyUsed;
+	
+		// move
+			if (spotIsFree(c->newposition, c->size, i))
+			{
+				//pthread_mutex_lock( &c->position_mutex );
+				c->moveToNewPoss();
+				//pthread_mutex_unlock( &c->position_mutex );
+			}
+	
+		// eat
+			if ( c->touchingFood && c->eat )
+			{
+				//cerr << "pre E: " << critters[i]->energyLevel << endl;
+				// increase energyLevel of critter, decrease of food
+				//float eaten = ( c->maxEnergyLevel - c->energyLevel ) / 10.0f;
+	
+				float eaten = c->maxEnergyLevel / 50.0f;
+				if ( c->energyLevel + eaten > c->maxEnergyLevel ) eaten -= (c->energyLevel + eaten) - c->maxEnergyLevel;
+	
+				c->energyLevel		+= eaten;
+	
+				Food *fo = food[c->touchedFoodID];
+	
+				fo->energy		-= eaten;
+	
+				if ( fo->energy > 0.0f ) fo->resize((foodsize/2.0f) + (foodsize/foodenergy/2.0f) * fo->energy);
+			}
+	
+		// fire
+			if ( c->fire && c->canFire )
+			{
+				//cerr << "critter " << i << "(ad:" << c->adamdist << ") FIRES\n";
+				c->fireTimeCount = 0;
+				float used = c->maxEnergyLevel * 0.01f;
+				c->energyLevel	-= used;
+				freeEnergy			+= used;
+	
+				Bullet *b = new Bullet;
+	
+				b->calcDirection(c->rotation);
+				float reused = c->rotation * 0.0174532925f;
+				b->position.x = c->position.x - sin(reused) * (c->halfsize + b->size+0.1);
+				b->position.z = c->position.z - cos(reused) * (c->halfsize + b->size+0.1);
+	
+				bullets.push_back( b );
+			}
+	
+		// hit by bullet?
+			for( unsigned int f=0; f < bullets.size() && !c->wasShot; f++)
+			{
+				Bullet *b = bullets[f];
+				float avgSize = (c->size + b->size) / 2;
+				if ( fabs(c->position.x - b->position.x) <= avgSize && fabs(c->position.z - b->position.z) <= avgSize )
 				{
-					//if ( i == 0 ) cerr << "not drawing " << c->drawedAgo << "!=" << c->drawEvery << endl;
-
-					if ( c->drawedAgo == 1 ) memset(c->retina, 0, c->items);
-					c->drawedAgo++;
+					c->totalFrames += (c->maxtotalFrames/10) ;
+					c->wasShot = true;
+					delete b;
+					bullets.erase(bullets.begin()+f);
 				}
+			}
+	
+		// procreate
+			//procreation if procreation energy trigger is hit
+			if ( c->procreate && c->canProcreate )
+			{
+	
+				// move critter it's half size to the left
+				float reused = (90.0f+c->rotation) * 0.0174532925f;
+				c->prepNewPoss();
+				c->newposition.x -= sin(reused) * c->halfsize;
+				c->newposition.z -= cos(reused) * c->halfsize;
+	
+				if (spotIsFree(c->newposition, c->size, i))
+				{
+					CritterB *nc = new CritterB(*c);
 
-				processCritter(i);
-		}
+					// mutate or not
+					bool mutant = false;
+					if ( randgen.get(1,100) <= mutationRate )
+					{
+						mutant = true;
+						nc->mutate();
+					}
+					nc->setup();
+
+					// same positions / rotation
+					nc->position = c->position;
+					nc->rotation = c->rotation;
+
+					// move new critter to the right by sum of halfsizes
+					float reused = (270.0f+nc->rotation) * 0.0174532925f;
+					Vector3f newpos;
+					nc->prepNewPoss();
+					nc->newposition.x -= sin(reused) * (c->halfsize + nc->halfsize + 0.01);
+					nc->newposition.z -= cos(reused) * (c->halfsize + nc->halfsize + 0.01);
+
+					if (spotIsFree(nc->newposition, nc->size, i))
+					{
+						cerr << "critter " << setw(3) << i << "/" << setw(3) << critters.size()-1 << " PROCREATES (ad: " << setw(4) << c->adamdist << ")";
+
+						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
+						if ( mutant ) cerr << " ( mutant )";
+
+						// optional rotate 180 of new borne
+						if ( flipnewbornes ) nc->rotation = nc->rotation + 180.0f;
+
+						// split energies in half
+						nc->energyLevel = c->energyLevel/2.0f;
+						c->energyLevel = nc->energyLevel;
+
+						// reset procreation energy count
+						c->procreateTimeCount = 0;
+	
+						nc->calcFramePos(critters.size());
+
+						critters.push_back( nc );
+
+						c->moveToNewPoss();
+						nc->moveToNewPoss();
+
+						cerr << endl;
+					}
+					else
+					{
+						delete nc;
+					}
+				}
+			}
 	}
 
 	//critters[0].printVision();
@@ -511,54 +441,7 @@ void WorldB::drawWithGrid()
 	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();
 }
 
-void WorldB::drawWithFloor(CritterB *c)
-{
-	// draw floor
-	floor.draw();
-
-	for( unsigned int i=0; i < food.size(); i++)
-	{
-		Food *f = food[i];
-		float avgSize = 5.0 - (f->halfsize + c->halfsize);
-		if ( fabs( c->position.x - f->position.x ) <= avgSize && fabs( c->position.z - f->position.z ) <= avgSize )
-		{
-			f->draw();
-		}
-	}
-
-	for( unsigned int i=0; i < critters.size(); i++)
-	{
-		CritterB *oc = critters[i];
-		float avgSize = 5.0 - (oc->halfsize + c->halfsize);
-		if ( fabs( c->position.x - oc->position.x ) <= avgSize && fabs( c->position.z - oc->position.z ) <= avgSize )
-		{
-			oc->draw();
-		}
-	}
-
-	for( unsigned int i=0; i < walls.size(); i++)
-	{
-		Wall *w = walls[i];
-		float avgSize = 5.0 - (w->halfsize + c->halfsize);
-		if ( fabs( c->position.x - w->position.x ) <= avgSize && fabs( c->position.z - w->position.z ) <= avgSize )
-		{
-			w->draw();
-		}
-	}
-
-	for( unsigned int i=0; i < bullets.size(); i++)
-	{
-		Bullet *b = bullets[i];
-		float avgSize = 5.0 - (b->halfsize + c->halfsize);
-		if ( fabs( c->position.x - b->position.x ) <= avgSize && fabs( c->position.z - b->position.z ) <= avgSize )
-		{
-			b->draw();
-		}
-	}
-}
-
-// min/max critter control
-
+// min critter control
 void WorldB::increaseMincritters()
 {
 	mincritters++;
@@ -569,25 +452,6 @@ void WorldB::decreaseMincritters()
 {
 	if ( mincritters > 0 ) mincritters--;
 	cerr << "min c: " << mincritters << endl;
-}
-
-void WorldB::toggleBGthread()
-{
-
-	if ( bgthreadActive ) bgthreadActive = false;
-	else
-	{
-		if ( !bgthreadIsSpawned )
-		{
-cerr << "CREATING THREAD" << endl;
-			pthread_create( &bgthread, NULL, ::procCritters, (void *) this );
-cerr << "DONE" << endl;
-			pthread_detach( bgthread );
-			bgthreadIsSpawned = true;
-		}
-		bgthreadActive = true;
-	}
-	cerr << "BACKGROUND THREAD: " << bgthreadActive << endl;
 }
 
 void WorldB::loadAllCritters()

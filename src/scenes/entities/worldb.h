@@ -42,17 +42,6 @@ class WorldB
 		int			size;
 		unsigned int		mutationRate;
 
-		// THREADING
-		pthread_t		bgthread;
-		bool			bgthreadActive;
-		bool			bgthreadIsSpawned;
-
-		pthread_cond_t		condition_startthreads;
-		pthread_mutex_t		condition_startthreads_mutex;
-
-		vector<unsigned int>	cqueue;
-		pthread_mutex_t		cqueue_mutex;
-
 		unsigned int		selectedCritter;
 		bool			isSelected;
 
@@ -66,12 +55,10 @@ class WorldB
 		void			positionCritterB(unsigned int cid);
 		void			saveAllCritters();
 		void			loadAllCritters();
-		void			processCritter(unsigned int i);
 
 		void			increaseMincritters();
 		void			decreaseMincritters();
 
-		void			toggleBGthread();
 		void			createWall();
 		void			destroyWall();
 		void			toggleGate(unsigned int wid);
@@ -102,8 +89,6 @@ class WorldB
 		void			createDirs();
 		bool			spotIsFree(Vector3f &position, float osize, unsigned int exclude);
 		bool			spotIsFree(Vector3f &position, float osize);
-
-		void			drawWithFloor(CritterB *c);
 };
 
 #endif

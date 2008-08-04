@@ -30,9 +30,6 @@ class CritterB
 		unsigned int		frameWidth;
 		unsigned int		frameHeight;
 
-		int			drawEvery;
-		int			drawedAgo;
-
 		float			size;
 		float			halfsize;
 		float			volume;
