@@ -70,8 +70,6 @@ class WorldB
 
 		void			increaseMincritters();
 		void			decreaseMincritters();
-		void			increaseMaxcritters();
-		void			decreaseMaxcritters();
 
 		void			toggleBGthread();
 		void			createWall();
@@ -90,7 +88,6 @@ class WorldB
 		Floor			floor;
 		Infobar			*infobar;
 		float			foodsize;
-		unsigned int		maxcritters;
 		unsigned int		mincritters;
 		string			homedir;
 		string			progdir;

@@ -14,11 +14,19 @@ Camera::Camera()
 //	position	= Vector3f(-3.0, -6.6222, -5.6555);
 
 // world=7
-	position	= Vector3f(-3.5, -7.7059, -6.48241);
+//	position	= Vector3f(-3.5, -7.7059, -6.48241);
 
 // world= 15
-	position	= Vector3f(-7.5, -15.9639, -13.8971);
+//	position	= Vector3f(-7.5, -15.9639, -13.8971);
 
+// world= 20
+//	position	= Vector3f(-10.0, -22.2945, -17.9489);
+
+// world= 25
+//	position	= Vector3f(-12.5, -27.3786, -22.3314);
+
+// world= 30
+	position	= Vector3f(-15.0, -32.5821, -26.5761);
 
 // world=10
 //	position	= Vector3f(-5.0, -10.5, -8.66);
