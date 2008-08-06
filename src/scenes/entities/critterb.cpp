@@ -20,10 +20,10 @@ CritterB::CritterB()
 
 		brain.maxNeurons					= 500;
 		brain.minSynapses					= 1;
-		brain.maxSynapses					= 50;
+		brain.maxSynapses					= 60;
 
 		brain.minNeuronsAtBuildtime				= 20;
-		brain.maxNeuronsAtBuildtime				= 80;
+		brain.maxNeuronsAtBuildtime				= 60;
 
 			brain.mutate_PlasticityFactors			= false;
 
@@ -33,7 +33,7 @@ CritterB::CritterB()
 		brain.minSynapsesAtBuildtime				= 1;
 			brain.mutate_minSynapsesAtBuildtime		= false;
 
-		brain.maxSynapsesAtBuildtime				= 40;
+		brain.maxSynapsesAtBuildtime				= 50;
 			brain.mutate_maxSynapsesAtBuildtime		= false;
 
 		brain.percentChanceInhibitoryNeuron			= 50;
@@ -127,7 +127,8 @@ void CritterB::setup()
 	retina = (unsigned char*)malloc(items);
 
 	// initialize retina
-	for ( unsigned int i=0; i < items; i++ ) retina[i] = 0;
+//	for ( unsigned int i=0; i < items; i++ ) retina[i] = 0;
+	memset(retina, 0, items);
 
 	// setup brain from architecture
 	brain.wireArch();
@@ -341,10 +342,6 @@ void CritterB::procOutputNeurons()
 
 void CritterB::procFrame()
 {
-	// Clear the variable.
-	// done in world now
-	//memset(retina, 0, items);
-
 	// read from front buffer
 //	glReadBuffer(GL_FRONT);
 	
