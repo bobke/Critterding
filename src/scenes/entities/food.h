@@ -18,6 +18,9 @@ class Food
 		float			halfsize;
 		float			energy;
 
+		float			maxsize;
+		float			maxenergy;
+
 		Vector3f		position;
 		float			color[4];
 
@@ -27,7 +30,7 @@ class Food
 		GLfloat 		vertices[24];
 
 		void			draw();
-		void			resize(float size);
+		void			resize();
 
 
 	private:

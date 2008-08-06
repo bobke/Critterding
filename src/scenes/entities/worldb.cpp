@@ -1,5 +1,81 @@
 #include "worldb.h"
 
+extern "C" void *procCritters( void *ptr )
+{
+
+	WorldB *b = static_cast<WorldB *>(ptr);
+
+	// register this thread
+	unsigned int threadID;
+	pthread_mutex_lock( &b->busyThreads_mutex );
+		threadID = b->registeredThreads++;
+		cerr << "registered thread " << threadID << endl;
+	pthread_mutex_unlock( &b->busyThreads_mutex );
+
+	while (1)
+	{
+		// thread stuff
+			pthread_mutex_lock( &b->condition_startthreads_mutex );
+	
+				pthread_mutex_lock( &b->busyThreads_mutex );
+					if ( --b->busyThreads == 0 )
+					{
+						pthread_mutex_lock( &b->condition_threadsdone_mutex );
+							pthread_cond_signal( &b->condition_threadsdone );
+						pthread_mutex_unlock( &b->condition_threadsdone_mutex );
+					}
+				pthread_mutex_unlock( &b->busyThreads_mutex );
+	
+			pthread_cond_wait( &b->condition_startthreads, &b->condition_startthreads_mutex );
+					//cerr << "thread " << threadID << " initiated" << endl;
+			pthread_mutex_unlock( &b->condition_startthreads_mutex );
+
+
+		// process
+
+			unsigned int csize = b->critters.size();
+			unsigned int fsize = b->food.size();
+			for ( unsigned int i=threadID; i < csize; i+=b->nthreads )
+			{
+					CritterB *c = b->critters[i];
+
+					// over food input neuron
+						c->touchingFood = false;
+						for( unsigned int f=0; f < fsize && !c->touchingFood; f++)
+						{
+							Food *fo = b->food[f];
+							float avgSize = (c->size + fo->size) / 2;
+							if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
+							{
+								c->touchingFood = true;
+								c->touchedFoodID = f;
+							}
+						}
+
+					c->process();
+
+					// record critter used energy
+					pthread_mutex_lock( &b->freeEnergy_mutex );
+						b->freeEnergy += c->energyUsed;
+					pthread_mutex_unlock( &b->freeEnergy_mutex );
+				
+					// move
+					pthread_mutex_lock( &b->position_mutex );
+						if (b->spotIsFree(c->newposition, c->size, i))
+						{
+							//pthread_mutex_lock( &c->position_mutex );
+							c->moveToNewPoss();
+							//pthread_mutex_unlock( &c->position_mutex );
+						}
+					pthread_mutex_unlock( &b->position_mutex );
+	
+
+			}
+
+	}
+	return 0;
+}
+
 WorldB::WorldB()
 {
 //	Infobar *infobar	= Infobar::instance();
@@ -9,12 +85,12 @@ WorldB::WorldB()
 
 	size			= 30;
 	foodsize		= 0.1f;
-	foodenergy		= 1750.0f;
+	foodenergy		= 2500.0f;
 
-	freeEnergy		= foodenergy * 0.0f;
+	freeEnergy		= foodenergy * 2000.0f;
 	freeEnergyInfo		= freeEnergy;
 
-	mincritters		= 0;
+	mincritters		= 10;
 
 	mutationRate		= 10; // %
 
@@ -25,6 +101,45 @@ WorldB::WorldB()
 
 	// home & program directory
 	createDirs();
+
+	// threads
+	nthreads			= 1;
+	registeredThreads		= 0;
+	busyThreads			= nthreads;
+
+	if ( nthreads > 1 )
+	{
+
+		pthread_mutex_init (&condition_startthreads_mutex, NULL);
+		pthread_cond_init (&condition_startthreads, NULL);
+	
+		pthread_mutex_init (&condition_threadsdone_mutex, NULL);
+		pthread_cond_init (&condition_threadsdone, NULL);
+	
+		pthread_mutex_init (&busyThreads_mutex, NULL);
+		pthread_mutex_init (&freeEnergy_mutex, NULL);
+		pthread_mutex_init (&position_mutex, NULL);
+	
+	
+		// init threads
+		for ( unsigned int i = 0; i < nthreads; i++ )
+		{
+			threads.push_back( pthread_t() );
+			pthread_create( &threads[i], NULL, ::procCritters, (void *) this );
+			pthread_detach( threads[i] );
+		}
+	
+		// wait untill all threads are created before continuing
+		pthread_mutex_lock( &busyThreads_mutex );
+		while ( busyThreads > 0 )
+		{
+			pthread_mutex_unlock( &busyThreads_mutex );
+				usleep (100);
+			pthread_mutex_lock( &busyThreads_mutex );
+		}
+		pthread_mutex_unlock( &busyThreads_mutex );
+	}
+
 }
 
 void WorldB::process()
@@ -158,40 +273,62 @@ void WorldB::process()
 		c->procFrame();
 	}
 
-	// seems to go faster in 2 loops, caching wise
+	if ( nthreads > 1 && critters.size()>1 )
+	{
+		// tell threads to start & wait for end
+			busyThreads = nthreads;
+	
+			pthread_mutex_lock( &condition_threadsdone_mutex );
+			// start the threads
+				pthread_mutex_lock( &condition_startthreads_mutex );
+					//cerr << "signaling start threads" << endl;
+					pthread_cond_broadcast( &condition_startthreads );
+				pthread_mutex_unlock( &condition_startthreads_mutex );
+	
+			// wait for threads to end
+				pthread_cond_wait( &condition_threadsdone, &condition_threadsdone_mutex );
+			pthread_mutex_unlock( &condition_threadsdone_mutex );
+	}
+	else
+	{
+		for( unsigned int i=0; i < critters.size(); i++)
+		{
+			CritterB *c = critters[i];
+	
+			// over food input neuron
+				c->touchingFood = false;
+				for( unsigned int f=0; f < food.size() && !c->touchingFood; f++)
+				{
+					Food *fo = food[f];
+					float avgSize = (c->size + fo->size) / 2;
+					if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
+					{
+						c->touchingFood = true;
+						c->touchedFoodID = f;
+					}
+				}
+		
+			// process
+				c->process();
+
+
+			// record critter used energy
+				freeEnergy += c->energyUsed;
+		
+			// move
+				if (spotIsFree(c->newposition, c->size, i))
+				{
+					c->moveToNewPoss();
+				}
+		}
+	}
+
+	// seems to go faster in 3 loops, caching wise
 	unsigned int lmax = critters.size();
 	for( unsigned int i=0; i < lmax; i++)
 	{
 		CritterB *c = critters[i];
 
-
-		// over food input neuron
-			c->touchingFood = false;
-			for( unsigned int f=0; f < food.size() && !c->touchingFood; f++)
-			{
-				Food *fo = food[f];
-				float avgSize = (c->size + fo->size) / 2;
-				if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
-				{
-					c->touchingFood = true;
-					c->touchedFoodID = f;
-				}
-			}
-	
-		// process
-			c->process();
-	
-		// record critter used energy
-			freeEnergy += c->energyUsed;
-	
-		// move
-			if (spotIsFree(c->newposition, c->size, i))
-			{
-				//pthread_mutex_lock( &c->position_mutex );
-				c->moveToNewPoss();
-				//pthread_mutex_unlock( &c->position_mutex );
-			}
-	
 		// eat
 			if ( c->touchingFood && c->eat )
 			{
@@ -208,7 +345,7 @@ void WorldB::process()
 	
 				fo->energy		-= eaten;
 	
-				if ( fo->energy > 0.0f ) fo->resize((foodsize/2.0f) + (foodsize/foodenergy/2.0f) * fo->energy);
+				fo->resize();
 			}
 	
 		// fire
@@ -327,7 +464,7 @@ void WorldB::insertRandomFood(int amount, float energy)
 		f->position	= findEmptySpace(foodsize);
 		f->energy	= energy;
 
-		f->resize((foodsize/2.0f) + (foodsize/foodenergy/2.0f) * energy);
+		f->resize();
 		//f->resize((foodsize/foodenergy) * energy);
 		food.push_back( f );
 	}
@@ -373,7 +510,7 @@ void WorldB::removeCritter(unsigned int cid)
 		// put 50% of energy in food, rest back in space
 
 		//f->resize(foodsize);
-		f->resize((foodsize/2.0f) + (foodsize/foodenergy/2.0f) * f->energy);
+		f->resize();
 		food.push_back( f );
 	}
 	else freeEnergy += critters[cid]->energyLevel;

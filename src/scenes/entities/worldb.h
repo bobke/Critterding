@@ -32,13 +32,11 @@ class WorldB
 		vector<Food*>		food;
 		vector<Wall*>		walls;
 		vector<Bullet*>		bullets;
-		pthread_mutex_t		bulletsV_mutex;
 
 		RandGen			randgen;
 
 		float			freeEnergy;
 		float			freeEnergyInfo;
-		pthread_mutex_t		freeEnergy_mutex;
 		int			size;
 		unsigned int		mutationRate;
 
@@ -62,6 +60,25 @@ class WorldB
 		void			createWall();
 		void			destroyWall();
 		void			toggleGate(unsigned int wid);
+
+		bool			spotIsFree(Vector3f &position, float osize, unsigned int exclude);
+
+
+		pthread_cond_t			condition_startthreads;
+		pthread_mutex_t			condition_startthreads_mutex;
+
+		pthread_cond_t			condition_threadsdone;
+		pthread_mutex_t			condition_threadsdone_mutex;
+
+		unsigned int			nthreads;
+		unsigned int			registeredThreads;
+		unsigned int			busyThreads;
+		pthread_mutex_t			busyThreads_mutex;
+
+		pthread_mutex_t			freeEnergy_mutex;
+		pthread_mutex_t			position_mutex;
+
+		vector<pthread_t>		threads;
 
 	private:
 
@@ -87,8 +104,9 @@ class WorldB
 		bool			isTouchingAnything(float size, float x, float z);
 		Vector3f		findEmptySpace(float objectsize);
 		void			createDirs();
-		bool			spotIsFree(Vector3f &position, float osize, unsigned int exclude);
 		bool			spotIsFree(Vector3f &position, float osize);
+
+
 };
 
 #endif

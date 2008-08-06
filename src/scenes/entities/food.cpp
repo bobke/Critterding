@@ -2,9 +2,11 @@
 
 Food::Food()
 {
-	size		= 0.2f;
- 	energy		= 1750.0f;
-	resize(size);
+	maxsize		= 0.1f;
+ 	maxenergy	= 2500.0f;
+
+	size		= maxsize;
+ 	energy		= maxenergy;
 
 	totalFrames		= 0;
 	maxtotalFrames		= 1500;
@@ -27,10 +29,14 @@ void Food::draw()
 	glPopMatrix();
 }
 
-void Food::resize(float newsize)
+void Food::resize()
 {
-	size = newsize;
-	halfsize = (newsize / 2.0f);
+	// spillover failsafe
+	if ( energy > maxenergy ) energy = maxenergy;
+
+	size = (maxsize / maxenergy) * energy;
+
+	halfsize = (size / 2.0f);
 
 	// change position according to height
 	position.y = halfsize;
