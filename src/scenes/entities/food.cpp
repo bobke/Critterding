@@ -2,17 +2,17 @@
 
 Food::Food()
 {
-	maxsize		= 0.1f;
+	maxsize		= 0.15f;
  	maxenergy	= 2500.0f;
 
 	size		= maxsize;
  	energy		= maxenergy;
 
 	totalFrames		= 0;
-	maxtotalFrames		= 1500;
+	maxtotalFrames		= 2000;
 
 	color[0]	= 0.0f;
-	color[1]	= 1.0f;
+	color[1]	= 0.80f;
 	color[2]	= 0.0f;
 	color[3]	= 1.0f;
 }

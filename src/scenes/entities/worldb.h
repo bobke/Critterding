@@ -37,14 +37,21 @@ class WorldB
 
 		float			freeEnergy;
 		float			freeEnergyInfo;
-		int			size;
 		unsigned int		mutationRate;
+		unsigned int		maxMutateRuns;
 
 		unsigned int		selectedCritter;
 		bool			isSelected;
 
+		bool			doTimedInserts;
+		unsigned int		timedInsertsCounter;
+		void			toggleTimedInserts();
+
 		void			process();
 		void			drawWithGrid();
+
+		void			resize(unsigned int newsize);
+		void			startfoodamount(unsigned int amount);
 
 		float			foodenergy;
 		void			insertRandomFood(int amount, float energy);
@@ -56,6 +63,7 @@ class WorldB
 
 		void			increaseMincritters();
 		void			decreaseMincritters();
+		void			setMincritters(unsigned int c);
 
 		void			createWall();
 		void			destroyWall();
@@ -86,8 +94,12 @@ class WorldB
 		File			fileH;
 		Parser			parseH;
 
+		unsigned char		*retina;
+		unsigned int		items;
+
 		bool			flipnewbornes;
 
+		int			size;
 		Grid			grid;
 		Floor			floor;
 		Infobar			*infobar;
