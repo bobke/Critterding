@@ -169,10 +169,10 @@ void Evolution::handlekey(const KeySym& key)
 			world.destroyWall();
 		break;
 		case XK_c:
-/*			world.toggleGate((unsigned int)(world.size*2.0f)-2);
+			world.toggleGate((unsigned int)(world.size*2.0f)-2);
 			world.toggleGate((unsigned int)(world.size*2.0f)-1);
 			world.toggleGate((unsigned int)(world.size*2.0f));
-			world.toggleGate((unsigned int)(world.size*2.0f)+1);*/
+			world.toggleGate((unsigned int)(world.size*2.0f)+1);
 		break;
 
 

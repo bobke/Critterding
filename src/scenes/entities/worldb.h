@@ -35,6 +35,7 @@ class WorldB
 
 		RandGen			randgen;
 
+		int			size;
 		float			freeEnergy;
 		float			freeEnergyInfo;
 		unsigned int		mutationRate;
@@ -99,7 +100,6 @@ class WorldB
 
 		bool			flipnewbornes;
 
-		int			size;
 		Grid			grid;
 		Floor			floor;
 		Infobar			*infobar;
