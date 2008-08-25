@@ -4,7 +4,7 @@
 using namespace std;
 
 unsigned int worldsizeparam = 25;
-unsigned int foodparam = 1000;
+unsigned int foodparam = 500;
 unsigned int mincritters = 10;
 unsigned int startcritters = 0;
 unsigned int mutationrate = 10;
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
 	//cerr << "Starting application" << endl;
 	GLWindow glwindow;
-	glwindow.create("Critterding 0.01", 640, 600, 24, False);
+	glwindow.create("Critterding 0.01", 600, 600, 24, False);
 
 		Evolution mainscene;
 

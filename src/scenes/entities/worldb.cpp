@@ -91,7 +91,7 @@ WorldB::WorldB()
 	mincritters		= 10;
 
 	mutationRate		= 10; // %
-	maxMutateRuns		= 3;
+	maxMutateRuns		= 1;
 
 	flipnewbornes		= false;
 
@@ -296,7 +296,7 @@ void WorldB::process()
 
 	if ( critters.size() > 0 )
 	{
-		unsigned int itemsperrow = 10;
+		unsigned int itemsperrow = 20;
 
 		// determine width
 		unsigned int picwidth = (itemsperrow * (10+1));
