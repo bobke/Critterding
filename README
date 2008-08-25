@@ -1,3 +1,12 @@
+STARTUP
+
+  --worldsize [25]
+  --food [1000]
+  --mincritters [10]
+  --startcritters [0]
+  --mutationrate [10]
+  --maxmutateruns [3]
+
 BUTTONS
 
  - Engine / World Operations
@@ -11,6 +20,9 @@ BUTTONS
    F3            : decrease Minimum Critters
    F4            : increase Minimum Critters
 
+   F5            : increase energy in the system by the energy amount of 25 food
+   F6            : decrease energy in the system by the energy amount of 24 food
+
    F7            : insert Adam
                    alternatively this can be used as a population reduction mechanism,
                    by inserting a considering amount of adams, the current population size
@@ -22,7 +34,9 @@ BUTTONS
    F11           : increase mutation rate (%)
    F12           : decrease mutation rate (%)
 
-   Insert        : toggle critter vision
+   Insert        : toggle hide critter vision. note that most videocard drivers
+                   cannot capture the vision pixels when they are rendered outside
+                   the window.
 
    w             : create a horizontal wall
    x             : destroy the wall
@@ -33,8 +47,8 @@ BUTTONS
    Page Up       : load all critters from "~/.critterding/load" directory
    Page Down     : save all critters into "~/.critterding/save/(timestamp)" directory
 
-   +             : increase energy in the system by the energy amount of 1 food
-   -             : decrease energy in the system by the energy amount of 1 food
+   + (keypad)    : increase energy in the system by the energy amount of 1 food
+   - (keypad)    : decrease energy in the system by the energy amount of 1 food
 
  - Camera Operations
 
@@ -56,7 +70,7 @@ TERMINOLOGY
       : new (100% random) critter
 
  - Adam Distance (ad)
-      : mutations since adam
+      : generations with mutations since adam
 
 
 

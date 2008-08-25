@@ -3,11 +3,12 @@
 
 using namespace std;
 
-unsigned int worldsizeparam = 50;
-unsigned int foodparam = 2500;
+unsigned int worldsizeparam = 25;
+unsigned int foodparam = 1000;
 unsigned int mincritters = 10;
 unsigned int startcritters = 0;
 unsigned int mutationrate = 10;
+unsigned int maxmutateruns = 3;
 
 // double  dparam=0;
 // string  sparam="";
@@ -46,20 +47,11 @@ int main(int argc, char *argv[])
 			optind++;
 			mutationrate = atoi(argv[optind]);
 	        }
-/*		else if (sw=="-d")
+		else if (sw=="--maxmutateruns")
 		{
 			optind++;
-			dparam = atof(argv[optind]);
-		}
-		else if (sw=="-s")
-		{
-			optind++;
-			sparam = argv[optind];
-		}
-		else if (sw=="-f")
-		{
-			fparam=1;
-		}*/
+			maxmutateruns = atoi(argv[optind]);
+	        }
 		else
 		{
 			cout << "Unknown switch: " << argv[optind] << endl;
@@ -72,6 +64,7 @@ int main(int argc, char *argv[])
 	cout << "Food Amount = " << foodparam << endl;
 	cout << "Minimum Critters = " << mincritters << endl;
 	cout << "Starting Amount of critters = " << startcritters << endl;
+	cout << "Mutation Runs per Mutating Critter = " << maxmutateruns << endl;
 	cout << "Critter Mutation Rate = " << mutationrate << endl;
 	cout << "Remaining arguments = ";
 	for (;optind<argc;optind++)
@@ -89,6 +82,7 @@ int main(int argc, char *argv[])
 		mainscene.world.resize(worldsizeparam);
 		mainscene.world.startfoodamount(foodparam);
 		mainscene.world.setMincritters(mincritters);
+		mainscene.world.maxMutateRuns = maxmutateruns;
 		mainscene.world.mutationRate = mutationrate;
 
 		for (unsigned int i=0; i < startcritters; i++) mainscene.world.insertCritter();
