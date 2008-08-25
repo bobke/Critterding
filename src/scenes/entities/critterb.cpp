@@ -4,7 +4,6 @@
 
 void CritterB::initConst()
 {
-	maxSize			= 1.0f;
 	components		= 4;
 	maxEnergyLevel		= 5000.0f;
 	maxtotalFrames		= 2000;
@@ -12,6 +11,8 @@ void CritterB::initConst()
 	minprocenergyLevel	= maxEnergyLevel * 0.6f;
 	fireTimeTrigger		= 5;
 	minfireenergyLevel	= maxEnergyLevel * 0.0f;
+
+	visionPosition		= 0;
 }
 
 CritterB::CritterB()
@@ -23,7 +24,7 @@ CritterB::CritterB()
 		brain.maxSynapses					= 60;
 
 		brain.minNeuronsAtBuildtime				= 20;
-		brain.maxNeuronsAtBuildtime				= 60;
+		brain.maxNeuronsAtBuildtime				= 40;
 
 			brain.mutate_PlasticityFactors			= false;
 
@@ -33,7 +34,7 @@ CritterB::CritterB()
 		brain.minSynapsesAtBuildtime				= 1;
 			brain.mutate_minSynapsesAtBuildtime		= false;
 
-		brain.maxSynapsesAtBuildtime				= 50;
+		brain.maxSynapsesAtBuildtime				= 40;
 			brain.mutate_maxSynapsesAtBuildtime		= false;
 
 		brain.percentChanceInhibitoryNeuron			= 50;
@@ -48,7 +49,7 @@ CritterB::CritterB()
 		brain.percentChanceMotorNeuron				= 50;
 			brain.mutate_percentChanceMotorNeuron		= false;
 
-		brain.percentChancePlasticNeuron			= 50;
+		brain.percentChancePlasticNeuron			= 20;
 			brain.mutate_percentChancePlasticNeuron		= false;
 
 		brain.percentChanceSensorySynapse			= 20;
@@ -73,9 +74,9 @@ CritterB::CritterB()
 
 	// frame capturing options
 	adamdist		= 0;
-	frameWidth		= 9;
+	frameWidth		= 10;
 	frameHeight		= frameWidth; // must be same as frameWidth
-	visionDivider		= 4;
+	visionDivider		= 2;
 
 	// energy
 	energyLevel		= maxEnergyLevel / 2.0f;
@@ -85,6 +86,12 @@ CritterB::CritterB()
 
 	brain.numberOfInputs = (items*visionDivider)+1+1+1+10+1;
 	brain.numberOfOutputs = 9;
+
+	color[0] = (float)randgen.get( 20,100 ) / 100.0f;
+	color[1] = (float)randgen.get( 20,100 ) / 100.0f;
+	color[2] = (float)randgen.get( 20,100 ) / 100.0f;
+	color[3] = 0.0f;
+
 }
 
 CritterB::CritterB(string &critterstring)
@@ -124,29 +131,20 @@ void CritterB::setup()
 	fireTimeCount		= 0;
 
 	// Allocate the neccessary memory for our retina.
-	retina = (unsigned char*)malloc(items);
+//	retina = (unsigned char*)malloc(items);
 
 	// initialize retina
 //	for ( unsigned int i=0; i < items; i++ ) retina[i] = 0;
-	memset(retina, 0, items);
+//	memset(retina, 0, items);
 
 	// setup brain from architecture
 	brain.wireArch();
 
-	// resize by brain architecture properties
-	//float newsize		= ((maxSize/3) / brain.maxNeurons) * brain.totalNeurons + (((maxSize/3)/(brain.maxNeurons*brain.maxSynapses))*brain.totalSynapses*2);
-	//resize(newsize);
-	resize(0.12f);
+	resize( 0.1f );
 
 	volume			= size * size * size * 100.0f;
 
-	speedfactor		= (maxSize-size) / 10.0f; // FIXME HACK lower me :)
-
-//	speedfactor		= 100.0f / (volume*10000.0f);
-
-// 	maxEnergyLevel		= 50000.0f * size;
-//	maxtotalFrames		= 50000.0f * size;
-
+	speedfactor		= (1.0f-0.12f) / 12.0f; // FIXME HACK lower me :)
 }
 
 void CritterB::process()
@@ -191,41 +189,78 @@ void CritterB::process()
 
 void CritterB::procInputNeurons()
 {
+
+	// clear all inputs
+
+		// FIXME make function of brain
+		for ( unsigned int z=0; z < brain.numberOfInputs; z++ )
+		{
+			brain.Inputs[z].output = 0;
+		}
+
 	// link vision array directly to the sensor neurons' output
-		if ( visionDivider == 1 )
+/*		if ( visionDivider == 1 )
 		{
 			for ( unsigned int i=0; i < items; i++ )
 			{
-				if ( retina[i]>0 )	brain.Inputs[i].output = 1;
-				else			brain.Inputs[i].output = 0;
+				if ( retina[i]>0 ) brain.Inputs[i].output = 1;
 			}
 		}
 		else
-		{
-/*			for ( unsigned int i=0; i < items; i++ )
+		{*/
+			unsigned int itemsperrow = 10;
+			unsigned int divider = 256 / visionDivider;
+
+			unsigned int target = visionPosition;
+
+			unsigned int rowstart = 0;
+			// determine on which row of the retina to start for this critter
+			unsigned int rowlength = itemsperrow * (10+1) * 4;
+			while ( target >= itemsperrow )
 			{
-				unsigned target = i * visionDivider;
-				unsigned int NeuronToFire = (unsigned int)(((float)retina[i] / 256.0f) * visionDivider);
-				for ( unsigned int z=0; z < visionDivider; z++ )
-				{
-					if ( retina[i]>0 && z == NeuronToFire  )	brain.Inputs[target+z].output = 1;
-					else						brain.Inputs[target+z].output = 0;
-				}
-			}*/
-			for ( unsigned int i=0; i < items; i++ )
+				rowstart += 10 * rowlength;
+				target -= itemsperrow;
+			}
+
+			// determine on which column to start
+			unsigned int columnstart = target * (frameWidth+1) * components;
+
+// see what it sees
+// 			for ( unsigned int h=rowstart; h < rowstart+(frameHeight*rowlength); h += rowlength )
+// 			{
+// 				for ( unsigned int w=h+columnstart; w < h+columnstart+((frameWidth)*components); w+=4 )
+// 				{
+// 					if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
+// 					else cerr << ".";
+// 					if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
+// 					else cerr << ".";
+// 					if ( (int)retina[w] ) cerr << "\033[1;34mB\033[0m";
+// 					else cerr << ".";
+// 					if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
+// 					else cerr << ".";
+// 				}
+// 				cerr << "" << endl;
+// 			}
+// 			cerr << "" << endl;
+// 			usleep (10000);
+
+
+			unsigned int i=0;
+			for ( unsigned int h=rowstart; h < rowstart+(frameHeight*rowlength); h += rowlength )
 			{
-				unsigned target = i * visionDivider;
-				for ( unsigned int z=0; z < visionDivider; z++ )
+				for ( unsigned int w=h+columnstart; w < h+columnstart+((frameWidth)*components); w++ )
 				{
-					brain.Inputs[target+z].output = 0;
-				}
-				if ( retina[i]>0 )
-				{
-					unsigned int NeuronToFire = (unsigned int)(((float)retina[i] / 256.0f) * visionDivider);
-					brain.Inputs[target+NeuronToFire].output = 1;
+					unsigned itarget = i * visionDivider;
+
+					if ( retina[w]>0 )
+					{
+						brain.Inputs[itarget+ ((unsigned int)retina[w] / divider)].output = 1;
+					}
+					i++;
 				}
 			}
-		}
+
+// 		}
 
 	unsigned int overstep = items*visionDivider;
 
@@ -340,34 +375,28 @@ void CritterB::procOutputNeurons()
 
 }
 
-void CritterB::procFrame()
-{
-	// read from front buffer
-//	glReadBuffer(GL_FRONT);
-	
-	glReadPixels(framePosX, framePosY, frameWidth, frameHeight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
-}
-
-void CritterB::mutate()
+void CritterB::mutate(unsigned int maxMutateRuns)
 {
 	adamdist++;
 
 	// mutate color
 	unsigned int mode = randgen.get(1,2);
-	//unsigned int ncolor = randgen.get(0,2);
+	unsigned int ncolor = randgen.get(0,2);
 
 	if ( mode == 1 )
 	{
-		color[2] += (float)randgen.get(1,10)/1000.0f;
-		if ( color[2] > 1.0f ) color[2] = 1.0f;
+		color[ncolor] += (float)randgen.get(1,10)/200.0f;
+		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
 	}
 	else
 	{
-		color[2] -= (float)randgen.get(1,10)/1000.0f;
-		if ( color[2] < 0.05f ) color[2] = 0.05f;
+		color[ncolor] -= (float)randgen.get(1,10)/200.0f;
+		if ( color[ncolor] < 0.2f ) color[ncolor] = 0.2f;
 	}
 
-	brain.mutate(0);
+	unsigned int runs = randgen.get(1, maxMutateRuns);
+	brain.mutate( runs );
+	//brain.mutate( 0 );
 }
 
 
@@ -396,6 +425,8 @@ void CritterB::place()
 
 void CritterB::calcFramePos(unsigned int pos)
 {
+	visionPosition = pos;
+
 	framePosY = 0;
 	while ( pos >= 10 )
 	{
@@ -411,6 +442,7 @@ void CritterB::calcFramePos(unsigned int pos)
 
 void CritterB::printVision()
 {
+	cerr << "hi" << endl;
 	int rowlength = frameWidth * components;
 
 	cerr << rowlength << " " << items << endl;
@@ -431,6 +463,30 @@ void CritterB::printVision()
 	}
 	cerr << "" << endl;
 }
+
+// void CritterB::printVision()
+// {
+// cerr << "hi" << endl;
+// 	int rowlength = frameWidth * components;
+// 
+// 	cerr << rowlength << " " << items << endl;
+// 	for ( int h=items-rowlength; h >= 0; h -= rowlength )
+// 	{
+// 		for ( int w=h; w < (int)(frameWidth*components)+h; w += components )
+// 		{
+// 			if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
+// 			else cerr << ".";
+// 			if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
+// 			else cerr << ".";
+// 			if ( (int)retina[w] ) cerr << "\033[1;34mB\033[0m";
+// 			else cerr << ".";
+// 			if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
+// 			else cerr << ".";
+// 		}
+// 		cerr << "" << endl;
+// 	}
+// 	cerr << "" << endl;
+// }
 
 void CritterB::draw()
 {
@@ -650,7 +706,7 @@ void CritterB::resize(float newsize)
 
 CritterB::~CritterB()
 {
-	free(retina);
+//	free(retina);
 }
 
 

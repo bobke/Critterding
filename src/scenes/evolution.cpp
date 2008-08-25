@@ -53,11 +53,6 @@ void Evolution::handlekey(const KeySym& key)
 {
 	switch (key)
 	{
-		case XK_KP_Add:
-		break;
-		case XK_KP_Subtract:
-		break;
-
 		case XK_F2:
 			sleeper.swap();
 		break;
@@ -74,30 +69,73 @@ void Evolution::handlekey(const KeySym& key)
 			{
 				world.freeEnergyInfo -= world.foodenergy * 25.0f;
 				world.freeEnergy -= world.foodenergy * 25.0f;
-				cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
+				cerr << endl << "food in system: "<< (world.freeEnergyInfo / world.foodenergy)  << endl << endl;
 			}
 		break;
 		case XK_F6:
 			world.freeEnergyInfo += world.foodenergy * 25.0f;
 			world.freeEnergy += world.foodenergy * 25.0f;
-			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
+			cerr << endl << "food in system: "<< (world.freeEnergyInfo / world.foodenergy) << endl<< endl;
+		break;
+
+		case XK_KP_Subtract:
+			if ( (world.freeEnergyInfo-world.foodenergy) / world.foodenergy >= 0.0f )
+			{
+				world.freeEnergyInfo -= world.foodenergy;
+				world.freeEnergy -= world.foodenergy;
+				cerr << endl << "food in system: "<< (world.freeEnergyInfo / world.foodenergy) << endl << endl;
+			}
+		break;
+
+		case XK_KP_Add:
+			world.freeEnergyInfo += world.foodenergy;
+			world.freeEnergy += world.foodenergy;
+			cerr << endl << "food in system: "<< (world.freeEnergyInfo / world.foodenergy) << endl << endl;
 		break;
 
 		case XK_F7:
 			world.insertCritter();
 		break;
 		case XK_F8:
+			world.toggleTimedInserts();
+			cerr << endl << "timed food inserts: "<< world.doTimedInserts << endl << endl;
 		break;
 		case XK_F9:
+			if ( world.maxMutateRuns >= 2 )
+			{
+				world.maxMutateRuns -= 1;
+				cerr << endl << "Max Mutation Runs: "<< world.maxMutateRuns << endl << endl;
+			}
 		break;
 		case XK_F10:
+			if ( world.maxMutateRuns <= 999 )
+			{
+				world.maxMutateRuns += 1;
+				cerr << endl << "Max Mutation Runs: "<< world.maxMutateRuns << endl << endl;
+			}
 		break;
 		case XK_F11:
-			world.loadAllCritters();
+			if ( world.mutationRate >= 1 )
+			{
+				world.mutationRate -= 1;
+				cerr << endl << "Mutation Rate: "<< world.mutationRate << "%" << endl << endl;
+			}
 		break;
 		case XK_F12:
+			if ( world.mutationRate <= 99 )
+			{
+				world.mutationRate += 1;
+				cerr << endl << "Mutation Rate: "<< world.mutationRate << "%" << endl << endl;
+			}
+		break;
+
+		case XK_Page_Up:
+			world.loadAllCritters();
+		break;
+		case XK_Page_Down:
 			world.saveAllCritters();
 		break;
+
 
 		// Critter controls
 		case XK_z:
@@ -131,10 +169,10 @@ void Evolution::handlekey(const KeySym& key)
 			world.destroyWall();
 		break;
 		case XK_c:
-			world.toggleGate((unsigned int)(world.size*2.0f)-2);
+/*			world.toggleGate((unsigned int)(world.size*2.0f)-2);
 			world.toggleGate((unsigned int)(world.size*2.0f)-1);
 			world.toggleGate((unsigned int)(world.size*2.0f));
-			world.toggleGate((unsigned int)(world.size*2.0f)+1);
+			world.toggleGate((unsigned int)(world.size*2.0f)+1);*/
 		break;
 
 
@@ -171,20 +209,6 @@ void Evolution::handlekey(const KeySym& key)
 			drawCVNeurons = !drawCVNeurons;
 		break;
 		case XK_Delete:
-		break;
-
-		case XK_Page_Down:
-			if ( (world.freeEnergyInfo-world.foodenergy) / world.foodenergy >= 0.0f )
-			{
-				world.freeEnergyInfo -= world.foodenergy;
-				world.freeEnergy -= world.foodenergy;
-				cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
-			}
-		break;
-		case XK_Page_Up:
-			world.freeEnergyInfo += world.foodenergy;
-			world.freeEnergy += world.foodenergy;
-			cerr << (world.freeEnergyInfo / world.foodenergy) << " food in system" << endl;
 		break;
 
 		case XK_Up:

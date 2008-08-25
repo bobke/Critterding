@@ -15,8 +15,6 @@ extern "C" void *procCritters( void *ptr )
 	while (1)
 	{
 		// thread stuff
-			pthread_mutex_lock( &b->condition_startthreads_mutex );
-	
 				pthread_mutex_lock( &b->busyThreads_mutex );
 					if ( --b->busyThreads == 0 )
 					{
@@ -26,10 +24,11 @@ extern "C" void *procCritters( void *ptr )
 					}
 				pthread_mutex_unlock( &b->busyThreads_mutex );
 	
-			pthread_cond_wait( &b->condition_startthreads, &b->condition_startthreads_mutex );
 					//cerr << "thread " << threadID << " initiated" << endl;
-			pthread_mutex_unlock( &b->condition_startthreads_mutex );
 
+			pthread_mutex_lock( &b->condition_startthreads_mutex );
+			pthread_cond_wait( &b->condition_startthreads, &b->condition_startthreads_mutex );
+			pthread_mutex_unlock( &b->condition_startthreads_mutex );
 
 		// process
 
@@ -83,24 +82,33 @@ WorldB::WorldB()
 	selectedCritter		= 0;
 	isSelected		= false;
 
-	size			= 30;
+	doTimedInserts		= false;
+	timedInsertsCounter	= 0;
+
 	foodsize		= 0.1f;
 	foodenergy		= 2500.0f;
-
-	freeEnergy		= foodenergy * 2000.0f;
-	freeEnergyInfo		= freeEnergy;
 
 	mincritters		= 10;
 
 	mutationRate		= 10; // %
+	maxMutateRuns		= 3;
 
 	flipnewbornes		= false;
 
-	grid.resize(size);
-	floor.resize(size);
-
 	// home & program directory
 	createDirs();
+
+	// vision retina allocation
+
+	// register input/output neurons
+	//items = 4* 1000 * (1 + (10*2));
+
+	items = 10000 * 4 * (10+1) * 10;
+
+	cerr << items << endl;
+
+	retina = (unsigned char*)malloc(items);
+	memset(retina, 0, items);
 
 	// threads
 	nthreads			= 1;
@@ -140,6 +148,19 @@ WorldB::WorldB()
 		pthread_mutex_unlock( &busyThreads_mutex );
 	}
 
+}
+
+void WorldB::resize(unsigned int newsize)
+{
+	size = newsize;
+	grid.resize(size);
+	floor.resize(size);
+}
+
+void WorldB::startfoodamount(unsigned int amount)
+{
+	freeEnergy		= foodenergy * amount;
+	freeEnergyInfo		= freeEnergy;
 }
 
 void WorldB::process()
@@ -184,7 +205,7 @@ void WorldB::process()
 	}
 
 	// Insert Food
-	if ( freeEnergy >= foodenergy )
+	while ( freeEnergy >= foodenergy )
 	{
 		insertRandomFood(1, foodenergy);
 		freeEnergy -= foodenergy;
@@ -200,21 +221,21 @@ void WorldB::process()
 		// see if energy level isn't below 0 -> die, or die of old age
 		if ( critters[i]->energyLevel < 0.0f )
 		{
-			cerr << "critter " << setw(3) << i << "/" << setw(3) << critters.size()-1 << " DIES: starvation" << endl;
+			cerr << setw(3) << i << "/" << setw(3) << critters.size()-1 << " DIES: starvation" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// see if died from bullet
 		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames && critters[i]->wasShot )
 		{
-			cerr << "critter " << setw(3) << i << "/" << setw(3) << critters.size()-1 << " DIES: killed" << endl;
+			cerr << setw(3) << i << "/" << setw(3) << critters.size()-1 << " DIES: killed" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// die of old age
 		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames )
 		{
-			cerr << "critter " << setw(3) << i << "/" << setw(3) << critters.size()-1 << " DIES: old age" << endl;
+			cerr << setw(3) << i << "/" << setw(3) << critters.size()-1 << " DIES: old age" << endl;
 			removeCritter(i);
 			i--;
 		}
@@ -227,13 +248,15 @@ void WorldB::process()
 
 		c->place();
 
+		float preppedSize = 5.0f + c->halfsize;
+
 		// draw everything in it's sight
 			floor.draw();
 		
 			for( unsigned int j=0; j < critters.size(); j++)
 			{
 				CritterB *oc = critters[j];
-				float avgSize = 5.0 - (oc->halfsize + c->halfsize);
+				float avgSize = preppedSize - oc->halfsize;
 				if ( fabs( c->position.x - oc->position.x ) <= avgSize && fabs( c->position.z - oc->position.z ) <= avgSize )
 				{
 					oc->draw();
@@ -243,7 +266,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < food.size(); j++)
 			{
 				Food *f = food[j];
-				float avgSize = 5.0 - (f->halfsize + c->halfsize);
+				float avgSize = preppedSize - f->halfsize;
 				if ( fabs( c->position.x - f->position.x ) <= avgSize && fabs( c->position.z - f->position.z ) <= avgSize )
 				{
 					f->draw();
@@ -253,7 +276,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < walls.size(); j++)
 			{
 				Wall *w = walls[j];
-				float avgSize = 5.0 - (w->halfsize + c->halfsize);
+				float avgSize = preppedSize - w->halfsize;
 				if ( fabs( c->position.x - w->position.x ) <= avgSize && fabs( c->position.z - w->position.z ) <= avgSize )
 				{
 					w->draw();
@@ -263,15 +286,33 @@ void WorldB::process()
 			for( unsigned int j=0; j < bullets.size(); j++)
 			{
 				Bullet *b = bullets[j];
-				float avgSize = 5.0 - (b->halfsize + c->halfsize);
+				float avgSize = preppedSize - b->halfsize;
 				if ( fabs( c->position.x - b->position.x ) <= avgSize && fabs( c->position.z - b->position.z ) <= avgSize )
 				{
 					b->draw();
 				}
 			}
-
-		c->procFrame();
 	}
+
+	if ( critters.size() > 0 )
+	{
+		unsigned int itemsperrow = 10;
+
+		// determine width
+		unsigned int picwidth = (itemsperrow * (10+1));
+
+		// determine height
+		unsigned int picheight = 10;
+		unsigned int rows = critters.size();
+		while ( rows > itemsperrow )
+		{
+			picheight += 10;
+			rows -= itemsperrow;
+		}
+
+		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
+	}
+
 
 	if ( nthreads > 1 && critters.size()>1 )
 	{
@@ -287,6 +328,7 @@ void WorldB::process()
 	
 			// wait for threads to end
 				pthread_cond_wait( &condition_threadsdone, &condition_threadsdone_mutex );
+
 			pthread_mutex_unlock( &condition_threadsdone_mutex );
 	}
 	else
@@ -401,13 +443,15 @@ void WorldB::process()
 					if ( randgen.get(1,100) <= mutationRate )
 					{
 						mutant = true;
-						nc->mutate();
+						nc->mutate(maxMutateRuns);
 					}
-					nc->setup();
 
 					// same positions / rotation
 					nc->position = c->position;
 					nc->rotation = c->rotation;
+
+					nc->setup();
+					nc->retina = retina;
 
 					// move new critter to the right by sum of halfsizes
 					float reused = (270.0f+nc->rotation) * 0.0174532925f;
@@ -418,10 +462,10 @@ void WorldB::process()
 
 					if (spotIsFree(nc->newposition, nc->size, i))
 					{
-						cerr << "critter " << setw(3) << i << "/" << setw(3) << critters.size()-1 << " PROCREATES (ad: " << setw(4) << c->adamdist << ")";
+						cerr << setw(3) << i << "/" << setw(3) << critters.size()-1 << " PROC: (ad: " << setw(4) << c->adamdist << ")";
 
 						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
-						if ( mutant ) cerr << " ( mutant )";
+						if ( mutant ) cerr << " (m)";
 
 						// optional rotate 180 of new borne
 						if ( flipnewbornes ) nc->rotation = nc->rotation + 180.0f;
@@ -450,10 +494,41 @@ void WorldB::process()
 			}
 	}
 
-	//critters[0].printVision();
 
 /*	cerr << "b: " << *critters[0]->Neurons[0]->inputs[0]->ref << endl;
 	usleep (1000000);*/
+
+	if ( doTimedInserts )
+	{
+		timedInsertsCounter++;
+
+		if ( timedInsertsCounter == 6000 )
+		{
+			cerr << "inserting 100 food" << endl;
+
+			freeEnergyInfo += foodenergy * 200.0f;
+			freeEnergy += foodenergy * 200.0f;
+		}
+		else if ( timedInsertsCounter == 6001 )
+		{
+			cerr << "removing 100 food" << endl;
+
+			freeEnergyInfo -= foodenergy * 200.0f;
+			freeEnergy -= foodenergy * 200.0f;
+
+			timedInsertsCounter = 0;
+		}
+	}
+}
+
+void WorldB::toggleTimedInserts()
+{
+	 if ( doTimedInserts ) doTimedInserts = false;
+	 else
+	 {
+		 doTimedInserts = true;
+		 timedInsertsCounter = 0;
+	 }
 }
 
 void WorldB::insertRandomFood(int amount, float energy)
@@ -474,13 +549,9 @@ void WorldB::insertCritter()
 {
 	CritterB *c = new CritterB;
 
-	c->color[0] = 1.0f;
-	c->color[1] = 0.0f;
-	c->color[2] = (float)randgen.get( 0,1000 ) / 1000;
-	c->color[3] = 0.0f;
-
 	c->brain.buildArch();
 	c->setup();
+	c->retina = retina;
 
 	// record it's energy
 	freeEnergy -= c->energyLevel;
@@ -500,12 +571,23 @@ void WorldB::positionCritterB(unsigned int cid)
 
 void WorldB::removeCritter(unsigned int cid)
 {
-	if ( critters[cid]->energyLevel > 0 )
+	if ( critters[cid]->energyLevel > 0.0f )
 	{
 		Food *f = new Food;
-		f->position	= critters[cid]->position;
-		f->energy	= critters[cid]->energyLevel / 2;
-		freeEnergy += (critters[cid]->energyLevel - f->energy);
+		f->position = critters[cid]->position;
+
+		if ( critters[cid]->energyLevel > 2500.0f )
+		{
+			f->energy = 2500.0f;
+		}
+		else
+		{
+			f->energy = critters[cid]->energyLevel;
+		}
+
+
+		freeEnergy += critters[cid]->energyLevel;
+		freeEnergy -= f->energy;
 
 		// put 50% of energy in food, rest back in space
 
@@ -591,6 +673,12 @@ void WorldB::decreaseMincritters()
 	cerr << "min c: " << mincritters << endl;
 }
 
+void WorldB::setMincritters(unsigned int c)
+{
+	mincritters = c;
+	cerr << "min c: " << mincritters << endl;
+}
+
 void WorldB::loadAllCritters()
 {
 	vector<string> files;
@@ -604,6 +692,7 @@ void WorldB::loadAllCritters()
 
 		CritterB *c = new CritterB(content);
 		c->setup();
+		c->retina = retina;
 		// record it's energy
 		freeEnergy -= c->energyLevel;
 		critters.push_back( c );

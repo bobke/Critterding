@@ -24,10 +24,10 @@ class Evolution : public GLScene {
 
 		Camera camera;
 
+		WorldB world;
+
 	private:
 		Sleeper sleeper;
-
-		WorldB world;
 
 		bool drawCVNeurons;
 };

@@ -16,8 +16,11 @@ BUTTONS
                    by inserting a considering amount of adams, the current population size
                    will drop.
 
-   F11           : load all critters from "~/.critterding/load" directory
-   F12           : save all critters into "~/.critterding/save/(timestamp)" directory
+   F9            : increase nr of actual mutations when a critter mutates
+   F10           : decrease nr of actual mutations when a critter mutates
+
+   F11           : increase mutation rate (%)
+   F12           : decrease mutation rate (%)
 
    Insert        : toggle critter vision
 
@@ -27,9 +30,11 @@ BUTTONS
 
    f             : toggle follow the youngest critter untill it dies.
 
-   Page Up       : increase energy in the system by the energy amount of 1 food
-   Page Down     : decrease energy in the system by the energy amount of 1 food
+   Page Up       : load all critters from "~/.critterding/load" directory
+   Page Down     : save all critters into "~/.critterding/save/(timestamp)" directory
 
+   +             : increase energy in the system by the energy amount of 1 food
+   -             : decrease energy in the system by the energy amount of 1 food
 
  - Camera Operations
 

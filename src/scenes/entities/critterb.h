@@ -69,7 +69,6 @@ class CritterB
 
 		void			draw();
 		void			place();
-		void			procFrame();
 		void			process();
 		void			resize(float newsize);
 
@@ -77,7 +76,7 @@ class CritterB
 		void			calcCamPos();
 		void			printVision();
 		void			setup();
-		void			mutate();
+		void			mutate(unsigned int maxMutateRuns);
 
 		void			moveForward();
 		void			moveBackward();
@@ -96,14 +95,16 @@ class CritterB
 
 		Parser			parseH;
 
-		// frame capturing options
-		float			maxSize;
 		float			speedfactor;
+
+		// frame capturing options
 		unsigned int		components;
 		unsigned int		framePosX;
 		unsigned int		framePosY;
 
 		unsigned int		visionDivider;
+
+		unsigned int		visionPosition;
 
 		bool			moved;
 		unsigned int		motorneuronsfired;
