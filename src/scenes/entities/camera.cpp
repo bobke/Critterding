@@ -23,7 +23,7 @@ Camera::Camera()
 //	position	= Vector3f(-10.0, -22.3, -18.0);
 
 // world= 25
-//	position	= Vector3f(-12.5, -27.4, -22.5);
+	position	= Vector3f(-12.5, -27.4, -22.5);
 
 // world= 30
 //	position	= Vector3f(-15.0, -32.6, -26.5);
@@ -32,7 +32,7 @@ Camera::Camera()
 //	position	= Vector3f(-17.5, -37.8, -31.5);
 
 // world= 50
-	position	= Vector3f(-25.1, -54.0, -45.2);
+//	position	= Vector3f(-25.1, -54.0, -45.2);
 
 // world= 100
 //	position	= Vector3f(-50.0, -102.0, -87.0);
