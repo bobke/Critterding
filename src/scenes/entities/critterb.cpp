@@ -208,7 +208,7 @@ void CritterB::procInputNeurons()
 		}
 		else
 		{*/
-			unsigned int itemsperrow = 10;
+			unsigned int itemsperrow = 20;
 			unsigned int divider = 256 / visionDivider;
 
 			unsigned int target = visionPosition;
@@ -428,9 +428,9 @@ void CritterB::calcFramePos(unsigned int pos)
 	visionPosition = pos;
 
 	framePosY = 0;
-	while ( pos >= 10 )
+	while ( pos >= 20 )
 	{
-		pos -= 10;
+		pos -= 20;
 		framePosY += frameHeight;
 	}
 	framePosX = (pos * frameWidth) + pos;
