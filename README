@@ -1,18 +1,26 @@
-STARTUP
+TERMINOLOGY
 
-  --worldsize [25]
-  --food [1000]
-  --mincritters [10]
-  --startcritters [0]
-  --mutationrate [10]
-  --maxmutateruns [3]
+ - Adam
+      : new (totally random) critter
+
+ - Adam Distance (ad)
+      : generations with mutations since adam
+
+
+STARTUP OPTIONS
+
+  option         [default value]
+  --worldsize    [25]        Creates a 25x25 world
+  --food        [500]        Maintains 500 food units of energy in the system
+  --mincritters  [10]        If less than 10 critters are present, insert an adam
+  --startcritters [0]        Throw in 0 adams at startup
+  --mutationrate [10]        When a critter procreates it mutates 10% of the time
+  --maxmutateruns [3]        When a critter mutates, it can do 3 mutations at maximum
+
 
 BUTTONS
 
  - Engine / World Operations
-
-   F1            : fullscreen
-                   (leaks mem, old crufty X code needs replacement)
 
    F2            : fps toggle
                    (console)
@@ -27,6 +35,10 @@ BUTTONS
                    alternatively this can be used as a population reduction mechanism,
                    by inserting a considering amount of adams, the current population size
                    will drop.
+
+   F8            : toggle Timed Food Inserts
+                   this will insert 100 extra food every 3 generations, and thus
+                   artificially drives the population up and down.
 
    F9            : increase nr of actual mutations when a critter mutates
    F10           : decrease nr of actual mutations when a critter mutates
@@ -64,13 +76,6 @@ BUTTONS
    NumKey 6      : look right
 
 
-TERMINOLOGY
-
- - Adam
-      : new (100% random) critter
-
- - Adam Distance (ad)
-      : generations with mutations since adam
 
 
 
