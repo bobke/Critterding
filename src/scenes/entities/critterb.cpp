@@ -385,12 +385,12 @@ void CritterB::mutate(unsigned int maxMutateRuns)
 
 	if ( mode == 1 )
 	{
-		color[ncolor] += (float)randgen.get(1,10)/200.0f;
+		color[ncolor] += (float)randgen.get(1,10)/150.0f;
 		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
 	}
 	else
 	{
-		color[ncolor] -= (float)randgen.get(1,10)/200.0f;
+		color[ncolor] -= (float)randgen.get(1,10)/150.0f;
 		if ( color[ncolor] < 0.2f ) color[ncolor] = 0.2f;
 	}
 

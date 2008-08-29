@@ -195,30 +195,7 @@ void GLWindow::runGLScene(GLScene &glscene)
 						break;
 						case XK_F1:			// Switch Fullscreen/Windowed mode
 
-	cerr << "BEFORE" << endl;
-	cerr << GLWin.dpy << endl;
-	cerr << GLWin.win << endl;
-	cerr << GLWin.screen << endl;
-	cerr << GLWin.ctx << endl;
-	cerr << &GLWin.attr << endl;
-	cerr << &GLWin.deskMode << endl;
-
-
-
 							destroy();
-
-	GLWin.dpy = 0;
-	GLWin.win = 0;
-	GLWin.ctx = 0;
-//	GLWin.attr = 0;
-
-	cerr << "\nAFTER" << endl;
-	cerr << GLWin.dpy << endl;
-	cerr << GLWin.win << endl;
-	cerr << GLWin.screen << endl;
-	cerr << GLWin.ctx << endl;
-	cerr << &GLWin.attr << endl;
-	cerr << &GLWin.deskMode << endl;
 
 							GLWin.fs = !GLWin.fs;
 							create("", GLWin.owidth, GLWin.oheight, GLWin.bpp, GLWin.fs);

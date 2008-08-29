@@ -15,19 +15,23 @@ extern "C" void *procCritters( void *ptr )
 	while (1)
 	{
 		// thread stuff
-				pthread_mutex_lock( &b->busyThreads_mutex );
-					if ( --b->busyThreads == 0 )
-					{
-						pthread_mutex_lock( &b->condition_threadsdone_mutex );
-							pthread_cond_signal( &b->condition_threadsdone );
-						pthread_mutex_unlock( &b->condition_threadsdone_mutex );
-					}
-				pthread_mutex_unlock( &b->busyThreads_mutex );
+			pthread_mutex_lock( &b->busyThreads_mutex );
+				if ( --b->busyThreads == 0 )
+				{
+					pthread_mutex_lock( &b->condition_threadsdone_mutex );
+						pthread_cond_signal( &b->condition_threadsdone );
+					pthread_mutex_unlock( &b->condition_threadsdone_mutex );
+				}
+			pthread_mutex_unlock( &b->busyThreads_mutex );
 	
 					//cerr << "thread " << threadID << " initiated" << endl;
 
 			pthread_mutex_lock( &b->condition_startthreads_mutex );
+cerr << " thread " << threadID << " ended " << endl;
+
 			pthread_cond_wait( &b->condition_startthreads, &b->condition_startthreads_mutex );
+
+cerr << " thread " << threadID << " started " << endl;
 			pthread_mutex_unlock( &b->condition_startthreads_mutex );
 
 		// process
@@ -319,15 +323,20 @@ void WorldB::process()
 		// tell threads to start & wait for end
 			busyThreads = nthreads;
 	
-			pthread_mutex_lock( &condition_threadsdone_mutex );
 			// start the threads
-				pthread_mutex_lock( &condition_startthreads_mutex );
+//				pthread_mutex_lock( &condition_startthreads_mutex );
 					//cerr << "signaling start threads" << endl;
 					pthread_cond_broadcast( &condition_startthreads );
-				pthread_mutex_unlock( &condition_startthreads_mutex );
+//				pthread_mutex_unlock( &condition_startthreads_mutex );
 	
 			// wait for threads to end
+			pthread_mutex_lock( &condition_threadsdone_mutex );
 				pthread_cond_wait( &condition_threadsdone, &condition_threadsdone_mutex );
+// 			while ( busyThreads != 0 )
+// 			{
+// 				pthread_mutex_unlock( &busyThreads_mutex );
+// 				pthread_mutex_lock( &busyThreads_mutex );
+// 			}
 
 			pthread_mutex_unlock( &condition_threadsdone_mutex );
 	}
