@@ -1,84 +1,5 @@
 #include "worldb.h"
 
-extern "C" void *procCritters( void *ptr )
-{
-
-	WorldB *b = static_cast<WorldB *>(ptr);
-
-	// register this thread
-	unsigned int threadID;
-	pthread_mutex_lock( &b->busyThreads_mutex );
-		threadID = b->registeredThreads++;
-		cerr << "registered thread " << threadID << endl;
-	pthread_mutex_unlock( &b->busyThreads_mutex );
-
-	while (1)
-	{
-		// thread stuff
-			pthread_mutex_lock( &b->busyThreads_mutex );
-				if ( --b->busyThreads == 0 )
-				{
-					pthread_mutex_lock( &b->condition_threadsdone_mutex );
-						pthread_cond_signal( &b->condition_threadsdone );
-					pthread_mutex_unlock( &b->condition_threadsdone_mutex );
-				}
-			pthread_mutex_unlock( &b->busyThreads_mutex );
-	
-					//cerr << "thread " << threadID << " initiated" << endl;
-
-			pthread_mutex_lock( &b->condition_startthreads_mutex );
-cerr << " thread " << threadID << " ended " << endl;
-
-			pthread_cond_wait( &b->condition_startthreads, &b->condition_startthreads_mutex );
-
-cerr << " thread " << threadID << " started " << endl;
-			pthread_mutex_unlock( &b->condition_startthreads_mutex );
-
-		// process
-
-			unsigned int csize = b->critters.size();
-			unsigned int fsize = b->food.size();
-			for ( unsigned int i=threadID; i < csize; i+=b->nthreads )
-			{
-					CritterB *c = b->critters[i];
-
-					// over food input neuron
-						c->touchingFood = false;
-						for( unsigned int f=0; f < fsize && !c->touchingFood; f++)
-						{
-							Food *fo = b->food[f];
-							float avgSize = (c->size + fo->size) / 2;
-							if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
-							{
-								c->touchingFood = true;
-								c->touchedFoodID = f;
-							}
-						}
-
-					c->process();
-
-					// record critter used energy
-					pthread_mutex_lock( &b->freeEnergy_mutex );
-						b->freeEnergy += c->energyUsed;
-					pthread_mutex_unlock( &b->freeEnergy_mutex );
-				
-					// move
-					pthread_mutex_lock( &b->position_mutex );
-						if (b->spotIsFree(c->newposition, c->size, i))
-						{
-							//pthread_mutex_lock( &c->position_mutex );
-							c->moveToNewPoss();
-							//pthread_mutex_unlock( &c->position_mutex );
-						}
-					pthread_mutex_unlock( &b->position_mutex );
-	
-
-			}
-
-	}
-	return 0;
-}
-
 WorldB::WorldB()
 {
 //	Infobar *infobar	= Infobar::instance();
@@ -90,7 +11,7 @@ WorldB::WorldB()
 	timedInsertsCounter	= 0;
 
 	foodsize		= 0.1f;
-	foodenergy		= 2500.0f;
+	foodenergy		= 0.0f;
 
 	mincritters		= 10;
 
@@ -99,58 +20,19 @@ WorldB::WorldB()
 
 	flipnewbornes		= false;
 
+	critterspeed		= 0.0f;
+	critterenergy		= 0.0f;
+
+	critterlifetime		= 0;
+	foodlifetime		= 0;
+
 	// home & program directory
 	createDirs();
 
 	// vision retina allocation
-
-	// register input/output neurons
-	//items = 4* 1000 * (1 + (10*2));
-
 	items = 10000 * 4 * (10+1) * 10;
-
-	cerr << items << endl;
-
 	retina = (unsigned char*)malloc(items);
 	memset(retina, 0, items);
-
-	// threads
-	nthreads			= 1;
-	registeredThreads		= 0;
-	busyThreads			= nthreads;
-
-	if ( nthreads > 1 )
-	{
-
-		pthread_mutex_init (&condition_startthreads_mutex, NULL);
-		pthread_cond_init (&condition_startthreads, NULL);
-	
-		pthread_mutex_init (&condition_threadsdone_mutex, NULL);
-		pthread_cond_init (&condition_threadsdone, NULL);
-	
-		pthread_mutex_init (&busyThreads_mutex, NULL);
-		pthread_mutex_init (&freeEnergy_mutex, NULL);
-		pthread_mutex_init (&position_mutex, NULL);
-	
-	
-		// init threads
-		for ( unsigned int i = 0; i < nthreads; i++ )
-		{
-			threads.push_back( pthread_t() );
-			pthread_create( &threads[i], NULL, ::procCritters, (void *) this );
-			pthread_detach( threads[i] );
-		}
-	
-		// wait untill all threads are created before continuing
-		pthread_mutex_lock( &busyThreads_mutex );
-		while ( busyThreads > 0 )
-		{
-			pthread_mutex_unlock( &busyThreads_mutex );
-				usleep (100);
-			pthread_mutex_lock( &busyThreads_mutex );
-		}
-		pthread_mutex_unlock( &busyThreads_mutex );
-	}
 
 }
 
@@ -298,6 +180,7 @@ void WorldB::process()
 			}
 	}
 
+	// Read pixels into retina
 	if ( critters.size() > 0 )
 	{
 		unsigned int itemsperrow = 20;
@@ -317,68 +200,39 @@ void WorldB::process()
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 	}
 
-
-	if ( nthreads > 1 && critters.size()>1 )
+	// process all critters
+ 	unsigned int lmax = critters.size();
+	for( unsigned int i=0; i < lmax; i++)
 	{
-		// tell threads to start & wait for end
-			busyThreads = nthreads;
-	
-			// start the threads
-//				pthread_mutex_lock( &condition_startthreads_mutex );
-					//cerr << "signaling start threads" << endl;
-					pthread_cond_broadcast( &condition_startthreads );
-//				pthread_mutex_unlock( &condition_startthreads_mutex );
-	
-			// wait for threads to end
-			pthread_mutex_lock( &condition_threadsdone_mutex );
-				pthread_cond_wait( &condition_threadsdone, &condition_threadsdone_mutex );
-// 			while ( busyThreads != 0 )
-// 			{
-// 				pthread_mutex_unlock( &busyThreads_mutex );
-// 				pthread_mutex_lock( &busyThreads_mutex );
-// 			}
+		CritterB *c = critters[i];
 
-			pthread_mutex_unlock( &condition_threadsdone_mutex );
-	}
-	else
-	{
-		for( unsigned int i=0; i < critters.size(); i++)
-		{
-			CritterB *c = critters[i];
-	
-			// over food input neuron
-				c->touchingFood = false;
-				for( unsigned int f=0; f < food.size() && !c->touchingFood; f++)
+		// over food input neuron
+			c->touchingFood = false;
+			for( unsigned int f=0; f < food.size() && !c->touchingFood; f++)
+			{
+				Food *fo = food[f];
+				float avgSize = (c->size + fo->size) / 2;
+				if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
 				{
-					Food *fo = food[f];
-					float avgSize = (c->size + fo->size) / 2;
-					if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
-					{
-						c->touchingFood = true;
-						c->touchedFoodID = f;
-					}
+					c->touchingFood = true;
+					c->touchedFoodID = f;
 				}
-		
-			// process
-				c->process();
+			}
+	
+		// process
+			c->process();
 
-
-			// record critter used energy
-				freeEnergy += c->energyUsed;
-		
-			// move
+		// record critter used energy
+			freeEnergy += c->energyUsed;
+	
+		// move
+			if (c->moved)
+			{
 				if (spotIsFree(c->newposition, c->size, i))
 				{
 					c->moveToNewPoss();
 				}
-		}
-	}
-
-	// seems to go faster in 3 loops, caching wise
-	unsigned int lmax = critters.size();
-	for( unsigned int i=0; i < lmax; i++)
-	{
-		CritterB *c = critters[i];
+			}
 
 		// eat
 			if ( c->touchingFood && c->eat )
@@ -459,6 +313,9 @@ void WorldB::process()
 					nc->position = c->position;
 					nc->rotation = c->rotation;
 
+					nc->speedfactor = critterspeed;
+					nc->maxEnergyLevel = critterenergy;
+					nc->maxtotalFrames = critterlifetime;
 					nc->setup();
 					nc->retina = retina;
 
@@ -546,7 +403,9 @@ void WorldB::insertRandomFood(int amount, float energy)
 	{
 		Food *f = new Food;
 		f->position	= findEmptySpace(foodsize);
+		f->maxenergy	= foodenergy;
 		f->energy	= energy;
+		f->maxtotalFrames = foodlifetime;
 
 		f->resize();
 		//f->resize((foodsize/foodenergy) * energy);
@@ -559,6 +418,9 @@ void WorldB::insertCritter()
 	CritterB *c = new CritterB;
 
 	c->brain.buildArch();
+	c->speedfactor = critterspeed;
+	c->maxEnergyLevel = critterenergy;
+	c->maxtotalFrames = critterlifetime;
 	c->setup();
 	c->retina = retina;
 
@@ -583,11 +445,13 @@ void WorldB::removeCritter(unsigned int cid)
 	if ( critters[cid]->energyLevel > 0.0f )
 	{
 		Food *f = new Food;
+		f->maxenergy	= foodenergy;
+		f->maxtotalFrames = foodlifetime;
 		f->position = critters[cid]->position;
 
-		if ( critters[cid]->energyLevel > 2500.0f )
+		if ( critters[cid]->energyLevel > foodenergy )
 		{
-			f->energy = 2500.0f;
+			f->energy = foodenergy;
 		}
 		else
 		{
@@ -700,6 +564,9 @@ void WorldB::loadAllCritters()
 		fileH.open( files[i], content );
 
 		CritterB *c = new CritterB(content);
+		c->speedfactor = critterspeed;
+		c->maxEnergyLevel = critterenergy;
+		c->maxtotalFrames = critterlifetime;
 		c->setup();
 		c->retina = retina;
 		// record it's energy

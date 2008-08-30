@@ -3,13 +3,13 @@
 Food::Food()
 {
 	maxsize		= 0.15f;
- 	maxenergy	= 2500.0f;
+ 	maxenergy	= 2000.0f;
 
 	size		= maxsize;
  	energy		= maxenergy;
 
-	totalFrames		= 0;
-	maxtotalFrames		= 2000;
+	totalFrames	= 0;
+	maxtotalFrames	= 2000;
 
 	color[0]	= 0.0f;
 	color[1]	= 0.80f;

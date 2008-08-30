@@ -29,11 +29,6 @@ class WorldB
 		~WorldB();
 
 		vector<CritterB*>	critters;
-		vector<Food*>		food;
-		vector<Wall*>		walls;
-		vector<Bullet*>		bullets;
-
-		RandGen			randgen;
 
 		int			size;
 		float			freeEnergy;
@@ -45,7 +40,6 @@ class WorldB
 		bool			isSelected;
 
 		bool			doTimedInserts;
-		unsigned int		timedInsertsCounter;
 		void			toggleTimedInserts();
 
 		void			process();
@@ -56,6 +50,12 @@ class WorldB
 
 		float			foodenergy;
 		void			insertRandomFood(int amount, float energy);
+
+		float			critterspeed;
+		float			critterenergy;
+
+		int			critterlifetime;
+		int			foodlifetime;
 
 		void			insertCritter();
 		void			positionCritterB(unsigned int cid);
@@ -72,28 +72,19 @@ class WorldB
 
 		bool			spotIsFree(Vector3f &position, float osize, unsigned int exclude);
 
-
-		pthread_cond_t			condition_startthreads;
-		pthread_mutex_t			condition_startthreads_mutex;
-
-		pthread_cond_t			condition_threadsdone;
-		pthread_mutex_t			condition_threadsdone_mutex;
-
-		unsigned int			nthreads;
-		unsigned int			registeredThreads;
-		unsigned int			busyThreads;
-		pthread_mutex_t			busyThreads_mutex;
-
-		pthread_mutex_t			freeEnergy_mutex;
-		pthread_mutex_t			position_mutex;
-
-		vector<pthread_t>		threads;
-
 	private:
+
+		RandGen			randgen;
+
+		vector<Food*>		food;
+		vector<Wall*>		walls;
+		vector<Bullet*>		bullets;
 
 		Dir			dirH;
 		File			fileH;
 		Parser			parseH;
+
+		unsigned int		timedInsertsCounter;
 
 		unsigned char		*retina;
 		unsigned int		items;
