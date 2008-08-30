@@ -193,13 +193,13 @@ void GLWindow::runGLScene(GLScene &glscene)
 							}
 							else running = 0;
 						break;
-						case XK_F1:			// Switch Fullscreen/Windowed mode
+/*						case XK_F1:			// Switch Fullscreen/Windowed mode
 
 							destroy();
 
 							GLWin.fs = !GLWin.fs;
 							create("", GLWin.owidth, GLWin.oheight, GLWin.bpp, GLWin.fs);
-						break;
+						break;*/
  						default:			// TODO ELSE pass event to the scene
 							glscene.handlekey(XLookupKeysym(&event.xkey,0));
 						break;

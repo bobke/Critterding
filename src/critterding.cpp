@@ -5,14 +5,20 @@ using namespace std;
 
 unsigned int worldsizeparam = 25;
 unsigned int foodparam = 500;
+
 unsigned int mincritters = 10;
 unsigned int startcritters = 0;
-unsigned int mutationrate = 10;
-unsigned int maxmutateruns = 3;
 
-// double  dparam=0;
-// string  sparam="";
-// int     fparam=0;
+unsigned int mutationrate = 10;
+unsigned int maxmutateruns = 1;
+
+unsigned int critterenergy = 5000;
+unsigned int foodenergy = 2500;
+
+unsigned int critterlifetime = 2000;
+unsigned int foodlifetime = 2000;
+
+float critterspeed = 0.05f;
 
 int main(int argc, char *argv[])
 {
@@ -52,6 +58,31 @@ int main(int argc, char *argv[])
 			optind++;
 			maxmutateruns = atoi(argv[optind]);
 	        }
+		else if (sw=="--critterenergy")
+		{
+			optind++;
+			critterenergy = atoi(argv[optind]);
+	        }
+		else if (sw=="--foodenergy")
+		{
+			optind++;
+			foodenergy = atoi(argv[optind]);
+	        }
+		else if (sw=="--critterspeed")
+		{
+			optind++;
+			critterspeed = (float)atoi(argv[optind]) / 1000.0f;
+	        }
+		else if (sw=="--critterlifetime")
+		{
+			optind++;
+			critterlifetime = atoi(argv[optind]);
+	        }
+		else if (sw=="--foodlifetime")
+		{
+			optind++;
+			foodlifetime = atoi(argv[optind]);
+	        }
 		else
 		{
 			cout << "Unknown switch: " << argv[optind] << endl;
@@ -60,30 +91,44 @@ int main(int argc, char *argv[])
 	}
 
 	// report settings
-	cout << "World Size = " << worldsizeparam << endl;
+	cout << "World Size = " << worldsizeparam << "x" << worldsizeparam << endl;
 	cout << "Food Amount = " << foodparam << endl;
 	cout << "Minimum Critters = " << mincritters << endl;
 	cout << "Starting Amount of critters = " << startcritters << endl;
 	cout << "Mutation Runs per Mutating Critter = " << maxmutateruns << endl;
 	cout << "Critter Mutation Rate = " << mutationrate << endl;
+
+	cout << "Critter Energy = " << critterenergy << endl;
+	cout << "Food Energy = " << foodenergy << endl;
+
+	cout << "Critter Lifetime = " << critterlifetime << endl;
+	cout << "Food Lifetime = " << foodlifetime << endl;
+
+	cout << "Critter Speed = " << critterspeed*1000.0f << endl;
+
 	cout << "Remaining arguments = ";
 	for (;optind<argc;optind++)
 	{
 		cout << argv[optind];
 	}
-	cout << endl;
+	cout << endl << endl;
 
 	//cerr << "Starting application" << endl;
 	GLWindow glwindow;
-	glwindow.create("Critterding 0.01", 600, 600, 24, False);
+	glwindow.create("Critterding beta2", 600, 600, 24, False);
 
 		Evolution mainscene;
 
 		mainscene.world.resize(worldsizeparam);
+		mainscene.world.foodenergy = foodenergy;
+		mainscene.world.critterenergy = critterenergy;
 		mainscene.world.startfoodamount(foodparam);
 		mainscene.world.setMincritters(mincritters);
 		mainscene.world.maxMutateRuns = maxmutateruns;
 		mainscene.world.mutationRate = mutationrate;
+		mainscene.world.critterspeed = critterspeed;
+		mainscene.world.critterlifetime = critterlifetime;
+		mainscene.world.foodlifetime = foodlifetime;
 
 		for (unsigned int i=0; i < startcritters; i++) mainscene.world.insertCritter();
 

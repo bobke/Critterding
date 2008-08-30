@@ -32,11 +32,10 @@ class CritterB
 
 		float			size;
 		float			halfsize;
-		float			volume;
+		float			speedfactor;
 
 		Vector3f		position;
 		Vector3f		newposition;
-		pthread_mutex_t		position_mutex;
 
 		float			rotation;
 		float			color[4];
@@ -56,6 +55,7 @@ class CritterB
 		float			minfireenergyLevel;
 
 		bool			eat;
+		bool			moved;
 		bool			touchingFood;
 		unsigned int		touchedFoodID;
 		bool			fire;
@@ -95,7 +95,6 @@ class CritterB
 
 		Parser			parseH;
 
-		float			speedfactor;
 
 		// frame capturing options
 		unsigned int		components;
@@ -106,7 +105,6 @@ class CritterB
 
 		unsigned int		visionPosition;
 
-		bool			moved;
 		unsigned int		motorneuronsfired;
 
 		GLfloat 		vertices[27];

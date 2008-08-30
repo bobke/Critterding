@@ -8,11 +8,13 @@ void CritterB::initConst()
 	maxEnergyLevel		= 5000.0f;
 	maxtotalFrames		= 2000;
 	procreateTimeTrigger	= 100;
-	minprocenergyLevel	= maxEnergyLevel * 0.6f;
 	fireTimeTrigger		= 5;
-	minfireenergyLevel	= maxEnergyLevel * 0.0f;
+	minprocenergyLevel	= 0.0f;
+	minfireenergyLevel	= 0.0f;
 
 	visionPosition		= 0;
+
+	speedfactor		= 0.05f;
 }
 
 CritterB::CritterB()
@@ -21,7 +23,7 @@ CritterB::CritterB()
 
 		brain.maxNeurons					= 500;
 		brain.minSynapses					= 1;
-		brain.maxSynapses					= 60;
+		brain.maxSynapses					= 100;
 
 		brain.minNeuronsAtBuildtime				= 20;
 		brain.maxNeuronsAtBuildtime				= 40;
@@ -78,9 +80,6 @@ CritterB::CritterB()
 	frameHeight		= frameWidth; // must be same as frameWidth
 	visionDivider		= 2;
 
-	// energy
-	energyLevel		= maxEnergyLevel / 2.0f;
-
 	// register input/output neurons
 	items = frameWidth * frameHeight * components;
 
@@ -99,9 +98,6 @@ CritterB::CritterB(string &critterstring)
 	initConst();
 
 	loadCritterB(critterstring);
-
-	// energy
-	energyLevel		= maxEnergyLevel / 2.0f;
 
 	// register input/output neurons
 	items = frameWidth * frameHeight * components;
@@ -123,28 +119,20 @@ CritterB::CritterB(CritterB &other)
 
 void CritterB::setup()
 {
-	// initialize mutexes
-	pthread_mutex_init (&position_mutex, NULL);
-
 	totalFrames		= 0;
 	procreateTimeCount	= 0;
 	fireTimeCount		= 0;
 
-	// Allocate the neccessary memory for our retina.
-//	retina = (unsigned char*)malloc(items);
+	minprocenergyLevel	= maxEnergyLevel * 0.6f;
+	minfireenergyLevel	= maxEnergyLevel * 0.0f;
 
-	// initialize retina
-//	for ( unsigned int i=0; i < items; i++ ) retina[i] = 0;
-//	memset(retina, 0, items);
+	// energy
+	energyLevel		= maxEnergyLevel / 2.0f;
 
 	// setup brain from architecture
 	brain.wireArch();
 
 	resize( 0.1f );
-
-	volume			= size * size * size * 100.0f;
-
-	speedfactor		= (1.0f-0.12f) / 12.0f; // FIXME HACK lower me :)
 }
 
 void CritterB::process()
@@ -175,11 +163,6 @@ void CritterB::process()
 		procOutputNeurons();
 
 	// calc used energy, energyUsed is used in world aswell, don't remove
-
-// 		energyUsed += (float)brain.neuronsFired * size * 2.0f;
-// 		energyUsed += (float)motorneuronsfired * volume;
-
-		//cerr << "energy used " << ((float)brain.neuronsFired+(float)motorneuronsfired) / 20.0f << endl;
 
 		energyUsed = ( (float)brain.neuronsFired + (2.0f*(float)motorneuronsfired) + ((float)brain.totalSynapses/50.0) ) / 50.0f;
 
@@ -243,7 +226,6 @@ void CritterB::procInputNeurons()
 // 			}
 // 			cerr << "" << endl;
 // 			usleep (10000);
-
 
 			unsigned int i=0;
 			for ( unsigned int h=rowstart; h < rowstart+(frameHeight*rowlength); h += rowlength )
@@ -395,8 +377,7 @@ void CritterB::mutate(unsigned int maxMutateRuns)
 	}
 
 	unsigned int runs = randgen.get(1, maxMutateRuns);
-	brain.mutate( runs );
-	//brain.mutate( 0 );
+	brain.mutate( runs ); // 0 for random
 }
 
 
@@ -463,30 +444,6 @@ void CritterB::printVision()
 	}
 	cerr << "" << endl;
 }
-
-// void CritterB::printVision()
-// {
-// cerr << "hi" << endl;
-// 	int rowlength = frameWidth * components;
-// 
-// 	cerr << rowlength << " " << items << endl;
-// 	for ( int h=items-rowlength; h >= 0; h -= rowlength )
-// 	{
-// 		for ( int w=h; w < (int)(frameWidth*components)+h; w += components )
-// 		{
-// 			if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
-// 			else cerr << ".";
-// 			if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
-// 			else cerr << ".";
-// 			if ( (int)retina[w] ) cerr << "\033[1;34mB\033[0m";
-// 			else cerr << ".";
-// 			if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
-// 			else cerr << ".";
-// 		}
-// 		cerr << "" << endl;
-// 	}
-// 	cerr << "" << endl;
-// }
 
 void CritterB::draw()
 {
