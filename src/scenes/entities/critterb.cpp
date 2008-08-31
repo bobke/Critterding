@@ -13,10 +13,13 @@ void CritterB::initConst()
 	minfireenergyLevel	= 0.0f;
 
 	visionPosition		= 0;
+	retinasperrow		= 0;
 
 	speedfactor		= 0.0f;
 	size			= 0.0f;
 	halfsize		= 0.0f;
+
+	colorDivider		= 0;
 }
 
 CritterB::CritterB()
@@ -125,6 +128,8 @@ void CritterB::setup()
 	procreateTimeCount	= 0;
 	fireTimeCount		= 0;
 
+	colorDivider		= 256 / visionDivider;
+
 	minprocenergyLevel	= maxEnergyLevel * 0.6f;
 	minfireenergyLevel	= maxEnergyLevel * 0.0f;
 
@@ -170,6 +175,24 @@ void CritterB::process()
 	energyLevel -= energyUsed;
 }
 
+void CritterB::calcFramePos(unsigned int pos, unsigned int cretinasperrow)
+{
+	visionPosition = pos;
+	retinasperrow = cretinasperrow;
+
+	framePosY = 0;
+	while ( pos >= cretinasperrow )
+	{
+		pos -= cretinasperrow;
+		framePosY += frameHeight;
+	}
+	framePosX = (pos * frameWidth) + pos;
+
+// cerr << framePosX << " : " << framePosY << endl;
+// usleep (1000);
+
+}
+
 void CritterB::procInputNeurons()
 {
 
@@ -187,18 +210,16 @@ void CritterB::procInputNeurons()
 		}
 		else
 		{*/
-			unsigned int itemsperrow = 20;
-			unsigned int divider = 256 / visionDivider;
 
 			unsigned int target = visionPosition;
 
 			unsigned int rowstart = 0;
 			// determine on which row of the retina to start for this critter
-			unsigned int rowlength = itemsperrow * (10+1) * 4;
-			while ( target >= itemsperrow )
+			unsigned int rowlength = retinasperrow * (10+1) * 4;
+			while ( target >= retinasperrow )
 			{
 				rowstart += 10 * rowlength;
-				target -= itemsperrow;
+				target -= retinasperrow;
 			}
 
 			// determine on which column to start
@@ -232,7 +253,7 @@ void CritterB::procInputNeurons()
 
 					if ( retina[w]>0 )
 					{
-						brain.Inputs[itarget+ ((unsigned int)retina[w] / divider)].output = 1;
+						brain.Inputs[itarget+ ((unsigned int)retina[w] / colorDivider)].output = 1;
 					}
 					i++;
 				}
@@ -397,23 +418,6 @@ void CritterB::place()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-}
-
-void CritterB::calcFramePos(unsigned int pos)
-{
-	visionPosition = pos;
-
-	framePosY = 0;
-	while ( pos >= 20 )
-	{
-		pos -= 20;
-		framePosY += frameHeight;
-	}
-	framePosX = (pos * frameWidth) + pos;
-
-// cerr << framePosX << " : " << framePosY << endl;
-// usleep (1000);
 
 }
 

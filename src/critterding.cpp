@@ -18,6 +18,8 @@ unsigned int foodenergy = 2500;
 unsigned int critterlifetime = 2000;
 unsigned int foodlifetime = 2000;
 
+unsigned int retinasperrow = 20;
+
 float crittersize = 0.1f;
 float foodsize = 0.15f;
 
@@ -96,6 +98,11 @@ int main(int argc, char *argv[])
 			optind++;
 			foodsize = (float)atoi(argv[optind]) / 100.0f;
 	        }
+		else if (sw=="--retinasperrow")
+		{
+			optind++;
+			retinasperrow = atoi(argv[optind]);
+	        }
 		else
 		{
 			cout << "Unknown switch: " << argv[optind] << endl;
@@ -122,6 +129,8 @@ int main(int argc, char *argv[])
 
 	cout << "Critter Speed = " << critterspeed*1000.0f << endl;
 
+	cout << "Retinas per row = " << retinasperrow << endl;
+
 	cout << "Remaining arguments = ";
 	for (;optind<argc;optind++)
 	{
@@ -147,6 +156,7 @@ int main(int argc, char *argv[])
 		mainscene.world.critterspeed = critterspeed;
 		mainscene.world.critterlifetime = critterlifetime;
 		mainscene.world.foodlifetime = foodlifetime;
+		mainscene.world.retinasperrow = retinasperrow;
 
 		for (unsigned int i=0; i < startcritters; i++) mainscene.world.insertCritter();
 

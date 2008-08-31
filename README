@@ -21,13 +21,14 @@ STARTUP OPTIONS
   --critterlifetime [2000]        Maximum amount of frames a critter can live
   --foodlifetime    [2000]        Maximum amount of frames food can live
   --critterspeed      [50]        Critter speed
+  --retinasperrow     [20]        Amount of retinas on a row (bottom left)
 
 
 BUTTONS
 
  - Engine / World Operations
 
-   F2            : fps toggle
+   F2            : fps toggle, displays average over 10 frames
                    (console)
 
    F3            : decrease Minimum Critters
@@ -37,9 +38,6 @@ BUTTONS
    F6            : decrease energy in the system by the energy amount of 24 food
 
    F7            : insert Adam
-                   alternatively this can be used as a population reduction mechanism,
-                   by inserting a considering amount of adams, the current population size
-                   will drop.
 
    F8            : toggle Timed Food Inserts
                    this will insert 100 extra food every 3 generations, and thus
@@ -64,8 +62,8 @@ BUTTONS
    Page Up       : load all critters from "~/.critterding/load" directory
    Page Down     : save all critters into "~/.critterding/save/(timestamp)" directory
 
-   + (keypad)    : increase energy in the system by the energy amount of 1 food
-   - (keypad)    : decrease energy in the system by the energy amount of 1 food
+   keypad +      : increase energy in the system by the energy amount of 1 food
+   keypad -      : decrease energy in the system by the energy amount of 1 food
 
  - Camera Operations
 
@@ -82,5 +80,5 @@ BUTTONS
 
 
 
-
+TIPS
 

@@ -54,11 +54,13 @@ class WorldB
 		float			critterspeed;
 		float			critterenergy;
 
-		int			critterlifetime;
-		int			foodlifetime;
+		unsigned int		critterlifetime;
+		unsigned int		foodlifetime;
 
 		float			crittersize;
 		float			foodsize;
+
+		unsigned int		retinasperrow;
 
 		void			insertCritter();
 		void			positionCritterB(unsigned int cid);

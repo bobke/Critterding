@@ -191,10 +191,10 @@ void Evolution::handlekey(const KeySym& key)
 			camera.lookDown(1.1f);
 		break;
 		case XK_KP_Page_Down:
-			camera.rollLeft(1.0f);
+			//camera.rollLeft(1.0f);
 		break;
 		case XK_KP_End:
-			camera.rollRight(1.0f);
+			//camera.rollRight(1.0f);
 		break;
 
 		// Camera Moving
