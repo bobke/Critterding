@@ -30,6 +30,8 @@ class CritterB
 		unsigned int		frameWidth;
 		unsigned int		frameHeight;
 
+		unsigned int		retinasperrow;
+
 		float			size;
 		float			halfsize;
 		float			speedfactor;
@@ -72,7 +74,7 @@ class CritterB
 		void			process();
 		void			resize(float newsize);
 
-		void			calcFramePos(unsigned int pos);
+		void			calcFramePos(unsigned int pos, unsigned int cretinasperrow);
 		void			calcCamPos();
 		void			printVision();
 		void			setup();
@@ -102,6 +104,8 @@ class CritterB
 		unsigned int		framePosY;
 
 		unsigned int		visionDivider;
+		unsigned int		colorDivider;
+
 
 		unsigned int		visionPosition;
 

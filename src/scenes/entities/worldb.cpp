@@ -15,6 +15,8 @@ WorldB::WorldB()
 
 	foodenergy		= 0.0f;
 
+	retinasperrow		= 0;
+
 	mincritters		= 10;
 
 	mutationRate		= 10; // %
@@ -185,18 +187,16 @@ void WorldB::process()
 	// Read pixels into retina
 	if ( critters.size() > 0 )
 	{
-		unsigned int itemsperrow = 20;
-
 		// determine width
-		unsigned int picwidth = (itemsperrow * (10+1));
+		unsigned int picwidth = (retinasperrow * (10+1));
 
 		// determine height
 		unsigned int picheight = 10;
 		unsigned int rows = critters.size();
-		while ( rows > itemsperrow )
+		while ( rows > retinasperrow )
 		{
 			picheight += 10;
-			rows -= itemsperrow;
+			rows -= retinasperrow;
 		}
 
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
@@ -346,7 +346,7 @@ void WorldB::process()
 						// reset procreation energy count
 						c->procreateTimeCount = 0;
 	
-						nc->calcFramePos(critters.size());
+						nc->calcFramePos(critters.size(), retinasperrow);
 
 						critters.push_back( nc );
 
@@ -371,19 +371,19 @@ void WorldB::process()
 	{
 		timedInsertsCounter++;
 
-		if ( timedInsertsCounter == 6000 )
+		if ( timedInsertsCounter == 3*critterlifetime )
 		{
 			cerr << "inserting 100 food" << endl;
 
-			freeEnergyInfo += foodenergy * 200.0f;
-			freeEnergy += foodenergy * 200.0f;
+			freeEnergyInfo += foodenergy * 100.0f;
+			freeEnergy += foodenergy * 100.0f;
 		}
-		else if ( timedInsertsCounter == 6001 )
+		else if ( timedInsertsCounter == (3*critterlifetime)+1 )
 		{
 			cerr << "removing 100 food" << endl;
 
-			freeEnergyInfo -= foodenergy * 200.0f;
-			freeEnergy -= foodenergy * 200.0f;
+			freeEnergyInfo -= foodenergy * 100.0f;
+			freeEnergy -= foodenergy * 100.0f;
 
 			timedInsertsCounter = 0;
 		}
@@ -412,7 +412,6 @@ void WorldB::insertRandomFood(int amount, float energy)
 		f->position = findEmptySpace(f->size);
 
 		f->resize();
-		//f->resize((foodsize/foodenergy) * energy);
 		food.push_back( f );
 	}
 }
@@ -442,7 +441,7 @@ void WorldB::positionCritterB(unsigned int cid)
 {
 	critters[cid]->position	= findEmptySpace(critters[cid]->size);
 	critters[cid]->position.y = critters[cid]->halfsize;
-	critters[cid]->calcFramePos(cid);
+	critters[cid]->calcFramePos(cid, retinasperrow);
 	critters[cid]->calcCamPos();
 }
 
@@ -497,7 +496,7 @@ void WorldB::removeCritter(unsigned int cid)
 
 	for ( unsigned int c = cid; c < critters.size(); c++ )
 	{
-		critters[c]->calcFramePos(c);
+		critters[c]->calcFramePos(c, retinasperrow);
 	}
 }
 
