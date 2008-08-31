@@ -25,6 +25,9 @@ float foodsize = 0.15f;
 
 float critterspeed = 0.05f;
 
+float crittersightrange = 4.0f;
+
+
 int main(int argc, char *argv[])
 {
 
@@ -103,6 +106,12 @@ int main(int argc, char *argv[])
 			optind++;
 			retinasperrow = atoi(argv[optind]);
 	        }
+		else if (sw=="--crittersightrange")
+		{
+			optind++;
+			crittersightrange = (float)atoi(argv[optind]) / 10.0f;
+	        }
+
 		else
 		{
 			cout << "Unknown switch: " << argv[optind] << endl;
@@ -131,6 +140,10 @@ int main(int argc, char *argv[])
 
 	cout << "Retinas per row = " << retinasperrow << endl;
 
+	cout << "Critter Sight Range = " << crittersightrange*10.0f << endl;
+
+
+
 	cout << "Remaining arguments = ";
 	for (;optind<argc;optind++)
 	{
@@ -157,6 +170,8 @@ int main(int argc, char *argv[])
 		mainscene.world.critterlifetime = critterlifetime;
 		mainscene.world.foodlifetime = foodlifetime;
 		mainscene.world.retinasperrow = retinasperrow;
+		mainscene.world.critterSightRange = crittersightrange;
+
 
 		for (unsigned int i=0; i < startcritters; i++) mainscene.world.insertCritter();
 

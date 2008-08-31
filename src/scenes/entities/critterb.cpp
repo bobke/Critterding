@@ -14,6 +14,9 @@ void CritterB::initConst()
 
 	visionPosition		= 0;
 	retinasperrow		= 0;
+	retinaColumnStart	= 0;
+	retinaRowStart		= 0;
+	retinaRowLength		= 0;
 
 	speedfactor		= 0.0f;
 	size			= 0.0f;
@@ -180,13 +183,29 @@ void CritterB::calcFramePos(unsigned int pos, unsigned int cretinasperrow)
 	visionPosition = pos;
 	retinasperrow = cretinasperrow;
 
+	// Calc 2D cartesian vectors X & Y for frame positioning of retina
 	framePosY = 0;
-	while ( pos >= cretinasperrow )
+	while ( pos >= retinasperrow )
 	{
-		pos -= cretinasperrow;
+		pos -= retinasperrow;
 		framePosY += frameHeight;
 	}
 	framePosX = (pos * frameWidth) + pos;
+
+	// Calculate where in the Great Retina this critter shold start (column & row)
+	unsigned int target = visionPosition;
+	retinaRowStart = 0;
+
+	// determine on which row of the retina to start for this critter
+	retinaRowLength = retinasperrow * (frameWidth+1) * components;
+
+	// determine on which column to start
+	while ( target >= retinasperrow )
+	{
+		retinaRowStart += frameWidth * retinaRowLength;
+		target -= retinasperrow;
+	}
+	retinaColumnStart = target * (frameWidth+1) * components;
 
 // cerr << framePosX << " : " << framePosY << endl;
 // usleep (1000);
@@ -211,30 +230,16 @@ void CritterB::procInputNeurons()
 		else
 		{*/
 
-			unsigned int target = visionPosition;
-
-			unsigned int rowstart = 0;
-			// determine on which row of the retina to start for this critter
-			unsigned int rowlength = retinasperrow * (10+1) * 4;
-			while ( target >= retinasperrow )
-			{
-				rowstart += 10 * rowlength;
-				target -= retinasperrow;
-			}
-
-			// determine on which column to start
-			unsigned int columnstart = target * (frameWidth+1) * components;
-
-// see what it sees
-// 			for ( unsigned int h=rowstart; h < rowstart+(frameHeight*rowlength); h += rowlength )
+//see what it sees
+// 			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(frameHeight*retinaRowLength); h += retinaRowLength )
 // 			{
-// 				for ( unsigned int w=h+columnstart; w < h+columnstart+((frameWidth)*components); w+=4 )
+// 				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((frameWidth)*components); w+=components )
 // 				{
-// 					if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
+// 					if ( (int)retina[w] ) cerr << "\033[1;31mR\033[0m";
 // 					else cerr << ".";
 // 					if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
 // 					else cerr << ".";
-// 					if ( (int)retina[w] ) cerr << "\033[1;34mB\033[0m";
+// 					if ( (int)retina[w+2] ) cerr << "\033[1;34mB\033[0m";
 // 					else cerr << ".";
 // 					if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
 // 					else cerr << ".";
@@ -242,12 +247,12 @@ void CritterB::procInputNeurons()
 // 				cerr << "" << endl;
 // 			}
 // 			cerr << "" << endl;
-// 			usleep (10000);
+// 			usleep (100000);
 
 			unsigned int i=0;
-			for ( unsigned int h=rowstart; h < rowstart+(frameHeight*rowlength); h += rowlength )
+			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(frameHeight*retinaRowLength); h += retinaRowLength )
 			{
-				for ( unsigned int w=h+columnstart; w < h+columnstart+((frameWidth)*components); w++ )
+				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((frameWidth)*components); w++ )
 				{
 					unsigned itarget = i * visionDivider;
 

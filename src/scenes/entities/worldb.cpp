@@ -30,6 +30,8 @@ WorldB::WorldB()
 	critterlifetime		= 0;
 	foodlifetime		= 0;
 
+	critterSightRange	= 0.0f;
+
 	// home & program directory
 	createDirs();
 
@@ -138,7 +140,7 @@ void WorldB::process()
 
 		c->place();
 
-		float preppedSize = 5.0f + c->halfsize;
+		float preppedSize = critterSightRange + c->halfsize;
 
 		// draw everything in it's sight
 			floor.draw();

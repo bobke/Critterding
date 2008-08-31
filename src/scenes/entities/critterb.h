@@ -105,6 +105,9 @@ class CritterB
 
 		unsigned int		visionDivider;
 		unsigned int		colorDivider;
+		unsigned int		retinaColumnStart;
+		unsigned int		retinaRowStart;
+		unsigned int		retinaRowLength;
 
 
 		unsigned int		visionPosition;
