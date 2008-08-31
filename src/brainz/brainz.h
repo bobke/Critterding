@@ -127,6 +127,7 @@ class Brainz
 	// RUN TIME
 
 		// functions
+			void			clearInputs();
 			void			process();
 			void			processTillAnswer();
 

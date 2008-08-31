@@ -10,7 +10,9 @@ WorldB::WorldB()
 	doTimedInserts		= false;
 	timedInsertsCounter	= 0;
 
-	foodsize		= 0.1f;
+	crittersize		= 0.0f;
+	foodsize		= 0.0f;
+
 	foodenergy		= 0.0f;
 
 	mincritters		= 10;
@@ -201,7 +203,7 @@ void WorldB::process()
 	}
 
 	// process all critters
- 	unsigned int lmax = critters.size();
+	unsigned int lmax = critters.size();
 	for( unsigned int i=0; i < lmax; i++)
 	{
 		CritterB *c = critters[i];
@@ -316,6 +318,7 @@ void WorldB::process()
 					nc->speedfactor = critterspeed;
 					nc->maxEnergyLevel = critterenergy;
 					nc->maxtotalFrames = critterlifetime;
+					nc->resize(crittersize);
 					nc->setup();
 					nc->retina = retina;
 
@@ -402,10 +405,11 @@ void WorldB::insertRandomFood(int amount, float energy)
 	for ( int i=0; i < amount; i++ )
 	{
 		Food *f = new Food;
-		f->position	= findEmptySpace(foodsize);
-		f->maxenergy	= foodenergy;
-		f->energy	= energy;
+		f->maxenergy = foodenergy;
+		f->energy = energy;
 		f->maxtotalFrames = foodlifetime;
+		f->maxsize = foodsize;
+		f->position = findEmptySpace(f->size);
 
 		f->resize();
 		//f->resize((foodsize/foodenergy) * energy);
@@ -417,17 +421,20 @@ void WorldB::insertCritter()
 {
 	CritterB *c = new CritterB;
 
+	critters.push_back( c );
+
 	c->brain.buildArch();
 	c->speedfactor = critterspeed;
 	c->maxEnergyLevel = critterenergy;
 	c->maxtotalFrames = critterlifetime;
+	c->rotation = randgen.get( 0, 360 );
+	c->resize(crittersize);
 	c->setup();
 	c->retina = retina;
 
 	// record it's energy
 	freeEnergy -= c->energyLevel;
 
-	critters.push_back( c );
 	positionCritterB(critters.size()-1);
 }
 
@@ -435,7 +442,6 @@ void WorldB::positionCritterB(unsigned int cid)
 {
 	critters[cid]->position	= findEmptySpace(critters[cid]->size);
 	critters[cid]->position.y = critters[cid]->halfsize;
-	critters[cid]->rotation	= randgen.get( 0, 360 );
 	critters[cid]->calcFramePos(cid);
 	critters[cid]->calcCamPos();
 }
@@ -445,7 +451,8 @@ void WorldB::removeCritter(unsigned int cid)
 	if ( critters[cid]->energyLevel > 0.0f )
 	{
 		Food *f = new Food;
-		f->maxenergy	= foodenergy;
+		f->maxenergy = foodenergy;
+		f->maxsize = foodsize;
 		f->maxtotalFrames = foodlifetime;
 		f->position = critters[cid]->position;
 
@@ -559,21 +566,29 @@ void WorldB::loadAllCritters()
 
 	for ( unsigned int i = 0; i < files.size(); i++ )
 	{
-		cout << "loading " << files[i] << endl;
-		string content;
-		fileH.open( files[i], content );
+		if ( parseH.endMatches( ".cr", files[i] ) )
+		{
+			cout << "loading " << files[i] << endl;
+			string content;
+			fileH.open( files[i], content );
 
-		CritterB *c = new CritterB(content);
-		c->speedfactor = critterspeed;
-		c->maxEnergyLevel = critterenergy;
-		c->maxtotalFrames = critterlifetime;
-		c->setup();
-		c->retina = retina;
-		// record it's energy
-		freeEnergy -= c->energyLevel;
-		critters.push_back( c );
-		positionCritterB(critters.size()-1);
+			CritterB *c = new CritterB(content);
+
+			critters.push_back( c );
+
+			c->speedfactor = critterspeed;
+			c->maxEnergyLevel = critterenergy;
+			c->maxtotalFrames = critterlifetime;
+			c->rotation = randgen.get( 0, 360 );
+			c->resize(crittersize);
+			c->setup();
+			c->retina = retina;
+			// record it's energy
+			freeEnergy -= c->energyLevel;
+			positionCritterB(critters.size()-1);
+		}
 	}
+	cerr << endl << "Loaded critters from " << loaddir << endl << endl;
 }
 
 void WorldB::saveAllCritters()
@@ -587,23 +602,19 @@ void WorldB::saveAllCritters()
 	if ( !dirH.exists(savedir) )	dirH.make(savedir);
 	if ( !dirH.exists(subsavedir) )	dirH.make(subsavedir);
 
-	// save each critter
-	if ( dirH.exists(subsavedir) )
+	for ( unsigned int i = 0; i < critters.size(); i++ )
 	{
-		for ( unsigned int i = 0; i < critters.size(); i++ )
-		{
-			string content = critters[i]->saveCritterB();
-		
-			// determine filename
-			stringstream filename;
-			filename << subsavedir << "/" << "critter" << i << ".cr";
-			string sfilename = filename.str();
-		
-			// save critters
-			fileH.save(sfilename, content);
-		}
+		string content = critters[i]->saveCritterB();
+	
+		// determine filename
+		stringstream filename;
+		filename << subsavedir << "/" << "critter" << i << ".cr";
+		string sfilename = filename.str();
+	
+		// save critters
+		fileH.save(sfilename, content);
 	}
-	else cerr << "cannot save, directory already exists";
+	cerr << endl << "Saved critters to " << subsavedir << endl << endl;
 }
 
 void WorldB::createDirs()
@@ -764,5 +775,6 @@ WorldB::~WorldB()
 	for ( unsigned int i=0; i < food.size(); i++ )		delete food[i];
 	for ( unsigned int i=0; i < bullets.size(); i++ )	delete bullets[i];
 	for ( unsigned int i=0; i < critters.size(); i++ )	delete critters[i];
+	free(retina);
 }
 

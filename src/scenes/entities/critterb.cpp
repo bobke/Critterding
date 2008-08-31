@@ -14,7 +14,9 @@ void CritterB::initConst()
 
 	visionPosition		= 0;
 
-	speedfactor		= 0.05f;
+	speedfactor		= 0.0f;
+	size			= 0.0f;
+	halfsize		= 0.0f;
 }
 
 CritterB::CritterB()
@@ -131,8 +133,6 @@ void CritterB::setup()
 
 	// setup brain from architecture
 	brain.wireArch();
-
-	resize( 0.1f );
 }
 
 void CritterB::process()
@@ -175,11 +175,7 @@ void CritterB::procInputNeurons()
 
 	// clear all inputs
 
-		// FIXME make function of brain
-		for ( unsigned int z=0; z < brain.numberOfInputs; z++ )
-		{
-			brain.Inputs[z].output = 0;
-		}
+		brain.clearInputs();
 
 	// link vision array directly to the sensor neurons' output
 /*		if ( visionDivider == 1 )
@@ -471,9 +467,6 @@ void CritterB::resize(float newsize)
 	size		= newsize;
 	halfsize	= (newsize / 2.0f);
 
-	// change position according to height
-	position.y	= halfsize;
-
 	// left plane
 	vertices[0] = -halfsize; vertices[1] = halfsize; vertices[2] = halfsize;
 	vertices[3] = -halfsize; vertices[4] = -halfsize; vertices[5] = halfsize;
@@ -491,13 +484,6 @@ void CritterB::resize(float newsize)
 	indices[8] = 1; indices[9] = 0; indices[10] = 4; indices[11] = 5;
 	indices[12] = 1; indices[13] = 2; indices[14] = 3; indices[15] = 0;
 	indices[16] = 5; indices[17] = 6; indices[18] = 7; indices[19] = 4;
-
-// 	indices[0] = 0; indices[1] = 3; indices[2] = 7; indices[3] = 4;
-// 	indices[4] = 1; indices[5] = 2; indices[6] = 6; indices[7] = 5;
-// 	indices[8] = 2; indices[9] = 3; indices[10] = 7; indices[11] = 6;
-// 	indices[12] = 1; indices[13] = 0; indices[14] = 4; indices[15] = 5;
-// 	indices[16] = 1; indices[17] = 2; indices[18] = 3; indices[19] = 0;
-// 	indices[20] = 5; indices[21] = 6; indices[22] = 7; indices[23] = 4;
 
 	// nose
 	vertices[24] = 0; vertices[25] = halfsize; vertices[26] = -halfsize*1.3f;
@@ -632,13 +618,6 @@ void CritterB::resize(float newsize)
 			line = parseH.returnUntillStrip( "\n", content );
 		}
 
-	// register input/output neurons
-//  	cerr << frameWidth << " : " << frameHeight  << " : " <<  components << endl;
-//  	items			= frameWidth * frameHeight * components;
-//  	cerr << "new conn ordering total inputs" << (items*visionDivider)+1+1+1+10+1 << endl;
-//  	brain.setupInputs( (items*visionDivider)+1+1+1+10+1 );
-//  	brain.setupOutputs(9);
-
 		brain.setArch(&passToBrain);
 
 	}
@@ -663,7 +642,6 @@ void CritterB::resize(float newsize)
 
 CritterB::~CritterB()
 {
-//	free(retina);
 }
 
 

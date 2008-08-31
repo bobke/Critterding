@@ -18,6 +18,9 @@ unsigned int foodenergy = 2500;
 unsigned int critterlifetime = 2000;
 unsigned int foodlifetime = 2000;
 
+float crittersize = 0.1f;
+float foodsize = 0.15f;
+
 float critterspeed = 0.05f;
 
 int main(int argc, char *argv[])
@@ -83,6 +86,16 @@ int main(int argc, char *argv[])
 			optind++;
 			foodlifetime = atoi(argv[optind]);
 	        }
+		else if (sw=="--crittersize")
+		{
+			optind++;
+			crittersize = (float)atoi(argv[optind]) / 100.0f;
+	        }
+		else if (sw=="--foodsize")
+		{
+			optind++;
+			foodsize = (float)atoi(argv[optind]) / 100.0f;
+	        }
 		else
 		{
 			cout << "Unknown switch: " << argv[optind] << endl;
@@ -104,6 +117,9 @@ int main(int argc, char *argv[])
 	cout << "Critter Lifetime = " << critterlifetime << endl;
 	cout << "Food Lifetime = " << foodlifetime << endl;
 
+	cout << "Critter Size = " << crittersize*100.0f << endl;
+	cout << "Food Size = " << foodsize*100.0f << endl;
+
 	cout << "Critter Speed = " << critterspeed*1000.0f << endl;
 
 	cout << "Remaining arguments = ";
@@ -122,6 +138,8 @@ int main(int argc, char *argv[])
 		mainscene.world.resize(worldsizeparam);
 		mainscene.world.foodenergy = foodenergy;
 		mainscene.world.critterenergy = critterenergy;
+		mainscene.world.foodsize = foodsize;
+		mainscene.world.crittersize = crittersize;
 		mainscene.world.startfoodamount(foodparam);
 		mainscene.world.setMincritters(mincritters);
 		mainscene.world.maxMutateRuns = maxmutateruns;

@@ -177,9 +177,8 @@ Brainz::Brainz()
 		// if not determine inter neuron id
 	 		else
 			{
+				// as in real life, neurons can connect to themselves
 				as.neuronID = randgen.get( 0, ArchNeurons.size()-1 );
-				// make sure we aren't connected to ourself FIXME DISABLED
-				//	while ( as.neuronID == parentneuron ) as.neuronID = randgen.get( 0, ArchNeurons.size()-1 );
 	 		}
 	
 		// dendrite branch number
@@ -269,7 +268,7 @@ Brainz::Brainz()
 						Neurons[i].connec( &Neurons[ ArchNeurons[i].ArchSynapses[j].neuronID ].output, ArchNeurons[i].ArchSynapses[j].dendriteBranch, ArchNeurons[i].ArchSynapses[j].weight );
 				}
 			}
-//cerr << "total neurons: " << totalNeurons << "total synapses: " << totalSynapses << endl;
+			//cerr << "total neurons: " << totalNeurons << "total synapses: " << totalSynapses << endl;
 
 	}
 
@@ -322,8 +321,7 @@ Brainz::Brainz()
 					unsigned int nid = randgen.get( 0, ArchNeurons.size()-1 );
 					//cerr << "\t-N " << nid << endl;
 
-
-					// first remove all connections to this neuron, FIXME remove neuron too if no connections are left
+					// first remove all connections to this neuron
 					for ( unsigned int i=0; i < ArchNeurons.size(); i++ )
 					{
 						for ( unsigned int j=0; j < ArchNeurons[i].ArchSynapses.size(); j++ )
@@ -696,13 +694,24 @@ Brainz::Brainz()
 
 // RUN TIME
 
+	void Brainz::clearInputs()
+	{
+		for ( unsigned int i=0; i < numberOfInputs; i++ )
+		{
+			Inputs[i].output = 0;
+		}
+	}
+
 	void Brainz::process()
 	{
 		// reset fired neurons counter
 		neuronsFired = 0;
 	
 		// clear Motor Outputs
-		for ( unsigned int i=0; i < numberOfOutputs; i++ ) Outputs[i].output = 0;
+		for ( unsigned int i=0; i < numberOfOutputs; i++ )
+		{
+			Outputs[i].output = 0;
+		}
 	
 		for ( unsigned int i=0; i < totalNeurons; i++ )
 		{
@@ -1141,7 +1150,6 @@ Brainz::Brainz()
 		}
 	}
 	
-	// FIXME rename to save critter
 	string* Brainz::getArch()
 	{
 		if ( !archIsBuffered )

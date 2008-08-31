@@ -40,6 +40,12 @@ bool Parser::beginMatches(string stop, string &line)
 	else return false;
 }
 
+bool Parser::endMatches(string stop, string &line)
+{
+	if ( line.substr( line.size()-stop.size(), stop.size() ) == stop ) return true;
+	else return false;
+}
+
 Parser::~Parser()
 {
 }

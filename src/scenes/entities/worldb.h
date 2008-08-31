@@ -57,6 +57,9 @@ class WorldB
 		int			critterlifetime;
 		int			foodlifetime;
 
+		float			crittersize;
+		float			foodsize;
+
 		void			insertCritter();
 		void			positionCritterB(unsigned int cid);
 		void			saveAllCritters();
@@ -94,7 +97,6 @@ class WorldB
 		Grid			grid;
 		Floor			floor;
 		Infobar			*infobar;
-		float			foodsize;
 		unsigned int		mincritters;
 		string			homedir;
 		string			progdir;

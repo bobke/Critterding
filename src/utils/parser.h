@@ -16,6 +16,8 @@ class Parser
 
 		bool		beginMatches(string stop, string &line);
 		bool		beginMatchesStrip(string stop, string &line);
+
+		bool		endMatches(string stop, string &line);
 };
 
 #endif
