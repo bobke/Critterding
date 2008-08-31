@@ -2,17 +2,17 @@
 
 Food::Food()
 {
-	maxsize		= 0.15f;
- 	maxenergy	= 2000.0f;
+	maxsize		= 0.0f;
+ 	maxenergy	= 0.0f;
 
 	size		= maxsize;
  	energy		= maxenergy;
 
 	totalFrames	= 0;
-	maxtotalFrames	= 2000;
+	maxtotalFrames	= 0;
 
 	color[0]	= 0.0f;
-	color[1]	= 0.80f;
+	color[1]	= 1.0f;
 	color[2]	= 0.0f;
 	color[3]	= 1.0f;
 }
@@ -58,10 +58,6 @@ void Food::resize()
 	indices[8] = 1; indices[9] = 0; indices[10] = 4; indices[11] = 5;
 	indices[12] = 1; indices[13] = 2; indices[14] = 3; indices[15] = 0;
 	indices[16] = 5; indices[17] = 6; indices[18] = 7; indices[19] = 4;
-
-	/*
-	--->	indices[4] = 1; indices[5] = 2; indices[6] = 6; indices[7] = 5; was removed
-	*/
 }
 
 Food::~Food()
