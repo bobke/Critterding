@@ -71,7 +71,7 @@ void Camera::place(unsigned int *width, unsigned int *height)
 	glLoadIdentity();
 }
 
-void Camera::follow(unsigned int *width, unsigned int *height, CritterB *c)
+void Camera::follow(unsigned int *width, unsigned int *height, CritterB *c, float crittersightrange)
 {
 	glViewport(0,0,*width,*height);
 
@@ -79,7 +79,7 @@ void Camera::follow(unsigned int *width, unsigned int *height, CritterB *c)
 	glLoadIdentity();
 
 	float nheight = 0.05f * ((float)(*height) / *width);
-	glFrustum(-0.05f,0.05f,-nheight,nheight,0.1f,5.0f);
+	glFrustum(-0.05f,0.05f,-nheight,nheight,0.1f,crittersightrange);
 
 	glRotatef(c->rotation, 0.0f, -1.0f, 0.0f);
 	glTranslatef(-c->cameraposition.x, -c->cameraposition.y, -c->cameraposition.z);

@@ -22,6 +22,8 @@ STARTUP OPTIONS
   --foodlifetime    [2000]        Maximum amount of frames food can live
   --critterspeed      [50]        Critter speed
   --retinasperrow     [20]        Amount of retinas on a row (bottom left)
+  --crittersightrange [40]        Distance a critter can see (press f for visual verification)
+                                  Each floor square counts as 10
 
 
 BUTTONS

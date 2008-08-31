@@ -35,7 +35,7 @@ void Evolution::draw()
 
 	if ( world.isSelected )
 	{
-		camera.follow(width, height, world.critters[world.selectedCritter]);
+		camera.follow(width, height, world.critters[world.selectedCritter], world.critterSightRange);
 	}
 	else
 	{

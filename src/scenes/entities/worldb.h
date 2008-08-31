@@ -62,6 +62,8 @@ class WorldB
 
 		unsigned int		retinasperrow;
 
+		float			critterSightRange;
+
 		void			insertCritter();
 		void			positionCritterB(unsigned int cid);
 		void			saveAllCritters();
