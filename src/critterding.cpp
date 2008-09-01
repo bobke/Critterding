@@ -4,7 +4,7 @@
 using namespace std;
 
 unsigned int worldsizeparam = 25;
-unsigned int foodparam = 500;
+unsigned int energy = 500;
 
 unsigned int mincritters = 10;
 unsigned int startcritters = 0;
@@ -41,10 +41,10 @@ int main(int argc, char *argv[])
 			optind++;
 			worldsizeparam = atoi(argv[optind]);
 	        }
-		else if (sw=="--food")
+		else if (sw=="--energy")
 		{
 			optind++;
-			foodparam = atoi(argv[optind]);
+			energy = atoi(argv[optind]);
 	        }
 		else if (sw=="--mincritters")
 		{
@@ -120,12 +120,12 @@ int main(int argc, char *argv[])
 	}
 
 	// report settings
-	cout << endl << "World Settings" << endl;
+	cout << endl << "Global Settings" << endl;
 	cout << "  World Size                  = " << worldsizeparam << "x" << worldsizeparam << endl;
-	cout << "  Energy                      = " << foodparam << "*" << foodenergy << " = " << foodparam*foodenergy << endl;
+	cout << "  Energy in system            = " << energy << "*" << foodenergy << " = " << energy*foodenergy << endl;
 	cout << "  Minimal Amount of Critters  = " << mincritters << endl;
 	cout << "  Starting Amount of critters = " << startcritters << endl;
-	cout << "  Retinas per row = " << retinasperrow << endl;
+	cout << "  Retinas per row             = " << retinasperrow << endl;
 
 	cout << endl << "Critter Settings" << endl;
 	cout << "  Lifetime                    = " << critterlifetime << endl;
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
 
 	cout << endl << "Food Settings" << endl;
 	cout << "  Lifetime                    = " << foodlifetime << endl;
-	cout << "  Energy                      = " << foodenergy << endl;
+	cout << "  Maximum Energy              = " << foodenergy << endl;
 	cout << "  Size                        = " << foodsize*100.0f << endl;
 
 	cout << endl;
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 		mainscene.world.critterenergy = critterenergy;
 		mainscene.world.foodsize = foodsize;
 		mainscene.world.crittersize = crittersize;
-		mainscene.world.startfoodamount(foodparam);
+		mainscene.world.startfoodamount(energy);
 		mainscene.world.setMincritters(mincritters);
 		mainscene.world.maxMutateRuns = maxmutateruns;
 		mainscene.world.mutationRate = mutationrate;
