@@ -200,7 +200,6 @@ void WorldB::process()
 			picheight += 10;
 			rows -= retinasperrow;
 		}
-
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 	}
 

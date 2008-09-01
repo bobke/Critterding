@@ -31,10 +31,10 @@ CritterB::CritterB()
 
 		brain.maxNeurons					= 500;
 		brain.minSynapses					= 1;
-		brain.maxSynapses					= 100;
+		brain.maxSynapses					= 500;
 
 		brain.minNeuronsAtBuildtime				= 20;
-		brain.maxNeuronsAtBuildtime				= 40;
+		brain.maxNeuronsAtBuildtime				= 45;
 
 			brain.mutate_PlasticityFactors			= false;
 
@@ -44,7 +44,7 @@ CritterB::CritterB()
 		brain.minSynapsesAtBuildtime				= 1;
 			brain.mutate_minSynapsesAtBuildtime		= false;
 
-		brain.maxSynapsesAtBuildtime				= 40;
+		brain.maxSynapsesAtBuildtime				= 100;
 			brain.mutate_maxSynapsesAtBuildtime		= false;
 
 		brain.percentChanceInhibitoryNeuron			= 50;

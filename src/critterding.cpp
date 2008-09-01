@@ -10,7 +10,7 @@ unsigned int mincritters = 10;
 unsigned int startcritters = 0;
 
 unsigned int mutationrate = 10;
-unsigned int maxmutateruns = 1;
+unsigned int maxmutateruns = 3;
 
 unsigned int critterenergy = 5000;
 unsigned int foodenergy = 2500;
