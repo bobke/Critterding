@@ -133,6 +133,9 @@ void WorldB::process()
 		}
 	}
 
+	// as approximation we take every c's halfsize*2: crittersize
+	float realSightRange = critterSightRange + crittersize;
+
 	// for all critters do
 	for( unsigned int i=0; i < critters.size(); i++)
 	{
@@ -140,16 +143,13 @@ void WorldB::process()
 
 		c->place();
 
-		float preppedSize = critterSightRange + c->halfsize;
-
 		// draw everything in it's sight
 			floor.draw();
 		
 			for( unsigned int j=0; j < critters.size(); j++)
 			{
 				CritterB *oc = critters[j];
-				float avgSize = preppedSize - oc->halfsize;
-				if ( fabs( c->position.x - oc->position.x ) <= avgSize && fabs( c->position.z - oc->position.z ) <= avgSize )
+				if ( fabs( c->position.x - oc->position.x ) <= realSightRange && fabs( c->position.z - oc->position.z ) <= realSightRange )
 				{
 					oc->draw();
 				}
@@ -158,8 +158,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < food.size(); j++)
 			{
 				Food *f = food[j];
-				float avgSize = preppedSize - f->halfsize;
-				if ( fabs( c->position.x - f->position.x ) <= avgSize && fabs( c->position.z - f->position.z ) <= avgSize )
+				if ( fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
 				{
 					f->draw();
 				}
@@ -168,8 +167,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < walls.size(); j++)
 			{
 				Wall *w = walls[j];
-				float avgSize = preppedSize - w->halfsize;
-				if ( fabs( c->position.x - w->position.x ) <= avgSize && fabs( c->position.z - w->position.z ) <= avgSize )
+				if ( fabs( c->position.x - w->position.x ) <= realSightRange && fabs( c->position.z - w->position.z ) <= realSightRange )
 				{
 					w->draw();
 				}
@@ -178,8 +176,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < bullets.size(); j++)
 			{
 				Bullet *b = bullets[j];
-				float avgSize = preppedSize - b->halfsize;
-				if ( fabs( c->position.x - b->position.x ) <= avgSize && fabs( c->position.z - b->position.z ) <= avgSize )
+				if ( fabs( c->position.x - b->position.x ) <= realSightRange && fabs( c->position.z - b->position.z ) <= realSightRange )
 				{
 					b->draw();
 				}
