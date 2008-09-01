@@ -15,15 +15,14 @@ STARTUP OPTIONS
   --mincritters       [10]        If less than 10 critters are present, insert an adam
   --startcritters      [0]        Throw in 0 adams at startup
   --mutationrate      [10]        When a critter procreates it mutates 10% of the time
-  --maxmutateruns      [1]        When a critter mutates, it can do 3 mutations at maximum
+  --maxmutateruns      [3]        When a critter mutates, it can do 3 mutations at maximum
   --critterenergy   [5000]        Maximum amount of energy in a critter
   --foodenergy      [2500]        Maximum amount of energy in a food unit
   --critterlifetime [2000]        Maximum amount of frames a critter can live
   --foodlifetime    [2000]        Maximum amount of frames food can live
-  --critterspeed      [50]        Critter speed
-  --retinasperrow     [20]        Amount of retinas on a row (bottom left)
-  --crittersightrange [40]        Distance a critter can see (press f for visual verification)
-                                  Each floor square counts as 10
+  --critterspeed      [50]        Critter speed (50/1000 = 0.05 floor square)
+  --retinasperrow     [20]        Amount of retinas on a row (bottom left of window)
+  --crittersightrange [40]        Distance a critter can see (40/10 = 4 floor squares)
 
 
 BUTTONS
@@ -51,9 +50,7 @@ BUTTONS
    F11           : increase mutation rate (%)
    F12           : decrease mutation rate (%)
 
-   Insert        : toggle hide critter vision. note that most videocard drivers
-                   cannot capture the vision pixels when they are rendered outside
-                   the window.
+   Insert        : toggle hide critter retinas.
 
    w             : create a horizontal wall
    x             : destroy the wall
@@ -81,6 +78,16 @@ BUTTONS
    NumKey 6      : look right
 
 
+OTHER THINGS
 
-TIPS
+ - Make sure the retina boxes in the lower left of the window never leave the
+   boundaries of the window.  Offscreen rendering is not supported by almost any
+   video card drivers.  For some drivers you are not even allowed to minimize the window or
+   change desktops.  You should notice a big dropoff in population when this occurs.
+
+ - Slow videocards will gain some performance gains by making the window's width smaller.
+   Again watch out the retinas do not leave the window boundaries, the option --retinasperrow
+   can be used to level your needs.
+
+ - Hiding the retinas is (slightly) more costly than leaving them on.
 
