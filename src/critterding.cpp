@@ -120,40 +120,39 @@ int main(int argc, char *argv[])
 	}
 
 	// report settings
-	cout << "World Size = " << worldsizeparam << "x" << worldsizeparam << endl;
-	cout << "Food Amount = " << foodparam << endl;
-	cout << "Minimum Critters = " << mincritters << endl;
-	cout << "Starting Amount of critters = " << startcritters << endl;
-	cout << "Mutation Runs per Mutating Critter = " << maxmutateruns << endl;
-	cout << "Critter Mutation Rate = " << mutationrate << endl;
+	cout << endl << "World Settings" << endl;
+	cout << "  World Size                  = " << worldsizeparam << "x" << worldsizeparam << endl;
+	cout << "  Energy                      = " << foodparam << "*" << foodenergy << " = " << foodparam*foodenergy << endl;
+	cout << "  Minimal Amount of Critters  = " << mincritters << endl;
+	cout << "  Starting Amount of critters = " << startcritters << endl;
+	cout << "  Retinas per row = " << retinasperrow << endl;
 
-	cout << "Critter Energy = " << critterenergy << endl;
-	cout << "Food Energy = " << foodenergy << endl;
+	cout << endl << "Critter Settings" << endl;
+	cout << "  Lifetime                    = " << critterlifetime << endl;
+	cout << "  Maximum Energy              = " << critterenergy << endl;
+	cout << "  Size                        = " << crittersize*100.0f << endl;
+	cout << "  Speed                       = " << critterspeed*1000.0f << endl;
+	cout << "  Sight Range                 = " << crittersightrange*10.0f << endl;
+	cout << "  Mutation Rate               = " << mutationrate << endl;
+	cout << "  Mutation Runs               = " << maxmutateruns << endl;
 
-	cout << "Critter Lifetime = " << critterlifetime << endl;
-	cout << "Food Lifetime = " << foodlifetime << endl;
+	cout << endl << "Food Settings" << endl;
+	cout << "  Lifetime                    = " << foodlifetime << endl;
+	cout << "  Energy                      = " << foodenergy << endl;
+	cout << "  Size                        = " << foodsize*100.0f << endl;
 
-	cout << "Critter Size = " << crittersize*100.0f << endl;
-	cout << "Food Size = " << foodsize*100.0f << endl;
+	cout << endl;
 
-	cout << "Critter Speed = " << critterspeed*1000.0f << endl;
-
-	cout << "Retinas per row = " << retinasperrow << endl;
-
-	cout << "Critter Sight Range = " << crittersightrange*10.0f << endl;
-
-
-
-	cout << "Remaining arguments = ";
-	for (;optind<argc;optind++)
-	{
-		cout << argv[optind];
-	}
-	cout << endl << endl;
+// 	cout << "Remaining arguments = ";
+// 	for (;optind<argc;optind++)
+// 	{
+// 		cout << argv[optind];
+// 	}
+// 	cout << endl << endl;
 
 	//cerr << "Starting application" << endl;
 	GLWindow glwindow;
-	glwindow.create("Critterding beta2", 600, 600, 24, False);
+	glwindow.create("Critterding beta3", 600, 600, 24, False);
 
 		Evolution mainscene;
 

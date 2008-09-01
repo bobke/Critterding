@@ -11,7 +11,7 @@ STARTUP OPTIONS
 
   option   [default value]
   --worldsize         [25]        Creates a 25x25 world
-  --food             [500]        Maintains 500 food units of energy in the system
+  --energy           [500]        Energy in the system: 500*foodenergy(2500) = 1250000
   --mincritters       [10]        If less than 10 critters are present, insert an adam
   --startcritters      [0]        Throw in 0 adams at startup
   --mutationrate      [10]        When a critter procreates it mutates 10% of the time
