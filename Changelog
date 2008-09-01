@@ -1,0 +1,12 @@
+1.0-beta3
+---------
+fixes minor memleaks & speedups
+brain.clearInputs() implementation                             
+critter & food size have been made adaptable
+make sure we only load files with extension cr
+Retinas Per Row is now adaptable
+default critter sight distance reduced from 50 to 40: performance boost
+follow camera handles critter sight distance
+cleaned up settings reporting
+updated README
+Start of a Changelog

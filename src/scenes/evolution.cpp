@@ -69,13 +69,13 @@ void Evolution::handlekey(const KeySym& key)
 			{
 				world.freeEnergyInfo -= world.foodenergy * 25.0f;
 				world.freeEnergy -= world.foodenergy * 25.0f;
-				cerr << endl << "food in system: "<< (world.freeEnergyInfo / world.foodenergy)  << endl << endl;
+				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.foodenergy) << "*" << world.foodenergy << " = " << world.freeEnergyInfo  << endl << endl;
 			}
 		break;
 		case XK_F6:
 			world.freeEnergyInfo += world.foodenergy * 25.0f;
 			world.freeEnergy += world.foodenergy * 25.0f;
-			cerr << endl << "food in system: "<< (world.freeEnergyInfo / world.foodenergy) << endl<< endl;
+			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.foodenergy) << "*" << world.foodenergy << " = " << world.freeEnergyInfo  << endl << endl;
 		break;
 
 		case XK_KP_Subtract:
@@ -83,14 +83,14 @@ void Evolution::handlekey(const KeySym& key)
 			{
 				world.freeEnergyInfo -= world.foodenergy;
 				world.freeEnergy -= world.foodenergy;
-				cerr << endl << "food in system: "<< (world.freeEnergyInfo / world.foodenergy) << endl << endl;
+				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.foodenergy) << "*" << world.foodenergy << " = " << world.freeEnergyInfo  << endl << endl;
 			}
 		break;
 
 		case XK_KP_Add:
 			world.freeEnergyInfo += world.foodenergy;
 			world.freeEnergy += world.foodenergy;
-			cerr << endl << "food in system: "<< (world.freeEnergyInfo / world.foodenergy) << endl << endl;
+			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.foodenergy) << "*" << world.foodenergy << " = " << world.freeEnergyInfo  << endl << endl;
 		break;
 
 		case XK_F7:
