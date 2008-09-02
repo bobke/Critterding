@@ -3,31 +3,27 @@
 
 using namespace std;
 
-unsigned int worldsizeparam = 25;
-unsigned int energy = 500;
+// Global Settings
+	unsigned int worldsize			= 25;
+	unsigned int energy			= 500;
+	unsigned int mincritters		= 10;
+	unsigned int startcritters		= 0;
+	unsigned int retinasperrow		= 20;
 
-unsigned int mincritters = 10;
-unsigned int startcritters = 0;
+// Critter Settings
+	unsigned int critter_maxlifetime	= 2000;
+	unsigned int critter_maxenergy		= 5000;
+	float        critter_size		= 0.1f;
+	float        critter_speed		= 0.05f;
+	float        critter_sightrange		= 4.0f;
+	unsigned int critter_colorneurons	= 3;
+	unsigned int critter_mutationrate	= 10;
+	unsigned int critter_maxmutateruns	= 3;
 
-unsigned int mutationrate = 10;
-unsigned int maxmutateruns = 3;
-
-unsigned int critterenergy = 5000;
-unsigned int foodenergy = 2500;
-
-unsigned int critterlifetime = 2000;
-unsigned int foodlifetime = 2000;
-
-unsigned int retinasperrow = 20;
-
-float crittersize = 0.1f;
-float foodsize = 0.15f;
-
-float critterspeed = 0.05f;
-
-float crittersightrange = 4.0f;
-
-unsigned int crittervisiondivider = 3;
+// Food Settings
+	unsigned int food_maxlifetime		= 2000;
+	unsigned int food_maxenergy		= 2500;
+	float        food_size			= 0.15f;
 
 int main(int argc, char *argv[])
 {
@@ -37,10 +33,12 @@ int main(int argc, char *argv[])
 	while ((optind < argc) && (argv[optind][0]=='-'))
 	{
 		string sw = argv[optind];
+
+	// Global Settings
 		if (sw=="--worldsize")
 		{
 			optind++;
-			worldsizeparam = atoi(argv[optind]);
+			worldsize = atoi(argv[optind]);
 	        }
 		else if (sw=="--energy")
 		{
@@ -57,65 +55,67 @@ int main(int argc, char *argv[])
 			optind++;
 			startcritters = atoi(argv[optind]);
 	        }
-		else if (sw=="--mutationrate")
-		{
-			optind++;
-			mutationrate = atoi(argv[optind]);
-	        }
-		else if (sw=="--maxmutateruns")
-		{
-			optind++;
-			maxmutateruns = atoi(argv[optind]);
-	        }
-		else if (sw=="--critterenergy")
-		{
-			optind++;
-			critterenergy = atoi(argv[optind]);
-	        }
-		else if (sw=="--foodenergy")
-		{
-			optind++;
-			foodenergy = atoi(argv[optind]);
-	        }
-		else if (sw=="--critterspeed")
-		{
-			optind++;
-			critterspeed = (float)atoi(argv[optind]) / 1000.0f;
-	        }
-		else if (sw=="--critterlifetime")
-		{
-			optind++;
-			critterlifetime = atoi(argv[optind]);
-	        }
-		else if (sw=="--foodlifetime")
-		{
-			optind++;
-			foodlifetime = atoi(argv[optind]);
-	        }
-		else if (sw=="--crittersize")
-		{
-			optind++;
-			crittersize = (float)atoi(argv[optind]) / 100.0f;
-	        }
-		else if (sw=="--foodsize")
-		{
-			optind++;
-			foodsize = (float)atoi(argv[optind]) / 100.0f;
-	        }
 		else if (sw=="--retinasperrow")
 		{
 			optind++;
 			retinasperrow = atoi(argv[optind]);
 	        }
-		else if (sw=="--crittersightrange")
+	// Critter Settings
+		else if (sw=="--critter_maxlifetime")
 		{
 			optind++;
-			crittersightrange = (float)atoi(argv[optind]) / 10.0f;
+			critter_maxlifetime = atoi(argv[optind]);
 	        }
-		else if (sw=="--crittercolorneurons")
+		else if (sw=="--critter_maxenergy")
 		{
 			optind++;
-			crittervisiondivider = atoi(argv[optind]);
+			critter_maxenergy = atoi(argv[optind]);
+	        }
+		else if (sw=="--critter_size")
+		{
+			optind++;
+			critter_size = (float)atoi(argv[optind]) / 100.0f;
+	        }
+		else if (sw=="--critter_speed")
+		{
+			optind++;
+			critter_speed = (float)atoi(argv[optind]) / 1000.0f;
+	        }
+		else if (sw=="--critter_sightrange")
+		{
+			optind++;
+			critter_sightrange = (float)atoi(argv[optind]) / 10.0f;
+	        }
+		else if (sw=="--critter_colorneurons")
+		{
+			optind++;
+			critter_colorneurons = atoi(argv[optind]);
+	        }
+		else if (sw=="--critter_mutationrate")
+		{
+			optind++;
+			critter_mutationrate = atoi(argv[optind]);
+	        }
+		else if (sw=="--critter_maxmutateruns")
+		{
+			optind++;
+			critter_maxmutateruns = atoi(argv[optind]);
+	        }
+	// Food Settings
+		else if (sw=="--food_maxlifetime")
+		{
+			optind++;
+			food_maxlifetime = atoi(argv[optind]);
+	        }
+		else if (sw=="--food_maxenergy")
+		{
+			optind++;
+			food_maxenergy = atoi(argv[optind]);
+	        }
+		else if (sw=="--food_size")
+		{
+			optind++;
+			food_size = (float)atoi(argv[optind]) / 100.0f;
 	        }
 
 		else
@@ -127,28 +127,28 @@ int main(int argc, char *argv[])
 
 	// report settings
 	cout << endl << "Global Settings" << endl;
-	cout << "  World Size                  = " << worldsizeparam << "x" << worldsizeparam << endl;
-	cout << "  Energy in system            = " << energy << "*" << foodenergy << " = " << energy*foodenergy << endl;
+	cout << "  World Size                  = " << worldsize << "x" << worldsize << endl;
+	cout << "  Energy in system            = " << energy << "*" << food_maxenergy << " = " << energy*food_maxenergy << endl;
 	cout << "  Minimal Amount of Critters  = " << mincritters << endl;
 	cout << "  Starting Amount of critters = " << startcritters << endl;
 	cout << "  Retinas per row             = " << retinasperrow << endl;
 
 	cout << endl << "Critter Settings" << endl;
-	cout << "  Lifetime                    = " << critterlifetime << endl;
-	cout << "  Maximum Energy              = " << critterenergy << endl;
-	cout << "  Size                        = " << crittersize*100.0f << endl;
-	cout << "  Speed                       = " << critterspeed*1000.0f << endl;
-	cout << "  Sight Range                 = " << crittersightrange*10.0f << endl;
-	cout << "  Color Neurons               = " << crittervisiondivider << endl;
-	cout << "  Mutation Rate               = " << mutationrate << endl;
-	cout << "  Mutation Runs               = " << maxmutateruns << endl;
+	cout << "  Lifetime                    = " << critter_maxlifetime << endl;
+	cout << "  Maximum Energy              = " << critter_maxenergy << endl;
+	cout << "  Size                        = " << critter_size*100.0f << endl;
+	cout << "  Speed                       = " << critter_speed*1000.0f << endl;
+	cout << "  Sight Range                 = " << critter_sightrange*10.0f << endl;
+	cout << "  Color Neurons               = " << critter_colorneurons << endl;
+	cout << "  Mutation Rate               = " << critter_mutationrate << endl;
+	cout << "  Mutation Runs               = " << critter_maxmutateruns << endl;
 
 
 
 	cout << endl << "Food Settings" << endl;
-	cout << "  Lifetime                    = " << foodlifetime << endl;
-	cout << "  Maximum Energy              = " << foodenergy << endl;
-	cout << "  Size                        = " << foodsize*100.0f << endl;
+	cout << "  Lifetime                    = " << food_maxlifetime << endl;
+	cout << "  Maximum Energy              = " << food_maxenergy << endl;
+	cout << "  Size                        = " << food_size*100.0f << endl;
 
 	cout << endl;
 
@@ -165,21 +165,21 @@ int main(int argc, char *argv[])
 
 		Evolution mainscene;
 
-		mainscene.world.resize(worldsizeparam);
-		mainscene.world.foodenergy = foodenergy;
-		mainscene.world.critterenergy = critterenergy;
-		mainscene.world.foodsize = foodsize;
-		mainscene.world.crittersize = crittersize;
+		mainscene.world.resize(worldsize);
+		mainscene.world.food_maxenergy = food_maxenergy;
+		mainscene.world.critter_maxenergy = critter_maxenergy;
+		mainscene.world.food_size = food_size;
+		mainscene.world.critter_size = critter_size;
 		mainscene.world.startfoodamount(energy);
 		mainscene.world.setMincritters(mincritters);
-		mainscene.world.maxMutateRuns = maxmutateruns;
-		mainscene.world.mutationRate = mutationrate;
-		mainscene.world.critterspeed = critterspeed;
-		mainscene.world.critterlifetime = critterlifetime;
-		mainscene.world.foodlifetime = foodlifetime;
+		mainscene.world.critter_maxmutateruns = critter_maxmutateruns;
+		mainscene.world.critter_mutationrate = critter_mutationrate;
+		mainscene.world.critter_speed = critter_speed;
+		mainscene.world.critter_maxlifetime = critter_maxlifetime;
+		mainscene.world.food_maxlifetime = food_maxlifetime;
 		mainscene.world.retinasperrow = retinasperrow;
-		mainscene.world.critterSightRange = crittersightrange;
-		mainscene.world.crittervisiondivider = crittervisiondivider;
+		mainscene.world.critter_sightrange = critter_sightrange;
+		mainscene.world.critter_colorneurons = critter_colorneurons;
 
 
 		for (unsigned int i=0; i < startcritters; i++) mainscene.world.insertCritter();

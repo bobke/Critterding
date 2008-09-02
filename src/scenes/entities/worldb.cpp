@@ -4,35 +4,35 @@ WorldB::WorldB()
 {
 //	Infobar *infobar	= Infobar::instance();
 
+	size			= 0;
+	mincritters		= 0;
+	retinasperrow		= 0;
+
+	critter_maxlifetime	= 0;
+	critter_maxenergy	= 0.0f;
+	critter_size		= 0.0f;
+	critter_speed		= 0.0f;
+	critter_sightrange	= 0.0f;
+	critter_colorneurons	= 0;
+	critter_mutationrate	= 0; // %
+	critter_maxmutateruns	= 0;
+
+	food_maxlifetime	= 0;
+	food_maxenergy		= 0.0f;
+	food_size		= 0.0f;
+
 	selectedCritter		= 0;
 	isSelected		= false;
 
 	doTimedInserts		= false;
 	timedInsertsCounter	= 0;
 
-	crittersize		= 0.0f;
-	foodsize		= 0.0f;
 
-	foodenergy		= 0.0f;
-
-	retinasperrow		= 0;
-
-	mincritters		= 10;
-
-	mutationRate		= 10; // %
-	maxMutateRuns		= 1;
 
 	flipnewbornes		= false;
 
-	critterspeed		= 0.0f;
-	critterenergy		= 0.0f;
 
-	crittervisiondivider	= 0;
 
-	critterlifetime		= 0;
-	foodlifetime		= 0;
-
-	critterSightRange	= 0.0f;
 
 	// home & program directory
 	createDirs();
@@ -53,7 +53,7 @@ void WorldB::resize(unsigned int newsize)
 
 void WorldB::startfoodamount(unsigned int amount)
 {
-	freeEnergy		= foodenergy * amount;
+	freeEnergy		= food_maxenergy * amount;
 	freeEnergyInfo		= freeEnergy;
 }
 
@@ -99,10 +99,10 @@ void WorldB::process()
 	}
 
 	// Insert Food
-	while ( freeEnergy >= foodenergy )
+	while ( freeEnergy >= food_maxenergy )
 	{
-		insertRandomFood(1, foodenergy);
-		freeEnergy -= foodenergy;
+		insertRandomFood(1, food_maxenergy);
+		freeEnergy -= food_maxenergy;
 		//cerr << "food: " << food.size() << endl;
 	}
 
@@ -135,8 +135,8 @@ void WorldB::process()
 		}
 	}
 
-	// as approximation we take every c's halfsize*2: crittersize
-	float realSightRange = critterSightRange + crittersize;
+	// as approximation we take every c's halfsize*2: critter_size
+	float realSightRange = critter_sightrange + critter_size;
 
 	// for all critters do
 	for( unsigned int i=0; i < critters.size(); i++)
@@ -305,20 +305,20 @@ void WorldB::process()
 
 					// mutate or not
 					bool mutant = false;
-					if ( randgen.get(1,100) <= mutationRate )
+					if ( randgen.get(1,100) <= critter_mutationrate )
 					{
 						mutant = true;
-						nc->mutate(maxMutateRuns);
+						nc->mutate(critter_maxmutateruns);
 					}
 
 					// same positions / rotation
 					nc->position = c->position;
 					nc->rotation = c->rotation;
 
-					nc->speedfactor = critterspeed;
-					nc->maxEnergyLevel = critterenergy;
-					nc->maxtotalFrames = critterlifetime;
-					nc->resize(crittersize);
+					nc->speedfactor = critter_speed;
+					nc->maxEnergyLevel = critter_maxenergy;
+					nc->maxtotalFrames = critter_maxlifetime;
+					nc->resize(critter_size);
 					nc->setup();
 					nc->retina = retina;
 
@@ -371,19 +371,19 @@ void WorldB::process()
 	{
 		timedInsertsCounter++;
 
-		if ( timedInsertsCounter == 3*critterlifetime )
+		if ( timedInsertsCounter == 3*critter_maxlifetime )
 		{
 			cerr << "inserting 100 food" << endl;
 
-			freeEnergyInfo += foodenergy * 100.0f;
-			freeEnergy += foodenergy * 100.0f;
+			freeEnergyInfo += food_maxenergy * 100.0f;
+			freeEnergy += food_maxenergy * 100.0f;
 		}
-		else if ( timedInsertsCounter == (3*critterlifetime)+1 )
+		else if ( timedInsertsCounter == (3*critter_maxlifetime)+1 )
 		{
 			cerr << "removing 100 food" << endl;
 
-			freeEnergyInfo -= foodenergy * 100.0f;
-			freeEnergy -= foodenergy * 100.0f;
+			freeEnergyInfo -= food_maxenergy * 100.0f;
+			freeEnergy -= food_maxenergy * 100.0f;
 
 			timedInsertsCounter = 0;
 		}
@@ -405,10 +405,10 @@ void WorldB::insertRandomFood(int amount, float energy)
 	for ( int i=0; i < amount; i++ )
 	{
 		Food *f = new Food;
-		f->maxenergy = foodenergy;
+		f->maxenergy = food_maxenergy;
 		f->energy = energy;
-		f->maxtotalFrames = foodlifetime;
-		f->maxsize = foodsize;
+		f->maxtotalFrames = food_maxlifetime;
+		f->maxsize = food_size;
 		f->position = findEmptySpace(f->size);
 
 		f->resize();
@@ -422,16 +422,16 @@ void WorldB::insertCritter()
 
 	critters.push_back( c );
 
-	c->colorNeurons = crittervisiondivider;
+	c->colorNeurons = critter_colorneurons;
 
 	c->calcInputOutputNeurons();
 
 	c->brain.buildArch();
-	c->speedfactor = critterspeed;
-	c->maxEnergyLevel = critterenergy;
-	c->maxtotalFrames = critterlifetime;
+	c->speedfactor = critter_speed;
+	c->maxEnergyLevel = critter_maxenergy;
+	c->maxtotalFrames = critter_maxlifetime;
 	c->rotation = randgen.get( 0, 360 );
-	c->resize(crittersize);
+	c->resize(critter_size);
 	c->setup();
 	c->retina = retina;
 
@@ -454,14 +454,14 @@ void WorldB::removeCritter(unsigned int cid)
 	if ( critters[cid]->energyLevel > 0.0f )
 	{
 		Food *f = new Food;
-		f->maxenergy = foodenergy;
-		f->maxsize = foodsize;
-		f->maxtotalFrames = foodlifetime;
+		f->maxenergy = food_maxenergy;
+		f->maxsize = food_size;
+		f->maxtotalFrames = food_maxlifetime;
 		f->position = critters[cid]->position;
 
-		if ( critters[cid]->energyLevel > foodenergy )
+		if ( critters[cid]->energyLevel > food_maxenergy )
 		{
-			f->energy = foodenergy;
+			f->energy = food_maxenergy;
 		}
 		else
 		{
@@ -474,7 +474,7 @@ void WorldB::removeCritter(unsigned int cid)
 
 		// put 50% of energy in food, rest back in space
 
-		//f->resize(foodsize);
+		//f->resize(food_size);
 		f->resize();
 		food.push_back( f );
 	}
@@ -579,11 +579,11 @@ void WorldB::loadAllCritters()
 
 			critters.push_back( c );
 
-			c->speedfactor = critterspeed;
-			c->maxEnergyLevel = critterenergy;
-			c->maxtotalFrames = critterlifetime;
+			c->speedfactor = critter_speed;
+			c->maxEnergyLevel = critter_maxenergy;
+			c->maxtotalFrames = critter_maxlifetime;
 			c->rotation = randgen.get( 0, 360 );
-			c->resize(crittersize);
+			c->resize(critter_size);
 			c->setup();
 			c->retina = retina;
 			// record it's energy
