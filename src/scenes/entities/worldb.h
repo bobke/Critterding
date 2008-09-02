@@ -40,10 +40,11 @@ class WorldB
 		float			critter_size;
 		float			critter_speed;
 		float			critter_sightrange;
-		unsigned int		critter_visionres;
+		unsigned int		critter_retinasize;
 		unsigned int		critter_colorneurons;
 		unsigned int		critter_mutationrate;
 		unsigned int		critter_maxmutateruns;
+		bool			critter_flipnewborns;
 
 		unsigned int		food_maxlifetime;
 		float			food_maxenergy;
@@ -94,8 +95,6 @@ class WorldB
 
 		unsigned char		*retina;
 		unsigned int		items;
-
-		bool			flipnewbornes;
 
 		Grid			grid;
 		Floor			floor;
