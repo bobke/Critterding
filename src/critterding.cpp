@@ -18,7 +18,7 @@ using namespace std;
 	float        critter_sightrange		= 4.0f;
 	unsigned int critter_colorneurons	= 3;
 	unsigned int critter_mutationrate	= 10;
-	unsigned int critter_maxmutateruns	= 3;
+	unsigned int critter_maxmutateruns	= 1;
 
 // Food Settings
 	unsigned int food_maxlifetime		= 2000;
