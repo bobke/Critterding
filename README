@@ -21,11 +21,12 @@ STARTUP OPTIONS
   --critter_size          [10]  Size of a critter
   --critter_speed         [50]  Critter speed (50/1000 = 0.05 floor square)
   --critter_sightrange    [40]  Distance a critter can see (40/10 = 4 floor squares)
+  --critter_visionres      [7]  Resolution of critter's vision (retina), width and height
   --critter_colorneurons   [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
   --critter_mutationrate  [10]  When a critter procreates it mutates 10% of the time
   --critter_maxmutateruns  [1]  When a critter mutates, it can do 1 mutation at maximum
 
-  --food_maxlifetime    [2000]  Maximum amount of frames food can live
+  --food_maxlifetime    [1000]  Maximum amount of frames food can live
   --food_maxenergy      [2500]  Maximum amount of energy in a food unit
   --food_size             [15]  Size of a food unit
 

@@ -16,12 +16,13 @@ using namespace std;
 	float        critter_size		= 0.1f;
 	float        critter_speed		= 0.05f;
 	float        critter_sightrange		= 4.0f;
+	unsigned int critter_visionres		= 7;
 	unsigned int critter_colorneurons	= 3;
 	unsigned int critter_mutationrate	= 10;
 	unsigned int critter_maxmutateruns	= 1;
 
 // Food Settings
-	unsigned int food_maxlifetime		= 2000;
+	unsigned int food_maxlifetime		= 1000;
 	unsigned int food_maxenergy		= 2500;
 	float        food_size			= 0.15f;
 
@@ -86,6 +87,11 @@ int main(int argc, char *argv[])
 			optind++;
 			critter_sightrange = (float)atoi(argv[optind]) / 10.0f;
 	        }
+		else if (sw=="--critter_visionres")
+		{
+			optind++;
+			critter_visionres = atoi(argv[optind]);
+	        }
 		else if (sw=="--critter_colorneurons")
 		{
 			optind++;
@@ -139,6 +145,7 @@ int main(int argc, char *argv[])
 	cout << "  Size                        = " << critter_size*100.0f << endl;
 	cout << "  Speed                       = " << critter_speed*1000.0f << endl;
 	cout << "  Sight Range                 = " << critter_sightrange*10.0f << endl;
+	cout << "  Vision Resolution           = " << critter_visionres << endl;
 	cout << "  Color Neurons               = " << critter_colorneurons << endl;
 	cout << "  Mutation Rate               = " << critter_mutationrate << endl;
 	cout << "  Mutation Runs               = " << critter_maxmutateruns << endl;
@@ -161,28 +168,30 @@ int main(int argc, char *argv[])
 
 	//cerr << "Starting application" << endl;
 	GLWindow glwindow;
-	glwindow.create("Critterding beta3", 600, 600, 24, False);
+	glwindow.create("Critterding beta4", 600, 600, 24, False);
 
 		Evolution mainscene;
 
-		mainscene.world.resize(worldsize);
-		mainscene.world.food_maxenergy = food_maxenergy;
+		mainscene.world.critter_maxlifetime = critter_maxlifetime;
 		mainscene.world.critter_maxenergy = critter_maxenergy;
-		mainscene.world.food_size = food_size;
 		mainscene.world.critter_size = critter_size;
-		mainscene.world.startfoodamount(energy);
-		mainscene.world.setMincritters(mincritters);
+		mainscene.world.critter_speed = critter_speed;
+		mainscene.world.critter_sightrange = critter_sightrange;
+		mainscene.world.critter_visionres = critter_visionres;
+		mainscene.world.critter_colorneurons = critter_colorneurons;
 		mainscene.world.critter_maxmutateruns = critter_maxmutateruns;
 		mainscene.world.critter_mutationrate = critter_mutationrate;
-		mainscene.world.critter_speed = critter_speed;
-		mainscene.world.critter_maxlifetime = critter_maxlifetime;
+
 		mainscene.world.food_maxlifetime = food_maxlifetime;
+		mainscene.world.food_maxenergy = food_maxenergy;
+		mainscene.world.food_size = food_size;
+
 		mainscene.world.retinasperrow = retinasperrow;
-		mainscene.world.critter_sightrange = critter_sightrange;
-		mainscene.world.critter_colorneurons = critter_colorneurons;
-
-
+		mainscene.world.resize(worldsize);
+		mainscene.world.startfoodamount(energy);
+		mainscene.world.setMincritters(mincritters);
 		for (unsigned int i=0; i < startcritters; i++) mainscene.world.insertCritter();
+
 
 		glwindow.runGLScene(mainscene);
 
