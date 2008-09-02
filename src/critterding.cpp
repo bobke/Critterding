@@ -16,10 +16,17 @@ using namespace std;
 	float        critter_size		= 0.1f;
 	float        critter_speed		= 0.05f;
 	float        critter_sightrange		= 4.0f;
-	unsigned int critter_visionres		= 7;
+	unsigned int critter_retinasize		= 7;
 	unsigned int critter_colorneurons	= 3;
 	unsigned int critter_mutationrate	= 10;
 	unsigned int critter_maxmutateruns	= 1;
+	unsigned int critter_flipnewborns	= 0;
+
+// Brain Settings
+	unsigned int brain_maxneurons		= 500;
+	unsigned int brain_minsynapses		= 1;
+	unsigned int brain_maxSynapses		= 500;
+
 
 // Food Settings
 	unsigned int food_maxlifetime		= 1000;
@@ -87,10 +94,10 @@ int main(int argc, char *argv[])
 			optind++;
 			critter_sightrange = (float)atoi(argv[optind]) / 10.0f;
 	        }
-		else if (sw=="--critter_visionres")
+		else if (sw=="--critter_retinasize")
 		{
 			optind++;
-			critter_visionres = atoi(argv[optind]);
+			critter_retinasize = atoi(argv[optind]);
 	        }
 		else if (sw=="--critter_colorneurons")
 		{
@@ -107,6 +114,13 @@ int main(int argc, char *argv[])
 			optind++;
 			critter_maxmutateruns = atoi(argv[optind]);
 	        }
+		else if (sw=="--critter_flipnewborns")
+		{
+			optind++;
+			if ( atoi(argv[optind]) == 1 )
+				critter_flipnewborns = 1;
+	        }
+
 	// Food Settings
 		else if (sw=="--food_maxlifetime")
 		{
@@ -145,12 +159,11 @@ int main(int argc, char *argv[])
 	cout << "  Size                        = " << critter_size*100.0f << endl;
 	cout << "  Speed                       = " << critter_speed*1000.0f << endl;
 	cout << "  Sight Range                 = " << critter_sightrange*10.0f << endl;
-	cout << "  Vision Resolution           = " << critter_visionres << endl;
+	cout << "  Vision Resolution           = " << critter_retinasize << endl;
 	cout << "  Color Neurons               = " << critter_colorneurons << endl;
 	cout << "  Mutation Rate               = " << critter_mutationrate << endl;
 	cout << "  Mutation Runs               = " << critter_maxmutateruns << endl;
-
-
+	cout << "  Flip newborns               = " << critter_flipnewborns << endl;
 
 	cout << endl << "Food Settings" << endl;
 	cout << "  Lifetime                    = " << food_maxlifetime << endl;
@@ -177,10 +190,11 @@ int main(int argc, char *argv[])
 		mainscene.world.critter_size = critter_size;
 		mainscene.world.critter_speed = critter_speed;
 		mainscene.world.critter_sightrange = critter_sightrange;
-		mainscene.world.critter_visionres = critter_visionres;
+		mainscene.world.critter_retinasize = critter_retinasize;
 		mainscene.world.critter_colorneurons = critter_colorneurons;
 		mainscene.world.critter_maxmutateruns = critter_maxmutateruns;
 		mainscene.world.critter_mutationrate = critter_mutationrate;
+		if (critter_flipnewborns == 1) mainscene.world.critter_flipnewborns = true;
 
 		mainscene.world.food_maxlifetime = food_maxlifetime;
 		mainscene.world.food_maxenergy = food_maxenergy;

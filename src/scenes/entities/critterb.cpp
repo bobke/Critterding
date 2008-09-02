@@ -23,7 +23,7 @@ void CritterB::initConst()
 
 	components		= 4;
 	colorDivider		= 0;
-	visionres		= 0;
+	retinasize		= 0;
 
 	colorTrim		= 0.25f;
 }
@@ -102,7 +102,7 @@ CritterB::CritterB(string &critterstring)
 
 	loadCritterB(critterstring);
 
-	items = visionres * visionres * components;
+	items = retinasize * retinasize * components;
 }
 
 CritterB::CritterB(CritterB &other)
@@ -112,7 +112,7 @@ CritterB::CritterB(CritterB &other)
 	string arch = other.saveCritterB();
 	loadCritterB(arch);
 
-	items = visionres * visionres * components;
+	items = retinasize * retinasize * components;
 
 	// energy
 	energyLevel		= other.energyLevel;
@@ -121,7 +121,7 @@ CritterB::CritterB(CritterB &other)
 
 void CritterB::calcInputOutputNeurons()
 {
-	items = visionres * visionres * components;
+	items = retinasize * retinasize * components;
 
 	brain.numberOfInputs = (items*colorNeurons)+1+1+1+10+1;
 	brain.numberOfOutputs = 9;
@@ -190,24 +190,24 @@ void CritterB::calcFramePos(unsigned int pos, unsigned int cretinasperrow)
 	while ( pos >= retinasperrow )
 	{
 		pos -= retinasperrow;
-		framePosY += visionres;
+		framePosY += retinasize;
 	}
-	framePosX = (pos * visionres) + pos;
+	framePosX = (pos * retinasize) + pos;
 
 	// Calculate where in the Great Retina this critter shold start (column & row)
 	unsigned int target = visionPosition;
 	retinaRowStart = 0;
 
 	// determine on which row of the retina to start for this critter
-	retinaRowLength = retinasperrow * (visionres+1) * components;
+	retinaRowLength = retinasperrow * (retinasize+1) * components;
 
 	// determine on which column to start
 	while ( target >= retinasperrow )
 	{
-		retinaRowStart += visionres * retinaRowLength;
+		retinaRowStart += retinasize * retinaRowLength;
 		target -= retinasperrow;
 	}
-	retinaColumnStart = target * (visionres+1) * components;
+	retinaColumnStart = target * (retinasize+1) * components;
 
 // cerr << framePosX << " : " << framePosY << endl;
 // usleep (1000);
@@ -233,9 +233,9 @@ void CritterB::procInputNeurons()
 		{*/
 
 //see what it sees
-// 			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(visionres*retinaRowLength); h += retinaRowLength )
+// 			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
 // 			{
-// 				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((visionres)*components); w+=components )
+// 				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=components )
 // 				{
 // 					if ( (int)retina[w] ) cerr << "\033[1;31mR\033[0m";
 // 					else cerr << ".";
@@ -249,12 +249,12 @@ void CritterB::procInputNeurons()
 // 				cerr << "" << endl;
 // 			}
 // 			cerr << "" << endl;
-// 			usleep (100000);
+// 			usleep (10000);
 
 			unsigned int i=0;
-			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(visionres*retinaRowLength); h += retinaRowLength )
+			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
 			{
-				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((visionres)*components); w++ )
+				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
 				{
 					unsigned itarget = i * colorNeurons;
 
@@ -415,7 +415,7 @@ void CritterB::calcCamPos()
 
 void CritterB::place()
 {
-	glViewport(framePosX, framePosY, visionres, visionres);
+	glViewport(framePosX, framePosY, retinasize, retinasize);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, 5.0f);
@@ -431,12 +431,12 @@ void CritterB::place()
 void CritterB::printVision()
 {
 	cerr << "hi" << endl;
-	int rowlength = visionres * components;
+	int rowlength = retinasize * components;
 
 	cerr << rowlength << " " << items << endl;
 	for ( int h=items-rowlength; h >= 0; h -= rowlength )
 	{
-		for ( int w=h; w < (int)(visionres*components)+h; w += components )
+		for ( int w=h; w < (int)(retinasize*components)+h; w += components )
 		{
 			if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
 			else cerr << ".";
@@ -593,14 +593,14 @@ void CritterB::resize(float newsize)
 					if(EOF == sscanf(A.c_str(), "%f", &color[3])) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
-			// visionres=9;
-				else if ( parseH.beginMatchesStrip( "visionres=", line ) )
+			// retinasize=9;
+				else if ( parseH.beginMatchesStrip( "retinasize=", line ) )
 				{
 					string RES = parseH.returnUntillStrip( ";", line );
 					//cerr << "RES: " << RES  << endl;
-					if(EOF == sscanf(RES.c_str(), "%d", &visionres)) cerr << "ERROR INSERTING CRITTER" << endl;
-					//visionres = visionres;
-					//if(EOF == sscanf(RES.c_str(), "%d", &visionres)) cerr << "ERROR INSERTING CRITTER" << endl;
+					if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
+					//retinasize = retinasize;
+					//if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
 			// adamdist=690;
@@ -639,7 +639,7 @@ void CritterB::resize(float newsize)
 	{
 		stringstream buf;
 		buf << "color=" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << ";\n";
-		buf << "visionres=" << visionres << ";\n";
+		buf << "retinasize=" << retinasize << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
 		buf << "visiondivider=" << colorNeurons << ";\n";
 
