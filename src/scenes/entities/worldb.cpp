@@ -27,6 +27,8 @@ WorldB::WorldB()
 	critterspeed		= 0.0f;
 	critterenergy		= 0.0f;
 
+	crittervisiondivider	= 0;
+
 	critterlifetime		= 0;
 	foodlifetime		= 0;
 
@@ -419,6 +421,10 @@ void WorldB::insertCritter()
 	CritterB *c = new CritterB;
 
 	critters.push_back( c );
+
+	c->colorNeurons = crittervisiondivider;
+
+	c->calcInputOutputNeurons();
 
 	c->brain.buildArch();
 	c->speedfactor = critterspeed;

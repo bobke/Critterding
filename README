@@ -9,20 +9,22 @@ TERMINOLOGY
 
 STARTUP OPTIONS
 
-  option   [default value]
-  --worldsize         [25]        Creates a 25x25 world
-  --energy           [500]        Energy in the system: 500*foodenergy(2500) = 1250000
-  --mincritters       [10]        If less than 10 critters are present, insert an adam
-  --startcritters      [0]        Throw in 0 adams at startup
-  --mutationrate      [10]        When a critter procreates it mutates 10% of the time
-  --maxmutateruns      [3]        When a critter mutates, it can do 3 mutations at maximum
-  --critterenergy   [5000]        Maximum amount of energy in a critter
-  --foodenergy      [2500]        Maximum amount of energy in a food unit
-  --critterlifetime [2000]        Maximum amount of frames a critter can live
-  --foodlifetime    [2000]        Maximum amount of frames food can live
-  --critterspeed      [50]        Critter speed (50/1000 = 0.05 floor square)
-  --retinasperrow     [20]        Amount of retinas on a row (bottom left of window)
-  --crittersightrange [40]        Distance a critter can see (40/10 = 4 floor squares)
+  option    [default value]
+  --worldsize          [25]     Creates a 25x25 world
+  --energy            [500]     Energy in the system: 500*foodenergy(2500) = 1250000
+  --mincritters        [10]     If less than 10 critters are present, insert an adam
+  --startcritters       [0]     Throw in 0 adams at startup
+  --mutationrate       [10]     When a critter procreates it mutates 10% of the time
+  --maxmutateruns       [3]     When a critter mutates, it can do 3 mutations at maximum
+  --critterenergy    [5000]     Maximum amount of energy in a critter
+  --foodenergy       [2500]     Maximum amount of energy in a food unit
+  --critterlifetime  [2000]     Maximum amount of frames a critter can live
+  --foodlifetime     [2000]     Maximum amount of frames food can live
+  --critterspeed       [50]     Critter speed (50/1000 = 0.05 floor square)
+  --retinasperrow      [20]     Amount of retinas on a row (bottom left of window)
+  --crittersightrange  [40]     Distance a critter can see (40/10 = 4 floor squares)
+  --crittercolorneurons [3]     Earch color of every pixel (RGBA) will get [3] neurons
+                                This only counts for new adams.
 
 
 BUTTONS

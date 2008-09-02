@@ -27,6 +27,7 @@ float critterspeed = 0.05f;
 
 float crittersightrange = 4.0f;
 
+unsigned int crittervisiondivider = 3;
 
 int main(int argc, char *argv[])
 {
@@ -111,6 +112,11 @@ int main(int argc, char *argv[])
 			optind++;
 			crittersightrange = (float)atoi(argv[optind]) / 10.0f;
 	        }
+		else if (sw=="--crittercolorneurons")
+		{
+			optind++;
+			crittervisiondivider = atoi(argv[optind]);
+	        }
 
 		else
 		{
@@ -133,8 +139,11 @@ int main(int argc, char *argv[])
 	cout << "  Size                        = " << crittersize*100.0f << endl;
 	cout << "  Speed                       = " << critterspeed*1000.0f << endl;
 	cout << "  Sight Range                 = " << crittersightrange*10.0f << endl;
+	cout << "  Color Neurons               = " << crittervisiondivider << endl;
 	cout << "  Mutation Rate               = " << mutationrate << endl;
 	cout << "  Mutation Runs               = " << maxmutateruns << endl;
+
+
 
 	cout << endl << "Food Settings" << endl;
 	cout << "  Lifetime                    = " << foodlifetime << endl;
@@ -170,6 +179,7 @@ int main(int argc, char *argv[])
 		mainscene.world.foodlifetime = foodlifetime;
 		mainscene.world.retinasperrow = retinasperrow;
 		mainscene.world.critterSightRange = crittersightrange;
+		mainscene.world.crittervisiondivider = crittervisiondivider;
 
 
 		for (unsigned int i=0; i < startcritters; i++) mainscene.world.insertCritter();
