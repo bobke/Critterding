@@ -35,7 +35,7 @@ void Evolution::draw()
 
 	if ( world.isSelected )
 	{
-		camera.follow(width, height, world.critters[world.selectedCritter], world.critterSightRange);
+		camera.follow(width, height, world.critters[world.selectedCritter], world.critter_sightrange);
 	}
 	else
 	{
@@ -65,32 +65,32 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_F5:
-			if ( (world.freeEnergyInfo-(world.foodenergy*25.0f)) / world.foodenergy >= 0.0f )
+			if ( (world.freeEnergyInfo-(world.food_maxenergy*25.0f)) / world.food_maxenergy >= 0.0f )
 			{
-				world.freeEnergyInfo -= world.foodenergy * 25.0f;
-				world.freeEnergy -= world.foodenergy * 25.0f;
-				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.foodenergy) << "*" << world.foodenergy << " = " << world.freeEnergyInfo  << endl << endl;
+				world.freeEnergyInfo -= world.food_maxenergy * 25.0f;
+				world.freeEnergy -= world.food_maxenergy * 25.0f;
+				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.food_maxenergy) << "*" << world.food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
 			}
 		break;
 		case XK_F6:
-			world.freeEnergyInfo += world.foodenergy * 25.0f;
-			world.freeEnergy += world.foodenergy * 25.0f;
-			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.foodenergy) << "*" << world.foodenergy << " = " << world.freeEnergyInfo  << endl << endl;
+			world.freeEnergyInfo += world.food_maxenergy * 25.0f;
+			world.freeEnergy += world.food_maxenergy * 25.0f;
+			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.food_maxenergy) << "*" << world.food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
 		break;
 
 		case XK_KP_Subtract:
-			if ( (world.freeEnergyInfo-world.foodenergy) / world.foodenergy >= 0.0f )
+			if ( (world.freeEnergyInfo-world.food_maxenergy) / world.food_maxenergy >= 0.0f )
 			{
-				world.freeEnergyInfo -= world.foodenergy;
-				world.freeEnergy -= world.foodenergy;
-				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.foodenergy) << "*" << world.foodenergy << " = " << world.freeEnergyInfo  << endl << endl;
+				world.freeEnergyInfo -= world.food_maxenergy;
+				world.freeEnergy -= world.food_maxenergy;
+				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.food_maxenergy) << "*" << world.food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
 			}
 		break;
 
 		case XK_KP_Add:
-			world.freeEnergyInfo += world.foodenergy;
-			world.freeEnergy += world.foodenergy;
-			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.foodenergy) << "*" << world.foodenergy << " = " << world.freeEnergyInfo  << endl << endl;
+			world.freeEnergyInfo += world.food_maxenergy;
+			world.freeEnergy += world.food_maxenergy;
+			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.food_maxenergy) << "*" << world.food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
 		break;
 
 		case XK_F7:
@@ -101,31 +101,31 @@ void Evolution::handlekey(const KeySym& key)
 			cerr << endl << "timed food inserts: "<< world.doTimedInserts << endl << endl;
 		break;
 		case XK_F9:
-			if ( world.maxMutateRuns >= 2 )
+			if ( world.critter_maxmutateruns >= 2 )
 			{
-				world.maxMutateRuns -= 1;
-				cerr << endl << "Max Mutation Runs: "<< world.maxMutateRuns << endl << endl;
+				world.critter_maxmutateruns -= 1;
+				cerr << endl << "Max Mutation Runs: "<< world.critter_maxmutateruns << endl << endl;
 			}
 		break;
 		case XK_F10:
-			if ( world.maxMutateRuns <= 999 )
+			if ( world.critter_maxmutateruns <= 999 )
 			{
-				world.maxMutateRuns += 1;
-				cerr << endl << "Max Mutation Runs: "<< world.maxMutateRuns << endl << endl;
+				world.critter_maxmutateruns += 1;
+				cerr << endl << "Max Mutation Runs: "<< world.critter_maxmutateruns << endl << endl;
 			}
 		break;
 		case XK_F11:
-			if ( world.mutationRate >= 1 )
+			if ( world.critter_mutationrate >= 1 )
 			{
-				world.mutationRate -= 1;
-				cerr << endl << "Mutation Rate: "<< world.mutationRate << "%" << endl << endl;
+				world.critter_mutationrate -= 1;
+				cerr << endl << "Mutation Rate: "<< world.critter_mutationrate << "%" << endl << endl;
 			}
 		break;
 		case XK_F12:
-			if ( world.mutationRate <= 99 )
+			if ( world.critter_mutationrate <= 99 )
 			{
-				world.mutationRate += 1;
-				cerr << endl << "Mutation Rate: "<< world.mutationRate << "%" << endl << endl;
+				world.critter_mutationrate += 1;
+				cerr << endl << "Mutation Rate: "<< world.critter_mutationrate << "%" << endl << endl;
 			}
 		break;
 

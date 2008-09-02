@@ -33,8 +33,20 @@ class WorldB
 		int			size;
 		float			freeEnergy;
 		float			freeEnergyInfo;
-		unsigned int		mutationRate;
-		unsigned int		maxMutateRuns;
+		unsigned int		retinasperrow;
+
+		unsigned int		critter_maxlifetime;
+		float			critter_maxenergy;
+		float			critter_size;
+		float			critter_speed;
+		float			critter_sightrange;
+		unsigned int		critter_colorneurons;
+		unsigned int		critter_mutationrate;
+		unsigned int		critter_maxmutateruns;
+
+		unsigned int		food_maxlifetime;
+		float			food_maxenergy;
+		float			food_size;
 
 		unsigned int		selectedCritter;
 		bool			isSelected;
@@ -48,22 +60,7 @@ class WorldB
 		void			resize(unsigned int newsize);
 		void			startfoodamount(unsigned int amount);
 
-		float			foodenergy;
 		void			insertRandomFood(int amount, float energy);
-
-		float			critterspeed;
-		float			critterenergy;
-		unsigned int		crittervisiondivider;
-
-		unsigned int		critterlifetime;
-		unsigned int		foodlifetime;
-
-		float			crittersize;
-		float			foodsize;
-
-		unsigned int		retinasperrow;
-
-		float			critterSightRange;
 
 		void			insertCritter();
 		void			positionCritterB(unsigned int cid);
