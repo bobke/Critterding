@@ -53,6 +53,7 @@ class WorldB
 
 		float			critterspeed;
 		float			critterenergy;
+		unsigned int		crittervisiondivider;
 
 		unsigned int		critterlifetime;
 		unsigned int		foodlifetime;

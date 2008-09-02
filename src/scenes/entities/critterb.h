@@ -30,6 +30,8 @@ class CritterB
 		unsigned int		frameWidth;
 		unsigned int		frameHeight;
 
+		unsigned int		colorNeurons;
+
 		unsigned int		retinasperrow;
 
 		float			size;
@@ -41,6 +43,7 @@ class CritterB
 
 		float			rotation;
 		float			color[4];
+		float			colorTrim; // so critter's color is minimal X for rgb
 		float			maxEnergyLevel;
 		float			energyLevel;
 		float			energyUsed;
@@ -77,6 +80,7 @@ class CritterB
 		void			calcFramePos(unsigned int pos, unsigned int cretinasperrow);
 		void			calcCamPos();
 		void			printVision();
+		void			calcInputOutputNeurons();
 		void			setup();
 		void			mutate(unsigned int maxMutateRuns);
 
@@ -103,7 +107,6 @@ class CritterB
 		unsigned int		framePosX;
 		unsigned int		framePosY;
 
-		unsigned int		visionDivider;
 		unsigned int		colorDivider;
 		unsigned int		retinaColumnStart;
 		unsigned int		retinaRowStart;

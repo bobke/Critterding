@@ -5,13 +5,14 @@
 void CritterB::initConst()
 {
 	components		= 4;
-	maxEnergyLevel		= 5000.0f;
-	maxtotalFrames		= 2000;
+	maxEnergyLevel		= 0.0f;
+	maxtotalFrames		= 0;
 	procreateTimeTrigger	= 100;
 	fireTimeTrigger		= 5;
 	minprocenergyLevel	= 0.0f;
 	minfireenergyLevel	= 0.0f;
 
+	colorNeurons		= 0;
 	visionPosition		= 0;
 	retinasperrow		= 0;
 	retinaColumnStart	= 0;
@@ -23,6 +24,7 @@ void CritterB::initConst()
 	halfsize		= 0.0f;
 
 	colorDivider		= 0;
+	colorTrim		= 0.25f;
 }
 
 CritterB::CritterB()
@@ -44,7 +46,7 @@ CritterB::CritterB()
 		brain.minSynapsesAtBuildtime				= 1;
 			brain.mutate_minSynapsesAtBuildtime		= false;
 
-		brain.maxSynapsesAtBuildtime				= 100;
+		brain.maxSynapsesAtBuildtime				= 80;
 			brain.mutate_maxSynapsesAtBuildtime		= false;
 
 		brain.percentChanceInhibitoryNeuron			= 50;
@@ -86,13 +88,9 @@ CritterB::CritterB()
 	adamdist		= 0;
 	frameWidth		= 10;
 	frameHeight		= frameWidth; // must be same as frameWidth
-	visionDivider		= 2;
 
 	// register input/output neurons
 	items = frameWidth * frameHeight * components;
-
-	brain.numberOfInputs = (items*visionDivider)+1+1+1+10+1;
-	brain.numberOfOutputs = 9;
 
 	color[0] = (float)randgen.get( 20,100 ) / 100.0f;
 	color[1] = (float)randgen.get( 20,100 ) / 100.0f;
@@ -125,13 +123,20 @@ CritterB::CritterB(CritterB &other)
 	items = frameWidth * frameHeight * components;
 }
 
+
+void CritterB::calcInputOutputNeurons()
+{
+	brain.numberOfInputs = (items*colorNeurons)+1+1+1+10+1;
+	brain.numberOfOutputs = 9;
+}
+
 void CritterB::setup()
 {
 	totalFrames		= 0;
 	procreateTimeCount	= 0;
 	fireTimeCount		= 0;
 
-	colorDivider		= 256 / visionDivider;
+	colorDivider		= 256 / colorNeurons;
 
 	minprocenergyLevel	= maxEnergyLevel * 0.6f;
 	minfireenergyLevel	= maxEnergyLevel * 0.0f;
@@ -220,7 +225,7 @@ void CritterB::procInputNeurons()
 		brain.clearInputs();
 
 	// link vision array directly to the sensor neurons' output
-/*		if ( visionDivider == 1 )
+/*		if ( colorNeurons == 1 )
 		{
 			for ( unsigned int i=0; i < items; i++ )
 			{
@@ -254,7 +259,7 @@ void CritterB::procInputNeurons()
 			{
 				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((frameWidth)*components); w++ )
 				{
-					unsigned itarget = i * visionDivider;
+					unsigned itarget = i * colorNeurons;
 
 					if ( retina[w]>0 )
 					{
@@ -266,7 +271,7 @@ void CritterB::procInputNeurons()
 
 // 		}
 
-	unsigned int overstep = items*visionDivider;
+	unsigned int overstep = items*colorNeurons;
 
 	// over food sensor neuron
 		if ( touchingFood )	brain.Inputs[overstep].output = 1;
@@ -395,7 +400,7 @@ void CritterB::mutate(unsigned int maxMutateRuns)
 	else
 	{
 		color[ncolor] -= (float)randgen.get(1,10)/150.0f;
-		if ( color[ncolor] < 0.2f ) color[ncolor] = 0.2f;
+		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
 	}
 
 	unsigned int runs = randgen.get(1, maxMutateRuns);
@@ -614,7 +619,7 @@ void CritterB::resize(float newsize)
 				{
 					string VD = parseH.returnUntillStrip( ";", line );
 					//cerr << "AD: " << AD  << endl;
-					if(EOF == sscanf(VD.c_str(), "%d", &visionDivider)) cerr << "ERROR INSERTING CRITTER" << endl;
+					if(EOF == sscanf(VD.c_str(), "%d", &colorNeurons)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 
 			// the rest goes to the brain
@@ -639,7 +644,7 @@ void CritterB::resize(float newsize)
 		buf << "color=" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << ";\n";
 		buf << "visionres=" << frameWidth << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
-		buf << "visiondivider=" << visionDivider << ";\n";
+		buf << "visiondivider=" << colorNeurons << ";\n";
 
 		string* arch = brain.getArch();
 		buf << *arch;
