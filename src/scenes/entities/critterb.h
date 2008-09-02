@@ -27,8 +27,7 @@ class CritterB
 		Brainz			brain;
 
 		unsigned int		adamdist;
-		unsigned int		frameWidth;
-		unsigned int		frameHeight;
+		unsigned int		visionres;
 
 		unsigned int		colorNeurons;
 

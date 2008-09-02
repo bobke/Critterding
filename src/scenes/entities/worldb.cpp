@@ -13,6 +13,7 @@ WorldB::WorldB()
 	critter_size		= 0.0f;
 	critter_speed		= 0.0f;
 	critter_sightrange	= 0.0f;
+	critter_visionres	= 0;
 	critter_colorneurons	= 0;
 	critter_mutationrate	= 0; // %
 	critter_maxmutateruns	= 0;
@@ -27,18 +28,13 @@ WorldB::WorldB()
 	doTimedInserts		= false;
 	timedInsertsCounter	= 0;
 
-
-
 	flipnewbornes		= false;
-
-
-
 
 	// home & program directory
 	createDirs();
 
 	// vision retina allocation
-	items = 10000 * 4 * (10+1) * 10;
+	items = 4 * 1600 * 1200;
 	retina = (unsigned char*)malloc(items);
 	memset(retina, 0, items);
 
@@ -189,14 +185,14 @@ void WorldB::process()
 	if ( critters.size() > 0 )
 	{
 		// determine width
-		unsigned int picwidth = (retinasperrow * (10+1));
+		unsigned int picwidth = (retinasperrow * (critter_visionres+1));
 
 		// determine height
-		unsigned int picheight = 10;
+		unsigned int picheight = critter_visionres;
 		unsigned int rows = critters.size();
 		while ( rows > retinasperrow )
 		{
-			picheight += 10;
+			picheight += critter_visionres;
 			rows -= retinasperrow;
 		}
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
@@ -423,6 +419,7 @@ void WorldB::insertCritter()
 	critters.push_back( c );
 
 	c->colorNeurons = critter_colorneurons;
+	c->visionres = critter_visionres;
 
 	c->calcInputOutputNeurons();
 

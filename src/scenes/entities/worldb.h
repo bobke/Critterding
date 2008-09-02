@@ -40,6 +40,7 @@ class WorldB
 		float			critter_size;
 		float			critter_speed;
 		float			critter_sightrange;
+		unsigned int		critter_visionres;
 		unsigned int		critter_colorneurons;
 		unsigned int		critter_mutationrate;
 		unsigned int		critter_maxmutateruns;
