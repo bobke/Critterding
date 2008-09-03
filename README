@@ -35,16 +35,16 @@ STARTUP OPTIONS
   --food_size             [15]  Size of a food unit
 
   Brain Settings
-  --brain_maxneurons                            [500]  Max neurons per critter
+  --brain_maxneurons                           [1000]  Max neurons per critter
   --brain_minsynapses                             [1]  Min synapses per neuron
-  --brain_maxsynapses                           [500]  Max synapses per neuron
+  --brain_maxsynapses                           [100]  Max synapses per neuron
   --brain_minneuronsatbuildtime                  [20]  Min neurons for a new critter
-  --brain_maxneuronsatbuildtime                  [35]  Max neurons for a new critter
+  --brain_maxneuronsatbuildtime                  [30]  Max neurons for a new critter
 
   --brain_minsynapsesatbuildtime                  [1]  Min synapses when creating new neuron
    --brain_mutate_minsynapsesatbuildtime          [0]  If set to 1, the value above will mutate
 
-  --brain_maxsynapsesatbuildtime                 [60]  Max synapses when creating new neuron
+  --brain_maxsynapsesatbuildtime                 [40]  Max synapses when creating new neuron
    --brain_mutate_maxsynapsesatbuildtime          [0]  If set to 1, the value above will mutate
 
   --brain_percentchanceinhibitoryneuron          [50]  % chance neuron is inhibitory (vs exhibitory)

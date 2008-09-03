@@ -1,7 +1,90 @@
 #include "gl/glwindow.h"
 #include "scenes/evolution.h"
-
 using namespace std;
+
+string helpinfo = " \
+\nSTARTUP OPTIONS\
+\n\
+\n  option       [default value]\
+\n\
+\n  Global Settings\
+\n  --worldsize             [25]  Creates a 25x25 world\
+\n  --energy               [500]  Energy in the system: 500*foodenergy(2500) = 1250000\
+\n  --mincritters           [10]  If less than 10 critters are present, insert an adam\
+\n  --retinasperrow         [20]  Amount of retinas on a row (bottom left of window)\
+\n\
+\n  Critter Settings\
+\n  --critter_maxlifetime [2000]  Maximum amount of frames a critter can live\
+\n  --critter_maxenergy   [5000]  Maximum amount of energy in a critter\
+\n  --critter_size          [10]  Size of a critter\
+\n  --critter_speed         [50]  Critter speed (50/1000 = 0.05 floor square)\
+\n  --critter_sightrange    [40]  Distance a critter can see (40/10 = 4 floor squares)\
+\n  --critter_retinasize     [7]  Resolution of critter's retina: 7x7\
+\n  --critter_colorneurons   [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)\
+\n  --critter_mutationrate  [10]  When a critter procreates it mutates 10% of the time\
+\n  --critter_maxmutateruns  [1]  When a critter mutates, it can do 1 mutation at maximum\
+\n  --critter_flipnewborns   [0]  If set to 1, newborns will be flipped 180 degrees\
+\n\
+\n  Food Settings\
+\n  --food_maxlifetime    [1000]  Maximum amount of frames food can live\
+\n  --food_maxenergy      [2500]  Maximum amount of energy in a food unit\
+\n  --food_size             [15]  Size of a food unit\
+\n\
+\n  Brain Settings\
+\n  --brain_maxneurons                           [1000]  Max neurons per critter\
+\n  --brain_minsynapses                             [1]  Min synapses per neuron\
+\n  --brain_maxsynapses                           [100]  Max synapses per neuron\
+\n  --brain_minneuronsatbuildtime                  [20]  Min neurons for a new critter\
+\n  --brain_maxneuronsatbuildtime                  [30]  Max neurons for a new critter\
+\n\
+\n  --brain_minsynapsesatbuildtime                  [1]  Min synapses when creating new neuron\
+\n   --brain_mutate_minsynapsesatbuildtime          [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_maxsynapsesatbuildtime                 [40]  Max synapses when creating new neuron\
+\n   --brain_mutate_maxsynapsesatbuildtime          [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_percentchanceinhibitoryneuron          [50]  % chance neuron is inhibitory (vs exhibitory)\
+\n   --brain_mutate_percentchanceinhibitoryneuron   [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_percentchancemotorneuron               [50]  % chance a neuron is a motor neuron, this value seems\
+\n                                                       high, but when it tries to create a motor neuron that is\
+\n                                                       is already taken, it will stay a normal neuron\
+\n   --brain_mutate_percentchancemotorneuron        [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_percentchanceplasticneuron             [20]  % chance a neuron applies synaptic plasticity\
+\n   --brain_mutate_percentchanceplasticneuron      [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_minplasticitystrengthen               [100]  Min weight by which plastic synapses strengthen (1/100)\
+\n  --brain_maxplasticitystrengthen              [1000]  Max weight by which plastic synapses strengthen (1/1000)\
+\n  --brain_minplasticityweaken                  [1000]  Min weight by which plastic synapses weaken (1/1000)\
+\n  --brain_maxplasticityweaken                 [10000]  Max weight by which plastic synapses weaken (1/10000)\
+\n   --brain_mutate_plasticityfactors               [0]  If set to 1, all values above will mutate\
+\n\
+\n  --brain_minfiringthreshold                      [2]  Min firing threshold of a neuron\
+\n   --brain_mutate_minfiringthreshold              [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_maxfiringthreshold                     [10]  Max firing threshold of a neuron\
+\n   --brain_mutate_maxfiringthreshold              [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_maxdendridicbranches                    [3]  Max dendridic branches per neuron\
+\n   --brain_mutate_maxdendridicbranches            [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_percentchanceconsistentsynapses        [50]  % chance neuron has consistent synapses\
+\n                                                       meaning all (new) synapses are inhibitory or exhibitory\
+\n   --brain_mutate_percentchanceconsistentsynapses [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_percentchanceinhibitorysynapses        [50]  % chance a synapse is inhibitory (vs exhibitory)\
+\n   --brain_mutate_percentchanceinhibitorysynapses [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_percentchancesensorysynapse            [20]  % chance a synapse connects with a sensor (inputneuron)\
+\n   --brain_mutate_percentchancesensorysynapse     [0]  If set to 1, the value above will mutate\
+\n\
+\n  --brain_percentmutateeffectaddneuron           [10]  % chance of adding a neuron for a mutationrun\
+\n  --brain_percentmutateeffectremoveneuron        [10]  % chance of removing a neuron for a mutationrun\
+\n  --brain_percentmutateeffectalterneuron         [20]  % chance of altering a neuron for a mutationrun\
+\n  --brain_percentmutateeffectaddsynapse          [30]  % chance of adding a synapse for a mutationrun\
+\n  --brain_percentmutateeffectremovesynapse       [30]  % chance of removing a synapse for a mutationrun\
+\n   --brain_mutate_mutateeffects                   [0]  If set to 1, all values above will mutate";
 
 // Global Settings
 	unsigned int worldsize				= 25;
@@ -27,7 +110,7 @@ using namespace std;
 	float        food_size							= 0.15f;
 
 // Brain Settings
-	unsigned int brain_maxneurons						= 500;
+	unsigned int brain_maxneurons						= 1000;
 	unsigned int brain_minsynapses						= 1;
 	unsigned int brain_maxsynapses						= 100;
 	unsigned int brain_minneuronsatbuildtime				= 20;
@@ -388,9 +471,17 @@ int main(int argc, char *argv[])
 				brain_mutate_mutateeffects = 1;
 	        }
 
+		else if (sw=="--help")
+		{
+			cout << helpinfo << endl;
+			exit(1);
+	        }
+
 		else
 		{
 			cout << "Unknown switch: " << argv[optind] << endl;
+			cout << helpinfo << endl;
+			exit(1);
 		}
 		optind++;
 	}
