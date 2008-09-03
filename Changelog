@@ -1,3 +1,11 @@
+1.0-beta4
+---------
+adaptable colorneurons, default is now 3 instead of 2
+adaptable retinasize, default is nog 7 instead of 10
+all (38) initial brain settings have been made adaptable
+provided an option to flip newborn critters 180 degrees
+many minor fixes and cleanups
+
 1.0-beta3
 ---------
 fixes minor memleaks & speedups

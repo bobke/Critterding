@@ -677,18 +677,30 @@ void WorldB::loadAllCritters()
 
 			CritterB *c = new CritterB(content);
 
-			critters.push_back( c );
+			unsigned int error = 0;
 
-			c->speedfactor = critter_speed;
-			c->maxEnergyLevel = critter_maxenergy;
-			c->maxtotalFrames = critter_maxlifetime;
-			c->rotation = randgen.get( 0, 360 );
-			c->resize(critter_size);
-			c->setup();
-			c->retina = retina;
-			// record it's energy
-			freeEnergy -= c->energyLevel;
-			positionCritterB(critters.size()-1);
+			if ( c->retinasize != critter_retinasize ) error = 1;
+
+			if ( !error)
+			{
+				critters.push_back( c );
+
+				c->speedfactor = critter_speed;
+				c->maxEnergyLevel = critter_maxenergy;
+				c->maxtotalFrames = critter_maxlifetime;
+				c->rotation = randgen.get( 0, 360 );
+				c->resize(critter_size);
+				c->setup();
+				c->retina = retina;
+				// record it's energy
+				freeEnergy -= c->energyLevel;
+				positionCritterB(critters.size()-1);
+			}
+
+			if ( error == 1 )
+			{
+				cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << critter_retinasize << ")" << endl;
+			}
 		}
 	}
 	cerr << endl << "Loaded critters from " << loaddir << endl << endl;
