@@ -4,24 +4,68 @@ WorldB::WorldB()
 {
 //	Infobar *infobar	= Infobar::instance();
 
-	size			= 0;
-	mincritters		= 0;
-	retinasperrow		= 0;
+// 	size			= 0;
+// 	mincritters		= 0;
+// 	retinasperrow		= 0;
+// 
+// 	critter_maxlifetime	= 0;
+// 	critter_maxenergy	= 0.0f;
+// 	critter_size		= 0.0f;
+// 	critter_speed		= 0.0f;
+// 	critter_sightrange	= 0.0f;
+// 	critter_retinasize	= 0;
+// 	critter_colorneurons	= 0;
+// 	critter_mutationrate	= 0; // %
+// 	critter_maxmutateruns	= 0;
+// 	critter_flipnewborns	= false;
+// 
+// 	food_maxlifetime	= 0;
+// 	food_maxenergy		= 0.0f;
+// 	food_size		= 0.0f;
+// 
+// 	brain_maxneurons	= 0;
+// 	brain_minsynapses	= 0;
+// 	brain_maxsynapses = 0;
+// 	brain_minneuronsatbuildtime = 0;
+// 	brain_maxneuronsatbuildtime = 0;
+// 	brain_minsynapsesatbuildtime = 0;
+// 	brain_mutate_minsynapsesatbuildtime = 0;
+// 	brain_maxsynapsesatbuildtime = 0;
+// 	brain_mutate_maxsynapsesatbuildtime = 0;
+// 	brain_percentchanceinhibitoryneuron = 0;
+// 	brain_mutate_percentchanceinhibitoryneuron = 0;
+// 	brain_percentchanceconsistentsynapses = 0;
+// 	brain_mutate_percentchanceconsistentsynapses = 0;
+// 
+// 	brain_percentchanceinhibitorysynapses = 0;
+// 	brain_mutate_percentchanceinhibitorysynapses = 0;
+// 	brain_percentchancemotorneuron = 0;
+// 	brain_mutate_percentchancemotorneuron = 0;
+// 	brain_percentchanceplasticneuron = 0;
+// 	brain_mutate_percentchanceplasticneuron = 0;
+// 
+// 	brain_minplasticitystrengthen = 0;
+// 	brain_maxplasticitystrengthen = 0;
+// 	brain_minplasticityweaken = 0;
+// 	brain_maxplasticityweaken = 0;
+// 	brain_mutate_plasticityfactors = 0;
+// 
+// 	brain_percentchancesensorysynapse = 0;
+// 	brain_mutate_percentchancesensorysynapse = 0;
+// 	brain_minfiringthreshold = 0;
+// 	brain_mutate_minfiringthreshold = 0;
+// 	brain_maxfiringthreshold = 0;
+// 	brain_mutate_maxfiringthreshold = 0;
+// 	brain_maxdendridicbranches = 0;
+// 	brain_mutate_maxdendridicbranches = 0;
+// 
+// 	brain_percentmutateeffectaddneuron = 0;
+// 	brain_percentmutateeffectremoveneuron = 0;
+// 	brain_percentmutateeffectalterneuron = 0;
+// 	brain_percentmutateeffectaddsynapse = 0;
+// 	brain_percentmutateeffectremovesynapse = 0;
+// 	brain_mutate_mutateeffects = 0;
 
-	critter_maxlifetime	= 0;
-	critter_maxenergy	= 0.0f;
-	critter_size		= 0.0f;
-	critter_speed		= 0.0f;
-	critter_sightrange	= 0.0f;
-	critter_retinasize	= 0;
-	critter_colorneurons	= 0;
-	critter_mutationrate	= 0; // %
-	critter_maxmutateruns	= 0;
-	critter_flipnewborns	= false;
-
-	food_maxlifetime	= 0;
-	food_maxenergy		= 0.0f;
-	food_size		= 0.0f;
 
 	selectedCritter		= 0;
 	isSelected		= false;
@@ -34,7 +78,7 @@ WorldB::WorldB()
 	createDirs();
 
 	// vision retina allocation
-	items = 4 * 1600 * 1200;
+	items = 4 * 3200 * 2400;
 	retina = (unsigned char*)malloc(items);
 	memset(retina, 0, items);
 
@@ -418,9 +462,68 @@ void WorldB::insertCritter()
 
 	critters.push_back( c );
 
+	c->brain.maxNeurons					= brain_maxneurons;
+	c->brain.minSynapses					= brain_minsynapses;
+	c->brain.maxSynapses					= brain_maxsynapses;
+
+	c->brain.minNeuronsAtBuildtime				= brain_minneuronsatbuildtime;
+	c->brain.maxNeuronsAtBuildtime				= brain_maxneuronsatbuildtime;
+
+	c->brain.minSynapsesAtBuildtime				= brain_minsynapsesatbuildtime;
+		c->brain.mutate_minSynapsesAtBuildtime		= brain_mutate_minsynapsesatbuildtime;
+
+	c->brain.maxSynapsesAtBuildtime				= brain_maxsynapsesatbuildtime;
+		c->brain.mutate_maxSynapsesAtBuildtime		= brain_mutate_maxsynapsesatbuildtime;
+
+	c->brain.percentChanceInhibitoryNeuron			= brain_percentchanceinhibitoryneuron;
+		c->brain.mutate_percentChanceInhibitoryNeuron	= brain_mutate_percentchanceinhibitoryneuron;
+
+	c->brain.percentChanceConsistentSynapses		= brain_percentchanceconsistentsynapses;
+		c->brain.mutate_percentChanceConsistentSynapses	= brain_mutate_percentchanceconsistentsynapses;
+
+	c->brain.percentChanceInhibitorySynapses		= brain_percentchanceinhibitorysynapses;
+		c->brain.mutate_percentChanceInhibitorySynapses	= brain_mutate_percentchanceinhibitorysynapses;
+
+	c->brain.percentChanceMotorNeuron			= brain_percentchancemotorneuron;
+		c->brain.mutate_percentChanceMotorNeuron	= brain_mutate_percentchancemotorneuron;
+
+	c->brain.percentChancePlasticNeuron			= brain_percentchanceplasticneuron;
+		c->brain.mutate_percentChancePlasticNeuron	= brain_mutate_percentchanceplasticneuron;
+
+	c->brain.minPlasticityStrengthen			= brain_minplasticitystrengthen;
+	c->brain.maxPlasticityStrengthen			= brain_maxplasticitystrengthen;
+	c->brain.minPlasticityWeaken				= brain_minplasticityweaken;
+	c->brain.maxPlasticityWeaken				= brain_maxplasticityweaken;
+		c->brain.mutate_PlasticityFactors		= brain_mutate_plasticityfactors;
+
+	c->brain.percentChanceSensorySynapse			= brain_percentchancesensorysynapse;
+		c->brain.mutate_percentChanceSensorySynapse	= brain_mutate_percentchancesensorysynapse;
+
+	c->brain.minFiringThreshold				= brain_minfiringthreshold;
+		c->brain.mutate_minFiringThreshold		= brain_mutate_minfiringthreshold;
+
+	c->brain.maxFiringThreshold				= brain_maxfiringthreshold;
+		c->brain.mutate_maxFiringThreshold		= brain_mutate_maxfiringthreshold;
+
+	c->brain.maxDendridicBranches				= brain_maxdendridicbranches;
+		c->brain.mutate_maxDendridicBranches		= brain_mutate_maxdendridicbranches;
+
+	c->brain.percentMutateEffectAddNeuron			= brain_percentmutateeffectaddneuron;
+	c->brain.percentMutateEffectRemoveNeuron		= brain_percentmutateeffectremoveneuron;
+	c->brain.percentMutateEffectAlterNeuron			= brain_percentmutateeffectalterneuron;
+	c->brain.percentMutateEffectAddSynapse			= brain_percentmutateeffectaddsynapse;
+	c->brain.percentMutateEffectRemoveSynapse		= brain_percentmutateeffectremovesynapse;
+		c->brain.mutate_MutateEffects			= brain_mutate_mutateeffects;
+
+
+
+
+
+
+
+
 	c->colorNeurons = critter_colorneurons;
 	c->retinasize = critter_retinasize;
-
 	c->calcInputOutputNeurons();
 
 	c->brain.buildArch();

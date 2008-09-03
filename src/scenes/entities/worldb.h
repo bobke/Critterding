@@ -14,7 +14,6 @@
 #include "../../utils/randgen.h"
 #include "grid.h"
 #include "floor.h"
-#include "infobar.h"
 #include "food.h"
 #include "wall.h"
 #include "bullet.h"
@@ -49,6 +48,51 @@ class WorldB
 		unsigned int		food_maxlifetime;
 		float			food_maxenergy;
 		float			food_size;
+
+		unsigned int		brain_maxneurons;
+		unsigned int		brain_minsynapses;
+		unsigned int		brain_maxsynapses;
+		unsigned int		brain_minneuronsatbuildtime;
+		unsigned int		brain_maxneuronsatbuildtime;
+		unsigned int		brain_minsynapsesatbuildtime;
+		unsigned int		brain_mutate_minsynapsesatbuildtime;
+		unsigned int		brain_maxsynapsesatbuildtime;
+		unsigned int		brain_mutate_maxsynapsesatbuildtime;
+		unsigned int		brain_percentchanceinhibitoryneuron;
+		unsigned int		brain_mutate_percentchanceinhibitoryneuron;
+		unsigned int		brain_percentchanceconsistentsynapses;
+		unsigned int		brain_mutate_percentchanceconsistentsynapses;
+
+		unsigned int		brain_percentchanceinhibitorysynapses;
+		unsigned int		brain_mutate_percentchanceinhibitorysynapses;
+		unsigned int		brain_percentchancemotorneuron;
+		unsigned int		brain_mutate_percentchancemotorneuron;
+		unsigned int		brain_percentchanceplasticneuron;
+		unsigned int		brain_mutate_percentchanceplasticneuron;
+
+		unsigned int		brain_minplasticitystrengthen;
+		unsigned int		brain_maxplasticitystrengthen;
+		unsigned int		brain_minplasticityweaken;
+		unsigned int		brain_maxplasticityweaken;
+		unsigned int		brain_mutate_plasticityfactors;
+
+		unsigned int		brain_percentchancesensorysynapse;
+		unsigned int		brain_mutate_percentchancesensorysynapse;
+		unsigned int		brain_minfiringthreshold;
+		unsigned int		brain_mutate_minfiringthreshold;
+		unsigned int		brain_maxfiringthreshold;
+		unsigned int		brain_mutate_maxfiringthreshold;
+		unsigned int		brain_maxdendridicbranches;
+		unsigned int		brain_mutate_maxdendridicbranches;
+
+		unsigned int		brain_percentmutateeffectaddneuron;
+		unsigned int		brain_percentmutateeffectremoveneuron;
+		unsigned int		brain_percentmutateeffectalterneuron;
+		unsigned int		brain_percentmutateeffectaddsynapse;
+		unsigned int		brain_percentmutateeffectremovesynapse;
+		unsigned int		brain_mutate_mutateeffects;
+
+
 
 		unsigned int		selectedCritter;
 		bool			isSelected;
@@ -98,7 +142,6 @@ class WorldB
 
 		Grid			grid;
 		Floor			floor;
-		Infobar			*infobar;
 		unsigned int		mincritters;
 		string			homedir;
 		string			progdir;
