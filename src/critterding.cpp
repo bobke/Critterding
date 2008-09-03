@@ -397,9 +397,9 @@ int main(int argc, char *argv[])
 
 	// report settings
 	cout << endl << "Global Settings" << endl;
-	cout << "  World Size                  = " << worldsize << "x" << worldsize << endl;
+	cout << "  World size                  = " << worldsize << "x" << worldsize << endl;
 	cout << "  Energy in system            = " << energy << "*" << food_maxenergy << " = " << energy*food_maxenergy << endl;
-	cout << "  Minimal Amount of Critters  = " << mincritters << endl;
+	cout << "  Minimal amount of critters  = " << mincritters << endl;
 	cout << "  Retinas per row             = " << retinasperrow << endl;
 
 	cout << endl << "Critter Settings" << endl;
@@ -407,11 +407,11 @@ int main(int argc, char *argv[])
 	cout << "  max Energy                 = " << critter_maxenergy << endl;
 	cout << "  Size                        = " << critter_size*100.0f << endl;
 	cout << "  Speed                       = " << critter_speed*1000.0f << endl;
-	cout << "  Sight Range                 = " << critter_sightrange*10.0f << endl;
-	cout << "  Vision Resolution           = " << critter_retinasize << endl;
+	cout << "  Sight range                 = " << critter_sightrange*10.0f << endl;
+	cout << "  Retina size                 = " << critter_retinasize << endl;
 	cout << "  Color neurons               = " << critter_colorneurons << endl;
-	cout << "  Mutation Rate               = " << critter_mutationrate << endl;
-	cout << "  Mutation Runs               = " << critter_maxmutateruns << endl;
+	cout << "  Mutationrate                = " << critter_mutationrate << endl;
+	cout << "  Mutationruns                = " << critter_maxmutateruns << endl;
 	cout << "  Flip newborns               = " << critter_flipnewborns << endl;
 
 	cout << endl << "Food Settings" << endl;
@@ -419,6 +419,48 @@ int main(int argc, char *argv[])
 	cout << "  max Energy                  = " << food_maxenergy << endl;
 	cout << "  Size                        = " << food_size*100.0f << endl;
 
+	cout << endl << "Brain Settings" << endl;
+	cout << "  max Neurons per critter     = " << brain_maxneurons << endl;
+	cout << "  min Synapses per neuron     = " << brain_minsynapses << endl;
+	cout << "  max Synapses per neuron     = " << brain_maxsynapses << endl;
+	cout << "  min Neurons at build time   = " << brain_minneuronsatbuildtime << endl;
+	cout << "  min Neurons at build time   = " << brain_maxneuronsatbuildtime << endl;
+	cout << "  min Synapses at build time  = " << brain_minsynapsesatbuildtime << endl;
+	cout << "    mutate                    = " << brain_mutate_minsynapsesatbuildtime << endl;
+	cout << "  max Synapses at build time  = " << brain_maxsynapsesatbuildtime << endl;
+	cout << "    mutate                    = " << brain_mutate_maxsynapsesatbuildtime << endl;
+	cout << "  % Inhibitory neuron         = " << brain_percentchanceinhibitoryneuron << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitoryneuron << endl;
+	cout << "  % Consistent synapses       = " << brain_percentchanceconsistentsynapses << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceconsistentsynapses << endl;
+	cout << "  % Inhibitory synapses       = " << brain_percentchanceinhibitorysynapses << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitorysynapses << endl;
+	cout << "  % Motor neuron              = " << brain_percentchancemotorneuron << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchancemotorneuron << endl;
+	cout << "  % Plastic neuron            = " << brain_percentchanceplasticneuron << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceplasticneuron << endl;
+
+	cout << "  min Plasticity strengthen   = " << brain_minplasticitystrengthen << endl;
+	cout << "  max Plasticity strengthen   = " << brain_maxplasticitystrengthen << endl;
+	cout << "  min Plasticity weaken       = " << brain_minplasticityweaken << endl;
+	cout << "  max Plasticity weaken       = " << brain_maxplasticityweaken << endl;
+	cout << "    mutate plasticityfactors  = " << brain_mutate_plasticityfactors << endl;
+	cout << "  % Sensory Synapse           = " << brain_percentchancesensorysynapse << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchancesensorysynapse << endl;
+	cout << "  min Firing threshold        = " << brain_minfiringthreshold << endl;
+	cout << "    mutate                    = " << brain_mutate_minfiringthreshold << endl;
+	cout << "  max Firing threshold        = " << brain_maxfiringthreshold << endl;
+	cout << "    mutate                    = " << brain_mutate_maxfiringthreshold << endl;
+	cout << "  max Dendridic branches      = " << brain_maxdendridicbranches << endl;
+	cout << "    mutate                    = " << brain_mutate_maxdendridicbranches << endl;
+	cout << "  % Effect: add neuron        = " << brain_percentmutateeffectaddneuron << endl;
+	cout << "  % Effect: remove neuron     = " << brain_percentmutateeffectremoveneuron << endl;
+	cout << "  % Effect: alter neuron      = " << brain_percentmutateeffectalterneuron << endl;
+	cout << "  % Effect: add synapse       = " << brain_percentmutateeffectaddsynapse << endl;
+	cout << "  % Effect: remove synapse    = " << brain_percentmutateeffectremovesynapse << endl;
+	cout << "    mutate effects            = " << brain_mutate_mutateeffects << endl;
+
+exit(0);
 	cout << endl;
 
 // 	cout << "Remaining arguments = ";
