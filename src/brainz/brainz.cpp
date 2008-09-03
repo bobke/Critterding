@@ -1161,49 +1161,47 @@ Brainz::Brainz()
 			buf << "maxNeurons="				<< maxNeurons << ";" << endl;
 			buf << "minSynapses="				<< minSynapses << ";" << endl;
 			buf << "maxSynapses="				<< maxSynapses << ";" << endl;
+
+			buf << "minSynapsesAtBuildtime="		<< minSynapsesAtBuildtime << ";" << endl;
+				buf << "mutate_minSynapsesAtBuildtime="		<< mutate_minSynapsesAtBuildtime << ";" << endl;
+			buf << "maxSynapsesAtBuildtime="		<< maxSynapsesAtBuildtime << ";" << endl;
+				buf << "mutate_maxSynapsesAtBuildtime="		<< mutate_maxSynapsesAtBuildtime << ";" << endl;
 	
 			buf << "percentMutation="			<< percentMutation << ";" << endl;
+				buf << "mutate_percentMutation="		<< mutate_percentMutation << ";" << endl;
 	
 			buf << "percentChanceInhibitoryNeuron="		<< percentChanceInhibitoryNeuron << ";" << endl;
-			buf << "percentChanceConsistentSynapses="	<< percentChanceConsistentSynapses << ";" << endl;
-			buf << "percentChanceInhibitorySynapses="	<< percentChanceInhibitorySynapses << ";" << endl;
+				buf << "mutate_percentChanceInhibitoryNeuron="	<< mutate_percentChanceInhibitoryNeuron << ";" << endl;
 			buf << "percentChanceMotorNeuron="		<< percentChanceMotorNeuron << ";" << endl;
-			buf << "percentChanceSensorySynapse="		<< percentChanceSensorySynapse << ";" << endl;
-	
-			buf << "minSynapsesAtBuildtime="		<< minSynapsesAtBuildtime << ";" << endl;
-			buf << "maxSynapsesAtBuildtime="		<< maxSynapsesAtBuildtime << ";" << endl;
-	
+				buf << "mutate_percentChanceMotorNeuron="	<< mutate_percentChanceMotorNeuron << ";" << endl;
+			buf << "percentChancePlasticNeuron="		<< percentChancePlasticNeuron << ";" << endl;
+				buf << "mutate_percentChancePlasticNeuron="	<< mutate_percentChancePlasticNeuron << ";" << endl;
+			buf << "minPlasticityStrengthen="		<< minPlasticityStrengthen << ";" << endl;
+			buf << "maxPlasticityStrengthen="		<< maxPlasticityStrengthen << ";" << endl;
+			buf << "minPlasticityWeaken="			<< minPlasticityWeaken << ";" << endl;
+			buf << "maxPlasticityWeaken="			<< maxPlasticityWeaken << ";" << endl;
+				buf << "mutate_PlasticityFactors="		<< mutate_PlasticityFactors << ";" << endl;
+
 			buf << "minFiringThreshold="			<< minFiringThreshold << ";" << endl;
+				buf << "mutate_minFiringThreshold="		<< mutate_minFiringThreshold << ";" << endl;
 			buf << "maxFiringThreshold="			<< maxFiringThreshold << ";" << endl;
+				buf << "mutate_maxFiringThreshold="		<< mutate_maxFiringThreshold << ";" << endl;
 			buf << "maxDendridicBranches="			<< maxDendridicBranches << ";" << endl;
+				buf << "mutate_maxDendridicBranches="		<< mutate_maxDendridicBranches << ";" << endl;
 	
+			buf << "percentChanceConsistentSynapses="	<< percentChanceConsistentSynapses << ";" << endl;
+				buf << "mutate_percentChanceConsistentSynapses="<< mutate_percentChanceConsistentSynapses << ";" << endl;
+			buf << "percentChanceInhibitorySynapses="	<< percentChanceInhibitorySynapses << ";" << endl;
+				buf << "mutate_percentChanceInhibitorySynapses="<< mutate_percentChanceInhibitorySynapses << ";" << endl;
+			buf << "percentChanceSensorySynapse="		<< percentChanceSensorySynapse << ";" << endl;
+				buf << "mutate_percentChanceSensorySynapse="	<< mutate_percentChanceSensorySynapse << ";" << endl;
+
 			buf << "percentMutateEffectAddNeuron="		<< percentMutateEffectAddNeuron << ";" << endl;
 			buf << "percentMutateEffectRemoveNeuron="	<< percentMutateEffectRemoveNeuron << ";" << endl;
 			buf << "percentMutateEffectAlterNeuron="	<< percentMutateEffectAlterNeuron << ";" << endl;
 			buf << "percentMutateEffectAddSynapse="		<< percentMutateEffectAddSynapse << ";" << endl;
 			buf << "percentMutateEffectRemoveSynapse="	<< percentMutateEffectRemoveSynapse << ";" << endl;
-	
-			buf << "percentChancePlasticNeuron="		<< percentChancePlasticNeuron << ";" << endl;
-			buf << "minPlasticityStrengthen="		<< minPlasticityStrengthen << ";" << endl;
-			buf << "maxPlasticityStrengthen="		<< maxPlasticityStrengthen << ";" << endl;
-			buf << "minPlasticityWeaken="			<< minPlasticityWeaken << ";" << endl;
-			buf << "maxPlasticityWeaken="			<< maxPlasticityWeaken << ";" << endl;
-	
-	
-			buf << "mutate_percentMutation="		<< mutate_percentMutation << ";" << endl;
-			buf << "mutate_percentChanceInhibitoryNeuron="	<< mutate_percentChanceInhibitoryNeuron << ";" << endl;
-			buf << "mutate_percentChanceConsistentSynapses="<< mutate_percentChanceConsistentSynapses << ";" << endl;
-			buf << "mutate_percentChanceInhibitorySynapses="<< mutate_percentChanceInhibitorySynapses << ";" << endl;
-			buf << "mutate_percentChanceMotorNeuron="	<< mutate_percentChanceMotorNeuron << ";" << endl;
-			buf << "mutate_percentChanceSensorySynapse="	<< mutate_percentChanceSensorySynapse << ";" << endl;
-			buf << "mutate_minSynapsesAtBuildtime="		<< mutate_minSynapsesAtBuildtime << ";" << endl;
-			buf << "mutate_maxSynapsesAtBuildtime="		<< mutate_maxSynapsesAtBuildtime << ";" << endl;
-			buf << "mutate_minFiringThreshold="		<< mutate_minFiringThreshold << ";" << endl;
-			buf << "mutate_maxFiringThreshold="		<< mutate_maxFiringThreshold << ";" << endl;
-			buf << "mutate_maxDendridicBranches="		<< mutate_maxDendridicBranches << ";" << endl;
-			buf << "mutate_MutateEffects="			<< mutate_MutateEffects << ";" << endl;
-			buf << "mutate_percentChancePlasticNeuron="	<< mutate_percentChancePlasticNeuron << ";" << endl;
-			buf << "mutate_PlasticityFactors="		<< mutate_PlasticityFactors << ";" << endl;
+				buf << "mutate_MutateEffects="			<< mutate_MutateEffects << ";" << endl;
 	
 	
 			// neuronal arch & connections
