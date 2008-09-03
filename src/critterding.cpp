@@ -61,23 +61,23 @@ using namespace std;
 		unsigned int brain_mutate_plasticityfactors			= 0;
 
 	unsigned int brain_percentchancesensorysynapse				= 20;
-		unsigned int brain_mutate_percentchancesensorysynapse		= false;
+		unsigned int brain_mutate_percentchancesensorysynapse		= 0;
 
 	unsigned int brain_minfiringthreshold					= 2;
-		unsigned int brain_mutate_minfiringthreshold			= false;
+		unsigned int brain_mutate_minfiringthreshold			= 0;
 
 	unsigned int brain_maxfiringthreshold					= 10;
-		unsigned int brain_mutate_maxfiringthreshold			= false;
+		unsigned int brain_mutate_maxfiringthreshold			= 0;
 
 	unsigned int brain_maxdendridicbranches					= 3;
-		unsigned int brain_mutate_maxdendridicbranches			= false;
+		unsigned int brain_mutate_maxdendridicbranches			= 0;
 
 	unsigned int brain_percentmutateeffectaddneuron				= 10;
 	unsigned int brain_percentmutateeffectremoveneuron			= 10;
 	unsigned int brain_percentmutateeffectalterneuron			= 20;
 	unsigned int brain_percentmutateeffectaddsynapse			= 30;
 	unsigned int brain_percentmutateeffectremovesynapse			= 30;
-		unsigned int brain_mutate_mutateeffects				= false;
+		unsigned int brain_mutate_mutateeffects				= 0;
 
 int main(int argc, char *argv[])
 {
