@@ -29,24 +29,18 @@ using namespace std;
 // Brain Settings
 	unsigned int brain_maxneurons						= 500;
 	unsigned int brain_minsynapses						= 1;
-	unsigned int brain_maxsynapses						= 500;
+	unsigned int brain_maxsynapses						= 100;
 	unsigned int brain_minneuronsatbuildtime				= 20;
-	unsigned int brain_maxneuronsatbuildtime				= 35;
+	unsigned int brain_maxneuronsatbuildtime				= 30;
 
 	unsigned int brain_minsynapsesatbuildtime				= 1;
 		unsigned int brain_mutate_minsynapsesatbuildtime		= 0;
 
-	unsigned int brain_maxsynapsesatbuildtime				= 60;
+	unsigned int brain_maxsynapsesatbuildtime				= 40;
 		unsigned int brain_mutate_maxsynapsesatbuildtime		= 0;
 
 	unsigned int brain_percentchanceinhibitoryneuron			= 50;
 		unsigned int brain_mutate_percentchanceinhibitoryneuron		= 0;
-
-	unsigned int brain_percentchanceconsistentsynapses			= 50;
-		unsigned int brain_mutate_percentchanceconsistentsynapses	= 0;
-
-	unsigned int brain_percentchanceinhibitorysynapses			= 50;
-		unsigned int brain_mutate_percentchanceinhibitorysynapses	= 0;
 
 	unsigned int brain_percentchancemotorneuron				= 50;
 		unsigned int brain_mutate_percentchancemotorneuron		= 0;
@@ -60,9 +54,6 @@ using namespace std;
 	unsigned int brain_maxplasticityweaken					= 10000;
 		unsigned int brain_mutate_plasticityfactors			= 0;
 
-	unsigned int brain_percentchancesensorysynapse				= 20;
-		unsigned int brain_mutate_percentchancesensorysynapse		= 0;
-
 	unsigned int brain_minfiringthreshold					= 2;
 		unsigned int brain_mutate_minfiringthreshold			= 0;
 
@@ -71,6 +62,15 @@ using namespace std;
 
 	unsigned int brain_maxdendridicbranches					= 3;
 		unsigned int brain_mutate_maxdendridicbranches			= 0;
+
+	unsigned int brain_percentchanceconsistentsynapses			= 50;
+		unsigned int brain_mutate_percentchanceconsistentsynapses	= 0;
+
+	unsigned int brain_percentchanceinhibitorysynapses			= 50;
+		unsigned int brain_mutate_percentchanceinhibitorysynapses	= 0;
+
+	unsigned int brain_percentchancesensorysynapse				= 20;
+		unsigned int brain_mutate_percentchancesensorysynapse		= 0;
 
 	unsigned int brain_percentmutateeffectaddneuron				= 10;
 	unsigned int brain_percentmutateeffectremoveneuron			= 10;
@@ -239,28 +239,6 @@ int main(int argc, char *argv[])
 			if ( atoi(argv[optind]) == 1 )
 				brain_mutate_percentchanceinhibitoryneuron = 1;
 	        }
-		else if (sw=="--brain_percentchanceconsistentsynapses")
-		{
-			optind++;
-			brain_percentchanceconsistentsynapses = atoi(argv[optind]);
-	        }
-		else if (sw=="--brain_mutate_percentchanceconsistentsynapses")
-		{
-			optind++;
-			if ( atoi(argv[optind]) == 1 )
-				brain_mutate_percentchanceconsistentsynapses = 1;
-	        }
-		else if (sw=="--brain_percentchanceinhibitorysynapses")
-		{
-			optind++;
-			brain_percentchanceinhibitorysynapses = atoi(argv[optind]);
-	        }
-		else if (sw=="--brain_mutate_percentchanceinhibitorysynapses")
-		{
-			optind++;
-			if ( atoi(argv[optind]) == 1 )
-				brain_mutate_percentchanceinhibitorysynapses = 1;
-	        }
 		else if (sw=="--brain_percentchancemotorneuron")
 		{
 			optind++;
@@ -312,17 +290,6 @@ int main(int argc, char *argv[])
 	        }
 
 
-		else if (sw=="--brain_percentchancesensorysynapse")
-		{
-			optind++;
-			brain_percentchancesensorysynapse = atoi(argv[optind]);
-	        }
-		else if (sw=="--brain_mutate_percentchancesensorysynapse")
-		{
-			optind++;
-			if ( atoi(argv[optind]) == 1 )
-				brain_mutate_percentchancesensorysynapse = 1;
-	        }
 		else if (sw=="--brain_minfiringthreshold")
 		{
 			optind++;
@@ -355,6 +322,39 @@ int main(int argc, char *argv[])
 			optind++;
 			if ( atoi(argv[optind]) == 1 )
 				brain_mutate_maxdendridicbranches = 1;
+	        }
+		else if (sw=="--brain_percentchanceconsistentsynapses")
+		{
+			optind++;
+			brain_percentchanceconsistentsynapses = atoi(argv[optind]);
+	        }
+		else if (sw=="--brain_mutate_percentchanceconsistentsynapses")
+		{
+			optind++;
+			if ( atoi(argv[optind]) == 1 )
+				brain_mutate_percentchanceconsistentsynapses = 1;
+	        }
+		else if (sw=="--brain_percentchanceinhibitorysynapses")
+		{
+			optind++;
+			brain_percentchanceinhibitorysynapses = atoi(argv[optind]);
+	        }
+		else if (sw=="--brain_mutate_percentchanceinhibitorysynapses")
+		{
+			optind++;
+			if ( atoi(argv[optind]) == 1 )
+				brain_mutate_percentchanceinhibitorysynapses = 1;
+	        }
+		else if (sw=="--brain_percentchancesensorysynapse")
+		{
+			optind++;
+			brain_percentchancesensorysynapse = atoi(argv[optind]);
+	        }
+		else if (sw=="--brain_mutate_percentchancesensorysynapse")
+		{
+			optind++;
+			if ( atoi(argv[optind]) == 1 )
+				brain_mutate_percentchancesensorysynapse = 1;
 	        }
 		else if (sw=="--brain_percentmutateeffectaddneuron")
 		{
@@ -424,35 +424,34 @@ int main(int argc, char *argv[])
 	cout << "  min Synapses per neuron     = " << brain_minsynapses << endl;
 	cout << "  max Synapses per neuron     = " << brain_maxsynapses << endl;
 	cout << "  min Neurons at build time   = " << brain_minneuronsatbuildtime << endl;
-	cout << "  min Neurons at build time   = " << brain_maxneuronsatbuildtime << endl;
+	cout << "  max Neurons at build time   = " << brain_maxneuronsatbuildtime << endl;
 	cout << "  min Synapses at build time  = " << brain_minsynapsesatbuildtime << endl;
 	cout << "    mutate                    = " << brain_mutate_minsynapsesatbuildtime << endl;
 	cout << "  max Synapses at build time  = " << brain_maxsynapsesatbuildtime << endl;
 	cout << "    mutate                    = " << brain_mutate_maxsynapsesatbuildtime << endl;
 	cout << "  % Inhibitory neuron         = " << brain_percentchanceinhibitoryneuron << endl;
 	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitoryneuron << endl;
-	cout << "  % Consistent synapses       = " << brain_percentchanceconsistentsynapses << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceconsistentsynapses << endl;
-	cout << "  % Inhibitory synapses       = " << brain_percentchanceinhibitorysynapses << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitorysynapses << endl;
 	cout << "  % Motor neuron              = " << brain_percentchancemotorneuron << endl;
 	cout << "    mutate                    = " << brain_mutate_percentchancemotorneuron << endl;
 	cout << "  % Plastic neuron            = " << brain_percentchanceplasticneuron << endl;
 	cout << "    mutate                    = " << brain_mutate_percentchanceplasticneuron << endl;
-
 	cout << "  min Plasticity strengthen   = " << brain_minplasticitystrengthen << endl;
 	cout << "  max Plasticity strengthen   = " << brain_maxplasticitystrengthen << endl;
 	cout << "  min Plasticity weaken       = " << brain_minplasticityweaken << endl;
 	cout << "  max Plasticity weaken       = " << brain_maxplasticityweaken << endl;
 	cout << "    mutate plasticityfactors  = " << brain_mutate_plasticityfactors << endl;
-	cout << "  % Sensory Synapse           = " << brain_percentchancesensorysynapse << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchancesensorysynapse << endl;
 	cout << "  min Firing threshold        = " << brain_minfiringthreshold << endl;
 	cout << "    mutate                    = " << brain_mutate_minfiringthreshold << endl;
 	cout << "  max Firing threshold        = " << brain_maxfiringthreshold << endl;
 	cout << "    mutate                    = " << brain_mutate_maxfiringthreshold << endl;
 	cout << "  max Dendridic branches      = " << brain_maxdendridicbranches << endl;
 	cout << "    mutate                    = " << brain_mutate_maxdendridicbranches << endl;
+	cout << "  % Consistent synapses       = " << brain_percentchanceconsistentsynapses << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceconsistentsynapses << endl;
+	cout << "  % Inhibitory synapses       = " << brain_percentchanceinhibitorysynapses << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitorysynapses << endl;
+	cout << "  % Sensory Synapse           = " << brain_percentchancesensorysynapse << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchancesensorysynapse << endl;
 	cout << "  % Effect: add neuron        = " << brain_percentmutateeffectaddneuron << endl;
 	cout << "  % Effect: remove neuron     = " << brain_percentmutateeffectremoveneuron << endl;
 	cout << "  % Effect: alter neuron      = " << brain_percentmutateeffectalterneuron << endl;
@@ -460,7 +459,6 @@ int main(int argc, char *argv[])
 	cout << "  % Effect: remove synapse    = " << brain_percentmutateeffectremovesynapse << endl;
 	cout << "    mutate effects            = " << brain_mutate_mutateeffects << endl;
 
-exit(0);
 	cout << endl;
 
 // 	cout << "Remaining arguments = ";
@@ -471,6 +469,7 @@ exit(0);
 // 	cout << endl << endl;
 
 	//cerr << "Starting application" << endl;
+
 	GLWindow glwindow;
 	glwindow.create("Critterding beta4", 600, 600, 24, False);
 
@@ -542,7 +541,6 @@ exit(0);
 		mainscene.world.resize(worldsize);
 		mainscene.world.startfoodamount(energy);
 		mainscene.world.setMincritters(mincritters);
-
 
 		glwindow.runGLScene(mainscene);
 

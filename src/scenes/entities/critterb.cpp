@@ -32,60 +32,6 @@ CritterB::CritterB()
 {
 	initConst();
 
-// 		brain.maxNeurons					= 500;
-// 		brain.minSynapses					= 1;
-// 		brain.maxSynapses					= 500;
-// 
-// 		brain.minNeuronsAtBuildtime				= 20;
-// 		brain.maxNeuronsAtBuildtime				= 35;
-// 
-// 		brain.minSynapsesAtBuildtime				= 1;
-// 			brain.mutate_minSynapsesAtBuildtime		= false;
-// 
-// 		brain.maxSynapsesAtBuildtime				= 80;
-// 			brain.mutate_maxSynapsesAtBuildtime		= false;
-// 
-// 		brain.percentChanceInhibitoryNeuron			= 50;
-// 			brain.mutate_percentChanceInhibitoryNeuron	= false;
-// 
-// 		brain.percentChanceConsistentSynapses			= 50;
-// 			brain.mutate_percentChanceConsistentSynapses	= false;
-// 
-// 		brain.percentChanceInhibitorySynapses			= 50;
-// 			brain.mutate_percentChanceInhibitorySynapses	= false;
-// 
-// 		brain.percentChanceMotorNeuron				= 50;
-// 			brain.mutate_percentChanceMotorNeuron		= false;
-// 
-// 		brain.percentChancePlasticNeuron			= 20;
-// 			brain.mutate_percentChancePlasticNeuron		= false;
-// 
-// 		brain.minPlasticityStrengthen				= 100;
-// 		brain.maxPlasticityStrengthen				= 1000;
-// 		brain.minPlasticityWeaken				= 1000;
-// 		brain.maxPlasticityWeaken				= 10000;
-// 			brain.mutate_PlasticityFactors			= false;
-// 
-// 		brain.percentChanceSensorySynapse			= 20;
-// 			brain.mutate_percentChanceSensorySynapse	= false;
-// 
-// 		brain.minFiringThreshold				= 2;
-// 			brain.mutate_minFiringThreshold			= false;
-// 
-// 		brain.maxFiringThreshold				= 10;
-// 			brain.mutate_maxFiringThreshold			= false;
-// 
-// 		brain.maxDendridicBranches				= 3;
-// 			brain.mutate_maxDendridicBranches		= false;
-// 
-// 		brain.percentMutateEffectAddNeuron			= 10;
-// 		brain.percentMutateEffectRemoveNeuron			= 10;
-// 		brain.percentMutateEffectAlterNeuron			= 20;
-// 		brain.percentMutateEffectAddSynapse			= 30;
-// 		brain.percentMutateEffectRemoveSynapse			= 30;
-// 			brain.mutate_MutateEffects			= false;
-
-
 	// frame capturing options
 	adamdist		= 0;
 
@@ -94,7 +40,6 @@ CritterB::CritterB()
 	color[1] = (float)randgen.get( 20,100 ) / 100.0f;
 	color[2] = (float)randgen.get( 20,100 ) / 100.0f;
 	color[3] = 0.0f;
-
 }
 
 CritterB::CritterB(string &critterstring)
@@ -594,16 +539,6 @@ void CritterB::resize(float newsize)
 					if(EOF == sscanf(A.c_str(), "%f", &color[3])) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
-			// retinasize=9;
-				else if ( parseH.beginMatchesStrip( "visionres=", line ) )
-				{
-					string RES = parseH.returnUntillStrip( ";", line );
-					//cerr << "RES: " << RES  << endl;
-					if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
-					//retinasize = retinasize;
-					//if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
-				}
-	
 			// adamdist=690;
 				else if ( parseH.beginMatchesStrip( "adamdist=", line ) )
 				{
@@ -611,9 +546,19 @@ void CritterB::resize(float newsize)
 					//cerr << "AD: " << AD  << endl;
 					if(EOF == sscanf(AD.c_str(), "%d", &adamdist)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
+	
+			// retinasize=9;
+				else if ( parseH.beginMatchesStrip( "retinasize=", line ) )
+				{
+					string RES = parseH.returnUntillStrip( ";", line );
+					//cerr << "RES: " << RES  << endl;
+					if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
+					//retinasize = retinasize;
+					//if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
+				}
 
-			// visiondivider=1;
-				else if ( parseH.beginMatchesStrip( "visiondivider=", line ) )
+			// colorneurons=1;
+				else if ( parseH.beginMatchesStrip( "colorneurons=", line ) )
 				{
 					string VD = parseH.returnUntillStrip( ";", line );
 					//cerr << "AD: " << AD  << endl;
@@ -640,9 +585,9 @@ void CritterB::resize(float newsize)
 	{
 		stringstream buf;
 		buf << "color=" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << ";\n";
-		buf << "visionres=" << retinasize << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
-		buf << "visiondivider=" << colorNeurons << ";\n";
+		buf << "retinasize=" << retinasize << ";\n";
+		buf << "colorneurons=" << colorNeurons << ";\n";
 
 		string* arch = brain.getArch();
 		buf << *arch;

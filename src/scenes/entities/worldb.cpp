@@ -17,54 +17,54 @@ WorldB::WorldB()
 // 	critter_colorneurons	= 0;
 // 	critter_mutationrate	= 0; // %
 // 	critter_maxmutateruns	= 0;
-// 	critter_flipnewborns	= false;
+	critter_flipnewborns	= false;
 // 
 // 	food_maxlifetime	= 0;
 // 	food_maxenergy		= 0.0f;
 // 	food_size		= 0.0f;
 // 
-// 	brain_maxneurons	= 0;
-// 	brain_minsynapses	= 0;
+// 	brain_maxneurons = 0;
+// 	brain_minsynapses = 0;
 // 	brain_maxsynapses = 0;
 // 	brain_minneuronsatbuildtime = 0;
 // 	brain_maxneuronsatbuildtime = 0;
 // 	brain_minsynapsesatbuildtime = 0;
-// 	brain_mutate_minsynapsesatbuildtime = 0;
+ 	brain_mutate_minsynapsesatbuildtime = false;
 // 	brain_maxsynapsesatbuildtime = 0;
-// 	brain_mutate_maxsynapsesatbuildtime = 0;
+ 	brain_mutate_maxsynapsesatbuildtime = false;
 // 	brain_percentchanceinhibitoryneuron = 0;
-// 	brain_mutate_percentchanceinhibitoryneuron = 0;
+ 	brain_mutate_percentchanceinhibitoryneuron = false;
 // 	brain_percentchanceconsistentsynapses = 0;
-// 	brain_mutate_percentchanceconsistentsynapses = 0;
+ 	brain_mutate_percentchanceconsistentsynapses = false;
 // 
 // 	brain_percentchanceinhibitorysynapses = 0;
-// 	brain_mutate_percentchanceinhibitorysynapses = 0;
+ 	brain_mutate_percentchanceinhibitorysynapses = false;
 // 	brain_percentchancemotorneuron = 0;
-// 	brain_mutate_percentchancemotorneuron = 0;
+ 	brain_mutate_percentchancemotorneuron = false;
 // 	brain_percentchanceplasticneuron = 0;
-// 	brain_mutate_percentchanceplasticneuron = 0;
+ 	brain_mutate_percentchanceplasticneuron = false;
 // 
 // 	brain_minplasticitystrengthen = 0;
 // 	brain_maxplasticitystrengthen = 0;
 // 	brain_minplasticityweaken = 0;
 // 	brain_maxplasticityweaken = 0;
-// 	brain_mutate_plasticityfactors = 0;
+ 	brain_mutate_plasticityfactors = false;
 // 
 // 	brain_percentchancesensorysynapse = 0;
-// 	brain_mutate_percentchancesensorysynapse = 0;
+ 	brain_mutate_percentchancesensorysynapse = false;
 // 	brain_minfiringthreshold = 0;
-// 	brain_mutate_minfiringthreshold = 0;
+ 	brain_mutate_minfiringthreshold = false;
 // 	brain_maxfiringthreshold = 0;
-// 	brain_mutate_maxfiringthreshold = 0;
+ 	brain_mutate_maxfiringthreshold = false;
 // 	brain_maxdendridicbranches = 0;
-// 	brain_mutate_maxdendridicbranches = 0;
+ 	brain_mutate_maxdendridicbranches = false;
 // 
 // 	brain_percentmutateeffectaddneuron = 0;
 // 	brain_percentmutateeffectremoveneuron = 0;
 // 	brain_percentmutateeffectalterneuron = 0;
 // 	brain_percentmutateeffectaddsynapse = 0;
 // 	brain_percentmutateeffectremovesynapse = 0;
-// 	brain_mutate_mutateeffects = 0;
+ 	brain_mutate_mutateeffects = false;
 
 
 	selectedCritter		= 0;
@@ -78,7 +78,7 @@ WorldB::WorldB()
 	createDirs();
 
 	// vision retina allocation
-	items = 4 * 3200 * 2400;
+	items = 4 * 800 * 600;
 	retina = (unsigned char*)malloc(items);
 	memset(retina, 0, items);
 
