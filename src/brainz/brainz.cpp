@@ -60,7 +60,7 @@ Brainz::Brainz()
 		maxDendridicBranches				= 20;
 			mutate_maxDendridicBranches		= false;
 
-		percentMutation					= 3;
+		percentMutation					= 1;
 			mutate_percentMutation			= false;
 
 		// 90 % > 10 for mutatables
@@ -74,7 +74,6 @@ Brainz::Brainz()
 		// archBuffer
 		archBuffer					= "";
 		archIsBuffered					= false;
-
 }
 
 // BUILD TIME

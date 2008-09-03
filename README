@@ -13,7 +13,6 @@ STARTUP OPTIONS
   --worldsize             [25]  Creates a 25x25 world
   --energy               [500]  Energy in the system: 500*foodenergy(2500) = 1250000
   --mincritters           [10]  If less than 10 critters are present, insert an adam
-  --startcritters          [0]  Throw in 0 adams at startup
   --retinasperrow         [20]  Amount of retinas on a row (bottom left of window)
 
   --critter_maxlifetime [2000]  Maximum amount of frames a critter can live
