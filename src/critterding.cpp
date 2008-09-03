@@ -40,7 +40,7 @@ string helpinfo = " \
 \n  --brain_minsynapsesatbuildtime                  [1]  Min synapses when creating new neuron\
 \n   --brain_mutate_minsynapsesatbuildtime          [0]  If set to 1, the value above will mutate\
 \n\
-\n  --brain_maxsynapsesatbuildtime                 [40]  Max synapses when creating new neuron\
+\n  --brain_maxsynapsesatbuildtime                 [60]  Max synapses when creating new neuron\
 \n   --brain_mutate_maxsynapsesatbuildtime          [0]  If set to 1, the value above will mutate\
 \n\
 \n  --brain_percentchanceinhibitoryneuron          [50]  % chance neuron is inhibitory (vs exhibitory)\
@@ -119,7 +119,7 @@ string helpinfo = " \
 	unsigned int brain_minsynapsesatbuildtime				= 1;
 		unsigned int brain_mutate_minsynapsesatbuildtime		= 0;
 
-	unsigned int brain_maxsynapsesatbuildtime				= 40;
+	unsigned int brain_maxsynapsesatbuildtime				= 60;
 		unsigned int brain_mutate_maxsynapsesatbuildtime		= 0;
 
 	unsigned int brain_percentchanceinhibitoryneuron			= 50;
