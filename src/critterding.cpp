@@ -573,11 +573,19 @@ int main(int argc, char *argv[])
 		else
 		{
 			cout << "Unknown switch: " << argv[optind] << endl;
-			cout << helpinfo << endl;
+			cout << "use --help for more information" << endl;
 			exit(1);
 		}
 		optind++;
 	}
+
+	if (optind<argc)
+	{
+		cout << "Unknown switch: " << argv[optind] << endl;
+		cout << "use --help for more information" << endl;
+		exit(1);
+	}
+	cout << endl << endl;
 
 	// report settings
 	cout << endl << "Global Settings" << endl;
@@ -645,17 +653,8 @@ int main(int argc, char *argv[])
 
 	cout << endl;
 
-// 	cout << "Remaining arguments = ";
-// 	for (;optind<argc;optind++)
-// 	{
-// 		cout << argv[optind];
-// 	}
-// 	cout << endl << endl;
-
-	//cerr << "Starting application" << endl;
-
 	GLWindow glwindow;
-	glwindow.create("Critterding beta5", 600, 600, 24, False);
+	glwindow.create("Critterding beta5", 800, 600, 24, False);
 
 		Evolution mainscene;
 
@@ -683,7 +682,6 @@ int main(int argc, char *argv[])
 		mainscene.world.brain_minneuronsatbuildtime = brain_minneuronsatbuildtime;
 		mainscene.world.brain_maxneuronsatbuildtime = brain_maxneuronsatbuildtime;
 		mainscene.world.brain_minsynapsesatbuildtime = brain_minsynapsesatbuildtime;
-
 		mainscene.world.brain_mutate_minsynapsesatbuildtime = brain_mutate_minsynapsesatbuildtime;
 		mainscene.world.brain_maxsynapsesatbuildtime = brain_maxsynapsesatbuildtime;
 		mainscene.world.brain_mutate_maxsynapsesatbuildtime = brain_mutate_maxsynapsesatbuildtime;
