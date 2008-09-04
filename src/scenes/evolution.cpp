@@ -59,9 +59,11 @@ void Evolution::handlekey(const KeySym& key)
 
 		case XK_F3:
 			world.decreaseMincritters();
+			cerr << "min c: " << world.mincritters << endl;
 		break;
 		case XK_F4:
 			world.increaseMincritters();
+			cerr << "min c: " << world.mincritters << endl;
 		break;
 
 		case XK_F5:

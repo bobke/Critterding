@@ -27,7 +27,7 @@ STARTUP OPTIONS
   --critter_colorneurons   [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
   --critter_mutationrate  [10]  When a critter procreates it mutates 10% of the time
   --critter_maxmutateruns  [1]  When a critter mutates, it can do 1 mutation at maximum
-  --critter_flipnewborns   [0]  If set to 1, newborns will be flipped 180 degrees
+  --critter_flipnewborns        If set, newborns will be flipped 180 degrees
 
   Food Settings
   --food_maxlifetime    [1000]  Maximum amount of frames food can live
@@ -42,53 +42,53 @@ STARTUP OPTIONS
   --brain_maxneuronsatbuildtime                  [30]  Max neurons for a new critter
 
   --brain_minsynapsesatbuildtime                  [1]  Min synapses when creating new neuron
-   --brain_mutate_minsynapsesatbuildtime          [0]  If set to 1, the value above will mutate
+   --brain_mutate_minsynapsesatbuildtime               If set, the value above will mutate
 
   --brain_maxsynapsesatbuildtime                 [60]  Max synapses when creating new neuron
-   --brain_mutate_maxsynapsesatbuildtime          [0]  If set to 1, the value above will mutate
+   --brain_mutate_maxsynapsesatbuildtime               If set, the value above will mutate
 
   --brain_percentchanceinhibitoryneuron          [50]  % chance neuron is inhibitory (vs exhibitory)
-   --brain_mutate_percentchanceinhibitoryneuron   [0]  If set to 1, the value above will mutate
+   --brain_mutate_percentchanceinhibitoryneuron        If set, the value above will mutate
 
   --brain_percentchancemotorneuron               [50]  % chance a neuron is a motor neuron, this value seems
                                                        high, but when it tries to create a motor neuron that is
                                                        is already taken, it will stay a normal neuron
-   --brain_mutate_percentchancemotorneuron        [0]  If set to 1, the value above will mutate
+   --brain_mutate_percentchancemotorneuron             If set, the value above will mutate
 
   --brain_percentchanceplasticneuron             [20]  % chance a neuron applies synaptic plasticity
-   --brain_mutate_percentchanceplasticneuron      [0]  If set to 1, the value above will mutate
+   --brain_mutate_percentchanceplasticneuron           If set, the value above will mutate
 
   --brain_minplasticitystrengthen               [100]  Min weight by which plastic synapses strengthen (1/100)
   --brain_maxplasticitystrengthen              [1000]  Max weight by which plastic synapses strengthen (1/1000)
   --brain_minplasticityweaken                  [1000]  Min weight by which plastic synapses weaken (1/1000)
   --brain_maxplasticityweaken                 [10000]  Max weight by which plastic synapses weaken (1/10000)
-   --brain_mutate_plasticityfactors               [0]  If set to 1, all values above will mutate
+   --brain_mutate_plasticityfactors                    If set, all values above will mutate
 
   --brain_minfiringthreshold                      [2]  Min firing threshold of a neuron
-   --brain_mutate_minfiringthreshold              [0]  If set to 1, the value above will mutate
+   --brain_mutate_minfiringthreshold                   If set, the value above will mutate
 
   --brain_maxfiringthreshold                     [10]  Max firing threshold of a neuron
-   --brain_mutate_maxfiringthreshold              [0]  If set to 1, the value above will mutate
+   --brain_mutate_maxfiringthreshold                   If set, the value above will mutate
 
   --brain_maxdendridicbranches                    [3]  Max dendridic branches per neuron
-   --brain_mutate_maxdendridicbranches            [0]  If set to 1, the value above will mutate
+   --brain_mutate_maxdendridicbranches                 If set, the value above will mutate
 
   --brain_percentchanceconsistentsynapses        [50]  % chance neuron has consistent synapses
                                                        meaning all (new) synapses are inhibitory or exhibitory
-   --brain_mutate_percentchanceconsistentsynapses [0]  If set to 1, the value above will mutate
+   --brain_mutate_percentchanceconsistentsynapses      If set, the value above will mutate
 
   --brain_percentchanceinhibitorysynapses        [50]  % chance a synapse is inhibitory (vs exhibitory)
-   --brain_mutate_percentchanceinhibitorysynapses [0]  If set to 1, the value above will mutate
+   --brain_mutate_percentchanceinhibitorysynapses      If set, the value above will mutate
 
   --brain_percentchancesensorysynapse            [20]  % chance a synapse connects with a sensor (inputneuron)
-   --brain_mutate_percentchancesensorysynapse     [0]  If set to 1, the value above will mutate
+   --brain_mutate_percentchancesensorysynapse          If set, the value above will mutate
 
   --brain_percentmutateeffectaddneuron           [10]  % chance of adding a neuron for a mutationrun
   --brain_percentmutateeffectremoveneuron        [10]  % chance of removing a neuron for a mutationrun
   --brain_percentmutateeffectalterneuron         [20]  % chance of altering a neuron for a mutationrun
   --brain_percentmutateeffectaddsynapse          [30]  % chance of adding a synapse for a mutationrun
   --brain_percentmutateeffectremovesynapse       [30]  % chance of removing a synapse for a mutationrun
-   --brain_mutate_mutateeffects                   [0]  If set to 1, all values above will mutate
+   --brain_mutate_mutateeffects                        If set, all values above will mutate
 
 
 BUTTONS
