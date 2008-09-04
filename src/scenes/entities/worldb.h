@@ -33,6 +33,7 @@ class WorldB
 		float			freeEnergy;
 		float			freeEnergyInfo;
 		unsigned int		retinasperrow;
+		unsigned int		mincritters;
 
 		unsigned int		critter_maxlifetime;
 		float			critter_maxenergy;
@@ -142,7 +143,6 @@ class WorldB
 
 		Grid			grid;
 		Floor			floor;
-		unsigned int		mincritters;
 		string			homedir;
 		string			progdir;
 		string			savedir;

@@ -647,19 +647,16 @@ void WorldB::drawWithGrid()
 void WorldB::increaseMincritters()
 {
 	mincritters++;
-	cerr << "min c: " << mincritters << endl;
 }
 
 void WorldB::decreaseMincritters()
 {
 	if ( mincritters > 0 ) mincritters--;
-	cerr << "min c: " << mincritters << endl;
 }
 
 void WorldB::setMincritters(unsigned int c)
 {
 	mincritters = c;
-	cerr << "min c: " << mincritters << endl;
 }
 
 void WorldB::loadAllCritters()
@@ -743,7 +740,7 @@ void WorldB::createDirs()
 	savedir = progdir;	savedir.append("/save");
 	loaddir = progdir;	loaddir.append("/load");
 
-	cerr << progdir << endl;
+//	cerr << progdir << endl;
 
 	if ( !dirH.exists(progdir) ) dirH.make(progdir);
 	if ( !dirH.exists(loaddir) ) dirH.make(loaddir);

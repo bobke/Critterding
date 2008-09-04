@@ -94,7 +94,7 @@ void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fs
 	}
 	else
 	{
-		cerr << " Running: Windowed" << endl;
+		//cerr << " Running: Windowed" << endl;
 		GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask;
 		GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
 			  0, 0, width, height, 0, vi->depth, InputOutput, vi->visual,
