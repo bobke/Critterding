@@ -1,111 +1,33 @@
 #include "gl/glwindow.h"
 #include "scenes/evolution.h"
+
 using namespace std;
 
-string helpinfo = " \
-\nSTARTUP OPTIONS\
-\n\
-\n  option       [default value]\
-\n\
-\n  Global Settings\
-\n  --worldsize             [25]  Creates a 25x25 world\
-\n  --energy               [500]  Energy in the system: 500*foodenergy(2500) = 1250000\
-\n  --mincritters           [10]  If less than 10 critters are present, insert an adam\
-\n  --retinasperrow         [20]  Amount of retinas on a row (bottom left of window)\
-\n\
-\n  Critter Settings\
-\n  --critter_maxlifetime [2000]  Maximum amount of frames a critter can live\
-\n  --critter_maxenergy   [5000]  Maximum amount of energy in a critter\
-\n  --critter_size          [10]  Size of a critter\
-\n  --critter_speed         [50]  Critter speed (50/1000 = 0.05 floor square)\
-\n  --critter_sightrange    [40]  Distance a critter can see (40/10 = 4 floor squares)\
-\n  --critter_retinasize     [7]  Resolution of critter's retina: 7x7\
-\n  --critter_colorneurons   [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)\
-\n  --critter_mutationrate  [10]  When a critter procreates it mutates 10% of the time\
-\n  --critter_maxmutateruns  [1]  When a critter mutates, it can do 1 mutation at maximum\
-\n  --critter_flipnewborns        If set, newborns will be flipped 180 degrees\
-\n\
-\n  Food Settings\
-\n  --food_maxlifetime    [1000]  Maximum amount of frames food can live\
-\n  --food_maxenergy      [2500]  Maximum amount of energy in a food unit\
-\n  --food_size             [15]  Size of a food unit\
-\n\
-\n  Brain Settings\
-\n  --brain_maxneurons                           [1000]  Max neurons per critter\
-\n  --brain_minsynapses                             [1]  Min synapses per neuron\
-\n  --brain_maxsynapses                           [100]  Max synapses per neuron\
-\n  --brain_minneuronsatbuildtime                  [20]  Min neurons for a new critter\
-\n  --brain_maxneuronsatbuildtime                  [30]  Max neurons for a new critter\
-\n\
-\n  --brain_minsynapsesatbuildtime                  [1]  Min synapses when creating new neuron\
-\n   --brain_mutate_minsynapsesatbuildtime               If set, the value above will mutate\
-\n\
-\n  --brain_maxsynapsesatbuildtime                 [60]  Max synapses when creating new neuron\
-\n   --brain_mutate_maxsynapsesatbuildtime               If set, the value above will mutate\
-\n\
-\n  --brain_percentchanceinhibitoryneuron          [50]  % chance neuron is inhibitory (vs exhibitory)\
-\n   --brain_mutate_percentchanceinhibitoryneuron        If set, the value above will mutate\
-\n\
-\n  --brain_percentchancemotorneuron               [50]  % chance a neuron is a motor neuron, this value seems\
-\n                                                       high, but when it tries to create a motor neuron that is\
-\n                                                       is already taken, it will stay a normal neuron\
-\n   --brain_mutate_percentchancemotorneuron             If set, the value above will mutate\
-\n\
-\n  --brain_percentchanceplasticneuron             [20]  % chance a neuron applies synaptic plasticity\
-\n   --brain_mutate_percentchanceplasticneuron           If set, the value above will mutate\
-\n\
-\n  --brain_minplasticitystrengthen               [100]  Min weight by which plastic synapses strengthen (1/100)\
-\n  --brain_maxplasticitystrengthen              [1000]  Max weight by which plastic synapses strengthen (1/1000)\
-\n  --brain_minplasticityweaken                  [1000]  Min weight by which plastic synapses weaken (1/1000)\
-\n  --brain_maxplasticityweaken                 [10000]  Max weight by which plastic synapses weaken (1/10000)\
-\n   --brain_mutate_plasticityfactors                    If set, all values above will mutate\
-\n\
-\n  --brain_minfiringthreshold                      [2]  Min firing threshold of a neuron\
-\n   --brain_mutate_minfiringthreshold                   If set, the value above will mutate\
-\n\
-\n  --brain_maxfiringthreshold                     [10]  Max firing threshold of a neuron\
-\n   --brain_mutate_maxfiringthreshold                   If set, the value above will mutate\
-\n\
-\n  --brain_maxdendridicbranches                    [3]  Max dendridic branches per neuron\
-\n   --brain_mutate_maxdendridicbranches                 If set, the value above will mutate\
-\n\
-\n  --brain_percentchanceconsistentsynapses        [50]  % chance neuron has consistent synapses\
-\n                                                       meaning all (new) synapses are inhibitory or exhibitory\
-\n   --brain_mutate_percentchanceconsistentsynapses      If set, the value above will mutate\
-\n\
-\n  --brain_percentchanceinhibitorysynapses        [50]  % chance a synapse is inhibitory (vs exhibitory)\
-\n   --brain_mutate_percentchanceinhibitorysynapses      If set, the value above will mutate\
-\n\
-\n  --brain_percentchancesensorysynapse            [20]  % chance a synapse connects with a sensor (inputneuron)\
-\n   --brain_mutate_percentchancesensorysynapse          If set, the value above will mutate\
-\n\
-\n  --brain_percentmutateeffectaddneuron           [10]  % chance of adding a neuron for a mutationrun\
-\n  --brain_percentmutateeffectremoveneuron        [10]  % chance of removing a neuron for a mutationrun\
-\n  --brain_percentmutateeffectalterneuron         [20]  % chance of altering a neuron for a mutationrun\
-\n  --brain_percentmutateeffectaddsynapse          [30]  % chance of adding a synapse for a mutationrun\
-\n  --brain_percentmutateeffectremovesynapse       [30]  % chance of removing a synapse for a mutationrun\
-\n   --brain_mutate_mutateeffects                        If set, all values above will mutate";
-
 // Global Settings
-	unsigned int worldsize				= 25;
-	unsigned int energy				= 500;
-	unsigned int mincritters			= 10;
-	unsigned int retinasperrow			= 20;
+	unsigned int worldsize							= 10;
+	unsigned int energy							= 100;
+	unsigned int mincritters						= 10;
+	unsigned int retinasperrow						= 20;
 
 // Critter Settings
-	unsigned int critter_maxlifetime					= 2000;
+	unsigned int critter_maxlifetime					= 1200;
 	unsigned int critter_maxenergy						= 5000;
+	unsigned int critter_startenergy					= 2500;
+	unsigned int critter_maxchildren					= 100;
+	unsigned int critter_maxbullets						= 200;
+	unsigned int critter_minenergyproc					= 3000;
+	unsigned int critter_minenergyfire					= 1;
 	float        critter_size						= 0.1f;
 	float        critter_speed						= 0.05f;
-	float        critter_sightrange						= 4.0f;
+	float        critter_sightrange						= 3.0f;
 	unsigned int critter_retinasize						= 7;
 	unsigned int critter_colorneurons					= 3;
 	unsigned int critter_mutationrate					= 10;
-	unsigned int critter_maxmutateruns					= 1;
+	unsigned int critter_maxmutations					= 10;
 	bool critter_flipnewborns						= false;
 
 // Food Settings
-	unsigned int food_maxlifetime						= 1000;
+	unsigned int food_maxlifetime						= 400;
 	unsigned int food_maxenergy						= 2500;
 	float        food_size							= 0.15f;
 
@@ -162,8 +84,85 @@ string helpinfo = " \
 	unsigned int brain_percentmutateeffectremovesynapse			= 30;
 		bool brain_mutate_mutateeffects					= false;
 
+
 int main(int argc, char *argv[])
 {
+
+
+std::stringstream helpinfo;
+
+	helpinfo << "STARTUP OPTIONS" << endl << endl;
+	helpinfo << "  option         [default value]" << endl << endl;
+	helpinfo << "  Global Settings" << endl;
+	helpinfo << "  --worldsize               [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
+	helpinfo << "  --energy                 [" << energy << "]  Energy in the system: " << energy << "*food_energy(" << food_maxenergy << ") = " << energy*food_maxenergy << "" << endl;
+	helpinfo << "  --mincritters             [10]  If less than " << mincritters << " critters are present, insert an adam" << endl;
+	helpinfo << "  --retinasperrow           [20]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
+	helpinfo << endl;
+	helpinfo << "  Critter Settings" << endl;
+	helpinfo << "  --critter_maxlifetime   [" << critter_maxlifetime << "]  Max amount of frames a critter can live" << endl;
+	helpinfo << "  --critter_maxenergy     [" << critter_maxenergy << "]  Max amount of energy in a critter" << endl;
+	helpinfo << "  --critter_startenergy   [" << critter_startenergy << "]  Starting amount of energy for a new critter" << endl;
+	helpinfo << "  --critter_maxchildren    [" << critter_maxchildren << "]  Max amount of children a critter can spawn" << endl;
+	helpinfo << "  --critter_maxbullets     [" << critter_maxbullets << "]  Max amount of bullets a critter can fire" << endl;
+	helpinfo << "  --critter_minenergyproc [" << critter_minenergyproc << "]  Min amount of energy required for procreation" << endl;
+	helpinfo << "  --critter_minenergyfire    [" << critter_minenergyfire << "]  Min amount of energy required for firing a bullet" << endl;
+	helpinfo << "  --critter_size            [" << critter_size*100.0f << "]  Size of a critter" << endl;
+	helpinfo << "  --critter_speed           [" << critter_speed*1000.0f << "]  Critter speed" << endl;
+	helpinfo << "  --critter_sightrange      [" << critter_sightrange*10.0f << "]  Distance a critter can see (" << critter_sightrange*10.0f << " = " << critter_sightrange << " floor squares)" << endl;
+	helpinfo << "  --critter_retinasize       [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
+	helpinfo << "  --critter_colorneurons     [" << critter_colorneurons << "]  Earch color of every pixel (RGBA) will get [" << critter_colorneurons << "] neurons (only for new adams)" << endl;
+	helpinfo << "  --critter_mutationrate    [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
+	helpinfo << "  --critter_maxmutations     [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
+	helpinfo << "  --critter_flipnewborns          If set, newborns will be flipped 180 degrees" << endl;
+	helpinfo << endl;
+	helpinfo << "  Food Settings" << endl;
+	helpinfo << "  --food_maxlifetime       [" << food_maxlifetime << "]  Maximum amount of frames food can live" << endl;
+	helpinfo << "  --food_maxenergy        [" << food_maxenergy << "]  Maximum amount of energy in a food unit" << endl;
+	helpinfo << "  --food_size               [" << food_size*100.0f << "]  Size of a food unit" << endl;
+	helpinfo << endl;
+	helpinfo << "  Brain Settings" << endl;
+	helpinfo << "  --brain_maxneurons                           [" << brain_maxneurons << "]  Max neurons per critter" << endl;
+	helpinfo << "  --brain_minsynapses                             [" << brain_minsynapses << "]  Min synapses per neuron" << endl;
+	helpinfo << "  --brain_maxsynapses                           [" << brain_maxsynapses << "]  Max synapses per neuron" << endl;
+	helpinfo << "  --brain_minneuronsatbuildtime                  [" << brain_minneuronsatbuildtime << "]  Min neurons for a new critter" << endl;
+	helpinfo << "  --brain_maxneuronsatbuildtime                  [" << brain_maxneuronsatbuildtime << "]  Max neurons for a new critter" << endl;
+	helpinfo << "  --brain_minsynapsesatbuildtime                  [" << brain_minsynapsesatbuildtime << "]  Min synapses when creating new neuron" << endl;
+	helpinfo << "    --brain_mutate_minsynapsesatbuildtime              If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_maxsynapsesatbuildtime                 [" << brain_maxsynapsesatbuildtime << "]  Max synapses when creating new neuron" << endl;
+	helpinfo << "    --brain_mutate_maxsynapsesatbuildtime              If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_percentchanceinhibitoryneuron          [" << brain_percentchanceinhibitoryneuron << "]  % chance neuron is inhibitory (vs exhibitory)" << endl;
+	helpinfo << "    --brain_mutate_percentchanceinhibitoryneuron       If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_percentchancemotorneuron               [" << brain_percentchancemotorneuron << "]  % chance a neuron is a motor neuron, this value seems" << endl;
+	helpinfo << "                                                       high, but when it tries to create a motor neuron that is" << endl;
+	helpinfo << "                                                       is already taken, it will stay a normal neuron" << endl;
+	helpinfo << "    --brain_mutate_percentchancemotorneuron            If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_percentchanceplasticneuron             [" << brain_percentchanceplasticneuron << "]  % chance a neuron applies synaptic plasticity" << endl;
+	helpinfo << "    --brain_mutate_percentchanceplasticneuron          If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_minplasticitystrengthen               [" << brain_minplasticitystrengthen << "]  Min weight by which plastic synapses strengthen (1/" << brain_minplasticitystrengthen << ")" << endl;
+	helpinfo << "  --brain_maxplasticitystrengthen              [" << brain_maxplasticitystrengthen << "]  Max weight by which plastic synapses strengthen (1/" << brain_maxplasticitystrengthen << ")" << endl;
+	helpinfo << "  --brain_minplasticityweaken                  [" << brain_minplasticityweaken << "]  Min weight by which plastic synapses weaken (1/" << brain_minplasticityweaken << ")" << endl;
+	helpinfo << "  --brain_maxplasticityweaken                 [" << brain_maxplasticityweaken << "]  Max weight by which plastic synapses weaken (1/" << brain_maxplasticityweaken << ")" << endl;
+	helpinfo << "    --brain_mutate_plasticityfactors                   If set, all values above will mutate" << endl;
+	helpinfo << "  --brain_minfiringthreshold                      [" << brain_minfiringthreshold << "]  Min firing threshold of a neuron" << endl;
+	helpinfo << "    --brain_mutate_minfiringthreshold                  If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_maxfiringthreshold                     [" << brain_maxfiringthreshold << "]  Max firing threshold of a neuron" << endl;
+	helpinfo << "    --brain_mutate_maxfiringthreshold                  If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_maxdendridicbranches                    [" << brain_maxdendridicbranches << "]  Max dendridic branches per neuron" << endl;
+	helpinfo << "    --brain_mutate_maxdendridicbranches                If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_percentchanceconsistentsynapses        [" << brain_percentchanceconsistentsynapses << "]  % chance neuron has consistent synapses" << endl;
+	helpinfo << "                                                       meaning all (new) synapses are inhibitory or exhibitory" << endl;
+	helpinfo << "    --brain_mutate_percentchanceconsistentsynapses     If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_percentchanceinhibitorysynapses        [" << brain_percentchanceinhibitorysynapses << "]  % chance a synapse is inhibitory (vs exhibitory)" << endl;
+	helpinfo << "    --brain_mutate_percentchanceinhibitorysynapses     If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_percentchancesensorysynapse            [" << brain_percentchancesensorysynapse << "]  % chance a synapse connects with a sensor (inputneuron)" << endl;
+	helpinfo << "    --brain_mutate_percentchancesensorysynapse         If set, the value above will mutate" << endl;
+	helpinfo << "  --brain_percentmutateeffectaddneuron           [" << brain_percentmutateeffectaddneuron << "]  % chance of adding a neuron for a mutationrun" << endl;
+	helpinfo << "  --brain_percentmutateeffectremoveneuron        [" << brain_percentmutateeffectremoveneuron << "]  % chance of removing a neuron for a mutationrun" << endl;
+	helpinfo << "  --brain_percentmutateeffectalterneuron         [" << brain_percentmutateeffectalterneuron << "]  % chance of altering a neuron for a mutationrun" << endl;
+	helpinfo << "  --brain_percentmutateeffectaddsynapse          [" << brain_percentmutateeffectaddsynapse << "]  % chance of adding a synapse for a mutationrun" << endl;
+	helpinfo << "  --brain_percentmutateeffectremovesynapse       [" << brain_percentmutateeffectremovesynapse << "]  % chance of removing a synapse for a mutationrun" << endl;
+	helpinfo << "    --brain_mutate_mutateeffects                       If set, all values above will mutate" << endl;
 
 	int optind=1;
 	// decode arguments
@@ -209,7 +208,7 @@ int main(int argc, char *argv[])
 		{
 			optind++;
 			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 1000000 )
+			if ( value >= 1 && value <= 1000000 )
 				critter_maxlifetime = value;
 			else { cerr << "critter_maxlifetime must match >=1 and <=1000000" << endl; exit(1); }
 	        }
@@ -217,9 +216,49 @@ int main(int argc, char *argv[])
 		{
 			optind++;
 			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 1000000 )
+			if ( value >= 1 && value <= 1000000 )
 				critter_maxenergy = value;
 			else { cerr << "critter_maxenergy must match >=1 and <=1000000" << endl; exit(1); }
+	        }
+		else if (sw=="--critter_startenergy")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 1 && value <= 1000000 )
+				critter_startenergy = value;
+			else { cerr << "critter_startenergy must match >=1 and <=1000000" << endl; exit(1); }
+	        }
+		else if (sw=="--critter_maxchildren")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 1 && value <= 1000000 )
+				critter_maxchildren = value;
+			else { cerr << "critter_maxchildren must match >=1 and <=1000000" << endl; exit(1); }
+	        }
+		else if (sw=="--critter_maxbullets")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 0 && value <= 1000000 )
+				critter_maxbullets = value;
+			else { cerr << "critter_maxbullets must match >=0 and <=1000000" << endl; exit(1); }
+	        }
+		else if (sw=="--critter_minenergyproc")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 0 && value <= 1000000 )
+				critter_minenergyproc = value;
+			else { cerr << "critter_minenergyproc must match >=0 and <=1000000" << endl; exit(1); }
+	        }
+		else if (sw=="--critter_minenergyfire")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 0 && value <= 1000000 )
+				critter_minenergyfire = value;
+			else { cerr << "critter_minenergyfire must match >=0 and <=1000000" << endl; exit(1); }
 	        }
 		else if (sw=="--critter_size")
 		{
@@ -269,13 +308,13 @@ int main(int argc, char *argv[])
 				critter_mutationrate = value;
 			else { cerr << "critter_mutationrate must match >=0 and <=100" << endl; exit(1); }
 	        }
-		else if (sw=="--critter_maxmutateruns")
+		else if (sw=="--critter_maxmutations")
 		{
 			optind++;
 			unsigned int value = atoi(argv[optind]);
 			if ( value >= 1 && value <= 100 )
-				critter_maxmutateruns = value;
-			else { cerr << "critter_maxmutateruns must match >=1 and <=100" << endl; exit(1); }
+				critter_maxmutations = value;
+			else { cerr << "critter_maxmutations must match >=1 and <=100" << endl; exit(1); }
 	        }
 		else if (sw=="--critter_flipnewborns")
 		{
@@ -566,7 +605,7 @@ int main(int argc, char *argv[])
 
 		else if (sw=="--help")
 		{
-			cout << helpinfo << endl;
+			cout << helpinfo.str() << endl;
 			exit(1);
 	        }
 
@@ -587,86 +626,25 @@ int main(int argc, char *argv[])
 	}
 	cout << endl << endl;
 
-	// report settings
-	cout << endl << "Global Settings" << endl;
-	cout << "  World size                  = " << worldsize << "x" << worldsize << endl;
-	cout << "  Energy in system            = " << energy << "*" << food_maxenergy << " = " << energy*food_maxenergy << endl;
-	cout << "  Minimal amount of critters  = " << mincritters << endl;
-	cout << "  Retinas per row             = " << retinasperrow << endl;
-
-	cout << endl << "Critter Settings" << endl;
-	cout << "  max Lifetime               = " << critter_maxlifetime << endl;
-	cout << "  max Energy                 = " << critter_maxenergy << endl;
-	cout << "  Size                        = " << critter_size*100.0f << endl;
-	cout << "  Speed                       = " << critter_speed*1000.0f << endl;
-	cout << "  Sight range                 = " << critter_sightrange*10.0f << endl;
-	cout << "  Retina size                 = " << critter_retinasize << endl;
-	cout << "  Color neurons               = " << critter_colorneurons << endl;
-	cout << "  Mutationrate                = " << critter_mutationrate << endl;
-	cout << "  Mutationruns                = " << critter_maxmutateruns << endl;
-	cout << "  Flip newborns               = " << critter_flipnewborns << endl;
-
-	cout << endl << "Food Settings" << endl;
-	cout << "  max Lifetime                = " << food_maxlifetime << endl;
-	cout << "  max Energy                  = " << food_maxenergy << endl;
-	cout << "  Size                        = " << food_size*100.0f << endl;
-
-	cout << endl << "Brain Settings" << endl;
-	cout << "  max Neurons per critter     = " << brain_maxneurons << endl;
-	cout << "  min Synapses per neuron     = " << brain_minsynapses << endl;
-	cout << "  max Synapses per neuron     = " << brain_maxsynapses << endl;
-	cout << "  min Neurons at build time   = " << brain_minneuronsatbuildtime << endl;
-	cout << "  max Neurons at build time   = " << brain_maxneuronsatbuildtime << endl;
-	cout << "  min Synapses at build time  = " << brain_minsynapsesatbuildtime << endl;
-	cout << "    mutate                    = " << brain_mutate_minsynapsesatbuildtime << endl;
-	cout << "  max Synapses at build time  = " << brain_maxsynapsesatbuildtime << endl;
-	cout << "    mutate                    = " << brain_mutate_maxsynapsesatbuildtime << endl;
-	cout << "  % Inhibitory neuron         = " << brain_percentchanceinhibitoryneuron << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitoryneuron << endl;
-	cout << "  % Motor neuron              = " << brain_percentchancemotorneuron << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchancemotorneuron << endl;
-	cout << "  % Plastic neuron            = " << brain_percentchanceplasticneuron << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceplasticneuron << endl;
-	cout << "  min Plasticity strengthen   = " << brain_minplasticitystrengthen << endl;
-	cout << "  max Plasticity strengthen   = " << brain_maxplasticitystrengthen << endl;
-	cout << "  min Plasticity weaken       = " << brain_minplasticityweaken << endl;
-	cout << "  max Plasticity weaken       = " << brain_maxplasticityweaken << endl;
-	cout << "    mutate plasticityfactors  = " << brain_mutate_plasticityfactors << endl;
-	cout << "  min Firing threshold        = " << brain_minfiringthreshold << endl;
-	cout << "    mutate                    = " << brain_mutate_minfiringthreshold << endl;
-	cout << "  max Firing threshold        = " << brain_maxfiringthreshold << endl;
-	cout << "    mutate                    = " << brain_mutate_maxfiringthreshold << endl;
-	cout << "  max Dendridic branches      = " << brain_maxdendridicbranches << endl;
-	cout << "    mutate                    = " << brain_mutate_maxdendridicbranches << endl;
-	cout << "  % Consistent synapses       = " << brain_percentchanceconsistentsynapses << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceconsistentsynapses << endl;
-	cout << "  % Inhibitory synapses       = " << brain_percentchanceinhibitorysynapses << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitorysynapses << endl;
-	cout << "  % Sensory Synapse           = " << brain_percentchancesensorysynapse << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchancesensorysynapse << endl;
-	cout << "  % Effect: add neuron        = " << brain_percentmutateeffectaddneuron << endl;
-	cout << "  % Effect: remove neuron     = " << brain_percentmutateeffectremoveneuron << endl;
-	cout << "  % Effect: alter neuron      = " << brain_percentmutateeffectalterneuron << endl;
-	cout << "  % Effect: add synapse       = " << brain_percentmutateeffectaddsynapse << endl;
-	cout << "  % Effect: remove synapse    = " << brain_percentmutateeffectremovesynapse << endl;
-	cout << "    mutate effects            = " << brain_mutate_mutateeffects << endl;
-
-	cout << endl;
-
 	GLWindow glwindow;
-	glwindow.create("Critterding beta5", 800, 600, 24, False);
+	glwindow.create("Critterding beta5", 600, 600, 24, False);
 
 		Evolution mainscene;
 
 		// critter
 		mainscene.world.critter_maxlifetime = critter_maxlifetime;
 		mainscene.world.critter_maxenergy = critter_maxenergy;
+		mainscene.world.critter_startenergy = critter_startenergy;
+		mainscene.world.critter_minenergyproc = critter_minenergyproc;
+		mainscene.world.critter_minenergyfire = critter_minenergyfire;
+		mainscene.world.critter_maxchildren = critter_maxchildren;
+		mainscene.world.critter_maxbullets = critter_maxbullets;
 		mainscene.world.critter_size = critter_size;
 		mainscene.world.critter_speed = critter_speed;
 		mainscene.world.critter_sightrange = critter_sightrange;
 		mainscene.world.critter_retinasize = critter_retinasize;
 		mainscene.world.critter_colorneurons = critter_colorneurons;
-		mainscene.world.critter_maxmutateruns = critter_maxmutateruns;
+		mainscene.world.critter_maxmutations = critter_maxmutations;
 		mainscene.world.critter_mutationrate = critter_mutationrate;
 		mainscene.world.critter_flipnewborns = critter_flipnewborns;
 
@@ -724,6 +702,8 @@ int main(int argc, char *argv[])
 		mainscene.world.resize(worldsize);
 		mainscene.world.startfoodamount(energy);
 		mainscene.world.setMincritters(mincritters);
+
+		mainscene.world.printSettings();
 
 		glwindow.runGLScene(mainscene);
 

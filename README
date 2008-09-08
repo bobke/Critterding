@@ -7,32 +7,37 @@ TERMINOLOGY
       : generations with mutations since adam
 
 
-STARTUP OPTIONS
+STARTUP OPTIONS                                                                                                                                   
 
-  option       [default value]
+  option         [default value]
 
   Global Settings
-  --worldsize             [25]  Creates a 25x25 world
-  --energy               [500]  Energy in the system: 500*foodenergy(2500) = 1250000
-  --mincritters           [10]  If less than 10 critters are present, insert an adam
-  --retinasperrow         [20]  Amount of retinas on a row (bottom left of window)
+  --worldsize               [10]  Creates a 25x25 world
+  --energy                 [100]  Energy in the system: 500*foodenergy(2500) = 1250000
+  --mincritters             [10]  If less than 10 critters are present, insert an adam
+  --retinasperrow           [20]  Amount of retinas on a row (bottom left of window)  
 
   Critter Settings
-  --critter_maxlifetime [2000]  Maximum amount of frames a critter can live
-  --critter_maxenergy   [5000]  Maximum amount of energy in a critter
-  --critter_size          [10]  Size of a critter
-  --critter_speed         [50]  Critter speed (50/1000 = 0.05 floor square)
-  --critter_sightrange    [40]  Distance a critter can see (40/10 = 4 floor squares)
-  --critter_retinasize     [7]  Resolution of critter's retina: 7x7
-  --critter_colorneurons   [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
-  --critter_mutationrate  [10]  When a critter procreates it mutates 10% of the time
-  --critter_maxmutateruns  [1]  When a critter mutates, it can do 1 mutation at maximum
-  --critter_flipnewborns        If set, newborns will be flipped 180 degrees
+  --critter_maxlifetime   [1200]  Max amount of frames a critter can live
+  --critter_maxenergy     [5000]  Max amount of energy in a critter      
+  --critter_startenergy   [2500]  Starting amount of energy for a new critter
+  --critter_maxchildren    [100]  Max amount of children a critter can spawn 
+  --critter_maxbullets    [1000]  Max amount of bullets a critter can fire   
+  --critter_minenergyproc [3000]  Min amount of energy required for procreation
+  --critter_minenergyfire    [0]  Min amount of energy required for firing a bullet
+  --critter_size            [10]  Size of a critter                                
+  --critter_speed           [50]  Critter speed (50/1000 = 0.05 floor square)      
+  --critter_sightrange      [30]  Distance a critter can see (40/10 = 4 floor squares)
+  --critter_retinasize       [7]  Resolution of critter's retina: 7x7
+  --critter_colorneurons     [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
+  --critter_mutationrate    [10]  When a critter procreates it mutates 10% of the time
+  --critter_maxmutateruns    [1]  When a critter mutates, it can do 1 mutation at maximum
+  --critter_flipnewborns          If set, newborns will be flipped 180 degrees
 
   Food Settings
-  --food_maxlifetime    [1000]  Maximum amount of frames food can live
-  --food_maxenergy      [2500]  Maximum amount of energy in a food unit
-  --food_size             [15]  Size of a food unit
+  --food_maxlifetime       [400]  Maximum amount of frames food can live
+  --food_maxenergy        [2500]  Maximum amount of energy in a food unit
+  --food_size               [15]  Size of a food unit
 
   Brain Settings
   --brain_maxneurons                           [1000]  Max neurons per critter
@@ -94,6 +99,8 @@ STARTUP OPTIONS
 BUTTONS
 
  - Engine / World Operations
+
+   F1            : print settings and toggle pause program
 
    F2            : fps toggle, displays average over 10 frames
                    (console)

@@ -12,8 +12,8 @@ void CritterB::initConst()
 	maxtotalFrames		= 0;
 	maxEnergyLevel		= 0.0f;
 
-	fireTimeTrigger		= 5;
-	procreateTimeTrigger	= 100;
+	procreateTimeTrigger	= 0;
+	fireTimeTrigger		= 0;
 
 	visionPosition		= 0;
 	retinasperrow		= 0;
@@ -81,12 +81,6 @@ void CritterB::setup()
 
 	colorDivider		= 256 / colorNeurons;
 
-	minprocenergyLevel	= maxEnergyLevel * 0.6f;
-	minfireenergyLevel	= maxEnergyLevel * 0.0f;
-
-	// energy
-	energyLevel		= maxEnergyLevel / 2.0f;
-
 	// setup brain from architecture
 	brain.wireArch();
 }
@@ -120,7 +114,13 @@ void CritterB::process()
 
 	// calc used energy, energyUsed is used in world aswell, don't remove
 
-		energyUsed = ( (float)brain.neuronsFired + (2.0f*(float)motorneuronsfired) + ((float)brain.totalSynapses/50.0) ) / 50.0f;
+		energyUsed = ( (float)brain.totalNeurons + (float)brain.neuronsFired + (2.0f*(float)motorneuronsfired) + ((float)brain.totalSynapses/10.0f) ) / 200.0f;
+
+// cerr << energyUsed << endl;
+// 
+// 		energyUsed = ( (float)brain.neuronsFired + (2.0f*(float)motorneuronsfired) + ((float)brain.totalSynapses/50.0f) ) / 50.0f;
+// 
+// cerr << " vs " << energyUsed << endl << endl;;
 
 	// apply energy usage
 	energyLevel -= energyUsed;
@@ -337,12 +337,12 @@ void CritterB::mutate(unsigned int maxMutateRuns)
 
 	if ( mode == 1 )
 	{
-		color[ncolor] += (float)randgen.get(1,10)/150.0f;
+		color[ncolor] += (float)randgen.get(1,10)/100.0f;
 		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
 	}
 	else
 	{
-		color[ncolor] -= (float)randgen.get(1,10)/150.0f;
+		color[ncolor] -= (float)randgen.get(1,10)/100.0f;
 		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
 	}
 

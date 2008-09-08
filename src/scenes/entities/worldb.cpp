@@ -2,77 +2,29 @@
 
 WorldB::WorldB()
 {
-//	Infobar *infobar	= Infobar::instance();
+	critter_flipnewborns = false;
 
-// 	size			= 0;
-// 	mincritters		= 0;
-// 	retinasperrow		= 0;
-// 
-// 	critter_maxlifetime	= 0;
-// 	critter_maxenergy	= 0.0f;
-// 	critter_size		= 0.0f;
-// 	critter_speed		= 0.0f;
-// 	critter_sightrange	= 0.0f;
-// 	critter_retinasize	= 0;
-// 	critter_colorneurons	= 0;
-// 	critter_mutationrate	= 0; // %
-// 	critter_maxmutateruns	= 0;
-	critter_flipnewborns	= false;
-// 
-// 	food_maxlifetime	= 0;
-// 	food_maxenergy		= 0.0f;
-// 	food_size		= 0.0f;
-// 
-// 	brain_maxneurons = 0;
-// 	brain_minsynapses = 0;
-// 	brain_maxsynapses = 0;
-// 	brain_minneuronsatbuildtime = 0;
-// 	brain_maxneuronsatbuildtime = 0;
-// 	brain_minsynapsesatbuildtime = 0;
- 	brain_mutate_minsynapsesatbuildtime = false;
-// 	brain_maxsynapsesatbuildtime = 0;
- 	brain_mutate_maxsynapsesatbuildtime = false;
-// 	brain_percentchanceinhibitoryneuron = 0;
- 	brain_mutate_percentchanceinhibitoryneuron = false;
-// 	brain_percentchanceconsistentsynapses = 0;
- 	brain_mutate_percentchanceconsistentsynapses = false;
-// 
-// 	brain_percentchanceinhibitorysynapses = 0;
- 	brain_mutate_percentchanceinhibitorysynapses = false;
-// 	brain_percentchancemotorneuron = 0;
- 	brain_mutate_percentchancemotorneuron = false;
-// 	brain_percentchanceplasticneuron = 0;
- 	brain_mutate_percentchanceplasticneuron = false;
-// 
-// 	brain_minplasticitystrengthen = 0;
-// 	brain_maxplasticitystrengthen = 0;
-// 	brain_minplasticityweaken = 0;
-// 	brain_maxplasticityweaken = 0;
- 	brain_mutate_plasticityfactors = false;
-// 
-// 	brain_percentchancesensorysynapse = 0;
- 	brain_mutate_percentchancesensorysynapse = false;
-// 	brain_minfiringthreshold = 0;
- 	brain_mutate_minfiringthreshold = false;
-// 	brain_maxfiringthreshold = 0;
- 	brain_mutate_maxfiringthreshold = false;
-// 	brain_maxdendridicbranches = 0;
- 	brain_mutate_maxdendridicbranches = false;
-// 
-// 	brain_percentmutateeffectaddneuron = 0;
-// 	brain_percentmutateeffectremoveneuron = 0;
-// 	brain_percentmutateeffectalterneuron = 0;
-// 	brain_percentmutateeffectaddsynapse = 0;
-// 	brain_percentmutateeffectremovesynapse = 0;
- 	brain_mutate_mutateeffects = false;
+	brain_mutate_minsynapsesatbuildtime = false;
+	brain_mutate_maxsynapsesatbuildtime = false;
+	brain_mutate_percentchanceinhibitoryneuron = false;
+	brain_mutate_percentchanceconsistentsynapses = false;
 
+	brain_mutate_percentchanceinhibitorysynapses = false;
+	brain_mutate_percentchancemotorneuron = false;
+	brain_mutate_percentchanceplasticneuron = false;
+	brain_mutate_plasticityfactors = false;
+
+	brain_mutate_percentchancesensorysynapse = false;
+	brain_mutate_minfiringthreshold = false;
+	brain_mutate_maxfiringthreshold = false;
+	brain_mutate_maxdendridicbranches = false;
+	brain_mutate_mutateeffects = false;
 
 	selectedCritter		= 0;
 	isSelected		= false;
 
 	doTimedInserts		= false;
 	timedInsertsCounter	= 0;
-
 
 	// home & program directory
 	createDirs();
@@ -81,7 +33,6 @@ WorldB::WorldB()
 	items = 4 * 800 * 600;
 	retina = (unsigned char*)malloc(items);
 	memset(retina, 0, items);
-
 }
 
 void WorldB::resize(unsigned int newsize)
@@ -155,21 +106,21 @@ void WorldB::process()
 		// see if energy level isn't below 0 -> die, or die of old age
 		if ( critters[i]->energyLevel < 0.0f )
 		{
-			cerr << setw(3) << i << "/" << setw(3) << critters.size()-1 << " DIES: starvation" << endl;
+			cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " DIES: starvation" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// see if died from bullet
 		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames && critters[i]->wasShot )
 		{
-			cerr << setw(3) << i << "/" << setw(3) << critters.size()-1 << " DIES: killed" << endl;
+			cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " DIES: killed" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// die of old age
 		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames )
 		{
-			cerr << setw(3) << i << "/" << setw(3) << critters.size()-1 << " DIES: old age" << endl;
+			cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " DIES: old age" << endl;
 			removeCritter(i);
 			i--;
 		}
@@ -348,7 +299,7 @@ void WorldB::process()
 					if ( randgen.get(1,100) <= critter_mutationrate )
 					{
 						mutant = true;
-						nc->mutate(critter_maxmutateruns);
+						nc->mutate(critter_maxmutations);
 					}
 
 					// same positions / rotation
@@ -359,6 +310,11 @@ void WorldB::process()
 					nc->maxEnergyLevel = critter_maxenergy;
 					nc->maxtotalFrames = critter_maxlifetime;
 					nc->resize(critter_size);
+					nc->procreateTimeTrigger = critter_maxlifetime / critter_maxchildren;
+					nc->fireTimeTrigger = critter_maxlifetime / critter_maxbullets;
+					nc->minprocenergyLevel = critter_minenergyproc;
+					nc->minfireenergyLevel = critter_minenergyfire;
+
 					nc->setup();
 					nc->retina = retina;
 
@@ -371,7 +327,7 @@ void WorldB::process()
 
 					if (spotIsFree(nc->newposition, nc->size, i))
 					{
-						cerr << setw(3) << i << "/" << setw(3) << critters.size()-1 << " PROC: (ad: " << setw(4) << c->adamdist << ")";
+						cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " PROC: (ad: " << setw(4) << c->adamdist << ")";
 
 						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
 						if ( mutant ) cerr << " (m)";
@@ -516,12 +472,6 @@ void WorldB::insertCritter()
 		c->brain.mutate_MutateEffects			= brain_mutate_mutateeffects;
 
 
-
-
-
-
-
-
 	c->colorNeurons = critter_colorneurons;
 	c->retinasize = critter_retinasize;
 	c->calcInputOutputNeurons();
@@ -532,6 +482,13 @@ void WorldB::insertCritter()
 	c->maxtotalFrames = critter_maxlifetime;
 	c->rotation = randgen.get( 0, 360 );
 	c->resize(critter_size);
+
+	c->energyLevel		= critter_startenergy;
+	c->procreateTimeTrigger = critter_maxlifetime / critter_maxchildren;
+	c->fireTimeTrigger = critter_maxlifetime / critter_maxbullets;
+	c->minprocenergyLevel	= critter_minenergyproc;
+	c->minfireenergyLevel	= critter_minenergyfire;
+
 	c->setup();
 	c->retina = retina;
 
@@ -687,6 +644,13 @@ void WorldB::loadAllCritters()
 				c->maxtotalFrames = critter_maxlifetime;
 				c->rotation = randgen.get( 0, 360 );
 				c->resize(critter_size);
+
+				c->energyLevel		= critter_startenergy;
+				c->procreateTimeTrigger = critter_maxlifetime / critter_maxchildren;
+				c->fireTimeTrigger = critter_maxlifetime / critter_maxbullets;
+				c->minprocenergyLevel	= critter_minenergyproc;
+				c->minfireenergyLevel	= critter_minenergyfire;
+
 				c->setup();
 				c->retina = retina;
 				// record it's energy
@@ -881,6 +845,80 @@ Vector3f WorldB::findEmptySpace(float objectsize)
 	return pos;
 }
 
+void WorldB::printSettings()
+{
+	// report settings
+	cout << endl << "Global Settings" << endl;
+	cout << "  World size                  = " << size << "x" << size << endl;
+	cout << "  Energy in system            = " << freeEnergyInfo/food_maxenergy << "*" << food_maxenergy << " = " << freeEnergyInfo << endl;
+	cout << "  Minimal amount of critters  = " << mincritters << endl;
+	cout << "  Retinas per row             = " << retinasperrow << endl;
+
+	cout << endl << "Critter Settings" << endl;
+	cout << "  max Lifetime                = " << critter_maxlifetime << endl;
+	cout << "  max Energy                  = " << critter_maxenergy << endl;
+	cout << "  Energy at start             = " << critter_startenergy << endl;
+	cout << "  max Children                = " << critter_maxchildren << endl;
+	cout << "  max Bullets                 = " << critter_maxbullets << endl;
+	cout << "  min Energy for procreation  = " << critter_minenergyproc << endl;
+	cout << "  max Energy for firing       = " << critter_minenergyfire << endl;
+
+	cout << "  Size                        = " << critter_size*100.0f << endl;
+	cout << "  Speed                       = " << critter_speed*1000.0f << endl;
+	cout << "  Sight range                 = " << critter_sightrange*10.0f << endl;
+	cout << "  Retina size                 = " << critter_retinasize << endl;
+	cout << "  Color neurons               = " << critter_colorneurons << endl;
+	cout << "  Mutationrate                = " << critter_mutationrate << endl;
+	cout << "  max Mutations / mutant      = " << critter_maxmutations << endl;
+	cout << "  Flip newborns               = " << critter_flipnewborns << endl;
+
+	cout << endl << "Food Settings" << endl;
+	cout << "  max Lifetime                = " << food_maxlifetime << endl;
+	cout << "  max Energy                  = " << food_maxenergy << endl;
+	cout << "  Size                        = " << food_size*100.0f << endl;
+
+	cout << endl << "Brain Settings" << endl;
+	cout << "  max Neurons per critter     = " << brain_maxneurons << endl;
+	cout << "  min Synapses per neuron     = " << brain_minsynapses << endl;
+	cout << "  max Synapses per neuron     = " << brain_maxsynapses << endl;
+	cout << "  min Neurons at build time   = " << brain_minneuronsatbuildtime << endl;
+	cout << "  max Neurons at build time   = " << brain_maxneuronsatbuildtime << endl;
+	cout << "  min Synapses at build time  = " << brain_minsynapsesatbuildtime << endl;
+	cout << "    mutate                    = " << brain_mutate_minsynapsesatbuildtime << endl;
+	cout << "  max Synapses at build time  = " << brain_maxsynapsesatbuildtime << endl;
+	cout << "    mutate                    = " << brain_mutate_maxsynapsesatbuildtime << endl;
+	cout << "  % Inhibitory neuron         = " << brain_percentchanceinhibitoryneuron << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitoryneuron << endl;
+	cout << "  % Motor neuron              = " << brain_percentchancemotorneuron << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchancemotorneuron << endl;
+	cout << "  % Plastic neuron            = " << brain_percentchanceplasticneuron << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceplasticneuron << endl;
+	cout << "  min Plasticity strengthen   = " << brain_minplasticitystrengthen << endl;
+	cout << "  max Plasticity strengthen   = " << brain_maxplasticitystrengthen << endl;
+	cout << "  min Plasticity weaken       = " << brain_minplasticityweaken << endl;
+	cout << "  max Plasticity weaken       = " << brain_maxplasticityweaken << endl;
+	cout << "    mutate plasticityfactors  = " << brain_mutate_plasticityfactors << endl;
+	cout << "  min Firing threshold        = " << brain_minfiringthreshold << endl;
+	cout << "    mutate                    = " << brain_mutate_minfiringthreshold << endl;
+	cout << "  max Firing threshold        = " << brain_maxfiringthreshold << endl;
+	cout << "    mutate                    = " << brain_mutate_maxfiringthreshold << endl;
+	cout << "  max Dendridic branches      = " << brain_maxdendridicbranches << endl;
+	cout << "    mutate                    = " << brain_mutate_maxdendridicbranches << endl;
+	cout << "  % Consistent synapses       = " << brain_percentchanceconsistentsynapses << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceconsistentsynapses << endl;
+	cout << "  % Inhibitory synapses       = " << brain_percentchanceinhibitorysynapses << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitorysynapses << endl;
+	cout << "  % Sensory Synapse           = " << brain_percentchancesensorysynapse << endl;
+	cout << "    mutate                    = " << brain_mutate_percentchancesensorysynapse << endl;
+	cout << "  % Effect: add neuron        = " << brain_percentmutateeffectaddneuron << endl;
+	cout << "  % Effect: remove neuron     = " << brain_percentmutateeffectremoveneuron << endl;
+	cout << "  % Effect: alter neuron      = " << brain_percentmutateeffectalterneuron << endl;
+	cout << "  % Effect: add synapse       = " << brain_percentmutateeffectaddsynapse << endl;
+	cout << "  % Effect: remove synapse    = " << brain_percentmutateeffectremovesynapse << endl;
+	cout << "    mutate effects            = " << brain_mutate_mutateeffects << endl;
+
+	cout << endl;
+}
 
 WorldB::~WorldB()
 {

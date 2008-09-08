@@ -17,6 +17,8 @@ class Evolution : public GLScene {
 		Evolution();
 		~Evolution();
 
+		bool			pause;
+
 		void draw();
 
 		// glwindow passes events to the scene
