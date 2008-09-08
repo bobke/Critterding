@@ -16,6 +16,9 @@ Camera::Camera()
 // world=7
 //	position	= Vector3f(-3.5, -7.7, -6.5);
 
+// world=10
+	position	= Vector3f(-5.0f, -11.0f, -9.0f);
+
 // world= 15
 //	position	= Vector3f(-7.5, -16.0, -14.0);
 
@@ -23,7 +26,7 @@ Camera::Camera()
 //	position	= Vector3f(-10.0, -22.3, -18.0);
 
 // world= 25
-	position	= Vector3f(-12.5, -27.4, -22.5);
+//	position	= Vector3f(-12.5, -27.4, -22.5);
 
 // world= 30
 //	position	= Vector3f(-15.0, -32.6, -26.5);
@@ -42,7 +45,7 @@ Camera::Camera()
 //-17.5:-37.7965:-31.4548
 // world=10
 //	position	= Vector3f(-5.0, -10.5, -8.66);
-	rotation	= Vector3f( 74.0,  0.0, 0.0);
+	rotation	= Vector3f( 76.0,  0.0, 0.0);
 
 
 }

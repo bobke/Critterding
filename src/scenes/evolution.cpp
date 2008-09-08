@@ -2,11 +2,18 @@
 
 Evolution::Evolution()
 {
+	pause = false;
 	drawCVNeurons = true;
 }
 
 void Evolution::draw()
 {
+	if ( pause )
+	{
+		usleep(10000);
+		return;
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
@@ -51,8 +58,24 @@ void Evolution::draw()
 
 void Evolution::handlekey(const KeySym& key)
 {
+
+	if ( pause && key != XK_F1 )
+	{
+		usleep(10000);
+		return;
+	}
+
 	switch (key)
 	{
+		case XK_F1:
+			if ( !pause )
+			{
+				world.printSettings();
+				pause = true;
+			}
+			else pause = false;
+		break;
+
 		case XK_F2:
 			sleeper.swap();
 		break;
@@ -103,17 +126,17 @@ void Evolution::handlekey(const KeySym& key)
 			cerr << endl << "timed food inserts: "<< world.doTimedInserts << endl << endl;
 		break;
 		case XK_F9:
-			if ( world.critter_maxmutateruns >= 2 )
+			if ( world.critter_maxmutations >= 2 )
 			{
-				world.critter_maxmutateruns -= 1;
-				cerr << endl << "Max Mutation Runs: "<< world.critter_maxmutateruns << endl << endl;
+				world.critter_maxmutations -= 1;
+				cerr << endl << "Max Mutations: "<< world.critter_maxmutations << endl << endl;
 			}
 		break;
 		case XK_F10:
-			if ( world.critter_maxmutateruns <= 999 )
+			if ( world.critter_maxmutations <= 999 )
 			{
-				world.critter_maxmutateruns += 1;
-				cerr << endl << "Max Mutation Runs: "<< world.critter_maxmutateruns << endl << endl;
+				world.critter_maxmutations += 1;
+				cerr << endl << "Max Mutations: "<< world.critter_maxmutations << endl << endl;
 			}
 		break;
 		case XK_F11:

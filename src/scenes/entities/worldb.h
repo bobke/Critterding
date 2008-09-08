@@ -37,13 +37,18 @@ class WorldB
 
 		unsigned int		critter_maxlifetime;
 		float			critter_maxenergy;
+		unsigned int		critter_startenergy;
+		unsigned int		critter_maxchildren;
+		unsigned int		critter_maxbullets;
+		unsigned int		critter_minenergyproc;
+		unsigned int		critter_minenergyfire;
 		float			critter_size;
 		float			critter_speed;
 		float			critter_sightrange;
 		unsigned int		critter_retinasize;
 		unsigned int		critter_colorneurons;
 		unsigned int		critter_mutationrate;
-		unsigned int		critter_maxmutateruns;
+		unsigned int		critter_maxmutations;
 		bool			critter_flipnewborns;
 
 		unsigned int		food_maxlifetime;
@@ -121,6 +126,8 @@ class WorldB
 		void			createWall();
 		void			destroyWall();
 		void			toggleGate(unsigned int wid);
+
+		void			printSettings();
 
 		bool			spotIsFree(Vector3f &position, float osize, unsigned int exclude);
 
