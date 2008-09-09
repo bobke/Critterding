@@ -113,7 +113,7 @@ std::stringstream helpinfo;
 	helpinfo << "  --critter_retinasize       [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
 	helpinfo << "  --critter_colorneurons     [" << critter_colorneurons << "]  Earch color of every pixel (RGBA) will get [" << critter_colorneurons << "] neurons (only for new adams)" << endl;
 	helpinfo << "  --critter_mutationrate    [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
-	helpinfo << "  --critter_maxmutations     [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
+	helpinfo << "  --critter_maxmutations    [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
 	helpinfo << "  --critter_flipnewborns          If set, newborns will be flipped 180 degrees" << endl;
 	helpinfo << endl;
 	helpinfo << "  Food Settings" << endl;
