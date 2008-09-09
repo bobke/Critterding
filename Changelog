@@ -1,3 +1,11 @@
+1.0-beta5
+---------
+Options have boundary checks now
+improved command line option handling
+f1 pauses and prints settings / keys
+increased evolution rate by tuned defaults settings
+fixed README mistakes
+
 1.0-beta4
 ---------
 adaptable colorneurons, default is now 3 instead of 2
