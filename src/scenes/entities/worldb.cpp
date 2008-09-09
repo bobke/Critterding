@@ -847,8 +847,47 @@ Vector3f WorldB::findEmptySpace(float objectsize)
 
 void WorldB::printSettings()
 {
+
+	cout << endl << "BUTTONS" << endl << endl;
+	cout << "Engine / World Operations" << endl;
+	cout << "  F1            : print settings and toggle pause program" << endl;
+	cout << "  F2            : show fps (10 frames average)" << endl << endl;
+	cout << "  F3            : decrease Minimum Critters" << endl;
+	cout << "  F4            : increase Minimum Critters" << endl << endl;
+	cout << "  F5            : decrease energy in the system by the energy amount of 25 food" << endl;
+	cout << "  F6            : increase energy in the system by the energy amount of 25 food" << endl << endl;
+	cout << "  F7            : insert new critter (adam)" << endl << endl;
+	cout << "  F8            : toggle Timed Food Inserts" << endl;
+	cout << "                  inserts 100 food every 3 generations, driving the population up and down." << endl << endl;
+	cout << "  F9            : decrease max mutations per mutant" << endl;
+	cout << "  F10           : increase max mutations per mutant" << endl << endl;
+	cout << "  F11           : decrease mutation rate (%)" << endl;
+	cout << "  F12           : increase mutation rate (%)" << endl << endl;
+	cout << "  Insert        : toggle hide critter retinas." << endl << endl;
+	cout << "  w             : create a horizontal wall" << endl;
+	cout << "  x             : destroy the wall" << endl;
+	cout << "  c             : toggle gate in wall center" << endl << endl;
+	cout << "  f             : toggle follow the youngest critter untill it dies." << endl << endl;
+	cout << "  Page Up       : load all critters from \"~/.critterding/load\" directory" << endl;
+	cout << "  Page Down     : save all critters into \"~/.critterding/save/(timestamp)\" directory" << endl << endl;
+	cout << "  keypad -      : decrease energy in the system by the energy amount of 1 food" << endl;
+	cout << "  keypad +      : increase energy in the system by the energy amount of 1 food" << endl << endl;
+
+	cout << "Camera Operations" << endl;
+	cout << "  Arrow Up      : move forward" << endl;
+	cout << "  Arrow Down    : move backward" << endl;
+	cout << "  Arrow Left    : strafe left" << endl;
+	cout << "  Arrow Right   : strafe right" << endl;
+	cout << "  Home          : move up" << endl;
+	cout << "  End           : move down" << endl;
+	cout << "  NumKey 2      : look up" << endl;
+	cout << "  NumKey 8      : look down" << endl;
+	cout << "  NumKey 4      : look left" << endl;
+	cout << "  NumKey 6      : look right" << endl;
+
 	// report settings
-	cout << endl << "Global Settings" << endl;
+	cout << endl << "CURRENT SETTINGS" << endl << endl;
+	cout << "Global Settings" << endl;
 	cout << "  World size                  = " << size << "x" << size << endl;
 	cout << "  Energy in system            = " << freeEnergyInfo/food_maxenergy << "*" << food_maxenergy << " = " << freeEnergyInfo << endl;
 	cout << "  Minimal amount of critters  = " << mincritters << endl;

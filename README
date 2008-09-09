@@ -98,57 +98,52 @@ STARTUP OPTIONS
 
 BUTTONS
 
- - Engine / World Operations
+Engine / World Operations
+  F1            : print settings and toggle pause program
+  F2            : show fps (10 frames average)           
 
-   F1            : print settings and toggle pause program
+  F3            : decrease Minimum Critters
+  F4            : increase Minimum Critters
 
-   F2            : fps toggle, displays average over 10 frames
-                   (console)
+  F5            : decrease energy in the system by the energy amount of 25 food
+  F6            : increase energy in the system by the energy amount of 25 food
 
-   F3            : decrease Minimum Critters
-   F4            : increase Minimum Critters
+  F7            : insert new critter (adam)
 
-   F5            : increase energy in the system by the energy amount of 25 food
-   F6            : decrease energy in the system by the energy amount of 25 food
+  F8            : toggle Timed Food Inserts
+                  inserts 100 food every 3 generations, driving the population up and down.
 
-   F7            : insert Adam
+  F9            : decrease max mutations per mutant
+  F10           : increase max mutations per mutant
 
-   F8            : toggle Timed Food Inserts
-                   this will insert 100 extra food every 3 generations, and thus
-                   artificially drives the population up and down.
+  F11           : decrease mutation rate (%)
+  F12           : increase mutation rate (%)
 
-   F9            : increase nr of actual mutations when a critter mutates
-   F10           : decrease nr of actual mutations when a critter mutates
+  Insert        : toggle hide critter retinas.
 
-   F11           : increase mutation rate (%)
-   F12           : decrease mutation rate (%)
+  w             : create a horizontal wall
+  x             : destroy the wall        
+  c             : toggle gate in wall center
 
-   Insert        : toggle hide critter retinas.
+  f             : toggle follow the youngest critter untill it dies.
 
-   w             : create a horizontal wall
-   x             : destroy the wall
-   c             : toggle gate in wall center
+  Page Up       : load all critters from "~/.critterding/load" directory
+  Page Down     : save all critters into "~/.critterding/save/(timestamp)" directory
 
-   f             : toggle follow the youngest critter untill it dies.
+  keypad -      : decrease energy in the system by the energy amount of 1 food
+  keypad +      : increase energy in the system by the energy amount of 1 food
 
-   Page Up       : load all critters from "~/.critterding/load" directory
-   Page Down     : save all critters into "~/.critterding/save/(timestamp)" directory
-
-   keypad +      : increase energy in the system by the energy amount of 1 food
-   keypad -      : decrease energy in the system by the energy amount of 1 food
-
- - Camera Operations
-
-   Arrow Up      : move forward
-   Arrow Down    : move backward
-   Arrow Left    : strafe left
-   Arrow Right   : strafe right
-   Home          : move up
-   End           : move down
-   NumKey 2      : look up
-   NumKey 8      : look down
-   NumKey 4      : look left
-   NumKey 6      : look right
+Camera Operations
+  Arrow Up      : move forward
+  Arrow Down    : move backward
+  Arrow Left    : strafe left  
+  Arrow Right   : strafe right 
+  Home          : move up      
+  End           : move down    
+  NumKey 2      : look up      
+  NumKey 8      : look down    
+  NumKey 4      : look left    
+  NumKey 6      : look right   
 
 
 OTHER THINGS
