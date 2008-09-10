@@ -244,7 +244,7 @@ void CritterB::procInputNeurons()
 
 	overstep++;
 
-	// over energy neurons
+	// energy neurons
 		unsigned int NeuronToFire = (int)((energyLevel / maxEnergyLevel) * 10) + overstep;
 		unsigned int count = 10 + overstep;
 		while ( overstep < count )
