@@ -69,7 +69,7 @@ void CritterB::calcInputOutputNeurons()
 {
 	items = retinasize * retinasize * components;
 
-	brain.numberOfInputs = (items*colorNeurons)+1+1+1+10+1;
+	brain.numberOfInputs = (items*colorNeurons)+14; // 1 over food + 1 can fire bullet + 1 can procreate + 10 energy neurons + 1 always firing neuron
 	brain.numberOfOutputs = 9;
 }
 
