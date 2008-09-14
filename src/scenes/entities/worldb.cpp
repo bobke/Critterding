@@ -89,6 +89,28 @@ void WorldB::process()
 		}
 	}
 
+	// Remove corpses
+	for( unsigned int i=0; i < corpses.size(); i++)
+	{
+		// corpse was eaten
+		if ( corpses[i]->energy < 0 )
+		{
+			freeEnergy += corpses[i]->energy;
+			delete corpses[i];
+			corpses.erase(corpses.begin()+i);
+			i--;
+		}
+
+		// old corpse
+		else if ( ++corpses[i]->totalFrames >= corpses[i]->maxtotalFrames )
+		{
+			freeEnergy += corpses[i]->energy;
+			delete corpses[i];
+			corpses.erase(corpses.begin()+i);
+			i--;
+		}
+	}
+
 	// Insert Food
 	while ( freeEnergy >= food_maxenergy )
 	{
@@ -157,6 +179,15 @@ void WorldB::process()
 				}
 			}
 		
+			for( unsigned int j=0; j < corpses.size(); j++)
+			{
+				Corpse *co = corpses[j];
+				if ( fabs( c->position.x - co->position.x ) <= realSightRange && fabs( c->position.z - co->position.z ) <= realSightRange )
+				{
+					co->draw();
+				}
+			}
+		
 			for( unsigned int j=0; j < walls.size(); j++)
 			{
 				Wall *w = walls[j];
@@ -211,6 +242,19 @@ void WorldB::process()
 					c->touchedFoodID = f;
 				}
 			}
+
+		// over corpse input neuron
+			c->touchingCorpse = false;
+			for( unsigned int f=0; f < corpses.size() && !c->touchingCorpse; f++)
+			{
+				Corpse *co = corpses[f];
+				float avgSize = (c->size + co->size) / 2;
+				if ( fabs(c->position.x - co->position.x) <= avgSize && fabs(c->position.z - co->position.z) <= avgSize )
+				{
+					c->touchingCorpse = true;
+					c->touchedCorpseID = f;
+				}
+			}
 	
 		// process
 			c->process();
@@ -245,6 +289,23 @@ void WorldB::process()
 	
 				fo->resize();
 			}
+
+		// eat corpse
+			if ( c->touchingCorpse && c->eatCorpse )
+			{
+				//cerr << "pre E: " << critters[i]->energyLevel << endl;
+				// increase energyLevel of critter, decrease of food
+				//float eaten = ( c->maxEnergyLevel - c->energyLevel ) / 10.0f;
+	
+				float eaten = c->maxEnergyLevel / 50.0f;
+				if ( c->energyLevel + eaten > c->maxEnergyLevel ) eaten -= (c->energyLevel + eaten) - c->maxEnergyLevel;
+	
+				c->energyLevel		+= eaten;
+	
+				Corpse *co = corpses[c->touchedCorpseID];
+				co->energy		-= eaten;
+				co->resize();
+			}
 	
 		// fire
 			if ( c->fire && c->canFire )
@@ -272,7 +333,7 @@ void WorldB::process()
 				float avgSize = (c->size + b->size) / 2;
 				if ( fabs(c->position.x - b->position.x) <= avgSize && fabs(c->position.z - b->position.z) <= avgSize )
 				{
-					c->totalFrames += (c->maxtotalFrames/10) ;
+					c->totalFrames += (c->maxtotalFrames/2) ;
 					c->wasShot = true;
 					delete b;
 					bullets.erase(bullets.begin()+f);
@@ -510,32 +571,61 @@ void WorldB::removeCritter(unsigned int cid)
 {
 	if ( critters[cid]->energyLevel > 0.0f )
 	{
-		Food *f = new Food;
-		f->maxenergy = food_maxenergy;
-		f->maxsize = food_size;
-		f->maxtotalFrames = food_maxlifetime;
-		f->position = critters[cid]->position;
+		Corpse *c = new Corpse;
+		c->maxenergy = food_maxenergy;
+		c->maxsize = food_size;
+		c->maxtotalFrames = food_maxlifetime;
+		c->position = critters[cid]->position;
 
 		if ( critters[cid]->energyLevel > food_maxenergy )
 		{
-			f->energy = food_maxenergy;
+			c->energy = food_maxenergy;
 		}
 		else
 		{
-			f->energy = critters[cid]->energyLevel;
+			c->energy = critters[cid]->energyLevel;
 		}
 
 
 		freeEnergy += critters[cid]->energyLevel;
-		freeEnergy -= f->energy;
+		freeEnergy -= c->energy;
 
 		// put 50% of energy in food, rest back in space
 
 		//f->resize(food_size);
-		f->resize();
-		food.push_back( f );
+		c->resize();
+		corpses.push_back( c );
 	}
 	else freeEnergy += critters[cid]->energyLevel;
+
+// 	if ( critters[cid]->energyLevel > 0.0f )
+// 	{
+// 		Food *f = new Food;
+// 		f->maxenergy = food_maxenergy;
+// 		f->maxsize = food_size;
+// 		f->maxtotalFrames = food_maxlifetime;
+// 		f->position = critters[cid]->position;
+// 
+// 		if ( critters[cid]->energyLevel > food_maxenergy )
+// 		{
+// 			f->energy = food_maxenergy;
+// 		}
+// 		else
+// 		{
+// 			f->energy = critters[cid]->energyLevel;
+// 		}
+// 
+// 
+// 		freeEnergy += critters[cid]->energyLevel;
+// 		freeEnergy -= f->energy;
+// 
+// 		// put 50% of energy in food, rest back in space
+// 
+// 		//f->resize(food_size);
+// 		f->resize();
+// 		food.push_back( f );
+// 	}
+// 	else freeEnergy += critters[cid]->energyLevel;
 
 	// adapt selection
 	if ( isSelected )
@@ -595,6 +685,7 @@ void WorldB::drawWithGrid()
 	grid.draw();
 
 	for( unsigned int i=0; i < food.size(); i++) food[i]->draw();
+	for( unsigned int i=0; i < corpses.size(); i++) corpses[i]->draw();
 	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
 	for( unsigned int i=0; i < bullets.size(); i++) bullets[i]->draw();
 	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();
@@ -814,6 +905,15 @@ bool WorldB::isTouchingAnything(float size, float x, float z)
 		{
 			float avgSize = (size + food[i]->size) / 2;
 			if ( fabs(x - food[i]->position.x) <= avgSize && fabs(z - food[i]->position.z) <= avgSize )
+			{
+				return true;
+			}
+		}
+	// touches corpse?
+		for( unsigned int i=0; i < corpses.size(); i++)
+		{
+			float avgSize = (size + corpses[i]->size) / 2;
+			if ( fabs(x - corpses[i]->position.x) <= avgSize && fabs(z - corpses[i]->position.z) <= avgSize )
 			{
 				return true;
 			}

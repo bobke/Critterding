@@ -32,7 +32,6 @@ class Food
 		void			draw();
 		void			resize();
 
-
 	private:
 
 		GLubyte			indices[20];

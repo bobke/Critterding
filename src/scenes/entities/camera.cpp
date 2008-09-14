@@ -7,52 +7,8 @@ using namespace std;
 
 Camera::Camera()
 {
-// world=5
-//	position	= Vector3f(-2.5, -5.4, -4.5);
-
-// world=6
-//	position	= Vector3f(-3.0, -6.6, -5.6555);
-
-// world=7
-//	position	= Vector3f(-3.5, -7.7, -6.5);
-
-// world=10
-	position	= Vector3f(-5.0f, -11.0f, -9.0f);
-
-// world= 15
-//	position	= Vector3f(-7.5, -16.0, -14.0);
-
-// world= 20
-//	position	= Vector3f(-10.0, -22.3, -18.0);
-
-// world= 25
-//	position	= Vector3f(-12.5, -27.4, -22.5);
-
-// world= 30
-//	position	= Vector3f(-15.0, -32.6, -26.5);
-
-// world= 35
-//	position	= Vector3f(-17.5, -37.8, -31.5);
-
-// world= 50
-//	position	= Vector3f(-25.1, -54.0, -45.2);
-
-// world= 100
-//	position	= Vector3f(-50.0, -102.0, -87.0);
-
- //camera pos: -49.8998:-57.709:-111.602
-
-//-17.5:-37.7965:-31.4548
-// world=10
-//	position	= Vector3f(-5.0, -10.5, -8.66);
-	rotation	= Vector3f( 76.0,  0.0, 0.0);
-
-
-}
-
-
-Camera::~Camera()
-{
+	position	= Vector3f( 0.0f, 0.0f, 0.0f);
+	rotation	= Vector3f( 76.0f,  0.0f, 0.0f);
 }
 
 void Camera::place(unsigned int *width, unsigned int *height)
@@ -202,4 +158,8 @@ void Camera::lookDown(const float& factor)
 
 	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
+}
+
+Camera::~Camera()
+{
 }
