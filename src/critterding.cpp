@@ -96,6 +96,11 @@ std::stringstream helpinfo;
 	helpinfo << "STARTUP OPTIONS" << endl << endl;
 	helpinfo << "  option         [default value]" << endl << endl;
 	helpinfo << "  Global Settings" << endl;
+	helpinfo << "  --small                         Creates a 10x10 world with 100 energy" << endl;
+	helpinfo << "  --medium                        Creates a 25x25 world with 500 energy (default)" << endl;
+	helpinfo << "  --big                           Creates a 50x50 world with 3000 energy" << endl;
+	helpinfo << "  --huge                          Creates a 100x100 world with 15000 energy" << endl;
+
 	helpinfo << "  --worldsize               [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
 	helpinfo << "  --energy                 [" << energy << "]  Energy in the system: " << energy << "*food_energy(" << food_maxenergy << ") = " << energy*food_maxenergy << "" << endl;
 	helpinfo << "  --mincritters             [10]  If less than " << mincritters << " critters are present, insert an adam" << endl;
@@ -654,7 +659,7 @@ std::stringstream helpinfo;
 	cout << endl << endl;
 
 	GLWindow glwindow;
-	glwindow.create("Critterding beta5", 600, 600, 24, False);
+	glwindow.create("Critterding beta6", 600, 600, 24, False);
 
 		Evolution mainscene;
 
