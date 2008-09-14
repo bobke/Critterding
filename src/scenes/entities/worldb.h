@@ -15,6 +15,7 @@
 #include "grid.h"
 #include "floor.h"
 #include "food.h"
+#include "corpse.h"
 #include "wall.h"
 #include "bullet.h"
 #include "critterb.h"
@@ -136,6 +137,7 @@ class WorldB
 		RandGen			randgen;
 
 		vector<Food*>		food;
+		vector<Corpse*>		corpses;
 		vector<Wall*>		walls;
 		vector<Bullet*>		bullets;
 

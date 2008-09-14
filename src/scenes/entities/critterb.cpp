@@ -9,6 +9,7 @@ void CritterB::initConst()
 	size			= 0.0f;
 	halfsize		= 0.0f;
 	colorNeurons		= 0;
+	totalFrames		= 0;
 	maxtotalFrames		= 0;
 	maxEnergyLevel		= 0.0f;
 
@@ -25,7 +26,7 @@ void CritterB::initConst()
 	colorDivider		= 0;
 	retinasize		= 0;
 
-	colorTrim		= 0.25f;
+	colorTrim		= 0.5f;
 }
 
 CritterB::CritterB()
@@ -36,9 +37,9 @@ CritterB::CritterB()
 	adamdist		= 0;
 
 	// give it a random color
-	color[0] = (float)randgen.get( 20,100 ) / 100.0f;
-	color[1] = (float)randgen.get( 20,100 ) / 100.0f;
-	color[2] = (float)randgen.get( 20,100 ) / 100.0f;
+	color[0] = (float)randgen.get( 50,100 ) / 100.0f;
+	color[1] = (float)randgen.get( 50,100 ) / 100.0f;
+	color[2] = (float)randgen.get( 50,100 ) / 100.0f;
 	color[3] = 0.0f;
 }
 
@@ -69,17 +70,17 @@ void CritterB::calcInputOutputNeurons()
 {
 	items = retinasize * retinasize * components;
 
-	brain.numberOfInputs = (items*colorNeurons)+14; // 1 over food + 1 can fire bullet + 1 can procreate + 10 energy neurons + 1 always firing neuron
-	brain.numberOfOutputs = 9;
+	brain.numberOfInputs = (items*colorNeurons)+25; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 always firing neuron
+	brain.numberOfOutputs = 10;
 }
 
 void CritterB::setup()
 {
-	totalFrames		= 0;
 	procreateTimeCount	= 0;
 	fireTimeCount		= 0;
 
-	colorDivider		= 256 / colorNeurons;
+//	colorDivider		= 256.0f / colorNeurons;
+	colorDivider		= 128.0f / colorNeurons;
 
 	// setup brain from architecture
 	brain.wireArch();
@@ -94,6 +95,7 @@ void CritterB::process()
 
 	// reset motor bools
 		eat		= false;
+		eatCorpse	= false;
 		fire		= false;
 		procreate	= false;
 
@@ -206,7 +208,11 @@ void CritterB::procInputNeurons()
 
 					if ( retina[w]>0 )
 					{
-						brain.Inputs[itarget+ ((unsigned int)retina[w] / colorDivider)].output = 1;
+//						brain.Inputs[itarget+ ((unsigned int)retina[w] / colorDivider)].output = 1;
+
+// 						cerr << (unsigned int)retina[w] << " -> " << (unsigned int)retina[w]-128 << " : " << floor(((float)retina[w]-128) / colorDivider) << endl;
+
+						brain.Inputs[itarget+ floor(((float)retina[w]-128) / colorDivider)].output = 1;
 					}
 					i++;
 				}
@@ -245,8 +251,18 @@ void CritterB::procInputNeurons()
 	overstep++;
 
 	// energy neurons
-		unsigned int NeuronToFire = (int)((energyLevel / maxEnergyLevel) * 10) + overstep;
+		unsigned int NeuronToFire = (int)((energyLevel / maxEnergyLevel+1) * 10) + overstep;
 		unsigned int count = 10 + overstep;
+		while ( overstep < count )
+		{
+			if ( overstep <= NeuronToFire )	brain.Inputs[overstep].output = 1; // !!! <=
+			else 				brain.Inputs[overstep].output = 0;
+			overstep++;
+		}
+
+	// age neurons
+		NeuronToFire = (int)((totalFrames / maxtotalFrames+1) * 10) + overstep;
+		count = 10 + overstep;
 		while ( overstep < count )
 		{
 			if ( overstep <= NeuronToFire )	brain.Inputs[overstep].output = 1; // !!! <=
@@ -257,12 +273,19 @@ void CritterB::procInputNeurons()
 	// the always firing neuron
 		brain.Inputs[overstep].output = 1;
 
+	overstep++;
+
+	// over corpse sensor neuron
+		if ( touchingCorpse )	brain.Inputs[overstep].output = 1;
+		else			brain.Inputs[overstep].output = 0;
+
+
 	// debugging check
-//		if ( overstep != brain.Inputs.size()-1 )
-//		{
-//			cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
-//			exit(0);
-//		}
+		if ( overstep != brain.Inputs.size()-1 )
+		{
+			cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
+			exit(0);
+		}
 }
 
 void CritterB::procOutputNeurons()
@@ -322,6 +345,12 @@ void CritterB::procOutputNeurons()
 	if ( brain.Outputs[8].output > 0 )
 	{
 		procreate = true;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[9].output > 0 )
+	{
+		eatCorpse = true;
 		motorneuronsfired++;
 	}
 

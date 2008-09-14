@@ -3,14 +3,16 @@
 
 using namespace std;
 
+	Vector3f cameraposition							= Vector3f(-5.0f, -11.0f, -9.0f);
+
 // Global Settings
-	unsigned int worldsize							= 10;
-	unsigned int energy							= 100;
+	unsigned int worldsize							= 25;
+	unsigned int energy							= 500;
 	unsigned int mincritters						= 10;
 	unsigned int retinasperrow						= 20;
 
 // Critter Settings
-	unsigned int critter_maxlifetime					= 1200;
+	unsigned int critter_maxlifetime					= 2000;
 	unsigned int critter_maxenergy						= 5000;
 	unsigned int critter_startenergy					= 2500;
 	unsigned int critter_maxchildren					= 100;
@@ -19,7 +21,7 @@ using namespace std;
 	unsigned int critter_minenergyfire					= 1;
 	float        critter_size						= 0.1f;
 	float        critter_speed						= 0.05f;
-	float        critter_sightrange						= 3.0f;
+	float        critter_sightrange						= 4.0f;
 	unsigned int critter_retinasize						= 7;
 	unsigned int critter_colorneurons					= 3;
 	unsigned int critter_mutationrate					= 10;
@@ -27,7 +29,7 @@ using namespace std;
 	bool critter_flipnewborns						= false;
 
 // Food Settings
-	unsigned int food_maxlifetime						= 400;
+	unsigned int food_maxlifetime						= 500;
 	unsigned int food_maxenergy						= 2500;
 	float        food_size							= 0.15f;
 
@@ -170,14 +172,39 @@ std::stringstream helpinfo;
 	{
 		string sw = argv[optind];
 
+	// X Settings
+		if (sw=="--small")
+		{
+			worldsize = 10;
+			energy = 100;
+	        }
+
+		else if (sw=="--medium")
+		{
+			worldsize = 25;
+			energy = 500;
+	        }
+
+		else if (sw=="--big")
+		{
+			worldsize = 50;
+			energy = 3000;
+	        }
+
+		else if (sw=="--huge")
+		{
+			worldsize = 100;
+			energy = 15000;
+	        }
+
 	// Global Settings
-		if (sw=="--worldsize")
+		else if (sw=="--worldsize")
 		{
 			optind++;
 			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
+			if ( value >= 1 && value <= 5000 )
 				worldsize = value;
-			else { cerr << "worldsize must match >=1 and <=1000000" << endl; exit(1); }
+			else { cerr << "worldsize must match >=1 and <=5000" << endl; exit(1); }
 	        }
 		else if (sw=="--energy")
 		{
@@ -630,6 +657,9 @@ std::stringstream helpinfo;
 	glwindow.create("Critterding beta5", 600, 600, 24, False);
 
 		Evolution mainscene;
+
+		mainscene.camera.position = Vector3f(-0.5f*worldsize, -1.1f*worldsize, -0.9f*worldsize);
+		//mainscene.camera.position = cameraposition;
 
 		// critter
 		mainscene.world.critter_maxlifetime = critter_maxlifetime;

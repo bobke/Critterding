@@ -59,9 +59,12 @@ class CritterB
 		float			minfireenergyLevel;
 
 		bool			eat;
+		bool			eatCorpse;
 		bool			moved;
 		bool			touchingFood;
 		unsigned int		touchedFoodID;
+		bool			touchingCorpse;
+		unsigned int		touchedCorpseID;
 		bool			fire;
 		bool			canFire;
 		bool			procreate;
@@ -106,7 +109,7 @@ class CritterB
 		unsigned int		framePosX;
 		unsigned int		framePosY;
 
-		unsigned int		colorDivider;
+		float			colorDivider;
 		unsigned int		retinaColumnStart;
 		unsigned int		retinaRowStart;
 		unsigned int		retinaRowLength;
