@@ -167,58 +167,21 @@ void CritterB::procInputNeurons()
 
 	// clear all inputs
 
-		brain.clearInputs();
+	brain.clearInputs();
 
-	// link vision array directly to the sensor neurons' output
-/*		if ( colorNeurons == 1 )
+	// vision
+		unsigned int i=0;
+		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
 		{
-			for ( unsigned int i=0; i < items; i++ )
+			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
 			{
-				if ( retina[i]>0 ) brain.Inputs[i].output = 1;
+				if ( retina[w]>0 )
+				{
+					brain.Inputs[(i*colorNeurons) + floor(((float)retina[w]-128) / colorDivider)].output = 1;
+				}
+				i++;
 			}
 		}
-		else
-		{*/
-
-//see what it sees
-// 			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
-// 			{
-// 				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=components )
-// 				{
-// 					if ( (int)retina[w] ) cerr << "\033[1;31mR\033[0m";
-// 					else cerr << ".";
-// 					if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
-// 					else cerr << ".";
-// 					if ( (int)retina[w+2] ) cerr << "\033[1;34mB\033[0m";
-// 					else cerr << ".";
-// 					if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
-// 					else cerr << ".";
-// 				}
-// 				cerr << "" << endl;
-// 			}
-// 			cerr << "" << endl;
-// 			usleep (10000);
-
-			unsigned int i=0;
-			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
-			{
-				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
-				{
-					unsigned itarget = i * colorNeurons;
-
-					if ( retina[w]>0 )
-					{
-//						brain.Inputs[itarget+ ((unsigned int)retina[w] / colorDivider)].output = 1;
-
-// 						cerr << (unsigned int)retina[w] << " -> " << (unsigned int)retina[w]-128 << " : " << floor(((float)retina[w]-128) / colorDivider) << endl;
-
-						brain.Inputs[itarget+ floor(((float)retina[w]-128) / colorDivider)].output = 1;
-					}
-					i++;
-				}
-			}
-
-// 		}
 
 	unsigned int overstep = items*colorNeurons;
 
@@ -251,7 +214,7 @@ void CritterB::procInputNeurons()
 	overstep++;
 
 	// energy neurons
-		unsigned int NeuronToFire = (int)((energyLevel / maxEnergyLevel+1) * 10) + overstep;
+		unsigned int NeuronToFire = (int)((energyLevel / (maxEnergyLevel+1)) * 10) + overstep;
 		unsigned int count = 10 + overstep;
 		while ( overstep < count )
 		{
@@ -261,7 +224,7 @@ void CritterB::procInputNeurons()
 		}
 
 	// age neurons
-		NeuronToFire = (int)((totalFrames / maxtotalFrames+1) * 10) + overstep;
+		NeuronToFire = (int)(((float)totalFrames / (maxtotalFrames+1)) * 10) + overstep;
 		count = 10 + overstep;
 		while ( overstep < count )
 		{
@@ -281,11 +244,11 @@ void CritterB::procInputNeurons()
 
 
 	// debugging check
-		if ( overstep != brain.Inputs.size()-1 )
-		{
-			cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
-			exit(0);
-		}
+// 		if ( overstep != brain.Inputs.size()-1 )
+// 		{
+// 			cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
+// 			exit(0);
+// 		}
 }
 
 void CritterB::procOutputNeurons()

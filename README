@@ -12,13 +12,17 @@ STARTUP OPTIONS
   option         [default value]
 
   Global Settings
-  --worldsize               [10]  Creates a 10x10 world
-  --energy                 [100]  Energy in the system: 100*food_energy(2500) = 250000
-  --mincritters             [10]  If less than 10 critters are present, insert an adam
-  --retinasperrow           [20]  Place 20 retinas on a row (bottom left of window)   
+  --small                         Creates a 10x10 world with 100 energy
+  --medium                        Creates a 25x25 world with 500 energy (default)
+  --big                           Creates a 50x50 world with 3000 energy         
+  --huge                          Creates a 100x100 world with 15000 energy      
+  --worldsize               [25]  Creates a 25x25 world                          
+  --energy                 [500]  Energy in the system: 500*food_energy(2500) = 1250000
+  --mincritters             [10]  If less than 10 critters are present, insert an adam 
+  --retinasperrow           [20]  Place 20 retinas on a row (bottom left of window)    
 
   Critter Settings
-  --critter_maxlifetime   [1200]  Max amount of frames a critter can live
+  --critter_maxlifetime   [2000]  Max amount of frames a critter can live
   --critter_maxenergy     [5000]  Max amount of energy in a critter      
   --critter_startenergy   [2500]  Starting amount of energy for a new critter
   --critter_maxchildren    [100]  Max amount of children a critter can spawn 
@@ -27,7 +31,7 @@ STARTUP OPTIONS
   --critter_minenergyfire    [1]  Min amount of energy required for firing a bullet
   --critter_size            [10]  Size of a critter                                
   --critter_speed           [50]  Critter speed                                    
-  --critter_sightrange      [30]  Distance a critter can see (30 = 3 floor squares)
+  --critter_sightrange      [40]  Distance a critter can see (40 = 4 floor squares)
   --critter_retinasize       [7]  Resolution of critter's retina: 7x7
   --critter_colorneurons     [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
   --critter_mutationrate    [10]  When a critter procreates there is a 10% chance it will mutate
@@ -35,7 +39,7 @@ STARTUP OPTIONS
   --critter_flipnewborns          If set, newborns will be flipped 180 degrees
 
   Food Settings
-  --food_maxlifetime       [400]  Maximum amount of frames food can live
+  --food_maxlifetime       [500]  Maximum amount of frames food can live
   --food_maxenergy        [2500]  Maximum amount of energy in a food unit
   --food_size               [15]  Size of a food unit
 
