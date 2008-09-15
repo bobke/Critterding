@@ -5,6 +5,7 @@ started testing a corpse entity
 discovered and fixed retina to input mapping bug
 visibility enhancement by allowing only bright colors
 bullet hit: half of lifetime lost
+camera autopositioning according to world size
 --small, --medium, --big and --huge options
 
 1.0-beta5
