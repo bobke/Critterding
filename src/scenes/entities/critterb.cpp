@@ -175,7 +175,7 @@ void CritterB::procInputNeurons()
 		{
 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
 			{
-				if ( retina[w]>0 )
+				if ( (unsigned int)retina[w]>127 ) // >> 127 due to window resizing being a problem.
 				{
 					brain.Inputs[(i*colorNeurons) + floor(((float)retina[w]-128) / colorDivider)].output = 1;
 				}
