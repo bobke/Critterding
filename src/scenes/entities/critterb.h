@@ -6,7 +6,6 @@
 //#include "../../brain/brain.h"
 #include "../../brainz/brainz.h"
 #include "vector3f.h"
-
 #include "GL/gl.h"
 #include <cmath>
 #include <vector>
@@ -23,7 +22,6 @@ class CritterB
 		CritterB(string &critterstring);
 		~CritterB();
 
-//		Brain			brain;
 		Brainz			brain;
 
 		unsigned int		adamdist;
@@ -42,7 +40,7 @@ class CritterB
 
 		float			rotation;
 		float			color[4];
-		float			colorTrim; // so critter's color is minimal X for rgb
+		float			colorTrim;
 		float			maxEnergyLevel;
 		float			energyLevel;
 		float			energyUsed;
@@ -102,7 +100,6 @@ class CritterB
 	private:
 
 		Parser			parseH;
-
 
 		// frame capturing options
 		unsigned int		components;

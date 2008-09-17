@@ -21,7 +21,6 @@ class Wall
 		bool			disabled;
 
 		Vector3f		position;
-		float			color[4];
 
 		void			draw();
 		void			toggle();
@@ -29,8 +28,9 @@ class Wall
 
 	private:
 
+		float			color[4];
 		GLfloat 		vertices[24];
-		GLubyte			indices[24];
+		GLubyte			indices[20];
 
 
 };
