@@ -435,9 +435,11 @@ void CritterB::resize(float newsize)
 	indices[16] = 5; indices[19] = 6; indices[18] = 7; indices[17] = 4;
 
 	// nose
-	vertices[24] = 0; vertices[25] = halfsize; vertices[26] = -halfsize*1.3f;
+	vertices[24] = 0; vertices[25] = halfsize*0.5f; vertices[26] = -halfsize*1.3f;
 
-	tindices[0] = 3; tindices[1] = 7; tindices[2] = 8;
+//	tindices[0] = 3; tindices[1] = 7; tindices[2] = 8;
+	tindices[0] = 8; tindices[1] = 7; tindices[2] = 3;
+
 
 	calcCamPos();
 }
