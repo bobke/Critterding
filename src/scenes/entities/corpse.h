@@ -15,27 +15,24 @@ class Corpse
 		~Corpse();
 
 		float			size;
-		float			halfsize;
 		float			energy;
 
 		float			maxsize;
 		float			maxenergy;
 
 		Vector3f		position;
-		float			color[4];
 
 		unsigned int		totalFrames;
 		unsigned int		maxtotalFrames;
 
-		GLfloat 		vertices[24];
-
 		void			draw();
 		void			resize();
-
 	private:
 
 		GLubyte			indices[20];
-
+		GLfloat 		vertices[24];
+		float			color[4];
+		float			halfsize;
 
 };
 
