@@ -35,7 +35,8 @@ class Bullet
 		float		directionZ;
 
 		GLfloat 	vertices[24];
-		GLubyte		indices[24];
+		//GLubyte		indices[24];
+		GLubyte		indices[20];
 
 		void		resize(float size);
 

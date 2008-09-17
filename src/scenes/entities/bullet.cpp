@@ -40,7 +40,8 @@ void Bullet::draw()
 		glColor4f( color[0], color[1], color[2], color[3] );
 		glTranslatef( position.x, position.y, position.z );
 	
-		glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, indices);
+		glDrawElements(GL_QUADS, 20, GL_UNSIGNED_BYTE, indices);
+//		glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, indices);
 	glPopMatrix();
 }
 
@@ -65,11 +66,17 @@ void Bullet::resize(float newsize)
 	vertices[21] = halfsize; vertices[22] = halfsize; vertices[23] = -halfsize;
 
 	indices[0] = 0; indices[1] = 3; indices[2] = 7; indices[3] = 4;
+	indices[4] = 2; indices[7] = 3; indices[6] = 7; indices[5] = 6;
+	indices[8] = 1; indices[9] = 0; indices[10] = 4; indices[11] = 5;
+	indices[12] = 1; indices[13] = 2; indices[14] = 3; indices[15] = 0;
+	indices[16] = 5; indices[19] = 6; indices[18] = 7; indices[17] = 4;
+
+/*	indices[0] = 0; indices[1] = 3; indices[2] = 7; indices[3] = 4;
 	indices[4] = 1; indices[5] = 2; indices[6] = 6; indices[7] = 5;
 	indices[8] = 2; indices[9] = 3; indices[10] = 7; indices[11] = 6;
 	indices[12] = 1; indices[13] = 0; indices[14] = 4; indices[15] = 5;
 	indices[16] = 1; indices[17] = 2; indices[18] = 3; indices[19] = 0;
-	indices[20] = 5; indices[21] = 6; indices[22] = 7; indices[23] = 4;
+	indices[20] = 5; indices[21] = 6; indices[22] = 7; indices[23] = 4;*/
 }
 
 Bullet::~Bullet()

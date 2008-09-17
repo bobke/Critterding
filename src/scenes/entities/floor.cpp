@@ -32,11 +32,12 @@ void Floor::resize(int newsize)
 
 	vertices.clear();
 
-	vertices.push_back( Vector3f( 0.0f, 0.0f, 0.0f ) );
-	vertices.push_back( Vector3f( 0.0f, 0.0f, gridsize ) );
 
-	vertices.push_back( Vector3f( gridsize, 0.0f, gridsize ) );
 	vertices.push_back( Vector3f( gridsize, 0.0f, 0.0f ) );
+	vertices.push_back( Vector3f( gridsize, 0.0f, gridsize ) );
+
+	vertices.push_back( Vector3f( 0.0f, 0.0f, gridsize ) );
+	vertices.push_back( Vector3f( 0.0f, 0.0f, 0.0f ) );
 }
 
 Floor::~Floor()
