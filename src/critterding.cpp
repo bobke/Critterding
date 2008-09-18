@@ -659,7 +659,7 @@ std::stringstream helpinfo;
 	cout << endl << endl;
 
 	GLWindow glwindow;
-	glwindow.create("Critterding beta6", 600, 600, 24, False);
+	glwindow.create("Critterding beta7", 600, 600, 24, False);
 
 		Evolution mainscene;
 
