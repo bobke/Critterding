@@ -70,22 +70,25 @@ void WorldB::process()
 	// Remove food
 	for( unsigned int i=0; i < food.size(); i++)
 	{
-		// food was eaten
-		if ( food[i]->energy < 0 )
+		if ( !food[i]->isCarried )
 		{
-			freeEnergy += food[i]->energy;
-			delete food[i];
-			food.erase(food.begin()+i);
-			i--;
-		}
+			// food was eaten
+			if ( food[i]->energy < 0 )
+			{
+				freeEnergy += food[i]->energy;
+				delete food[i];
+				food.erase(food.begin()+i);
+				i--;
+			}
 
-		// old food, this should remove stuff from corners
-		else if ( ++food[i]->totalFrames >= food[i]->maxtotalFrames )
-		{
-			freeEnergy += food[i]->energy;
-			delete food[i];
-			food.erase(food.begin()+i);
-			i--;
+			// old food, this should remove stuff from corners
+			else if ( ++food[i]->totalFrames >= food[i]->maxtotalFrames )
+			{
+				freeEnergy += food[i]->energy;
+				delete food[i];
+				food.erase(food.begin()+i);
+				i--;
+			}
 		}
 	}
 
@@ -235,11 +238,14 @@ void WorldB::process()
 			for( unsigned int f=0; f < food.size() && !c->touchingFood; f++)
 			{
 				Food *fo = food[f];
-				float avgSize = (c->size + fo->size) / 2;
-				if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
+				if ( !fo->isCarried )
 				{
-					c->touchingFood = true;
-					c->touchedFoodID = f;
+					float avgSize = (c->size + fo->size) / 2;
+					if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
+					{
+						c->touchingFood = true;
+						c->touchedFoodID = f;
+					}
 				}
 			}
 
@@ -293,10 +299,6 @@ void WorldB::process()
 		// eat corpse
 			if ( c->touchingCorpse && c->eatCorpse )
 			{
-				//cerr << "pre E: " << critters[i]->energyLevel << endl;
-				// increase energyLevel of critter, decrease of food
-				//float eaten = ( c->maxEnergyLevel - c->energyLevel ) / 10.0f;
-	
 				float eaten = c->maxEnergyLevel / 50.0f;
 				if ( c->energyLevel + eaten > c->maxEnergyLevel ) eaten -= (c->energyLevel + eaten) - c->maxEnergyLevel;
 	
@@ -306,7 +308,33 @@ void WorldB::process()
 				co->energy		-= eaten;
 				co->resize();
 			}
-	
+
+		// carry / drop
+			if ( c->touchingFood && c->carrydrop )
+			{
+				if ( !c->carriesFood )
+				{
+					c->foodBeingCarried = food[c->touchedFoodID];
+					c->carriesFood = true;
+					c->foodBeingCarried->isCarried = true;
+					c->foodBeingCarried->position.x = c->position.x;
+					c->foodBeingCarried->position.y += c->size;
+					c->foodBeingCarried->position.z = c->position.z;
+					//cerr << "LIFTING" << endl;
+				}
+				else // we must do an exchange here
+				{
+				}
+			}
+
+			else if ( c->carrydrop && c->carriesFood ) // ! else
+			{
+				c->carriesFood = false;
+				c->foodBeingCarried->isCarried = false;
+				c->foodBeingCarried->position.y -= c->size;
+				//cerr << "DROPPING" << endl;
+			}
+
 		// fire
 			if ( c->fire && c->canFire )
 			{
@@ -577,6 +605,7 @@ void WorldB::removeCritter(unsigned int cid)
 		c->maxtotalFrames = food_maxlifetime;
 		c->position = critters[cid]->position;
 
+		// put max energy allowed in food
 		if ( critters[cid]->energyLevel > food_maxenergy )
 		{
 			c->energy = food_maxenergy;
@@ -586,11 +615,9 @@ void WorldB::removeCritter(unsigned int cid)
 			c->energy = critters[cid]->energyLevel;
 		}
 
-
+		// put rest back in space
 		freeEnergy += critters[cid]->energyLevel;
 		freeEnergy -= c->energy;
-
-		// put 50% of energy in food, rest back in space
 
 		//f->resize(food_size);
 		c->resize();
@@ -640,6 +667,12 @@ void WorldB::removeCritter(unsigned int cid)
 		{
 			selectedCritter--;
 		}
+	}
+
+	if ( critters[cid]->carriesFood )
+	{
+		critters[cid]->foodBeingCarried->isCarried = false;
+		critters[cid]->foodBeingCarried->position.y -= critters[cid]->size;
 	}
 
 	delete critters[cid];
@@ -741,7 +774,6 @@ void WorldB::loadAllCritters()
 				c->fireTimeTrigger = critter_maxlifetime / critter_maxbullets;
 				c->minprocenergyLevel	= critter_minenergyproc;
 				c->minfireenergyLevel	= critter_minenergyfire;
-
 				c->setup();
 				c->retina = retina;
 				// record it's energy

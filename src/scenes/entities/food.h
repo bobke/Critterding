@@ -3,6 +3,7 @@
 
 #include "GL/gl.h"
 #include "vector3f.h"
+//#include "critterb.h"
 #include <vector>
 #include <iostream>
 
@@ -24,6 +25,9 @@ class Food
 
 		unsigned int		totalFrames;
 		unsigned int		maxtotalFrames;
+
+		bool			isCarried;
+		//CritterB		carriedBy;
 
 		void			draw();
 		void			resize();
