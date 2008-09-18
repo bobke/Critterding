@@ -86,11 +86,8 @@ using namespace std;
 	unsigned int brain_percentmutateeffectremovesynapse			= 30;
 		bool brain_mutate_mutateeffects					= false;
 
-
-int main(int argc, char *argv[])
+const std::stringstream& helpinfo()
 {
-
-
 std::stringstream helpinfo;
 
 	helpinfo << "STARTUP OPTIONS" << endl << endl;
@@ -171,6 +168,11 @@ std::stringstream helpinfo;
 	helpinfo << "  --brain_percentmutateeffectremovesynapse       [" << brain_percentmutateeffectremovesynapse << "]  % chance of removing a synapse for a mutationrun" << endl;
 	helpinfo << "    --brain_mutate_mutateeffects                       If set, all values above will mutate" << endl;
 
+        return helpinfo;
+}
+
+void parseArgs( int argc, const char* argv[] )
+{
 	int optind=1;
 	// decode arguments
 	while ((optind < argc) && (argv[optind][0]=='-'))
@@ -637,7 +639,7 @@ std::stringstream helpinfo;
 
 		else if (sw=="--help")
 		{
-			cout << helpinfo.str() << endl;
+			cout << helpinfo().str() << endl;
 			exit(1);
 	        }
 
@@ -657,6 +659,12 @@ std::stringstream helpinfo;
 		exit(1);
 	}
 	cout << endl << endl;
+}
+
+int main(int argc, const char *argv[])
+{
+
+        parseArgs( argc, argv );
 
 	GLWindow glwindow;
 	glwindow.create("Critterding beta7", 600, 600, 24, False);
