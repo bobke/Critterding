@@ -6,6 +6,7 @@
 //#include "../../brain/brain.h"
 #include "../../brainz/brainz.h"
 #include "vector3f.h"
+#include "food.h"
 #include "GL/gl.h"
 #include <cmath>
 #include <vector>
@@ -48,6 +49,9 @@ class CritterB
 		unsigned int		totalFrames;
 		unsigned int		maxtotalFrames;
 
+		bool			carriesFood;
+		Food*			foodBeingCarried;
+
 		unsigned int		procreateTimeCount;
 		unsigned int		procreateTimeTrigger;
 		float			minprocenergyLevel;
@@ -56,18 +60,14 @@ class CritterB
 		unsigned int		fireTimeTrigger;
 		float			minfireenergyLevel;
 
-		bool			eat;
-		bool			eatCorpse;
 		bool			moved;
 		bool			touchingFood;
 		unsigned int		touchedFoodID;
 		bool			touchingCorpse;
 		unsigned int		touchedCorpseID;
-		bool			fire;
-		bool			canFire;
-		bool			procreate;
 		bool			canProcreate;
 		bool			wasShot;
+
 		unsigned char		*retina;
 		unsigned int		items;
 		Vector3f		cameraposition;
@@ -90,6 +90,13 @@ class CritterB
 		void			moveLeft();
 		void 			rotateRight();
 		void			rotateLeft();
+		bool			eat;
+		bool			fire;
+		bool			canFire;
+		bool			procreate;
+		bool			eatCorpse;
+		bool			carrydrop;
+
 		void			prepNewPoss();
 		void			moveToNewPoss();
 

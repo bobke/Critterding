@@ -22,6 +22,8 @@ void CritterB::initConst()
 	retinaRowStart		= 0;
 	retinaRowLength		= 0;
 
+	carriesFood		= false;
+
 	components		= 4;
 	colorDivider		= 0;
 	retinasize		= 0;
@@ -71,7 +73,7 @@ void CritterB::calcInputOutputNeurons()
 	items = retinasize * retinasize * components;
 
 	brain.numberOfInputs = (items*colorNeurons)+25; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 always firing neuron
-	brain.numberOfOutputs = 10;
+	brain.numberOfOutputs = 11;
 }
 
 void CritterB::setup()
@@ -98,6 +100,7 @@ void CritterB::process()
 		eatCorpse	= false;
 		fire		= false;
 		procreate	= false;
+		carrydrop	= false;
 
 	// wasShot (used in world)
 		wasShot		= false;
@@ -255,7 +258,7 @@ void CritterB::procOutputNeurons()
 {
 	motorneuronsfired = 0;
 
-	// there are 9 motor neurons
+	// there are 11 motor neurons
 
 	if ( brain.Outputs[0].output > 0 )
 	{
@@ -317,6 +320,11 @@ void CritterB::procOutputNeurons()
 		motorneuronsfired++;
 	}
 
+	if ( brain.Outputs[10].output > 0 )
+	{
+		carrydrop = true;
+		motorneuronsfired++;
+	}
 }
 
 void CritterB::mutate(unsigned int maxMutateRuns)
@@ -437,9 +445,7 @@ void CritterB::resize(float newsize)
 	// nose
 	vertices[24] = 0; vertices[25] = halfsize*0.5f; vertices[26] = -halfsize*1.3f;
 
-//	tindices[0] = 3; tindices[1] = 7; tindices[2] = 8;
 	tindices[0] = 8; tindices[1] = 7; tindices[2] = 3;
-
 
 	calcCamPos();
 }
@@ -457,6 +463,11 @@ void CritterB::resize(float newsize)
 	{
 		position = newposition;
 		calcCamPos();
+		if ( carriesFood )
+		{
+			foodBeingCarried->position.x = position.x;
+			foodBeingCarried->position.z = position.z;
+		}
 	}
 
 	void CritterB::moveForward()
@@ -570,7 +581,6 @@ void CritterB::resize(float newsize)
 		}
 
 		brain.setArch(&passToBrain);
-
 	}
 
 

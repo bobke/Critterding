@@ -11,6 +11,8 @@ Food::Food()
 	totalFrames	= 0;
 	maxtotalFrames	= 0;
 
+	isCarried	= false;
+
 	color[0]	= 0.0f;
 	color[1]	= 1.0f;
 	color[2]	= 0.0f;
