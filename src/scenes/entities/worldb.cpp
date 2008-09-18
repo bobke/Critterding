@@ -597,8 +597,11 @@ void WorldB::positionCritterB(unsigned int cid)
 
 void WorldB::removeCritter(unsigned int cid)
 {
+	bool hasCorpse = false;
 	if ( critters[cid]->energyLevel > 0.0f )
 	{
+		hasCorpse = true;
+
 		Corpse *c = new Corpse;
 		c->maxenergy = food_maxenergy;
 		c->maxsize = food_size;
@@ -660,8 +663,6 @@ void WorldB::removeCritter(unsigned int cid)
 		if ( selectedCritter == cid )
 		{
 			selectedCritter = critters.size()-1;
-//			selectedCritter = 0;
-//			isSelected = false;
 		}
 		else if ( selectedCritter > cid )
 		{
@@ -672,6 +673,8 @@ void WorldB::removeCritter(unsigned int cid)
 	if ( critters[cid]->carriesFood )
 	{
 		critters[cid]->foodBeingCarried->isCarried = false;
+
+		// drop the food back down
 		critters[cid]->foodBeingCarried->position.y -= critters[cid]->size;
 	}
 

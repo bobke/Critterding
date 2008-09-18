@@ -116,6 +116,7 @@ class Brainz
 	// build commands
 
 		// functions
+			void			copyFrom(Brainz& otherBrain);
 			void			buildArch();
 			void			mutate(unsigned int runs);
 			void			wireArch();
