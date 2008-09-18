@@ -831,29 +831,32 @@ Brainz::Brainz()
 		for ( unsigned int i = 0; i < otherBrain.ArchNeurons.size(); i++ )
 		{
 			ArchNeuronz an;
+			ArchNeuronz *oan = &otherBrain.ArchNeurons[i];
 
-			an.isInhibitory = otherBrain.ArchNeurons[i].isInhibitory;
+			an.isInhibitory = oan->isInhibitory;
 
-			an.hasConsistentSynapses = otherBrain.ArchNeurons[i].hasConsistentSynapses;
-			an.hasInhibitorySynapses = otherBrain.ArchNeurons[i].hasInhibitorySynapses;
-			an.firingThreshold = otherBrain.ArchNeurons[i].firingThreshold;
-			an.dendridicBranches = otherBrain.ArchNeurons[i].dendridicBranches;
+			an.hasConsistentSynapses = oan->hasConsistentSynapses;
+			an.hasInhibitorySynapses = oan->hasInhibitorySynapses;
+			an.firingThreshold = oan->firingThreshold;
+			an.dendridicBranches = oan->dendridicBranches;
 
-			an.isMotor = otherBrain.ArchNeurons[i].isMotor;
-			an.motorFunc = otherBrain.ArchNeurons[i].motorFunc;
-			an.isPlastic = otherBrain.ArchNeurons[i].isPlastic;
-			an.isPlastic = otherBrain.ArchNeurons[i].isPlastic;
-			an.plasticityStrengthen = otherBrain.ArchNeurons[i].plasticityStrengthen;
-			an.plasticityWeaken = otherBrain.ArchNeurons[i].plasticityWeaken;
+			an.isMotor = oan->isMotor;
+			an.motorFunc = oan->motorFunc;
+			an.isPlastic = oan->isPlastic;
+			an.isPlastic = oan->isPlastic;
+			an.plasticityStrengthen = oan->plasticityStrengthen;
+			an.plasticityWeaken = oan->plasticityWeaken;
 
 			// inputs
-			for ( unsigned int j = 0; j < otherBrain.ArchNeurons[i].ArchSynapses.size(); j++ )
+			for ( unsigned int j = 0; j < oan->ArchSynapses.size(); j++ )
 			{
 				ArchSynapse as;
-				as.isSensorNeuron	= otherBrain.ArchNeurons[i].ArchSynapses[j].isSensorNeuron;
-				as.neuronID		= otherBrain.ArchNeurons[i].ArchSynapses[j].neuronID;
-				as.dendriteBranch	= otherBrain.ArchNeurons[i].ArchSynapses[j].dendriteBranch;
-				as.weight		= otherBrain.ArchNeurons[i].ArchSynapses[j].weight;
+				ArchSynapse *oas = &oan->ArchSynapses[j];
+
+				as.isSensorNeuron	= oas->isSensorNeuron;
+				as.neuronID		= oas->neuronID;
+				as.dendriteBranch	= oas->dendriteBranch;
+				as.weight		= oas->weight;
 				an.ArchSynapses.push_back( as );
 			}
 			ArchNeurons.push_back( an );
