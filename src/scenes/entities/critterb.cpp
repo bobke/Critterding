@@ -56,12 +56,7 @@ CritterB::CritterB(string &critterstring)
 
 CritterB::CritterB(CritterB &other)
 {
-	// FIXME don't use the save shit, too slow!!!!! FIXME
 	initConst();
-
-//	string arch = other.saveCritterB();
-//	loadCritterB(arch);
-
 
 	color[0]					= other.color[0];
 	color[1]					= other.color[1];
@@ -73,8 +68,6 @@ CritterB::CritterB(CritterB &other)
 	colorNeurons					= other.colorNeurons;
 
 	brain.copyFrom(other.brain);
-
-
 
 	items = retinasize * retinasize * components;
 
