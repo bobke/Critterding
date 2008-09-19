@@ -73,7 +73,6 @@ Brainz::Brainz()
 
 		// archBuffer
 		archBuffer					= "";
-		archIsBuffered					= false;
 }
 
 // BUILD TIME
@@ -1231,8 +1230,6 @@ Brainz::Brainz()
 	
 	string* Brainz::getArch()
 	{
-		if ( !archIsBuffered )
-		{
 			stringstream buf;
 	
 			buf << "numberOfInputs="			<< numberOfInputs << ";" << endl;
@@ -1328,8 +1325,6 @@ Brainz::Brainz()
 				buf << ");\n";
 			}
 			archBuffer = buf.str();
-			archIsBuffered = true;
-		}
 
 		return &archBuffer;
 	}

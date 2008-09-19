@@ -143,7 +143,6 @@ class Brainz
 
 		// a buffer for reading architecture
 			string			archBuffer;
-			bool			archIsBuffered;
 
 		// build time functions
 			void			addRandomArchNeuron();
