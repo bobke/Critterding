@@ -67,6 +67,17 @@ void WorldB::process()
 		
 	}
 
+	// Insert Food
+	while ( freeEnergy >= food_maxenergy )
+	{
+		insertRandomFood(1, food_maxenergy);
+		freeEnergy -= food_maxenergy;
+		//cerr << "food: " << food.size() << endl;
+	}
+
+	// insert critter if < minimum
+	if ( critters.size() < mincritters ) insertCritter();
+
 	// Remove food
 	for( unsigned int i=0; i < food.size(); i++)
 	{
@@ -113,17 +124,6 @@ void WorldB::process()
 			i--;
 		}
 	}
-
-	// Insert Food
-	while ( freeEnergy >= food_maxenergy )
-	{
-		insertRandomFood(1, food_maxenergy);
-		freeEnergy -= food_maxenergy;
-		//cerr << "food: " << food.size() << endl;
-	}
-
-	// insert critter if < minimum
-	if ( critters.size() < mincritters ) insertCritter();
 
 	// remove all dead critters
 	for( unsigned int i=0; i < critters.size(); i++)
@@ -280,10 +280,6 @@ void WorldB::process()
 		// eat
 			if ( c->touchingFood && c->eat )
 			{
-				//cerr << "pre E: " << critters[i]->energyLevel << endl;
-				// increase energyLevel of critter, decrease of food
-				//float eaten = ( c->maxEnergyLevel - c->energyLevel ) / 10.0f;
-	
 				float eaten = c->maxEnergyLevel / 50.0f;
 				if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
 				if ( food[c->touchedFoodID]->energy - eaten < 0 ) eaten = food[c->touchedFoodID]->energy;
@@ -312,18 +308,21 @@ void WorldB::process()
 			{
 				if ( !c->carriesFood )
 				{
-					c->foodBeingCarried = food[c->touchedFoodID];
-					c->carriesFood = true;
+					if ( !food[c->touchedFoodID]->isCarried )
+					{
+						c->foodBeingCarried = food[c->touchedFoodID];
+						c->carriesFood = true;
 
-					// calculate a new speedfactor depending on food energy
-					float halfcrspeed = (critter_speed / 2.0f);
-					c->speedfactor = halfcrspeed + (halfcrspeed - ((c->foodBeingCarried->energy/food_maxenergy)*halfcrspeed) );
+						// calculate a new speedfactor depending on food energy
+						float halfcrspeed = (critter_speed / 2.0f);
+						c->speedfactor = halfcrspeed + (halfcrspeed - ((c->foodBeingCarried->energy/food_maxenergy)*halfcrspeed) );
 
-					c->foodBeingCarried->isCarried = true;
-					c->foodBeingCarried->position.x = c->position.x;
-					c->foodBeingCarried->position.y += c->size;
-					c->foodBeingCarried->position.z = c->position.z;
-					//cerr << "LIFTING" << endl;
+						c->foodBeingCarried->isCarried = true;
+						c->foodBeingCarried->position.x = c->position.x;
+						c->foodBeingCarried->position.y += c->size;
+						c->foodBeingCarried->position.z = c->position.z;
+						//cerr << "LIFTING" << endl;
+					}
 				}
 				else // we must do an exchange here
 				{
