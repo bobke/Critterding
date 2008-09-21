@@ -73,7 +73,7 @@ void WorldB::process()
 		if ( !food[i]->isCarried )
 		{
 			// food was eaten
-			if ( food[i]->energy < 0 )
+			if ( food[i]->energy <= 0 )
 			{
 				freeEnergy += food[i]->energy;
 				delete food[i];
@@ -96,7 +96,7 @@ void WorldB::process()
 	for( unsigned int i=0; i < corpses.size(); i++)
 	{
 		// corpse was eaten
-		if ( corpses[i]->energy < 0 )
+		if ( corpses[i]->energy <= 0 )
 		{
 			freeEnergy += corpses[i]->energy;
 			delete corpses[i];
@@ -129,7 +129,7 @@ void WorldB::process()
 	for( unsigned int i=0; i < critters.size(); i++)
 	{
 		// see if energy level isn't below 0 -> die, or die of old age
-		if ( critters[i]->energyLevel < 0.0f )
+		if ( critters[i]->energyLevel <= 0.0f )
 		{
 			cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " DIES: starvation" << endl;
 			removeCritter(i);
@@ -285,15 +285,13 @@ void WorldB::process()
 				//float eaten = ( c->maxEnergyLevel - c->energyLevel ) / 10.0f;
 	
 				float eaten = c->maxEnergyLevel / 50.0f;
-				if ( c->energyLevel + eaten > c->maxEnergyLevel ) eaten -= (c->energyLevel + eaten) - c->maxEnergyLevel;
+				if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
+				if ( food[c->touchedFoodID]->energy - eaten < 0 ) eaten = food[c->touchedFoodID]->energy;
 	
 				c->energyLevel		+= eaten;
 	
-				Food *fo = food[c->touchedFoodID];
-	
-				fo->energy		-= eaten;
-	
-				fo->resize();
+				food[c->touchedFoodID]->energy		-= eaten;
+				food[c->touchedFoodID]->resize();
 			}
 
 		// eat corpse
@@ -316,6 +314,11 @@ void WorldB::process()
 				{
 					c->foodBeingCarried = food[c->touchedFoodID];
 					c->carriesFood = true;
+
+					// calculate a new speedfactor depending on food energy
+					float halfcrspeed = (critter_speed / 2.0f);
+					c->speedfactor = halfcrspeed + (halfcrspeed - ((c->foodBeingCarried->energy/food_maxenergy)*halfcrspeed) );
+
 					c->foodBeingCarried->isCarried = true;
 					c->foodBeingCarried->position.x = c->position.x;
 					c->foodBeingCarried->position.y += c->size;
@@ -330,6 +333,7 @@ void WorldB::process()
 			else if ( c->carrydrop && c->carriesFood ) // ! else
 			{
 				c->carriesFood = false;
+				c->speedfactor = critter_speed;
 				c->foodBeingCarried->isCarried = false;
 				c->foodBeingCarried->position.y -= c->size;
 				//cerr << "DROPPING" << endl;

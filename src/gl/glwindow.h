@@ -1,7 +1,6 @@
 #ifndef GLWINDOW_H
 #define GLWINDOW_H
 
-
 /* Standard OpenGL/GLX header files */
 #include <GL/glx.h>
 #include <GL/gl.h>

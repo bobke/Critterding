@@ -30,7 +30,7 @@ using namespace std;
 
 // Food Settings
 	unsigned int food_maxlifetime						= 500;
-	unsigned int food_maxenergy						= 2500;
+	unsigned int food_maxenergy						= 2000;
 	float        food_size							= 0.15f;
 
 // Brain Settings

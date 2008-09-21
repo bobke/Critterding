@@ -28,6 +28,7 @@ void Food::draw()
 		glTranslatef( position.x, position.y, position.z );
 	
 		glDrawElements(GL_QUADS, 20, GL_UNSIGNED_BYTE, indices);
+
 	glPopMatrix();
 }
 
