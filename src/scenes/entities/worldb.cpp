@@ -298,13 +298,13 @@ void WorldB::process()
 			if ( c->touchingCorpse && c->eatCorpse )
 			{
 				float eaten = c->maxEnergyLevel / 50.0f;
-				if ( c->energyLevel + eaten > c->maxEnergyLevel ) eaten -= (c->energyLevel + eaten) - c->maxEnergyLevel;
+				if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
+				if ( corpses[c->touchedCorpseID]->energy - eaten < 0 ) eaten = corpses[c->touchedCorpseID]->energy;
 	
 				c->energyLevel		+= eaten;
 	
-				Corpse *co = corpses[c->touchedCorpseID];
-				co->energy		-= eaten;
-				co->resize();
+				corpses[c->touchedCorpseID]->energy		-= eaten;
+				corpses[c->touchedCorpseID]->resize();
 			}
 
 		// carry / drop
