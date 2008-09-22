@@ -50,11 +50,16 @@ class WorldB
 		unsigned int		critter_colorneurons;
 		unsigned int		critter_mutationrate;
 		unsigned int		critter_maxmutations;
+		unsigned int		critter_percentchangetype;
 		bool			critter_flipnewborns;
 
 		unsigned int		food_maxlifetime;
 		float			food_maxenergy;
 		float			food_size;
+
+		unsigned int		corpse_maxlifetime;
+		float			corpse_maxenergy;
+		float			corpse_size;
 
 		unsigned int		brain_maxneurons;
 		unsigned int		brain_minsynapses;

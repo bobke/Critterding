@@ -17,6 +17,8 @@ public:
 	// Controls
 	Vector3f rotation;
 
+	unsigned int sensitivity;
+
 	void place(unsigned int *width, unsigned int *height);
 	void follow(unsigned int *width, unsigned int *height, CritterB *c, float crittersightrange);
 

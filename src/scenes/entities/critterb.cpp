@@ -4,7 +4,6 @@
 
 void CritterB::initConst()
 {
-	// FIXME to new naming convention
 	speedfactor		= 0.0f;
 	size			= 0.0f;
 	halfsize		= 0.0f;
@@ -23,6 +22,7 @@ void CritterB::initConst()
 	retinaRowLength		= 0;
 
 	carriesFood		= false;
+	carriesCorpse		= false;
 
 	components		= 4;
 	colorDivider		= 0;
@@ -36,6 +36,7 @@ CritterB::CritterB()
 	initConst();
 
 	// frame capturing options
+	crittertype		= 0;
 	adamdist		= 0;
 
 	// give it a random color
@@ -63,6 +64,7 @@ CritterB::CritterB(CritterB &other)
 	color[2]					= other.color[2];
 	color[3]					= other.color[3];
 
+	crittertype					= other.crittertype;
 	adamdist					= other.adamdist;
 	retinasize					= other.retinasize;
 	colorNeurons					= other.colorNeurons;
@@ -81,7 +83,7 @@ void CritterB::calcInputOutputNeurons()
 	items = retinasize * retinasize * components;
 
 	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying neuron + 1 always firing neuron
-	brain.numberOfOutputs = 11;
+	brain.numberOfOutputs = 10;
 }
 
 void CritterB::setup()
@@ -105,7 +107,6 @@ void CritterB::process()
 
 	// reset motor bools
 		eat		= false;
-		eatCorpse	= false;
 		fire		= false;
 		procreate	= false;
 		carrydrop	= false;
@@ -329,20 +330,23 @@ void CritterB::procOutputNeurons()
 
 	if ( brain.Outputs[9].output > 0 )
 	{
-		eatCorpse = true;
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[10].output > 0 )
-	{
 		carrydrop = true;
 		motorneuronsfired++;
 	}
 }
 
-void CritterB::mutate(unsigned int maxMutateRuns)
+void CritterB::mutate(unsigned int maxMutateRuns, unsigned int percentChangeType)
 {
 	adamdist++;
+
+	// herbivore / carnivore switch
+	if ( randgen.get(1,100) <= percentChangeType )
+	{
+		if ( crittertype == 0 )
+			crittertype = 1;
+		else
+			crittertype = 0;
+	}
 
 	// mutate color
 	unsigned int mode = randgen.get(1,2);
@@ -557,11 +561,19 @@ void CritterB::resize(float newsize)
 					if(EOF == sscanf(A.c_str(), "%f", &color[3])) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
+			// type=0;
+				else if ( parseH.beginMatchesStrip( "type=", line ) )
+				{
+					string CTYPE = parseH.returnUntillStrip( ";", line );
+					//cerr << "CTYPE: " << CTYPE << endl;
+					if(EOF == sscanf(CTYPE.c_str(), "%d", &crittertype)) cerr << "ERROR INSERTING CRITTER" << endl;
+				}
+
 			// adamdist=690;
 				else if ( parseH.beginMatchesStrip( "adamdist=", line ) )
 				{
 					string AD = parseH.returnUntillStrip( ";", line );
-					//cerr << "AD: " << AD  << endl;
+					//cerr << "AD: " << AD << endl;
 					if(EOF == sscanf(AD.c_str(), "%d", &adamdist)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
@@ -569,10 +581,8 @@ void CritterB::resize(float newsize)
 				else if ( parseH.beginMatchesStrip( "retinasize=", line ) )
 				{
 					string RES = parseH.returnUntillStrip( ";", line );
-					//cerr << "RES: " << RES  << endl;
+					//cerr << "RES: " << RES << endl;
 					if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
-					//retinasize = retinasize;
-					//if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 
 			// colorneurons=1;
@@ -602,6 +612,7 @@ void CritterB::resize(float newsize)
 	{
 		stringstream buf;
 		buf << "color=" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << ";\n";
+		buf << "type=" << crittertype << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
 		buf << "retinasize=" << retinasize << ";\n";
 		buf << "colorneurons=" << colorNeurons << ";\n";

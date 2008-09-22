@@ -3,10 +3,10 @@
 
 #include "../../utils/parser.h"
 #include "../../utils/randgen.h"
-//#include "../../brain/brain.h"
 #include "../../brainz/brainz.h"
 #include "vector3f.h"
 #include "food.h"
+#include "corpse.h"
 #include "GL/gl.h"
 #include <cmath>
 #include <vector>
@@ -24,6 +24,8 @@ class CritterB
 		~CritterB();
 
 		Brainz			brain;
+
+		unsigned int		crittertype;
 
 		unsigned int		adamdist;
 		unsigned int		retinasize;
@@ -51,6 +53,9 @@ class CritterB
 
 		bool			carriesFood;
 		Food*			foodBeingCarried;
+
+		bool			carriesCorpse;
+		Corpse*			corpseBeingCarried;
 
 		unsigned int		procreateTimeCount;
 		unsigned int		procreateTimeTrigger;
@@ -82,7 +87,7 @@ class CritterB
 		void			printVision();
 		void			calcInputOutputNeurons();
 		void			setup();
-		void			mutate(unsigned int maxMutateRuns);
+		void			mutate(unsigned int maxMutateRuns, unsigned int percentChangeType);
 
 		void			moveForward();
 		void			moveBackward();
@@ -94,7 +99,6 @@ class CritterB
 		bool			fire;
 		bool			canFire;
 		bool			procreate;
-		bool			eatCorpse;
 		bool			carrydrop;
 
 		void			prepNewPoss();

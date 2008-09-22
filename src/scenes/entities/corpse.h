@@ -25,6 +25,8 @@ class Corpse
 		unsigned int		totalFrames;
 		unsigned int		maxtotalFrames;
 
+		bool			isCarried;
+
 		void			draw();
 		void			resize();
 	private:
