@@ -12,6 +12,7 @@ void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fs
 	int attrListSgl[] = {GLX_RGBA, GLX_RED_SIZE, 4,
 				GLX_GREEN_SIZE, 4,
 				GLX_BLUE_SIZE, 4,
+				GLX_ALPHA_SIZE, 4,
 				GLX_DEPTH_SIZE, 16,
 				None};
 
@@ -19,6 +20,7 @@ void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fs
 				GLX_RED_SIZE, 4,
 				GLX_GREEN_SIZE, 4,
 				GLX_BLUE_SIZE, 4,
+				GLX_ALPHA_SIZE, 4,
 				GLX_DEPTH_SIZE, 16,
 				None};
 

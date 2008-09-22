@@ -191,25 +191,29 @@ int main(int argc, char *argv[])
 		if (sw=="--small")
 		{
 			worldsize = 10;
+			mincritters = 5;
 			energy = 100;
 	        }
 
 		else if (sw=="--medium")
 		{
 			worldsize = 25;
+			mincritters = 10;
 			energy = 500;
 	        }
 
 		else if (sw=="--big")
 		{
 			worldsize = 50;
-			energy = 3000;
+			mincritters = 25;
+			energy = 2500;
 	        }
 
 		else if (sw=="--huge")
 		{
 			worldsize = 100;
-			energy = 15000;
+			mincritters = 50;
+			energy = 10000;
 	        }
 
 	// Global Settings
