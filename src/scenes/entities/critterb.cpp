@@ -182,6 +182,26 @@ void CritterB::procInputNeurons()
 	brain.clearInputs();
 
 	// vision
+
+// see what it sees
+// 		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
+// 		{
+// 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=4 )
+// 			{
+// 				if ( (int)retina[w] ) cerr << "\033[1;31mR\033[0m";
+// 				else cerr << ".";
+// 				if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
+// 				else cerr << ".";
+// 				if ( (int)retina[w+2] ) cerr << "\033[1;34mB\033[0m";
+// 				else cerr << ".";
+// 				if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
+// 				else cerr << ".";
+// 			}
+// 			cerr << "" << endl;
+// 		}
+// 		cerr << "" << endl;
+// 		usleep (10000);
+
 		unsigned int i=0;
 		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
 		{
