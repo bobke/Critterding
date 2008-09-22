@@ -106,22 +106,25 @@ void WorldB::process()
 	// Remove corpses
 	for( unsigned int i=0; i < corpses.size(); i++)
 	{
-		// corpse was eaten
-		if ( corpses[i]->energy <= 0 )
+		if ( !corpses[i]->isCarried )
 		{
-			freeEnergy += corpses[i]->energy;
-			delete corpses[i];
-			corpses.erase(corpses.begin()+i);
-			i--;
-		}
+			// corpse was eaten
+			if ( corpses[i]->energy <= 0 )
+			{
+				freeEnergy += corpses[i]->energy;
+				delete corpses[i];
+				corpses.erase(corpses.begin()+i);
+				i--;
+			}
 
-		// old corpse
-		else if ( ++corpses[i]->totalFrames >= corpses[i]->maxtotalFrames )
-		{
-			freeEnergy += corpses[i]->energy;
-			delete corpses[i];
-			corpses.erase(corpses.begin()+i);
-			i--;
+			// old corpse
+			else if ( ++corpses[i]->totalFrames >= corpses[i]->maxtotalFrames )
+			{
+				freeEnergy += corpses[i]->energy;
+				delete corpses[i];
+				corpses.erase(corpses.begin()+i);
+				i--;
+			}
 		}
 	}
 
@@ -253,12 +256,15 @@ void WorldB::process()
 			c->touchingCorpse = false;
 			for( unsigned int f=0; f < corpses.size() && !c->touchingCorpse; f++)
 			{
-				Corpse *co = corpses[f];
-				float avgSize = (c->size + co->size) / 2;
-				if ( fabs(c->position.x - co->position.x) <= avgSize && fabs(c->position.z - co->position.z) <= avgSize )
+				Corpse *fo = corpses[f];
+				if ( !fo->isCarried )
 				{
-					c->touchingCorpse = true;
-					c->touchedCorpseID = f;
+					float avgSize = (c->size + fo->size) / 2;
+					if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
+					{
+						c->touchingCorpse = true;
+						c->touchedCorpseID = f;
+					}
 				}
 			}
 	
@@ -277,66 +283,111 @@ void WorldB::process()
 				}
 			}
 
-		// eat
-			if ( c->touchingFood && c->eat )
+		// eat herb
+			if ( c->crittertype == 0 )
 			{
-				float eaten = c->maxEnergyLevel / 50.0f;
-				if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
-				if ( food[c->touchedFoodID]->energy - eaten < 0 ) eaten = food[c->touchedFoodID]->energy;
-	
-				c->energyLevel		+= eaten;
-	
-				food[c->touchedFoodID]->energy		-= eaten;
-				food[c->touchedFoodID]->resize();
+				if ( c->touchingFood && c->eat )
+				{
+					float eaten = c->maxEnergyLevel / 50.0f;
+					if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
+					if ( food[c->touchedFoodID]->energy - eaten < 0 ) eaten = food[c->touchedFoodID]->energy;
+		
+					c->energyLevel		+= eaten;
+		
+					food[c->touchedFoodID]->energy		-= eaten;
+					food[c->touchedFoodID]->resize();
+				}
 			}
 
 		// eat corpse
-			if ( c->touchingCorpse && c->eatCorpse )
+			else // must be 1
 			{
-				float eaten = c->maxEnergyLevel / 50.0f;
-				if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
-				if ( corpses[c->touchedCorpseID]->energy - eaten < 0 ) eaten = corpses[c->touchedCorpseID]->energy;
-	
-				c->energyLevel		+= eaten;
-	
-				corpses[c->touchedCorpseID]->energy		-= eaten;
-				corpses[c->touchedCorpseID]->resize();
+				if ( c->touchingCorpse && c->eat )
+				{
+					float eaten = c->maxEnergyLevel / 50.0f;
+					if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
+					if ( corpses[c->touchedCorpseID]->energy - eaten < 0 ) eaten = corpses[c->touchedCorpseID]->energy;
+		
+					c->energyLevel		+= eaten;
+		
+					corpses[c->touchedCorpseID]->energy		-= eaten;
+					corpses[c->touchedCorpseID]->resize();
+				}
 			}
 
 		// carry / drop
-			if ( c->touchingFood && c->carrydrop )
+			if ( c->carrydrop )
 			{
-				if ( !c->carriesFood )
+				// food
+				if ( c->touchingFood )
 				{
-					if ( !food[c->touchedFoodID]->isCarried )
+					if ( !c->carriesCorpse && !c->carriesFood )
 					{
-						c->foodBeingCarried = food[c->touchedFoodID];
-						c->carriesFood = true;
+						if ( !food[c->touchedFoodID]->isCarried && !c->carriesCorpse )
+						{
+							c->foodBeingCarried = food[c->touchedFoodID];
+							c->carriesFood = true;
 
-						// calculate a new speedfactor depending on food energy
-						float halfcrspeed = (critter_speed / 2.0f);
-						c->speedfactor = halfcrspeed + (halfcrspeed - ((c->foodBeingCarried->energy/food_maxenergy)*halfcrspeed) );
+							// calculate a new speedfactor depending on food energy
+							float halfcrspeed = (critter_speed / 2.0f);
+							c->speedfactor = halfcrspeed + (halfcrspeed - ((c->foodBeingCarried->energy/food_maxenergy)*halfcrspeed) );
 
-						c->foodBeingCarried->isCarried = true;
-						c->foodBeingCarried->position.x = c->position.x;
-						c->foodBeingCarried->position.y += c->size;
-						c->foodBeingCarried->position.z = c->position.z;
-						//cerr << "LIFTING" << endl;
+							c->foodBeingCarried->isCarried = true;
+							c->foodBeingCarried->position.x = c->position.x;
+							c->foodBeingCarried->position.y += c->size;
+							c->foodBeingCarried->position.z = c->position.z;
+							//cerr << "LIFTING" << endl;
+						}
 					}
+/*					else // we must do an exchange here
+					{
+					}*/
 				}
-				else // we must do an exchange here
+				else if ( c->carriesFood ) // ! else
 				{
+					c->carriesFood = false;
+					c->speedfactor = critter_speed;
+					c->foodBeingCarried->isCarried = false;
+					c->foodBeingCarried->position.y -= c->size;
+					//cerr << "DROPPING" << endl;
+				}
+
+				// corpse
+				if ( c->touchingCorpse )
+				{
+					if ( !c->carriesCorpse && !c->carriesFood )
+					{
+						if ( !corpses[c->touchedCorpseID]->isCarried )
+						{
+							c->corpseBeingCarried = corpses[c->touchedCorpseID];
+							c->carriesCorpse = true;
+
+							// calculate a new speedfactor depending on corpse energy
+							float halfcrspeed = (critter_speed / 2.0f);
+							c->speedfactor = halfcrspeed + (halfcrspeed - ((c->corpseBeingCarried->energy/corpse_maxenergy)*halfcrspeed) );
+
+							c->corpseBeingCarried->isCarried = true;
+							c->corpseBeingCarried->position.x = c->position.x;
+							c->corpseBeingCarried->position.y += c->size;
+							c->corpseBeingCarried->position.z = c->position.z;
+							//cerr << "LIFTING" << endl;
+						}
+					}
+/*					else // we must do an exchange here
+					{
+					}*/
+				}
+				else if ( c->carriesCorpse ) // ! else
+				{
+					c->carriesCorpse = false;
+					c->speedfactor = critter_speed;
+					c->corpseBeingCarried->isCarried = false;
+					c->corpseBeingCarried->position.y -= c->size;
+					//cerr << "DROPPING" << endl;
 				}
 			}
 
-			else if ( c->carrydrop && c->carriesFood ) // ! else
-			{
-				c->carriesFood = false;
-				c->speedfactor = critter_speed;
-				c->foodBeingCarried->isCarried = false;
-				c->foodBeingCarried->position.y -= c->size;
-				//cerr << "DROPPING" << endl;
-			}
+
 
 		// fire
 			if ( c->fire && c->canFire )
@@ -391,7 +442,7 @@ void WorldB::process()
 					if ( randgen.get(1,100) <= critter_mutationrate )
 					{
 						mutant = true;
-						nc->mutate(critter_maxmutations);
+						nc->mutate(critter_maxmutations, critter_percentchangetype);
 					}
 
 					// same positions / rotation
@@ -407,6 +458,7 @@ void WorldB::process()
 					nc->minprocenergyLevel = critter_minenergyproc;
 					nc->minfireenergyLevel = critter_minenergyfire;
 
+
 					nc->setup();
 					nc->retina = retina;
 
@@ -419,7 +471,7 @@ void WorldB::process()
 
 					if (spotIsFree(nc->newposition, nc->size, i))
 					{
-						cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " PROC: (ad: " << setw(4) << c->adamdist << ")";
+						cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " PROC: (t: " << c->crittertype << ", ad: " << setw(4) << c->adamdist << ")";
 
 						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
 						if ( mutant ) cerr << " (m)";
@@ -563,7 +615,6 @@ void WorldB::insertCritter()
 	c->brain.percentMutateEffectRemoveSynapse		= brain_percentmutateeffectremovesynapse;
 		c->brain.mutate_MutateEffects			= brain_mutate_mutateeffects;
 
-
 	c->colorNeurons = critter_colorneurons;
 	c->retinasize = critter_retinasize;
 	c->calcInputOutputNeurons();
@@ -601,20 +652,20 @@ void WorldB::positionCritterB(unsigned int cid)
 void WorldB::removeCritter(unsigned int cid)
 {
 	bool hasCorpse = false;
-	if ( critters[cid]->energyLevel > 0.0f )
+	if ( critters[cid]->energyLevel > 0.0f && corpse_maxlifetime > 0 )
 	{
 		hasCorpse = true;
 
 		Corpse *c = new Corpse;
-		c->maxenergy = food_maxenergy;
-		c->maxsize = food_size;
-		c->maxtotalFrames = food_maxlifetime;
+		c->maxenergy = corpse_maxenergy;
+		c->maxsize = corpse_size;
+		c->maxtotalFrames = corpse_maxlifetime;
 		c->position = critters[cid]->position;
 
-		// put max energy allowed in food
-		if ( critters[cid]->energyLevel > food_maxenergy )
+		// put max energy allowed in corpse
+		if ( critters[cid]->energyLevel > corpse_maxenergy )
 		{
-			c->energy = food_maxenergy;
+			c->energy = corpse_maxenergy;
 		}
 		else
 		{
@@ -625,7 +676,6 @@ void WorldB::removeCritter(unsigned int cid)
 		freeEnergy += critters[cid]->energyLevel;
 		freeEnergy -= c->energy;
 
-		//f->resize(food_size);
 		c->resize();
 		corpses.push_back( c );
 	}
@@ -679,6 +729,14 @@ void WorldB::removeCritter(unsigned int cid)
 
 		// drop the food back down
 		critters[cid]->foodBeingCarried->position.y -= critters[cid]->size;
+	}
+
+	if ( critters[cid]->carriesCorpse )
+	{
+		critters[cid]->corpseBeingCarried->isCarried = false;
+
+		// drop the food back down
+		critters[cid]->corpseBeingCarried->position.y -= critters[cid]->size;
 	}
 
 	delete critters[cid];
@@ -1012,6 +1070,7 @@ void WorldB::printSettings()
 	cout << "  keypad +      : increase energy in the system by the energy amount of 1 food" << endl << endl;
 
 	cout << "Camera Operations" << endl;
+	cout << "  Backspace     : reset camera" << endl << endl;
 	cout << "  Arrow Up      : move forward" << endl;
 	cout << "  Arrow Down    : move backward" << endl;
 	cout << "  Arrow Left    : strafe left" << endl;
@@ -1022,6 +1081,8 @@ void WorldB::printSettings()
 	cout << "  NumKey 8      : look down" << endl;
 	cout << "  NumKey 4      : look left" << endl;
 	cout << "  NumKey 6      : look right" << endl;
+	cout << "  keypad /      : decrease camera sensitivity" << endl;
+	cout << "  keypad *      : increase camera sensitivity" << endl << endl;
 
 	// report settings
 	cout << endl << "CURRENT SETTINGS" << endl << endl;
@@ -1047,12 +1108,18 @@ void WorldB::printSettings()
 	cout << "  Color neurons               = " << critter_colorneurons << endl;
 	cout << "  Mutationrate                = " << critter_mutationrate << endl;
 	cout << "  max Mutations / mutant      = " << critter_maxmutations << endl;
+	cout << "  % Mutants change type       = " << critter_percentchangetype << endl;
 	cout << "  Flip newborns               = " << critter_flipnewborns << endl;
 
 	cout << endl << "Food Settings" << endl;
 	cout << "  max Lifetime                = " << food_maxlifetime << endl;
 	cout << "  max Energy                  = " << food_maxenergy << endl;
 	cout << "  Size                        = " << food_size*100.0f << endl;
+
+	cout << endl << "Corpse Settings" << endl;
+	cout << "  max Lifetime                = " << corpse_maxlifetime << endl;
+	cout << "  max Energy                  = " << corpse_maxenergy << endl;
+	cout << "  Size                        = " << corpse_size*100.0f << endl;
 
 	cout << endl << "Brain Settings" << endl;
 	cout << "  max Neurons per critter     = " << brain_maxneurons << endl;

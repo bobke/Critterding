@@ -3,13 +3,12 @@
 
 using namespace std;
 
-	Vector3f cameraposition							= Vector3f(-5.0f, -11.0f, -9.0f);
-
 // Global Settings
 	unsigned int worldsize							= 25;
 	unsigned int energy							= 500;
 	unsigned int mincritters						= 10;
 	unsigned int retinasperrow						= 20;
+	unsigned int camerasensitivity						= 10;
 
 // Critter Settings
 	unsigned int critter_maxlifetime					= 2000;
@@ -21,17 +20,23 @@ using namespace std;
 	unsigned int critter_minenergyfire					= 1;
 	float        critter_size						= 0.1f;
 	float        critter_speed						= 0.05f;
-	float        critter_sightrange						= 4.0f;
+	float        critter_sightrange						= 3.0f;
 	unsigned int critter_retinasize						= 7;
 	unsigned int critter_colorneurons					= 3;
 	unsigned int critter_mutationrate					= 10;
 	unsigned int critter_maxmutations					= 10;
+	unsigned int critter_percentchangetype					= 5;
 	bool critter_flipnewborns						= false;
 
 // Food Settings
 	unsigned int food_maxlifetime						= 500;
-	unsigned int food_maxenergy						= 2000;
+	unsigned int food_maxenergy						= 2500;
 	float        food_size							= 0.15f;
+
+// Corpse Settings
+	unsigned int corpse_maxlifetime						= 1000;
+	unsigned int corpse_maxenergy						= 2500;
+	float        corpse_size						= 0.15f;
 
 // Brain Settings
 	unsigned int brain_maxneurons						= 1000;
@@ -101,30 +106,37 @@ int main(int argc, char *argv[])
 
 	helpinfo << "  --worldsize               [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
 	helpinfo << "  --energy                 [" << energy << "]  Energy in the system: " << energy << "*food_energy(" << food_maxenergy << ") = " << energy*food_maxenergy << "" << endl;
-	helpinfo << "  --mincritters             [10]  If less than " << mincritters << " critters are present, insert an adam" << endl;
-	helpinfo << "  --retinasperrow           [20]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
+	helpinfo << "  --mincritters             [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
+	helpinfo << "  --retinasperrow           [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
+	helpinfo << "  --camerasensitivity       [" << camerasensitivity << "]  Camera sensitivity" << endl;
 	helpinfo << endl;
 	helpinfo << "  Critter Settings" << endl;
-	helpinfo << "  --critter_maxlifetime   [" << critter_maxlifetime << "]  Max amount of frames a critter can live" << endl;
-	helpinfo << "  --critter_maxenergy     [" << critter_maxenergy << "]  Max amount of energy in a critter" << endl;
-	helpinfo << "  --critter_startenergy   [" << critter_startenergy << "]  Starting amount of energy for a new critter" << endl;
-	helpinfo << "  --critter_maxchildren    [" << critter_maxchildren << "]  Max amount of children a critter can spawn" << endl;
-	helpinfo << "  --critter_maxbullets     [" << critter_maxbullets << "]  Max amount of bullets a critter can fire" << endl;
-	helpinfo << "  --critter_minenergyproc [" << critter_minenergyproc << "]  Min amount of energy required for procreation" << endl;
-	helpinfo << "  --critter_minenergyfire    [" << critter_minenergyfire << "]  Min amount of energy required for firing a bullet" << endl;
-	helpinfo << "  --critter_size            [" << critter_size*100.0f << "]  Size of a critter" << endl;
-	helpinfo << "  --critter_speed           [" << critter_speed*1000.0f << "]  Critter speed" << endl;
-	helpinfo << "  --critter_sightrange      [" << critter_sightrange*10.0f << "]  Distance a critter can see (" << critter_sightrange*10.0f << " = " << critter_sightrange << " floor squares)" << endl;
-	helpinfo << "  --critter_retinasize       [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
-	helpinfo << "  --critter_colorneurons     [" << critter_colorneurons << "]  Earch color of every pixel (RGBA) will get [" << critter_colorneurons << "] neurons (only for new adams)" << endl;
-	helpinfo << "  --critter_mutationrate    [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
-	helpinfo << "  --critter_maxmutations    [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
-	helpinfo << "  --critter_flipnewborns          If set, newborns will be flipped 180 degrees" << endl;
+	helpinfo << "  --critter_maxlifetime     [" << critter_maxlifetime << "]  Max amount of frames a critter can live" << endl;
+	helpinfo << "  --critter_maxenergy       [" << critter_maxenergy << "]  Max amount of energy in a critter" << endl;
+	helpinfo << "  --critter_startenergy     [" << critter_startenergy << "]  Starting amount of energy for a new critter" << endl;
+	helpinfo << "  --critter_maxchildren      [" << critter_maxchildren << "]  Max amount of children a critter can spawn" << endl;
+	helpinfo << "  --critter_maxbullets       [" << critter_maxbullets << "]  Max amount of bullets a critter can fire" << endl;
+	helpinfo << "  --critter_minenergyproc   [" << critter_minenergyproc << "]  Min amount of energy required for procreation" << endl;
+	helpinfo << "  --critter_minenergyfire      [" << critter_minenergyfire << "]  Min amount of energy required for firing a bullet" << endl;
+	helpinfo << "  --critter_size              [" << critter_size*100.0f << "]  Size of a critter" << endl;
+	helpinfo << "  --critter_speed             [" << critter_speed*1000.0f << "]  Critter speed" << endl;
+	helpinfo << "  --critter_sightrange        [" << critter_sightrange*10.0f << "]  Distance a critter can see (" << critter_sightrange*10.0f << " = " << critter_sightrange << " floor squares)" << endl;
+	helpinfo << "  --critter_retinasize         [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
+	helpinfo << "  --critter_colorneurons       [" << critter_colorneurons << "]  Earch color of every pixel (RGBA) will get [" << critter_colorneurons << "] neurons (only for new adams)" << endl;
+	helpinfo << "  --critter_mutationrate      [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
+	helpinfo << "  --critter_maxmutations      [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
+	helpinfo << "  --critter_percentchangetype [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
+	helpinfo << "  --critter_flipnewborns            If set, newborns will be flipped 180 degrees" << endl;
 	helpinfo << endl;
 	helpinfo << "  Food Settings" << endl;
-	helpinfo << "  --food_maxlifetime       [" << food_maxlifetime << "]  Maximum amount of frames food can live" << endl;
-	helpinfo << "  --food_maxenergy        [" << food_maxenergy << "]  Maximum amount of energy in a food unit" << endl;
-	helpinfo << "  --food_size               [" << food_size*100.0f << "]  Size of a food unit" << endl;
+	helpinfo << "  --food_maxlifetime         [" << food_maxlifetime << "]  Maximum amount of frames food exists" << endl;
+	helpinfo << "  --food_maxenergy          [" << food_maxenergy << "]  Maximum amount of energy in a food unit" << endl;
+	helpinfo << "  --food_size                 [" << food_size*100.0f << "]  Size of a food unit" << endl;
+	helpinfo << endl;
+	helpinfo << "  Corpse Settings" << endl;
+	helpinfo << "  --corpse_maxlifetime      [" << corpse_maxlifetime << "]  Maximum amount of frames a corpse exists" << endl;
+	helpinfo << "  --corpse_maxenergy        [" << corpse_maxenergy << "]  Maximum amount of energy in a corpse unit" << endl;
+	helpinfo << "  --corpse_size               [" << corpse_size*100.0f << "]  Size of a corpse unit" << endl;
 	helpinfo << endl;
 	helpinfo << "  Brain Settings" << endl;
 	helpinfo << "  --brain_maxneurons                           [" << brain_maxneurons << "]  Max neurons per critter" << endl;
@@ -232,6 +244,14 @@ int main(int argc, char *argv[])
 			if ( value >= 1 && value <= 1000 )
 				retinasperrow = value;
 			else { cerr << "retinasperrow must match >=1 and <=1000" << endl; exit(1); }
+	        }
+		else if (sw=="--camerasensitivity")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 1 && value <= 1000 )
+				camerasensitivity = value;
+			else { cerr << "camerasensitivity must match >=1 and <=1000" << endl; exit(1); }
 	        }
 	// Critter Settings
 		else if (sw=="--critter_maxlifetime")
@@ -346,6 +366,14 @@ int main(int argc, char *argv[])
 				critter_maxmutations = value;
 			else { cerr << "critter_maxmutations must match >=1 and <=100" << endl; exit(1); }
 	        }
+		else if (sw=="--critter_percentchangetype")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 0 && value <= 100 )
+				critter_percentchangetype = value;
+			else { cerr << "critter_percentchangetype must match >=0 and <=100" << endl; exit(1); }
+	        }
 		else if (sw=="--critter_flipnewborns")
 		{
 			critter_flipnewborns = true;
@@ -375,6 +403,32 @@ int main(int argc, char *argv[])
 			if ( value >= 1 && value <= 100 )
 				food_size = (float)value / 100.0f;
 			else { cerr << "food_size must match >=1 and <=100" << endl; exit(1); }
+	        }
+
+	// Corpse Settings
+		else if (sw=="--corpse_maxlifetime")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 0 && value <= 1000000 )
+				corpse_maxlifetime = value;
+			else { cerr << "corpse_maxlifetime must match >=0 and <=1000000" << endl; exit(1); }
+	        }
+		else if (sw=="--corpse_maxenergy")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 1 && value <= 1000000 )
+				corpse_maxenergy = value;
+			else { cerr << "corpse_maxenergy must match >=1 and <=1000000" << endl; exit(1); }
+	        }
+		else if (sw=="--corpse_size")
+		{
+			optind++;
+			unsigned int value = atoi(argv[optind]);
+			if ( value >= 1 && value <= 100 )
+				corpse_size = (float)value / 100.0f;
+			else { cerr << "corpse_size must match >=1 and <=100" << endl; exit(1); }
 	        }
 
 	// Brain Settings
@@ -662,6 +716,8 @@ int main(int argc, char *argv[])
 		Evolution mainscene;
 
 		mainscene.camera.position = Vector3f(-0.5f*worldsize, -1.1f*worldsize, -0.9f*worldsize);
+		mainscene.camera.sensitivity = camerasensitivity;
+
 		//mainscene.camera.position = cameraposition;
 
 		// critter
@@ -679,12 +735,18 @@ int main(int argc, char *argv[])
 		mainscene.world.critter_colorneurons = critter_colorneurons;
 		mainscene.world.critter_maxmutations = critter_maxmutations;
 		mainscene.world.critter_mutationrate = critter_mutationrate;
+		mainscene.world.critter_percentchangetype = critter_percentchangetype;
 		mainscene.world.critter_flipnewborns = critter_flipnewborns;
 
 		// food
 		mainscene.world.food_maxlifetime = food_maxlifetime;
 		mainscene.world.food_maxenergy = food_maxenergy;
 		mainscene.world.food_size = food_size;
+
+		// corpse
+		mainscene.world.corpse_maxlifetime = corpse_maxlifetime;
+		mainscene.world.corpse_maxenergy = corpse_maxenergy;
+		mainscene.world.corpse_size = corpse_size;
 
 		// brain
 		mainscene.world.brain_maxneurons = brain_maxneurons;

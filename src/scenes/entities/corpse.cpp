@@ -11,6 +11,8 @@ Corpse::Corpse()
 	totalFrames	= 0;
 	maxtotalFrames	= 0;
 
+	isCarried	= false;
+
 	color[0]	= 0.5f;
 	color[1]	= 0.0f;
 	color[2]	= 0.0f;

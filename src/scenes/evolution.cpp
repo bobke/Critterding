@@ -216,7 +216,7 @@ void Evolution::handlekey(const KeySym& key)
 			camera.lookUp(1.0f);
 		break;
 		case XK_KP_Down:
-			camera.lookDown(1.1f);
+			camera.lookDown(1.0f);
 		break;
 		case XK_KP_Page_Down:
 			//camera.rollLeft(1.0f);
@@ -239,6 +239,17 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_Delete:
 		break;
 
+		case XK_KP_Divide:
+			if ( camera.sensitivity > 1 )
+			{
+				camera.sensitivity--;
+				cerr << endl << "Camera Sensitivity: "<< camera.sensitivity << endl << endl;
+			}
+		break;
+		case XK_KP_Multiply:
+			camera.sensitivity++;
+			cerr << endl << "Camera Sensitivity: "<< camera.sensitivity << endl << endl;
+		break;
 		case XK_Up:
 			camera.moveForward(0.1f);
 		break;
@@ -251,6 +262,11 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_Right:
 			camera.moveRight(0.1f);
 		break;
+		case XK_BackSpace:
+			camera.position = Vector3f(-0.5f*world.size, -1.1f*world.size, -0.9f*world.size);
+			camera.rotation = Vector3f( 76.0f,  0.0f, 0.0f);
+		break;
+
 	}
 }
 
