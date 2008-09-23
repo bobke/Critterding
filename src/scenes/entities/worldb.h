@@ -170,6 +170,8 @@ class WorldB
 		void			createDirs();
 		bool			spotIsFree(Vector3f &position, float osize);
 
+		GLuint			displayLists;
+		void			generateList();
 
 };
 

@@ -15,6 +15,7 @@ class Corpse
 		~Corpse();
 
 		float			size;
+		float			halfsize;
 		float			energy;
 
 		float			maxsize;
@@ -23,19 +24,11 @@ class Corpse
 		Vector3f		position;
 
 		unsigned int		totalFrames;
-		unsigned int		maxtotalFrames;
 
 		bool			isCarried;
 
-		void			draw();
 		void			resize();
 	private:
-
-		GLubyte			indices[20];
-		GLfloat 		vertices[24];
-		float			color[4];
-		float			halfsize;
-
 };
 
 #endif

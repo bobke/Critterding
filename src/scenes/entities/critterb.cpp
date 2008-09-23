@@ -435,54 +435,10 @@ void CritterB::printVision()
 	cerr << "" << endl;
 }
 
-void CritterB::draw()
-{
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	
-	glPushMatrix();
-
-		//pthread_mutex_lock( &position_mutex );
-			glTranslatef( position.x, position.y, position.z );
-		//pthread_mutex_unlock( &position_mutex );
-
-		glRotatef( rotation, 0.0, 1.0, 0.0 );
-
-		glColor4f( color[0], color[1], color[2], color[3] );
-		glDrawElements(GL_QUADS, 20, GL_UNSIGNED_BYTE, indices);
-
- 		glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
-		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, tindices);
-
-	glPopMatrix();
-}
-
 void CritterB::resize(float newsize)
 {
 	size		= newsize;
-	halfsize	= (newsize / 2.0f);
-
-	// left plane
-	vertices[0] = -halfsize; vertices[1] = halfsize; vertices[2] = halfsize; //0
-	vertices[3] = -halfsize; vertices[4] = -halfsize; vertices[5] = halfsize; //1
-	vertices[6] = -halfsize; vertices[7] = -halfsize; vertices[8] = -halfsize; //2
-	vertices[9] = -halfsize; vertices[10] = halfsize; vertices[11] = -halfsize; //3
-
-	// right plane
-	vertices[12] = halfsize; vertices[13] = halfsize; vertices[14] = halfsize; //4
-	vertices[15] = halfsize; vertices[16] = -halfsize; vertices[17] = halfsize; //5
-	vertices[18] = halfsize; vertices[19] = -halfsize; vertices[20] = -halfsize; //6
-	vertices[21] = halfsize; vertices[22] = halfsize; vertices[23] = -halfsize; //7
-
-	indices[0] = 0; indices[1] = 3; indices[2] = 7; indices[3] = 4;
-	indices[4] = 2; indices[7] = 3; indices[6] = 7; indices[5] = 6;
-	indices[8] = 1; indices[9] = 0; indices[10] = 4; indices[11] = 5;
-	indices[12] = 1; indices[13] = 2; indices[14] = 3; indices[15] = 0;
-	indices[16] = 5; indices[19] = 6; indices[18] = 7; indices[17] = 4;
-
-	// nose
-	vertices[24] = 0; vertices[25] = halfsize*0.5f; vertices[26] = -halfsize*1.3f;
-
-	tindices[0] = 8; tindices[1] = 7; tindices[2] = 3;
+	halfsize	= newsize / 2.0f;
 
 	calcCamPos();
 }
