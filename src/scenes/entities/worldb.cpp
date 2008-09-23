@@ -39,7 +39,7 @@ WorldB::WorldB()
 
 void WorldB::generateList()
 {
-	displayLists = glGenLists(2);
+	displayLists = glGenLists(3);
 
 	// 1 = food, corpse, bullet : normal cube
 	glNewList(displayLists,GL_COMPILE);
@@ -225,21 +225,21 @@ void WorldB::process()
 		// see if energy level isn't below 0 -> die, or die of old age
 		if ( critters[i]->energyLevel <= 0.0f )
 		{
-			cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " DIES: starvation" << endl;
+			cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: starvation" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// see if died from bullet
 		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames && critters[i]->wasShot )
 		{
-			cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " DIES: killed" << endl;
+			cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: killed" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// die of old age
 		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames )
 		{
-			cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " DIES: old age" << endl;
+			cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: old age" << endl;
 			removeCritter(i);
 			i--;
 		}
@@ -593,7 +593,7 @@ void WorldB::process()
 
 					if (spotIsFree(nc->newposition, nc->size, i))
 					{
-						cerr << setw(3) << i+1 << "/" << setw(3) << critters.size() << " PROC: (t: " << c->crittertype << ", ad: " << setw(4) << c->adamdist << ")";
+						cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: " << c->crittertype << ", ad: " << setw(4) << c->adamdist << ")";
 
 						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
 						if ( mutant ) cerr << " (m)";
