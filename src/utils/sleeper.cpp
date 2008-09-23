@@ -9,7 +9,7 @@ Sleeper::Sleeper()
 	cps		= optimal;
 
 	dispcounter	= 0;
-	dispevery	= 10;
+	dispevery	= 100;
 	dispsum		= 0.0f;
 
 	// calc lasttiem for first time
@@ -44,7 +44,7 @@ void Sleeper::mark()
 		dispcounter++;
 		if ( dispcounter == dispevery )
 		{
-			cerr << "cps:     " << (dispsum/dispevery) << endl;
+			cerr << endl << "FPS:     " << (dispsum/dispevery) << endl << endl;
 			dispcounter = 0;
 			dispsum = 0.0f;
 		}

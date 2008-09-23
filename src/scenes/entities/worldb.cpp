@@ -43,78 +43,83 @@ void WorldB::generateList()
 
 	// 1 = food, corpse, bullet : normal cube
 	glNewList(displayLists,GL_COMPILE);
-
 		glBegin(GL_QUADS);
-
-		glVertex3f( -1.0f,  1.0f,   1.0f );
-		glVertex3f( -1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,   1.0f );
-
-		glVertex3f( -1.0f, -1.0f,  -1.0f );
-		glVertex3f( -1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f, -1.0f,  -1.0f );
-
-		glVertex3f( -1.0f, -1.0f,   1.0f );
-		glVertex3f( -1.0f,  1.0f,   1.0f );
-		glVertex3f(  1.0f,  1.0f,   1.0f );
-		glVertex3f(  1.0f, -1.0f,   1.0f );
-
-		glVertex3f( -1.0f, -1.0f,   1.0f );
-		glVertex3f( -1.0f, -1.0f,  -1.0f );
-		glVertex3f( -1.0f,  1.0f,  -1.0f );
-		glVertex3f( -1.0f,  1.0f,   1.0f );
-
-		glVertex3f(  1.0f, -1.0f,   1.0f );
-		glVertex3f(  1.0f, -1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,   1.0f );
-
+		//Quad 1
+		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
+		glVertex3f( 1.0f,-1.0f, 1.0f);   //V1
+		glVertex3f( 1.0f,-1.0f,-1.0f);   //V3
+		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
+		//Quad 2
+		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
+		glVertex3f( 1.0f,-1.0f,-1.0f);   //V3
+		glVertex3f(-1.0f,-1.0f,-1.0f);   //V5
+		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
+		//Quad 3
+		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
+		glVertex3f(-1.0f,-1.0f,-1.0f);   //V5
+		glVertex3f(-1.0f,-1.0f, 1.0f);   //V7
+		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
+		//Quad 4
+		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
+		glVertex3f(-1.0f,-1.0f, 1.0f);   //V7
+		glVertex3f( 1.0f,-1.0f, 1.0f);   //V1
+		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
+		//Quad 5
+		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
+		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
+		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
+		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
 		glEnd();
-
 	glEndList();
 
 	// 2 = critter
 	glNewList(displayLists+1,GL_COMPILE);
-
 		glBegin(GL_QUADS);
-
-		glVertex3f( -1.0f,  1.0f,   1.0f );
-		glVertex3f( -1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,   1.0f );
-
-		glVertex3f( -1.0f, -1.0f,  -1.0f );
-		glVertex3f( -1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f, -1.0f,  -1.0f );
-
-		glVertex3f( -1.0f, -1.0f,   1.0f );
-		glVertex3f( -1.0f,  1.0f,   1.0f );
-		glVertex3f(  1.0f,  1.0f,   1.0f );
-		glVertex3f(  1.0f, -1.0f,   1.0f );
-
-		glVertex3f( -1.0f, -1.0f,   1.0f );
-		glVertex3f( -1.0f, -1.0f,  -1.0f );
-		glVertex3f( -1.0f,  1.0f,  -1.0f );
-		glVertex3f( -1.0f,  1.0f,   1.0f );
-
-		glVertex3f(  1.0f, -1.0f,   1.0f );
-		glVertex3f(  1.0f, -1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,   1.0f );
-
+		//Quad 1
+		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
+		glVertex3f( 1.0f,-1.0f, 1.0f);   //V1
+		glVertex3f( 1.0f,-1.0f,-1.0f);   //V3
+		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
+		//Quad 2
+		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
+		glVertex3f( 1.0f,-1.0f,-1.0f);   //V3
+		glVertex3f(-1.0f,-1.0f,-1.0f);   //V5
+		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
+		//Quad 3
+		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
+		glVertex3f(-1.0f,-1.0f,-1.0f);   //V5
+		glVertex3f(-1.0f,-1.0f, 1.0f);   //V7
+		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
+		//Quad 4
+		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
+		glVertex3f(-1.0f,-1.0f, 1.0f);   //V7
+		glVertex3f( 1.0f,-1.0f, 1.0f);   //V1
+		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
+		//Quad 5
+		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
+		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
+		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
+		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
 		glEnd();
 
  		glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
-
 		glBegin(GL_TRIANGLES);
-
-		glVertex3f(  0.0f,  0.5f,  -1.3f );
-		glVertex3f(  1.0f,  1.0f,  -1.0f );
 		glVertex3f( -1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,  -1.0f );
+		glVertex3f(  0.0f,  0.5f,  -1.3f );
+		glEnd();
 
+	glEndList();
+
+	// 3 = floor
+	glNewList(displayLists+2,GL_COMPILE);
+
+		glColor4f( 0.0f, 0.0f, 1.0f, 0.0f );
+		glBegin(GL_QUADS);
+		glVertex3f( 0.0f, 0.0f, 0.0f);
+		glVertex3f( 0.0f, 0.0f, 1.0f);
+		glVertex3f( 1.0f, 0.0f, 1.0f);
+		glVertex3f( 1.0f, 0.0f, 0.0f);
 		glEnd();
 
 	glEndList();
@@ -251,8 +256,13 @@ void WorldB::process()
 		c->place();
 
 		// draw everything in it's sight
-			floor.draw();
-		
+
+//			floor.draw();
+			glPushMatrix();
+				glScalef( floor.gridsize, floor.gridsize, floor.gridsize );
+				glCallList(displayLists+2);
+			glPopMatrix();
+
 			for( unsigned int j=0; j < critters.size(); j++)
 			{
 				CritterB *f = critters[j];

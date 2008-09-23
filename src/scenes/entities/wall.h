@@ -22,16 +22,10 @@ class Wall
 
 		Vector3f		position;
 
-		void			draw();
 		void			toggle();
 		void			resize(float size);
 
 	private:
-
-		float			color[4];
-		GLfloat 		vertices[24];
-		GLubyte			indices[20];
-
 
 };
 

@@ -1,11 +1,6 @@
 #ifndef FLOOR_H
 #define FLOOR_H
 
-#include "GL/gl.h"
-#include "vector3f.h"
-#include <vector>
-#include <iostream>
-
 using namespace std;
 
 class Floor
@@ -14,16 +9,9 @@ class Floor
 		Floor();
 		~Floor();
 
-		void			draw();
-		void			resize(int newsize);
-
-		float			color[4];
-
-	private:
 		unsigned int		gridsize;
-		float			resolution;
-
- 		vector<Vector3f>	vertices;
+		void			resize(int newsize);
+	private:
 };
 
 #endif
