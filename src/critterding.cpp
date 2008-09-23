@@ -25,7 +25,7 @@ using namespace std;
 	unsigned int critter_colorneurons					= 3;
 	unsigned int critter_mutationrate					= 10;
 	unsigned int critter_maxmutations					= 10;
-	unsigned int critter_percentchangetype					= 5;
+	unsigned int critter_percentchangetype					= 1;
 	bool critter_flipnewborns						= false;
 
 // Food Settings
@@ -34,7 +34,7 @@ using namespace std;
 	float        food_size							= 0.15f;
 
 // Corpse Settings
-	unsigned int corpse_maxlifetime						= 1000;
+	unsigned int corpse_maxlifetime						= 500;
 	unsigned int corpse_maxenergy						= 2500;
 	float        corpse_size						= 0.15f;
 

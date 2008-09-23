@@ -44,7 +44,7 @@ void Sleeper::mark()
 		dispcounter++;
 		if ( dispcounter == dispevery )
 		{
-			cerr << endl << "FPS:     " << (dispsum/dispevery) << endl << endl;
+			cerr << endl << "FPS: " << (dispsum/dispevery) << endl << endl;
 			dispcounter = 0;
 			dispsum = 0.0f;
 		}
