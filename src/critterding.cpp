@@ -30,12 +30,12 @@ using namespace std;
 
 // Food Settings
 	unsigned int food_maxlifetime						= 500;
-	unsigned int food_maxenergy						= 2500;
+	unsigned int food_maxenergy						= 1000;
 	float        food_size							= 0.15f;
 
 // Corpse Settings
 	unsigned int corpse_maxlifetime						= 500;
-	unsigned int corpse_maxenergy						= 2500;
+	unsigned int corpse_maxenergy						= 1000;
 	float        corpse_size						= 0.15f;
 
 // Brain Settings

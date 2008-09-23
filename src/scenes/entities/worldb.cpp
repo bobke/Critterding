@@ -593,7 +593,10 @@ void WorldB::process()
 
 					if (spotIsFree(nc->newposition, nc->size, i))
 					{
-						cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: " << c->crittertype << ", ad: " << setw(4) << c->adamdist << ")";
+						cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: ";
+						if (c->crittertype) cerr << "C";
+						else cerr << "H";
+						cerr << ", ad: " << setw(4) << c->adamdist << ")";
 
 						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
 						if ( mutant ) cerr << " (m)";
@@ -1220,7 +1223,7 @@ void WorldB::printSettings()
 	cout << endl << "BUTTONS" << endl << endl;
 	cout << "Engine / World Operations" << endl;
 	cout << "  F1            : print settings and toggle pause program" << endl;
-	cout << "  F2            : show fps (10 frames average)" << endl << endl;
+	cout << "  F2            : show fps (100 frames average)" << endl << endl;
 	cout << "  F3            : decrease Minimum Critters" << endl;
 	cout << "  F4            : increase Minimum Critters" << endl << endl;
 	cout << "  F5            : decrease energy in the system by the energy amount of 25 food" << endl;
