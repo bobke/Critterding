@@ -77,7 +77,6 @@ class CritterB
 		unsigned int		items;
 		Vector3f		cameraposition;
 
-		void			draw();
 		void			place();
 		void			process();
 		void			resize(float newsize);
@@ -126,10 +125,6 @@ class CritterB
 		unsigned int		visionPosition;
 
 		unsigned int		motorneuronsfired;
-
-		GLfloat 		vertices[27];
-		GLubyte			indices[20];
-		GLubyte			tindices[3];
 
 		RandGen			randgen;
 

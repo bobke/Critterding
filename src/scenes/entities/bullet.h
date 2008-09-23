@@ -18,11 +18,9 @@ class Bullet
 
 		float		size;
 		float		halfsize;
-		unsigned int	maxSteps;
 		unsigned int	totalSteps;
 		Vector3f	position;
 
-		void		draw();
 		void		calcDirection(float direction);
 		void		moveForward();
 
@@ -30,13 +28,8 @@ class Bullet
 
 		GLfloat		*pvertices;
 		float		speed;
-		float		color[4];
 		float		directionX;
 		float		directionZ;
-
-		GLfloat 	vertices[24];
-		//GLubyte		indices[24];
-		GLubyte		indices[20];
 
 		void		resize(float size);
 

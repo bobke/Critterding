@@ -33,6 +33,92 @@ WorldB::WorldB()
 	items = 4 * 800 * 600;
 	retina = (unsigned char*)malloc(items);
 	memset(retina, 0, items);
+
+	generateList();
+}
+
+void WorldB::generateList()
+{
+	displayLists = glGenLists(2);
+
+	// 1 = food, corpse, bullet : normal cube
+	glNewList(displayLists,GL_COMPILE);
+
+		glBegin(GL_QUADS);
+
+		glVertex3f( -1.0f,  1.0f,   1.0f );
+		glVertex3f( -1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,   1.0f );
+
+		glVertex3f( -1.0f, -1.0f,  -1.0f );
+		glVertex3f( -1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f, -1.0f,  -1.0f );
+
+		glVertex3f( -1.0f, -1.0f,   1.0f );
+		glVertex3f( -1.0f,  1.0f,   1.0f );
+		glVertex3f(  1.0f,  1.0f,   1.0f );
+		glVertex3f(  1.0f, -1.0f,   1.0f );
+
+		glVertex3f( -1.0f, -1.0f,   1.0f );
+		glVertex3f( -1.0f, -1.0f,  -1.0f );
+		glVertex3f( -1.0f,  1.0f,  -1.0f );
+		glVertex3f( -1.0f,  1.0f,   1.0f );
+
+		glVertex3f(  1.0f, -1.0f,   1.0f );
+		glVertex3f(  1.0f, -1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,   1.0f );
+
+		glEnd();
+
+	glEndList();
+
+	// 2 = critter
+	glNewList(displayLists+1,GL_COMPILE);
+
+		glBegin(GL_QUADS);
+
+		glVertex3f( -1.0f,  1.0f,   1.0f );
+		glVertex3f( -1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,   1.0f );
+
+		glVertex3f( -1.0f, -1.0f,  -1.0f );
+		glVertex3f( -1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f, -1.0f,  -1.0f );
+
+		glVertex3f( -1.0f, -1.0f,   1.0f );
+		glVertex3f( -1.0f,  1.0f,   1.0f );
+		glVertex3f(  1.0f,  1.0f,   1.0f );
+		glVertex3f(  1.0f, -1.0f,   1.0f );
+
+		glVertex3f( -1.0f, -1.0f,   1.0f );
+		glVertex3f( -1.0f, -1.0f,  -1.0f );
+		glVertex3f( -1.0f,  1.0f,  -1.0f );
+		glVertex3f( -1.0f,  1.0f,   1.0f );
+
+		glVertex3f(  1.0f, -1.0f,   1.0f );
+		glVertex3f(  1.0f, -1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  1.0f,   1.0f );
+
+		glEnd();
+
+ 		glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
+
+		glBegin(GL_TRIANGLES);
+
+		glVertex3f(  0.0f,  0.5f,  -1.3f );
+		glVertex3f(  1.0f,  1.0f,  -1.0f );
+		glVertex3f( -1.0f,  1.0f,  -1.0f );
+
+		glEnd();
+
+	glEndList();
+
 }
 
 void WorldB::resize(unsigned int newsize)
@@ -58,7 +144,7 @@ void WorldB::process()
 
 		// check if outside world
 			// left border
-			if ( bullets[i]->totalSteps > bullets[i]->maxSteps ) //bullets[i]->position.x - bullets[i]->halfsize <= 0 || bullets[i]->position.x + bullets[i]->halfsize >= size || bullets[i]->position.z - bullets[i]->halfsize <= 0 || bullets[i]->position.z + bullets[i]->halfsize >= size || 
+			if ( bullets[i]->totalSteps > 10 ) //bullets[i]->position.x - bullets[i]->halfsize <= 0 || bullets[i]->position.x + bullets[i]->halfsize >= size || bullets[i]->position.z - bullets[i]->halfsize <= 0 || bullets[i]->position.z + bullets[i]->halfsize >= size || 
 			{
 				delete bullets[i];
 				bullets.erase(bullets.begin()+i);
@@ -93,7 +179,7 @@ void WorldB::process()
 			}
 
 			// old food, this should remove stuff from corners
-			else if ( ++food[i]->totalFrames >= food[i]->maxtotalFrames )
+			else if ( ++food[i]->totalFrames >= food_maxlifetime )
 			{
 				freeEnergy += food[i]->energy;
 				delete food[i];
@@ -118,7 +204,7 @@ void WorldB::process()
 			}
 
 			// old corpse
-			else if ( ++corpses[i]->totalFrames >= corpses[i]->maxtotalFrames )
+			else if ( ++corpses[i]->totalFrames >= corpse_maxlifetime )
 			{
 				freeEnergy += corpses[i]->energy;
 				delete corpses[i];
@@ -169,46 +255,72 @@ void WorldB::process()
 		
 			for( unsigned int j=0; j < critters.size(); j++)
 			{
-				CritterB *oc = critters[j];
-				if ( fabs( c->position.x - oc->position.x ) <= realSightRange && fabs( c->position.z - oc->position.z ) <= realSightRange )
+				CritterB *f = critters[j];
+				if ( fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
 				{
-					oc->draw();
+					glPushMatrix();
+						glColor4f( f->color[0], f->color[1], f->color[2], f->color[3] );
+						glTranslatef( f->position.x, f->position.y, f->position.z );
+						glRotatef( f->rotation, 0.0, 1.0, 0.0 );
+						glScalef( f->size, f->size, f->size );
+						glCallList(displayLists+1);
+					glPopMatrix();
 				}
 			}
-		
+
+			glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
 			for( unsigned int j=0; j < food.size(); j++)
 			{
 				Food *f = food[j];
 				if ( fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
 				{
-					f->draw();
+					glPushMatrix();
+						glTranslatef( f->position.x, f->position.y, f->position.z );
+						glScalef( f->size, f->size, f->size );
+						glCallList(displayLists);
+					glPopMatrix();
 				}
 			}
 		
+			glColor4f( 0.0f, 0.5f, 0.0f, 0.5f );
 			for( unsigned int j=0; j < corpses.size(); j++)
 			{
-				Corpse *co = corpses[j];
-				if ( fabs( c->position.x - co->position.x ) <= realSightRange && fabs( c->position.z - co->position.z ) <= realSightRange )
+				Corpse *f = corpses[j];
+				if ( fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
 				{
-					co->draw();
+					glPushMatrix();
+						glTranslatef( f->position.x, f->position.y, f->position.z );
+						glScalef( f->size, f->size, f->size );
+						glCallList(displayLists);
+					glPopMatrix();
 				}
 			}
 		
+			glColor4f( 0.5f, 0.5f, 0.0f, 0.0f );
 			for( unsigned int j=0; j < walls.size(); j++)
 			{
-				Wall *w = walls[j];
-				if ( fabs( c->position.x - w->position.x ) <= realSightRange && fabs( c->position.z - w->position.z ) <= realSightRange )
+				Wall *f = walls[j];
+				if ( !f->disabled && fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
 				{
-					w->draw();
+					glPushMatrix();
+						glTranslatef( f->position.x, f->position.y, f->position.z );
+						glScalef( f->size, f->size, f->size );
+						glCallList(displayLists);
+					glPopMatrix();
 				}
 			}
 		
+			glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
 			for( unsigned int j=0; j < bullets.size(); j++)
 			{
-				Bullet *b = bullets[j];
-				if ( fabs( c->position.x - b->position.x ) <= realSightRange && fabs( c->position.z - b->position.z ) <= realSightRange )
+				Bullet *f = bullets[j];
+				if ( fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
 				{
-					b->draw();
+					glPushMatrix();
+						glTranslatef( f->position.x, f->position.y, f->position.z );
+						glScalef( f->size, f->size, f->size );
+						glCallList(displayLists);
+					glPopMatrix();
 				}
 			}
 	}
@@ -547,7 +659,6 @@ void WorldB::insertRandomFood(int amount, float energy)
 		Food *f = new Food;
 		f->maxenergy = food_maxenergy;
 		f->energy = energy;
-		f->maxtotalFrames = food_maxlifetime;
 		f->maxsize = food_size;
 		f->position = findEmptySpace(f->size);
 
@@ -659,7 +770,6 @@ void WorldB::removeCritter(unsigned int cid)
 		Corpse *c = new Corpse;
 		c->maxenergy = corpse_maxenergy;
 		c->maxsize = corpse_size;
-		c->maxtotalFrames = corpse_maxlifetime;
 		c->position = critters[cid]->position;
 
 		// put max energy allowed in corpse
@@ -781,11 +891,64 @@ void WorldB::drawWithGrid()
 	// draw floor
 	grid.draw();
 
-	for( unsigned int i=0; i < food.size(); i++) food[i]->draw();
-	for( unsigned int i=0; i < corpses.size(); i++) corpses[i]->draw();
-	for( unsigned int i=0; i < walls.size(); i++) walls[i]->draw();
-	for( unsigned int i=0; i < bullets.size(); i++) bullets[i]->draw();
-	for( unsigned int i=0; i < critters.size(); i++) critters[i]->draw();
+	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
+	for( unsigned int i=0; i < food.size(); i++)
+	{
+		Food *f = food[i];
+		glPushMatrix();
+			glTranslatef( f->position.x, f->position.y, f->position.z );
+			glScalef( f->halfsize, f->halfsize, f->halfsize );
+			glCallList(displayLists);
+		glPopMatrix();
+	}
+
+	glColor4f( 0.5f, 0.0f, 0.0f, 0.5f );
+	for( unsigned int i=0; i < corpses.size(); i++)
+	{
+		Corpse *f = corpses[i];
+		glPushMatrix();
+			glTranslatef( f->position.x, f->position.y, f->position.z );
+			glScalef( f->halfsize, f->halfsize, f->halfsize );
+			glCallList(displayLists);
+		glPopMatrix();
+	}
+
+	glColor4f( 0.5f, 0.5f, 0.0f, 0.0f );
+	for( unsigned int i=0; i < walls.size(); i++)
+	{
+		Wall *f = walls[i];
+		if ( !f->disabled )
+		{
+			glPushMatrix();
+				glTranslatef( f->position.x, f->position.y, f->position.z );
+				glScalef( f->halfsize, f->halfsize, f->halfsize );
+				glCallList(displayLists);
+			glPopMatrix();
+		}
+	}
+
+	glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
+	for( unsigned int i=0; i < bullets.size(); i++)
+	{
+		Bullet *f = bullets[i];
+		glPushMatrix();
+			glTranslatef( f->position.x, f->position.y, f->position.z );
+			glScalef( f->halfsize, f->halfsize, f->halfsize );
+			glCallList(displayLists);
+		glPopMatrix();
+	}
+
+	for( unsigned int i=0; i < critters.size(); i++)
+	{
+		CritterB *f = critters[i];
+		glPushMatrix();
+ 			glColor4f( f->color[0], f->color[1], f->color[2], f->color[3] );
+			glTranslatef( f->position.x, f->position.y, f->position.z );
+			glRotatef( f->rotation, 0.0, 1.0, 0.0 );
+			glScalef( f->halfsize, f->halfsize, f->halfsize );
+			glCallList(displayLists+1);
+		glPopMatrix();
+	}
 }
 
 // min critter control
