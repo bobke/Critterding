@@ -77,6 +77,13 @@ class CritterB
 		unsigned int		items;
 		Vector3f		cameraposition;
 
+		float			sightrange;
+
+		// 3 vectors for frustrum culling
+		Vector3f		frustCullTriangle1;
+		Vector3f		frustCullTriangle2;
+		Vector3f		frustCullTriangle3;
+
 		void			place();
 		void			process();
 		void			resize(float newsize);
@@ -102,6 +109,15 @@ class CritterB
 
 		void			prepNewPoss();
 		void			moveToNewPoss();
+		void			calcFrustrumTriangle();
+		// variables used as caching for checking if withing sight
+		float			v1x;
+		float			v1z;
+		float			v2x;
+		float			v2z;
+		float			denom;
+		bool			isWithinSight(Vector3f& point);
+
 
 		void			loadCritterB(string &content);
 		string			saveCritterB();

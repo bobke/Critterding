@@ -338,9 +338,9 @@ int main(int argc, char *argv[])
 		{
 			optind++;
 			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 100 )
+			if ( value >= 1 && value <= 1000 )
 				critter_retinasize = value;
-			else { cerr << "critter_retinasize must match >=1 and <=100" << endl; exit(1); }
+			else { cerr << "critter_retinasize must match >=1 and <=1000" << endl; exit(1); }
 	        }
 		else if (sw=="--critter_colorneurons")
 		{
