@@ -21,6 +21,8 @@ void CritterB::initConst()
 	retinaRowStart		= 0;
 	retinaRowLength		= 0;
 
+	sightrange		= 0.0f;
+
 	carriesFood		= false;
 	carriesCorpse		= false;
 
@@ -390,8 +392,8 @@ void CritterB::mutate(unsigned int maxMutateRuns, unsigned int percentChangeType
 void CritterB::calcCamPos()
 {
 	float reused = rotation * 0.0174532925f;
-	cameraposition.x = position.x - (sin(reused) * (halfsize - 0.01));
-	cameraposition.z = position.z - (cos(reused) * (halfsize - 0.01));
+	cameraposition.x = position.x - (sin(reused) * (halfsize - 0.01f));
+	cameraposition.z = position.z - (cos(reused) * (halfsize - 0.01f));
 	cameraposition.y = position.y + 0.05f;
 }
 
@@ -454,12 +456,74 @@ void CritterB::resize(float newsize)
 	void CritterB::moveToNewPoss()
 	{
 		position = newposition;
+
+		calcFrustrumTriangle();
+
 		calcCamPos();
 		if ( carriesFood )
 		{
 			foodBeingCarried->position.x = position.x;
 			foodBeingCarried->position.z = position.z;
 		}
+	}
+
+	void CritterB::calcFrustrumTriangle()
+	{
+		frustCullTriangle1 = position;
+		frustCullTriangle2 = position;
+
+ 		float reused = rotation * 0.0174532925f;
+
+		frustCullTriangle1.x += sin(reused) * 0.4f;
+		frustCullTriangle1.z += cos(reused) * 0.4f;
+
+		frustCullTriangle2.x -= sin(reused) * (sightrange+halfsize);
+		frustCullTriangle2.z -= cos(reused) * (sightrange+halfsize);
+
+		frustCullTriangle3 = frustCullTriangle2;
+
+		reused = (270.0f+rotation) * 0.0174532925f;
+		float sr = sightrange/2.0f;
+		frustCullTriangle2.x -= sin(reused) * sr;
+		frustCullTriangle2.z -= cos(reused) * sr;
+
+		reused = (90.0f+rotation) * 0.0174532925f;
+		frustCullTriangle3.x -= sin(reused) * sr;
+		frustCullTriangle3.z -= cos(reused) * sr;
+
+		v1x = frustCullTriangle1.x - frustCullTriangle3.x;
+		v1z = frustCullTriangle1.z - frustCullTriangle3.z;
+
+		v2x = frustCullTriangle2.x - frustCullTriangle3.x;
+		v2z = frustCullTriangle2.z - frustCullTriangle3.z;
+
+		denom = v1x*v2z-v1z*v2x;
+	}
+
+	bool CritterB::isWithinSight(Vector3f& point)
+	{
+
+		// denom = cross(a-c, b-c)
+		//  u = cross(p-c, b-c) / denom
+		//  v = cross(a-c, p-c) / denom
+		//  w = 1 - u - v 
+
+		float realSightRange = sightrange + size;
+
+		if ( fabs( position.x - point.x ) <= realSightRange && fabs( position.z - point.z ) <= realSightRange )
+		{
+			// p-c
+			float v3x = point.x - frustCullTriangle3.x;
+			float v3z = point.z - frustCullTriangle3.z;
+			float u = (v3x*v2z-v3z*v2x) / denom;
+			float v = (v1x*v3z-v1z*v3x) / denom;
+
+			if ( u > 0.0f && u < 1.0f && v > 0.0f && v < 1.0f && u + v < 1.0f )
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	void CritterB::moveForward()
@@ -500,6 +564,7 @@ void CritterB::resize(float newsize)
 	{
 		rotation += speedfactor*20.0f;
 		if ( rotation > 360.0f ) rotation -= 360.0f;
+		calcFrustrumTriangle();
 		calcCamPos();
 	}
 	
@@ -507,6 +572,7 @@ void CritterB::resize(float newsize)
 	{
 		rotation -= speedfactor*20.0f;
 		if ( rotation < 0.0f ) rotation += 360.0f;
+		calcFrustrumTriangle();
 		calcCamPos();
 	}
 

@@ -250,7 +250,7 @@ void WorldB::process()
 	}
 
 	// as approximation we take every c's halfsize*2: critter_size
-	float realSightRange = critter_sightrange + critter_size;
+	//float realSightRange = critter_sightrange + critter_size;
 
 	// for all critters do
 	for( unsigned int i=0; i < critters.size(); i++)
@@ -261,7 +261,7 @@ void WorldB::process()
 
 		// draw everything in it's sight
 
-//			floor.draw();
+//			draw floor;
 			glPushMatrix();
 				glScalef( floor.gridsize, floor.gridsize, floor.gridsize );
 				glCallList(displayLists+2);
@@ -270,7 +270,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < critters.size(); j++)
 			{
 				CritterB *f = critters[j];
-				if ( fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
+				if ( c->isWithinSight(f->position) )
 				{
 					glPushMatrix();
 						glColor4f( f->color[0], f->color[1], f->color[2], f->color[3] );
@@ -286,7 +286,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < food.size(); j++)
 			{
 				Food *f = food[j];
-				if ( fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
+				if ( c->isWithinSight(f->position) )
 				{
 					glPushMatrix();
 						glTranslatef( f->position.x, f->position.y, f->position.z );
@@ -300,7 +300,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < corpses.size(); j++)
 			{
 				Corpse *f = corpses[j];
-				if ( fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
+				if ( c->isWithinSight(f->position) )
 				{
 					glPushMatrix();
 						glTranslatef( f->position.x, f->position.y, f->position.z );
@@ -314,7 +314,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < walls.size(); j++)
 			{
 				Wall *f = walls[j];
-				if ( !f->disabled && fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
+				if ( !f->disabled && c->isWithinSight(f->position) )
 				{
 					glPushMatrix();
 						glTranslatef( f->position.x, f->position.y, f->position.z );
@@ -328,7 +328,7 @@ void WorldB::process()
 			for( unsigned int j=0; j < bullets.size(); j++)
 			{
 				Bullet *f = bullets[j];
-				if ( fabs( c->position.x - f->position.x ) <= realSightRange && fabs( c->position.z - f->position.z ) <= realSightRange )
+				if ( c->isWithinSight(f->position) )
 				{
 					glPushMatrix();
 						glTranslatef( f->position.x, f->position.y, f->position.z );
@@ -607,6 +607,7 @@ void WorldB::process()
 					nc->speedfactor = critter_speed;
 					nc->maxEnergyLevel = critter_maxenergy;
 					nc->maxtotalFrames = critter_maxlifetime;
+					nc->sightrange = critter_sightrange;
 					nc->resize(critter_size);
 					nc->procreateTimeTrigger = critter_maxlifetime / critter_maxchildren;
 					nc->fireTimeTrigger = critter_maxlifetime / critter_maxbullets;
@@ -781,6 +782,7 @@ void WorldB::insertCritter()
 	c->maxEnergyLevel = critter_maxenergy;
 	c->maxtotalFrames = critter_maxlifetime;
 	c->rotation = randgen.get( 0, 360 );
+	c->sightrange = critter_sightrange;
 	c->resize(critter_size);
 
 	c->energyLevel		= critter_startenergy;
@@ -800,8 +802,10 @@ void WorldB::insertCritter()
 
 void WorldB::positionCritterB(unsigned int cid)
 {
-	critters[cid]->position	= findEmptySpace(critters[cid]->size);
-	critters[cid]->position.y = critters[cid]->halfsize;
+	critters[cid]->newposition = findEmptySpace(critters[cid]->size);
+	critters[cid]->newposition.y = critters[cid]->halfsize;
+	critters[cid]->moveToNewPoss();
+
 	critters[cid]->calcFramePos(cid, retinasperrow);
 	critters[cid]->calcCamPos();
 }
@@ -993,7 +997,20 @@ void WorldB::drawWithGrid()
 			glRotatef( f->rotation, 0.0, 1.0, 0.0 );
 			glScalef( f->halfsize, f->halfsize, f->halfsize );
 			glCallList(displayLists+1);
+
+ 			glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
+
 		glPopMatrix();
+
+		// draw visual field
+// 		glPushMatrix();
+// 			glBegin(GL_TRIANGLES);
+// 				glVertex3f(f->frustCullTriangle1.x, f->frustCullTriangle1.y, f->frustCullTriangle1.z);
+// 				glVertex3f(f->frustCullTriangle2.x, f->frustCullTriangle2.y, f->frustCullTriangle2.z);
+// 				glVertex3f(f->frustCullTriangle3.x, f->frustCullTriangle3.y, f->frustCullTriangle3.z);
+// 			glEnd();
+// 		glPopMatrix();
+
 	}
 }
 
@@ -1040,6 +1057,7 @@ void WorldB::loadAllCritters()
 				c->maxEnergyLevel = critter_maxenergy;
 				c->maxtotalFrames = critter_maxlifetime;
 				c->rotation = randgen.get( 0, 360 );
+				c->sightrange = critter_sightrange;
 				c->resize(critter_size);
 
 				c->energyLevel		= critter_startenergy;
