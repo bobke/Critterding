@@ -57,7 +57,12 @@ void Sleeper::mark()
 void Sleeper::swap()
 {
 	if ( active )	active = false;
-	else		active = true;
+	else
+	{
+		active = true;
+		dispcounter = 0;
+		dispsum = 0.0f;
+	}
 }
 
 Sleeper::~Sleeper()

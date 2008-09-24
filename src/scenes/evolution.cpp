@@ -15,9 +15,10 @@ void Evolution::draw()
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glShadeModel(GL_FLAT);
 	glEnable(GL_DEPTH_TEST);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
+//	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 	glHint(GL_FOG_HINT, GL_FASTEST);
@@ -25,7 +26,6 @@ void Evolution::draw()
 	glDisable(GL_DITHER);
 	glDisable(GL_POLYGON_SMOOTH);
 
-//	glCullFace(GL_FRONT);
 	glEnable(GL_CULL_FACE);
 
 	world.process();
@@ -56,7 +56,7 @@ void Evolution::draw()
 
 	sleeper.mark();
 
-	glDisableClientState(GL_VERTEX_ARRAY);  // disable vertex arrays
+//	glDisableClientState(GL_VERTEX_ARRAY);  // disable vertex arrays
 }
 
 void Evolution::handlekey(const KeySym& key)

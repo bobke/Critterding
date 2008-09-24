@@ -7,41 +7,48 @@ TERMINOLOGY
       : generations with mutations since adam
 
 
-STARTUP OPTIONS                                                                                                                                                                              
+STARTUP OPTIONS                                                                                                                                                                                                        
 
-  option         [default value]
+  option           [default value]
 
   Global Settings
-  --small                         Creates a 10x10 world with 100 energy
-  --medium                        Creates a 25x25 world with 500 energy (default)
-  --big                           Creates a 50x50 world with 3000 energy         
-  --huge                          Creates a 100x100 world with 15000 energy      
-  --worldsize               [25]  Creates a 25x25 world                          
-  --energy                 [500]  Energy in the system: 500*food_energy(2500) = 1250000
-  --mincritters             [10]  If less than 10 critters are present, insert an adam 
-  --retinasperrow           [20]  Place 20 retinas on a row (bottom left of window)    
+  --small                           Creates a 10x10 world with 200 energy
+  --medium                          Creates a 25x25 world with 500 energy (default)
+  --big                             Creates a 50x50 world with 2000 energy         
+  --huge                            Creates a 100x100 world with 8000 energy       
+  --worldsize                 [25]  Creates a 25x25 world                          
+  --energy                   [500]  Energy in the system: 500*food_energy(1000) = 500000
+  --mincritters               [10]  If less than 10 critters are present, insert an adam
+  --retinasperrow             [20]  Place 20 retinas on a row (bottom left of window)   
+  --camerasensitivity         [10]  Camera sensitivity                                  
 
   Critter Settings
-  --critter_maxlifetime   [2000]  Max amount of frames a critter can live
-  --critter_maxenergy     [5000]  Max amount of energy in a critter      
-  --critter_startenergy   [2500]  Starting amount of energy for a new critter
-  --critter_maxchildren    [100]  Max amount of children a critter can spawn 
-  --critter_maxbullets     [200]  Max amount of bullets a critter can fire   
-  --critter_minenergyproc [3000]  Min amount of energy required for procreation
-  --critter_minenergyfire    [1]  Min amount of energy required for firing a bullet
-  --critter_size            [10]  Size of a critter                                
-  --critter_speed           [50]  Critter speed                                    
-  --critter_sightrange      [40]  Distance a critter can see (40 = 4 floor squares)
-  --critter_retinasize       [7]  Resolution of critter's retina: 7x7
-  --critter_colorneurons     [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
-  --critter_mutationrate    [10]  When a critter procreates there is a 10% chance it will mutate
-  --critter_maxmutations    [10]  When a critter mutates, it can do 10 mutations at maximum
-  --critter_flipnewborns          If set, newborns will be flipped 180 degrees
+  --critter_maxlifetime     [2000]  Max amount of frames a critter can live
+  --critter_maxenergy       [5000]  Max amount of energy in a critter      
+  --critter_startenergy     [2500]  Starting amount of energy for a new critter
+  --critter_maxchildren      [100]  Max amount of children a critter can spawn 
+  --critter_maxbullets       [200]  Max amount of bullets a critter can fire
+  --critter_minenergyproc   [3000]  Min amount of energy required for procreation
+  --critter_minenergyfire      [1]  Min amount of energy required for firing a bullet
+  --critter_size              [10]  Size of a critter
+  --critter_speed             [50]  Critter speed
+  --critter_sightrange        [30]  Distance a critter can see (30 = 3 floor squares)
+  --critter_retinasize         [7]  Resolution of critter's retina: 7x7
+  --critter_colorneurons       [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
+  --critter_mutationrate       [3]  When a critter procreates there is a 3% chance it will mutate
+  --critter_maxmutations       [8]  When a critter mutates, it can do 8 mutations at maximum
+  --critter_percentchangetype  [1]  When a critter mutates, percent chance it changes type
+  --critter_flipnewborns            If set, newborns will be flipped 180 degrees
 
   Food Settings
-  --food_maxlifetime       [500]  Maximum amount of frames food can live
-  --food_maxenergy        [2500]  Maximum amount of energy in a food unit
-  --food_size               [15]  Size of a food unit
+  --food_maxlifetime         [500]  Maximum amount of frames food exists
+  --food_maxenergy          [1000]  Maximum amount of energy in a food unit
+  --food_size                 [15]  Size of a food unit
+
+  Corpse Settings
+  --corpse_maxlifetime      [1000]  Maximum amount of frames a corpse exists
+  --corpse_maxenergy        [2500]  Maximum amount of energy in a corpse unit
+  --corpse_size               [15]  Size of a corpse unit
 
   Brain Settings
   --brain_maxneurons                           [1000]  Max neurons per critter
@@ -86,33 +93,27 @@ STARTUP OPTIONS
   --brain_percentmutateeffectremovesynapse       [30]  % chance of removing a synapse for a mutationrun
     --brain_mutate_mutateeffects                       If set, all values above will mutate
 
+
 BUTTONS
 
 Engine / World Operations
   F1            : print settings and toggle pause program
-  F2            : show fps (10 frames average)           
+  F2            : show fps (100 frames average)
 
-  F3            : decrease Minimum Critters
-  F4            : increase Minimum Critters
-
-  F5            : decrease energy in the system by the energy amount of 25 food
-  F6            : increase energy in the system by the energy amount of 25 food
-
+  F3/F4         : adjust minimum critters
+  F5/F6         : adjust energy in the system (by 25 units)
+  keypad -/+    : adjust energy in the system (by 1 unit)
   F7            : insert new critter (adam)
 
   F8            : toggle Timed Food Inserts
                   inserts 100 food every 3 generations, driving the population up and down.
 
-  F9            : decrease max mutations per mutant
-  F10           : increase max mutations per mutant
-
-  F11           : decrease mutation rate (%)
-  F12           : increase mutation rate (%)
-
+  F9/F10        : adjust max mutations per mutant
+  F11/F12       : adjust mutation rate (%)
   Insert        : toggle hide critter retinas.
 
   w             : create a horizontal wall
-  x             : destroy the wall        
+  x             : destroy the wall
   c             : toggle gate in wall center
 
   f             : toggle follow the youngest critter untill it dies.
@@ -120,32 +121,32 @@ Engine / World Operations
   Page Up       : load all critters from "~/.critterding/load" directory
   Page Down     : save all critters into "~/.critterding/save/(timestamp)" directory
 
-  keypad -      : decrease energy in the system by the energy amount of 1 food
-  keypad +      : increase energy in the system by the energy amount of 1 food
-
 Camera Operations
+  Backspace     : reset camera
   Arrow Up      : move forward
   Arrow Down    : move backward
-  Arrow Left    : strafe left  
-  Arrow Right   : strafe right 
-  Home          : move up      
-  End           : move down    
-  NumKey 2      : look up      
-  NumKey 8      : look down    
-  NumKey 4      : look left    
-  NumKey 6      : look right   
+  Arrow Left    : strafe left
+  Arrow Right   : strafe right
+  Home          : move up
+  End           : move down
+  NumKey 2      : look up
+  NumKey 8      : look down
+  NumKey 4      : look left
+  NumKey 6      : look right
+  keypad /      : decrease camera sensitivity
+  keypad *      : increase camera sensitivity
 
 
 OTHER THINGS
 
  - Make sure the retina boxes in the lower left of the window never leave the
-   boundaries of the window.  Offscreen rendering is not supported by almost any
+   boundaries of the window.  Offscreen rendering is not supported by many
    video card drivers.  For some drivers you are not even allowed to minimize the window or
    change desktops.  You should notice a big dropoff in population when this occurs.
 
  - Slow videocards will gain some performance gains by making the window's width smaller.
    Again watch out the retinas do not leave the window boundaries, the option --retinasperrow
-   can be used to level your needs.
+   can be used to adjust your needs.
 
  - Hiding the retinas is (slightly) more costly than leaving them on.
 

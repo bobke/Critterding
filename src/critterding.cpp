@@ -23,8 +23,8 @@ using namespace std;
 	float        critter_sightrange						= 3.0f;
 	unsigned int critter_retinasize						= 7;
 	unsigned int critter_colorneurons					= 3;
-	unsigned int critter_mutationrate					= 10;
-	unsigned int critter_maxmutations					= 10;
+	unsigned int critter_mutationrate					= 3;
+	unsigned int critter_maxmutations					= 8;
 	unsigned int critter_percentchangetype					= 1;
 	bool critter_flipnewborns						= false;
 
@@ -34,8 +34,8 @@ using namespace std;
 	float        food_size							= 0.15f;
 
 // Corpse Settings
-	unsigned int corpse_maxlifetime						= 500;
-	unsigned int corpse_maxenergy						= 1000;
+	unsigned int corpse_maxlifetime						= 1000;
+	unsigned int corpse_maxenergy						= 2500;
 	float        corpse_size						= 0.15f;
 
 // Brain Settings
@@ -97,18 +97,18 @@ int main(int argc, char *argv[])
 	std::stringstream helpinfo;
 
 	helpinfo << "STARTUP OPTIONS" << endl << endl;
-	helpinfo << "  option         [default value]" << endl << endl;
+	helpinfo << "  option           [default value]" << endl << endl;
 	helpinfo << "  Global Settings" << endl;
-	helpinfo << "  --small                         Creates a 10x10 world with 100 energy" << endl;
-	helpinfo << "  --medium                        Creates a 25x25 world with 500 energy (default)" << endl;
-	helpinfo << "  --big                           Creates a 50x50 world with 3000 energy" << endl;
-	helpinfo << "  --huge                          Creates a 100x100 world with 15000 energy" << endl;
+	helpinfo << "  --small                           Creates a 10x10 world with 200 energy" << endl;
+	helpinfo << "  --medium                          Creates a 25x25 world with 500 energy (default)" << endl;
+	helpinfo << "  --big                             Creates a 50x50 world with 2000 energy" << endl;
+	helpinfo << "  --huge                            Creates a 100x100 world with 8000 energy" << endl;
 
-	helpinfo << "  --worldsize               [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
-	helpinfo << "  --energy                 [" << energy << "]  Energy in the system: " << energy << "*food_energy(" << food_maxenergy << ") = " << energy*food_maxenergy << "" << endl;
-	helpinfo << "  --mincritters             [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
-	helpinfo << "  --retinasperrow           [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
-	helpinfo << "  --camerasensitivity       [" << camerasensitivity << "]  Camera sensitivity" << endl;
+	helpinfo << "  --worldsize                 [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
+	helpinfo << "  --energy                   [" << energy << "]  Energy in the system: " << energy << "*food_energy(" << food_maxenergy << ") = " << energy*food_maxenergy << "" << endl;
+	helpinfo << "  --mincritters               [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
+	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
+	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;
 	helpinfo << endl;
 	helpinfo << "  Critter Settings" << endl;
 	helpinfo << "  --critter_maxlifetime     [" << critter_maxlifetime << "]  Max amount of frames a critter can live" << endl;
@@ -123,9 +123,9 @@ int main(int argc, char *argv[])
 	helpinfo << "  --critter_sightrange        [" << critter_sightrange*10.0f << "]  Distance a critter can see (" << critter_sightrange*10.0f << " = " << critter_sightrange << " floor squares)" << endl;
 	helpinfo << "  --critter_retinasize         [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
 	helpinfo << "  --critter_colorneurons       [" << critter_colorneurons << "]  Earch color of every pixel (RGBA) will get [" << critter_colorneurons << "] neurons (only for new adams)" << endl;
-	helpinfo << "  --critter_mutationrate      [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
-	helpinfo << "  --critter_maxmutations      [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
-	helpinfo << "  --critter_percentchangetype [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
+	helpinfo << "  --critter_mutationrate       [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
+	helpinfo << "  --critter_maxmutations       [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
+	helpinfo << "  --critter_percentchangetype  [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
 	helpinfo << "  --critter_flipnewborns            If set, newborns will be flipped 180 degrees" << endl;
 	helpinfo << endl;
 	helpinfo << "  Food Settings" << endl;
@@ -191,29 +191,25 @@ int main(int argc, char *argv[])
 		if (sw=="--small")
 		{
 			worldsize = 10;
-			mincritters = 5;
-			energy = 100;
+			energy = 200;
 	        }
 
 		else if (sw=="--medium")
 		{
 			worldsize = 25;
-			mincritters = 10;
 			energy = 500;
 	        }
 
 		else if (sw=="--big")
 		{
 			worldsize = 50;
-			mincritters = 25;
-			energy = 2500;
+			energy = 2000;
 	        }
 
 		else if (sw=="--huge")
 		{
 			worldsize = 100;
-			mincritters = 50;
-			energy = 10000;
+			energy = 8000;
 	        }
 
 	// Global Settings

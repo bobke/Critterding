@@ -82,7 +82,7 @@ void CritterB::calcInputOutputNeurons()
 {
 	items = retinasize * retinasize * components;
 
-	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying neuron + 1 always firing neuron
+	brain.numberOfInputs = (items*colorNeurons)+25; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying neuron
 	brain.numberOfOutputs = 10;
 }
 
@@ -267,11 +267,6 @@ void CritterB::procInputNeurons()
 
 	// carries food
 		if (carriesFood) brain.Inputs[overstep].output = 1;
-
-	overstep++;
-
-	// the always firing neuron
-		brain.Inputs[overstep].output = 1;
 
 	overstep++;
 
