@@ -43,6 +43,7 @@ void WorldB::generateList()
 
 	// 1 = food, corpse, bullet : normal cube
 	glNewList(displayLists,GL_COMPILE);
+
 		glBegin(GL_QUADS);
 		//Quad 1
 		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
@@ -70,6 +71,7 @@ void WorldB::generateList()
 		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
 		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
 		glEnd();
+
 	glEndList();
 
 	// 2 = critter
@@ -102,7 +104,9 @@ void WorldB::generateList()
 		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
 		glEnd();
 
+		// nose
  		glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
+
 		glBegin(GL_TRIANGLES);
 		glVertex3f( -1.0f,  1.0f,  -1.0f );
 		glVertex3f(  1.0f,  1.0f,  -1.0f );
@@ -405,38 +409,69 @@ void WorldB::process()
 				}
 			}
 
-		// eat herb
-			if ( c->crittertype == 0 )
+		// eat
+			if ( c->eat )
 			{
-				if ( c->touchingFood && c->eat )
+				// herbivore
+				if ( c->crittertype == 0 )
 				{
-					float eaten = c->maxEnergyLevel / 50.0f;
-					if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
-					if ( food[c->touchedFoodID]->energy - eaten < 0 ) eaten = food[c->touchedFoodID]->energy;
-		
-					c->energyLevel		+= eaten;
-		
-					food[c->touchedFoodID]->energy		-= eaten;
-					food[c->touchedFoodID]->resize();
+					// is food
+					if ( c->touchingFood )
+					{
+						float eaten = c->maxEnergyLevel / 50.0f;
+						if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
+						if ( food[c->touchedFoodID]->energy - eaten < 0 ) eaten = food[c->touchedFoodID]->energy;
+			
+						c->energyLevel += eaten;
+						food[c->touchedFoodID]->energy -= eaten;
+						food[c->touchedFoodID]->resize();
+					}
+					// is poison
+					if ( c->touchingCorpse )
+					{
+						float eaten = c->maxEnergyLevel / 50.0f;
+						if ( c->energyLevel - eaten < 0.0f ) eaten = c->energyLevel;
+						if ( corpses[c->touchedCorpseID]->energy - eaten < 0.0f ) eaten = corpses[c->touchedCorpseID]->energy;
+			
+						c->energyLevel -= eaten;
+						corpses[c->touchedCorpseID]->energy -= eaten;
+						corpses[c->touchedCorpseID]->resize();
+
+						// free the energy
+						freeEnergy += 2.0f*eaten;
+					}
+				}
+
+				// carnivore
+				else
+				{
+					// is food
+					if ( c->touchingCorpse )
+					{
+						float eaten = c->maxEnergyLevel / 50.0f;
+						if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
+						if ( corpses[c->touchedCorpseID]->energy - eaten < 0.0f ) eaten = corpses[c->touchedCorpseID]->energy;
+			
+						c->energyLevel += eaten;
+						corpses[c->touchedCorpseID]->energy -= eaten;
+						corpses[c->touchedCorpseID]->resize();
+					}
+					// is poison
+					if ( c->touchingFood )
+					{
+						float eaten = c->maxEnergyLevel / 50.0f;
+						if ( c->energyLevel - eaten < 0.0f ) eaten = c->energyLevel;
+						if ( food[c->touchedFoodID]->energy - eaten < 0.0f ) eaten = food[c->touchedFoodID]->energy;
+			
+						c->energyLevel -= eaten;
+						food[c->touchedFoodID]->energy -= eaten;
+						food[c->touchedFoodID]->resize();
+
+						// free the energy
+						freeEnergy += 2.0f*eaten;
+					}
 				}
 			}
-
-		// eat corpse
-			else // must be 1
-			{
-				if ( c->touchingCorpse && c->eat )
-				{
-					float eaten = c->maxEnergyLevel / 50.0f;
-					if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
-					if ( corpses[c->touchedCorpseID]->energy - eaten < 0 ) eaten = corpses[c->touchedCorpseID]->energy;
-		
-					c->energyLevel		+= eaten;
-		
-					corpses[c->touchedCorpseID]->energy		-= eaten;
-					corpses[c->touchedCorpseID]->resize();
-				}
-			}
-
 		// carry / drop
 			if ( c->carrydrop )
 			{
@@ -495,7 +530,7 @@ void WorldB::process()
 							//cerr << "LIFTING" << endl;
 						}
 					}
-/*					else // we must do an exchange here
+/*					else // we must do an exchange here FIXME
 					{
 					}*/
 				}
@@ -509,16 +544,14 @@ void WorldB::process()
 				}
 			}
 
-
-
 		// fire
 			if ( c->fire && c->canFire )
 			{
 				//cerr << "critter " << i << "(ad:" << c->adamdist << ") FIRES\n";
 				c->fireTimeCount = 0;
 				float used = c->maxEnergyLevel * 0.01f;
-				c->energyLevel	-= used;
-				freeEnergy			+= used;
+				c->energyLevel -= used;
+				freeEnergy += used;
 	
 				Bullet *b = new Bullet;
 	
@@ -594,7 +627,7 @@ void WorldB::process()
 					if (spotIsFree(nc->newposition, nc->size, i))
 					{
 						cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: ";
-						if (c->crittertype) cerr << "C";
+						if ( c->crittertype == 1 ) cerr << "C";
 						else cerr << "H";
 						cerr << ", ad: " << setw(4) << c->adamdist << ")";
 
@@ -1220,46 +1253,6 @@ Vector3f WorldB::findEmptySpace(float objectsize)
 void WorldB::printSettings()
 {
 
-	cout << endl << "BUTTONS" << endl << endl;
-	cout << "Engine / World Operations" << endl;
-	cout << "  F1            : print settings and toggle pause program" << endl;
-	cout << "  F2            : show fps (100 frames average)" << endl << endl;
-	cout << "  F3            : decrease Minimum Critters" << endl;
-	cout << "  F4            : increase Minimum Critters" << endl << endl;
-	cout << "  F5            : decrease energy in the system by the energy amount of 25 food" << endl;
-	cout << "  F6            : increase energy in the system by the energy amount of 25 food" << endl << endl;
-	cout << "  F7            : insert new critter (adam)" << endl << endl;
-	cout << "  F8            : toggle Timed Food Inserts" << endl;
-	cout << "                  inserts 100 food every 3 generations, driving the population up and down." << endl << endl;
-	cout << "  F9            : decrease max mutations per mutant" << endl;
-	cout << "  F10           : increase max mutations per mutant" << endl << endl;
-	cout << "  F11           : decrease mutation rate (%)" << endl;
-	cout << "  F12           : increase mutation rate (%)" << endl << endl;
-	cout << "  Insert        : toggle hide critter retinas." << endl << endl;
-	cout << "  w             : create a horizontal wall" << endl;
-	cout << "  x             : destroy the wall" << endl;
-	cout << "  c             : toggle gate in wall center" << endl << endl;
-	cout << "  f             : toggle follow the youngest critter untill it dies." << endl << endl;
-	cout << "  Page Up       : load all critters from \"~/.critterding/load\" directory" << endl;
-	cout << "  Page Down     : save all critters into \"~/.critterding/save/(timestamp)\" directory" << endl << endl;
-	cout << "  keypad -      : decrease energy in the system by the energy amount of 1 food" << endl;
-	cout << "  keypad +      : increase energy in the system by the energy amount of 1 food" << endl << endl;
-
-	cout << "Camera Operations" << endl;
-	cout << "  Backspace     : reset camera" << endl << endl;
-	cout << "  Arrow Up      : move forward" << endl;
-	cout << "  Arrow Down    : move backward" << endl;
-	cout << "  Arrow Left    : strafe left" << endl;
-	cout << "  Arrow Right   : strafe right" << endl;
-	cout << "  Home          : move up" << endl;
-	cout << "  End           : move down" << endl;
-	cout << "  NumKey 2      : look up" << endl;
-	cout << "  NumKey 8      : look down" << endl;
-	cout << "  NumKey 4      : look left" << endl;
-	cout << "  NumKey 6      : look right" << endl;
-	cout << "  keypad /      : decrease camera sensitivity" << endl;
-	cout << "  keypad *      : increase camera sensitivity" << endl << endl;
-
 	// report settings
 	cout << endl << "CURRENT SETTINGS" << endl << endl;
 	cout << "Global Settings" << endl;
@@ -1336,6 +1329,41 @@ void WorldB::printSettings()
 	cout << "  % Effect: add synapse       = " << brain_percentmutateeffectaddsynapse << endl;
 	cout << "  % Effect: remove synapse    = " << brain_percentmutateeffectremovesynapse << endl;
 	cout << "    mutate effects            = " << brain_mutate_mutateeffects << endl;
+
+	cout << endl << "BUTTONS" << endl << endl;
+	cout << "Engine / World Operations" << endl;
+	cout << "  F1            : print settings and toggle pause program" << endl;
+	cout << "  F2            : show fps (100 frames average)" << endl << endl;
+	cout << "  F3/F4         : adjust minimum critters" << endl;
+	cout << "  F5/F6         : adjust energy in the system (by 25 units)" << endl;
+	cout << "  keypad -/+    : adjust energy in the system (by 1 unit)" << endl;
+	cout << "  F7            : insert new critter (adam)" << endl << endl;
+	cout << "  F8            : toggle Timed Food Inserts" << endl;
+	cout << "                  inserts 100 food every 3 generations, driving the population up and down." << endl << endl;
+	cout << "  F9/F10        : adjust max mutations per mutant" << endl;
+	cout << "  F11/F12       : adjust mutation rate (%)" << endl;
+	cout << "  Insert        : toggle hide critter retinas." << endl << endl;
+	cout << "  w             : create a horizontal wall" << endl;
+	cout << "  x             : destroy the wall" << endl;
+	cout << "  c             : toggle gate in wall center" << endl << endl;
+	cout << "  f             : toggle follow the youngest critter untill it dies." << endl << endl;
+	cout << "  Page Up       : load all critters from \"~/.critterding/load\" directory" << endl;
+	cout << "  Page Down     : save all critters into \"~/.critterding/save/(timestamp)\" directory" << endl << endl;
+
+	cout << "Camera Operations" << endl;
+	cout << "  Backspace     : reset camera" << endl;
+	cout << "  Arrow Up      : move forward" << endl;
+	cout << "  Arrow Down    : move backward" << endl;
+	cout << "  Arrow Left    : strafe left" << endl;
+	cout << "  Arrow Right   : strafe right" << endl;
+	cout << "  Home          : move up" << endl;
+	cout << "  End           : move down" << endl;
+	cout << "  NumKey 2      : look up" << endl;
+	cout << "  NumKey 8      : look down" << endl;
+	cout << "  NumKey 4      : look left" << endl;
+	cout << "  NumKey 6      : look right" << endl;
+	cout << "  keypad /      : decrease camera sensitivity" << endl;
+	cout << "  keypad *      : increase camera sensitivity" << endl << endl;
 
 	cout << endl;
 }
