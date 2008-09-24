@@ -23,8 +23,8 @@ using namespace std;
 	float        critter_sightrange						= 3.0f;
 	unsigned int critter_retinasize						= 7;
 	unsigned int critter_colorneurons					= 3;
-	unsigned int critter_mutationrate					= 3;
-	unsigned int critter_maxmutations					= 8;
+	unsigned int critter_mutationrate					= 8;
+	unsigned int critter_maxmutations					= 3;
 	unsigned int critter_percentchangetype					= 1;
 	bool critter_flipnewborns						= false;
 
