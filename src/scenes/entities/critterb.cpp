@@ -485,8 +485,8 @@ void CritterB::resize(float newsize)
 		frustCullTriangle1 = position;
 		frustCullTriangle2 = position;
 
-		frustCullTriangle1.x += reuseRotSinX * 0.4f;
-		frustCullTriangle1.z += reuseRotCosX * 0.4f;
+		frustCullTriangle1.x += reuseRotSinX * 0.5f;
+		frustCullTriangle1.z += reuseRotCosX * 0.5f;
 
 		frustCullTriangle2.x -= reuseRotSinX * (sightrange+halfsize);
 		frustCullTriangle2.z -= reuseRotCosX * (sightrange+halfsize);
