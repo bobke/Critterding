@@ -7,7 +7,7 @@ TERMINOLOGY
       : generations with mutations since adam
 
 
-STARTUP OPTIONS                                                                                                              
+STARTUP OPTIONS                                                                                                                                                                                                         
 
   option           [default value]
 
@@ -27,18 +27,18 @@ STARTUP OPTIONS
   --critter_maxenergy       [5000]  Max amount of energy in a critter      
   --critter_startenergy     [2500]  Starting amount of energy for a new critter
   --critter_maxchildren      [100]  Max amount of children a critter can spawn 
-  --critter_maxbullets       [200]  Max amount of bullets a critter can fire   
+  --critter_maxbullets       [200]  Max amount of bullets a critter can fire
   --critter_minenergyproc   [3000]  Min amount of energy required for procreation
   --critter_minenergyfire      [1]  Min amount of energy required for firing a bullet
-  --critter_size              [10]  Size of a critter                                
-  --critter_speed             [50]  Critter speed                                    
-  --critter_sightrange        [30]  Distance a critter can see (30 = 3 floor squares)
-  --critter_retinasize         [7]  Resolution of critter's retina: 7x7              
+  --critter_size              [10]  Size of a critter
+  --critter_speed             [50]  Critter speed
+  --critter_sightrange        [40]  Distance a critter can see (40 = 4 floor squares)
+  --critter_retinasize         [7]  Resolution of critter's retina: 7x7
   --critter_colorneurons       [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
-  --critter_mutationrate       [8]  When a critter procreates there is a 8% chance it will mutate              
-  --critter_maxmutations       [3]  When a critter mutates, it can do 3 mutations at maximum                   
-  --critter_percentchangetype  [1]  When a critter mutates, percent chance it changes type                     
-  --critter_flipnewborns            If set, newborns will be flipped 180 degrees                               
+  --critter_mutationrate       [8]  When a critter procreates there is a 8% chance it will mutate
+  --critter_maxmutations       [3]  When a critter mutates, it can do 3 mutations at maximum
+  --critter_percentchangetype  [1]  When a critter mutates, percent chance it changes type
+  --critter_flipnewborns            If set, newborns will be flipped 180 degrees
 
   Food Settings
   --food_maxlifetime         [500]  Maximum amount of frames food exists

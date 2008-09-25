@@ -20,7 +20,7 @@ using namespace std;
 	unsigned int critter_minenergyfire					= 1;
 	float        critter_size						= 0.1f;
 	float        critter_speed						= 0.05f;
-	float        critter_sightrange						= 3.0f;
+	float        critter_sightrange						= 4.0f;
 	unsigned int critter_retinasize						= 7;
 	unsigned int critter_colorneurons					= 3;
 	unsigned int critter_mutationrate					= 8;
