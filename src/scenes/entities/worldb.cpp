@@ -1002,7 +1002,7 @@ void WorldB::drawWithGrid()
 
 		glPopMatrix();
 
-		// draw visual field
+// 		// draw visual field
 // 		glPushMatrix();
 // 			glBegin(GL_TRIANGLES);
 // 				glVertex3f(f->frustCullTriangle1.x, f->frustCullTriangle1.y, f->frustCullTriangle1.z);
