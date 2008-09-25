@@ -31,6 +31,7 @@ void CritterB::initConst()
 	retinasize		= 0;
 
 	colorTrim		= 0.5f;
+
 }
 
 CritterB::CritterB()
@@ -88,8 +89,21 @@ void CritterB::calcInputOutputNeurons()
 	brain.numberOfOutputs = 10;
 }
 
+void CritterB::calcRotSinCos()
+{
+	float reused = rotation * 0.0174532925f;
+	reuseRotSinX = sin(reused);
+	reuseRotCosX = cos(reused);
+
+	reused = (90.0f+rotation) * 0.0174532925f;
+	reuseRotSinY = sin(reused);
+	reuseRotCosY = cos(reused);
+}
+
 void CritterB::setup()
 {
+	calcRotSinCos();
+
 	procreateTimeCount	= 0;
 	fireTimeCount		= 0;
 
@@ -391,9 +405,8 @@ void CritterB::mutate(unsigned int maxMutateRuns, unsigned int percentChangeType
 
 void CritterB::calcCamPos()
 {
-	float reused = rotation * 0.0174532925f;
-	cameraposition.x = position.x - (sin(reused) * (halfsize - 0.01f));
-	cameraposition.z = position.z - (cos(reused) * (halfsize - 0.01f));
+	cameraposition.x = position.x - (reuseRotSinX * (halfsize - 0.01f));
+	cameraposition.z = position.z - (reuseRotCosX * (halfsize - 0.01f));
 	cameraposition.y = position.y + 0.05f;
 }
 
@@ -472,24 +485,20 @@ void CritterB::resize(float newsize)
 		frustCullTriangle1 = position;
 		frustCullTriangle2 = position;
 
- 		float reused = rotation * 0.0174532925f;
+		frustCullTriangle1.x += reuseRotSinX * 0.4f;
+		frustCullTriangle1.z += reuseRotCosX * 0.4f;
 
-		frustCullTriangle1.x += sin(reused) * 0.4f;
-		frustCullTriangle1.z += cos(reused) * 0.4f;
-
-		frustCullTriangle2.x -= sin(reused) * (sightrange+halfsize);
-		frustCullTriangle2.z -= cos(reused) * (sightrange+halfsize);
+		frustCullTriangle2.x -= reuseRotSinX * (sightrange+halfsize);
+		frustCullTriangle2.z -= reuseRotCosX * (sightrange+halfsize);
 
 		frustCullTriangle3 = frustCullTriangle2;
 
-		reused = (270.0f+rotation) * 0.0174532925f;
 		float sr = sightrange/2.0f;
-		frustCullTriangle2.x -= sin(reused) * sr;
-		frustCullTriangle2.z -= cos(reused) * sr;
+		frustCullTriangle2.x += reuseRotSinY * sr;
+		frustCullTriangle2.z += reuseRotCosY * sr;
 
-		reused = (90.0f+rotation) * 0.0174532925f;
-		frustCullTriangle3.x -= sin(reused) * sr;
-		frustCullTriangle3.z -= cos(reused) * sr;
+		frustCullTriangle3.x -= reuseRotSinY * sr;
+		frustCullTriangle3.z -= reuseRotCosY * sr;
 
 		v1x = frustCullTriangle1.x - frustCullTriangle3.x;
 		v1z = frustCullTriangle1.z - frustCullTriangle3.z;
@@ -519,9 +528,7 @@ void CritterB::resize(float newsize)
 			float v = (v1x*v3z-v1z*v3x) / denom;
 
 			if ( u > 0.0f && u < 1.0f && v > 0.0f && v < 1.0f && u + v < 1.0f )
-			{
 				return true;
-			}
 		}
 		return false;
 	}
@@ -529,33 +536,29 @@ void CritterB::resize(float newsize)
 	void CritterB::moveForward()
 	{
 		moved = true;
-		float reused = rotation * 0.0174532925f;
-		newposition.x -= sin(reused) * speedfactor;
-		newposition.z -= cos(reused) * speedfactor;
+		newposition.x -= reuseRotSinX * speedfactor;
+		newposition.z -= reuseRotCosX * speedfactor;
 	}
 	
 	void CritterB::moveBackward()
 	{
 		moved = true;
-		float reused = rotation * 0.0174532925f;
-		newposition.x += sin(reused) * speedfactor;
-		newposition.z += cos(reused) * speedfactor;
+		newposition.x += reuseRotSinX * speedfactor;
+		newposition.z += reuseRotCosX * speedfactor;
 	}
 	
 	void CritterB::moveLeft()
 	{
 		moved = true;
-		float reused = (90.0f+rotation) * 0.0174532925f;
-		newposition.x -= sin(reused) * speedfactor;
-		newposition.z -= cos(reused) * speedfactor;
+		newposition.x -= reuseRotSinY * speedfactor;
+		newposition.z -= reuseRotCosY * speedfactor;
 	}
 	
 	void CritterB::moveRight()
 	{
 		moved = true;
-		float reused = (270.0f+rotation) * 0.0174532925f;
-		newposition.x -= sin(reused) * speedfactor;
-		newposition.z -= cos(reused) * speedfactor;
+		newposition.x += reuseRotSinY * speedfactor;
+		newposition.z += reuseRotCosY * speedfactor;
 	}
 
 // Looking
@@ -564,6 +567,8 @@ void CritterB::resize(float newsize)
 	{
 		rotation += speedfactor*20.0f;
 		if ( rotation > 360.0f ) rotation -= 360.0f;
+
+		calcRotSinCos();
 		calcFrustrumTriangle();
 		calcCamPos();
 	}
@@ -572,6 +577,8 @@ void CritterB::resize(float newsize)
 	{
 		rotation -= speedfactor*20.0f;
 		if ( rotation < 0.0f ) rotation += 360.0f;
+
+		calcRotSinCos();
 		calcFrustrumTriangle();
 		calcCamPos();
 	}

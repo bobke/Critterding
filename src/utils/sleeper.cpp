@@ -9,7 +9,7 @@ Sleeper::Sleeper()
 	cps		= optimal;
 
 	dispcounter	= 0;
-	dispevery	= 1000;
+	dispevery	= 100;
 	dispsum		= 0.0f;
 
 	// calc lasttiem for first time

@@ -42,6 +42,12 @@ class CritterB
 		Vector3f		newposition;
 
 		float			rotation;
+		void			calcRotSinCos();
+		float			reuseRotSinX;
+		float			reuseRotSinY;
+		float			reuseRotCosX;
+		float			reuseRotCosY;
+
 		float			color[4];
 		float			colorTrim;
 		float			maxEnergyLevel;
