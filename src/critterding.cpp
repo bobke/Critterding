@@ -18,9 +18,9 @@ using namespace std;
 	unsigned int critter_maxbullets						= 200;
 	unsigned int critter_minenergyproc					= 3000;
 	unsigned int critter_minenergyfire					= 1;
-	float        critter_size						= 0.1f;
-	float        critter_speed						= 0.05f;
-	float        critter_sightrange						= 4.0f;
+	unsigned int critter_size						= 10;
+	unsigned int critter_speed						= 50;
+	unsigned int critter_sightrange						= 40;
 	unsigned int critter_retinasize						= 7;
 	unsigned int critter_colorneurons					= 3;
 	unsigned int critter_mutationrate					= 8;
@@ -31,12 +31,12 @@ using namespace std;
 // Food Settings
 	unsigned int food_maxlifetime						= 500;
 	unsigned int food_maxenergy						= 1000;
-	float        food_size							= 0.15f;
+	unsigned int food_size							= 15;
 
 // Corpse Settings
 	unsigned int corpse_maxlifetime						= 1000;
 	unsigned int corpse_maxenergy						= 2500;
-	float        corpse_size						= 0.15f;
+	unsigned int corpse_size						= 15;
 
 // Brain Settings
 	unsigned int brain_maxneurons						= 1000;
@@ -90,6 +90,26 @@ using namespace std;
 	unsigned int brain_percentmutateeffectaddsynapse			= 30;
 	unsigned int brain_percentmutateeffectremovesynapse			= 30;
 		bool brain_mutate_mutateeffects					= false;
+
+
+bool checkSwitch(string matchsw, unsigned int &var, unsigned int min, unsigned int max, int optind, char *argv[])
+{
+	if ( matchsw == argv[optind] )
+	{
+		unsigned int value = atoi(argv[optind+1]);
+		if ( value >= min && value <= max )
+		{
+			var = value;
+			return true;
+		}
+		else
+		{
+			cerr << matchsw << " expects a value that is >=" << min << " and <=" << max << endl;
+			exit(1);
+		}
+	}
+	else return false;
+}
 
 
 int main(int argc, char *argv[])
@@ -213,479 +233,209 @@ int main(int argc, char *argv[])
 	        }
 
 	// Global Settings
-		else if (sw=="--worldsize")
-		{
+
+		else if ( checkSwitch("--worldsize", worldsize, 1, 5000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 5000 )
-				worldsize = value;
-			else { cerr << "worldsize must match >=1 and <=5000" << endl; exit(1); }
-	        }
-		else if (sw=="--energy")
-		{
+
+		else if ( checkSwitch("--energy", energy, 0, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 1000000 )
-				energy = value;
-			else { cerr << "energy must match >=0 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--mincritters")
-		{
+
+		else if ( checkSwitch("--mincritters", mincritters, 0, 1000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 1000 )
-				mincritters = value;
-			else { cerr << "mincritters must match >=0 and <=1000" << endl; exit(1); }
-	        }
-		else if (sw=="--retinasperrow")
-		{
+
+		else if ( checkSwitch("--retinasperrow", retinasperrow, 1, 1000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000 )
-				retinasperrow = value;
-			else { cerr << "retinasperrow must match >=1 and <=1000" << endl; exit(1); }
-	        }
-		else if (sw=="--camerasensitivity")
-		{
+
+		else if ( checkSwitch("--camerasensitivity", camerasensitivity, 1, 1000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000 )
-				camerasensitivity = value;
-			else { cerr << "camerasensitivity must match >=1 and <=1000" << endl; exit(1); }
-	        }
+
 	// Critter Settings
-		else if (sw=="--critter_maxlifetime")
-		{
+
+		else if ( checkSwitch("--critter_maxlifetime", critter_maxlifetime, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				critter_maxlifetime = value;
-			else { cerr << "critter_maxlifetime must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_maxenergy")
-		{
+
+		else if ( checkSwitch("--critter_maxenergy", critter_maxenergy, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				critter_maxenergy = value;
-			else { cerr << "critter_maxenergy must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_startenergy")
-		{
+
+		else if ( checkSwitch("--critter_startenergy", critter_startenergy, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				critter_startenergy = value;
-			else { cerr << "critter_startenergy must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_maxchildren")
-		{
+
+		else if ( checkSwitch("--critter_maxchildren", critter_maxchildren, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				critter_maxchildren = value;
-			else { cerr << "critter_maxchildren must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_maxbullets")
-		{
+
+		else if ( checkSwitch("--critter_maxbullets", critter_maxbullets, 0, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 1000000 )
-				critter_maxbullets = value;
-			else { cerr << "critter_maxbullets must match >=0 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_minenergyproc")
-		{
+
+		else if ( checkSwitch("--critter_minenergyproc", critter_minenergyproc, 0, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 1000000 )
-				critter_minenergyproc = value;
-			else { cerr << "critter_minenergyproc must match >=0 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_minenergyfire")
-		{
+
+		else if ( checkSwitch("--critter_minenergyfire", critter_minenergyfire, 0, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 1000000 )
-				critter_minenergyfire = value;
-			else { cerr << "critter_minenergyfire must match >=0 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_size")
-		{
+
+		else if ( checkSwitch("--critter_size", critter_size, 1, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 100 )
-				critter_size = (float)value / 100.0f;
-			else { cerr << "critter_size must match >=1 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_speed")
-		{
+
+		else if ( checkSwitch("--critter_speed", critter_speed, 1, 1000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000 )
-				critter_speed = (float)value / 1000.0f;
-			else { cerr << "critter_speed must match >=1 and <=1000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_sightrange")
-		{
+
+		else if ( checkSwitch("--critter_sightrange", critter_sightrange, 1, 1000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000 )
-				critter_sightrange = (float)value / 10.0f;
-			else { cerr << "critter_sightrange must match >=1 and <=1000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_retinasize")
-		{
+
+		else if ( checkSwitch("--critter_retinasize", critter_retinasize, 1, 1000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000 )
-				critter_retinasize = value;
-			else { cerr << "critter_retinasize must match >=1 and <=1000" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_colorneurons")
-		{
+
+		else if ( checkSwitch("--critter_colorneurons", critter_colorneurons, 2, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 2 && value <= 100 )
-				critter_colorneurons = value;
-			else { cerr << "critter_colorneurons must match >=2 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_mutationrate")
-		{
+
+		else if ( checkSwitch("--critter_mutationrate", critter_mutationrate, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				critter_mutationrate = value;
-			else { cerr << "critter_mutationrate must match >=0 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_maxmutations")
-		{
+
+		else if ( checkSwitch("--critter_maxmutations", critter_maxmutations, 1, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 100 )
-				critter_maxmutations = value;
-			else { cerr << "critter_maxmutations must match >=1 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--critter_percentchangetype")
-		{
+
+		else if ( checkSwitch("--critter_percentchangetype", critter_percentchangetype, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				critter_percentchangetype = value;
-			else { cerr << "critter_percentchangetype must match >=0 and <=100" << endl; exit(1); }
-	        }
+
 		else if (sw=="--critter_flipnewborns")
-		{
 			critter_flipnewborns = true;
-	        }
 
 	// Food Settings
-		else if (sw=="--food_maxlifetime")
-		{
+
+		else if ( checkSwitch("--food_maxlifetime", food_maxlifetime, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				food_maxlifetime = value;
-			else { cerr << "food_maxlifetime must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--food_maxenergy")
-		{
+
+		else if ( checkSwitch("--food_maxenergy", food_maxenergy, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				food_maxenergy = value;
-			else { cerr << "food_maxenergy must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--food_size")
-		{
+
+		else if ( checkSwitch("--food_size", food_size, 1, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 100 )
-				food_size = (float)value / 100.0f;
-			else { cerr << "food_size must match >=1 and <=100" << endl; exit(1); }
-	        }
 
 	// Corpse Settings
-		else if (sw=="--corpse_maxlifetime")
-		{
+
+		else if ( checkSwitch("--corpse_maxlifetime", corpse_maxlifetime, 0, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 1000000 )
-				corpse_maxlifetime = value;
-			else { cerr << "corpse_maxlifetime must match >=0 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--corpse_maxenergy")
-		{
+
+		else if ( checkSwitch("--corpse_maxenergy", corpse_maxenergy, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				corpse_maxenergy = value;
-			else { cerr << "corpse_maxenergy must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--corpse_size")
-		{
+
+		else if ( checkSwitch("--corpse_size", corpse_size, 1, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 100 )
-				corpse_size = (float)value / 100.0f;
-			else { cerr << "corpse_size must match >=1 and <=100" << endl; exit(1); }
-	        }
 
 	// Brain Settings
-		else if (sw=="--brain_maxneurons")
-		{
+
+		else if ( checkSwitch("--brain_maxneurons", brain_maxneurons, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				brain_maxneurons = value;
-			else { cerr << "brain_maxneurons must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_minsynapses")
-		{
+
+		else if ( checkSwitch("--brain_minsynapses", brain_minsynapses, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=1  && value <= 1000000 )
-				brain_minsynapses = value;
-			else { cerr << "brain_minsynapses must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_maxsynapses")
-		{
+
+		else if ( checkSwitch("--brain_maxsynapses", brain_maxsynapses, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=1  && value <= 1000000 )
-				brain_maxsynapses = value;
-			else { cerr << "brain_maxsynapses must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_minneuronsatbuildtime")
-		{
+
+		else if ( checkSwitch("--brain_minneuronsatbuildtime", brain_minneuronsatbuildtime, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=1  && value <= 1000000 )
-				brain_minneuronsatbuildtime = value;
-			else { cerr << "brain_minneuronsatbuildtime must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_maxneuronsatbuildtime")
-		{
+
+		else if ( checkSwitch("--brain_maxneuronsatbuildtime", brain_maxneuronsatbuildtime, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=1  && value <= 1000000 )
-				brain_maxneuronsatbuildtime = value;
-			else { cerr << "brain_maxneuronsatbuildtime must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_minsynapsesatbuildtime")
-		{
+
+		else if ( checkSwitch("--brain_minsynapsesatbuildtime", brain_minsynapsesatbuildtime, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=1  && value <= 1000000 )
-				brain_minsynapsesatbuildtime = value;
-			else { cerr << "brain_minsynapsesatbuildtime must match >=1 and <=1000000" << endl; exit(1); }
-	        }
+
 		else if (sw=="--brain_mutate_minsynapsesatbuildtime")
-		{
 			brain_mutate_minsynapsesatbuildtime = true;
-	        }
 
-		else if (sw=="--brain_maxsynapsesatbuildtime")
-		{
+		else if ( checkSwitch("--brain_maxsynapsesatbuildtime", brain_maxsynapsesatbuildtime, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=1  && value <= 1000000 )
-				brain_maxsynapsesatbuildtime = value;
-			else { cerr << "brain_maxsynapsesatbuildtime must match >=1 and <=1000000" << endl; exit(1); }
-	        }
+
 		else if (sw=="--brain_mutate_maxsynapsesatbuildtime")
-		{
 			brain_mutate_maxsynapsesatbuildtime = true;
-	        }
-		else if (sw=="--brain_percentchanceinhibitoryneuron")
-		{
-			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=0  && value <= 100 )
-				brain_percentchanceinhibitoryneuron = value;
-			else { cerr << "brain_percentchanceinhibitoryneuron must match >=0 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_mutate_percentchanceinhibitoryneuron")
-		{
-			brain_mutate_percentchanceinhibitoryneuron = true;
-	        }
-		else if (sw=="--brain_percentchancemotorneuron")
-		{
-			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=0  && value <= 100 )
-				brain_percentchancemotorneuron = value;
-			else { cerr << "brain_percentchancemotorneuron must match >=0 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_mutate_percentchancemotorneuron")
-		{
-			brain_mutate_percentchancemotorneuron = true;
-	        }
-		else if (sw=="--brain_percentchanceplasticneuron")
-		{
-			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=0  && value <= 100 )
-				brain_percentchanceplasticneuron = value;
-			else { cerr << "brain_percentchanceplasticneuron must match >=0 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_mutate_percentchanceplasticneuron")
-		{
-			brain_mutate_percentchanceplasticneuron = true;
-	        }
 
-		else if (sw=="--brain_minplasticitystrengthen")
-		{
+		else if ( checkSwitch("--brain_percentchanceinhibitoryneuron", brain_percentchanceinhibitoryneuron, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >=1  && value <= 1000000 )
-				brain_minplasticitystrengthen = value;
-			else { cerr << "brain_minplasticitystrengthen must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_maxplasticitystrengthen")
-		{
+
+		else if (sw=="--brain_mutate_percentchanceinhibitoryneuron")
+			brain_mutate_percentchanceinhibitoryneuron = true;
+
+		else if ( checkSwitch("--brain_percentchancemotorneuron", brain_percentchancemotorneuron, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				brain_maxplasticitystrengthen = value;
-			else { cerr << "brain_maxplasticitystrengthen must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_minplasticityweaken")
-		{
+
+		else if (sw=="--brain_mutate_percentchancemotorneuron")
+			brain_mutate_percentchancemotorneuron = true;
+
+		else if ( checkSwitch("--brain_percentchanceplasticneuron", brain_percentchanceplasticneuron, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				brain_minplasticityweaken = value;
-			else { cerr << "brain_minplasticityweaken must match >=1 and <=1000000" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_maxplasticityweaken")
-		{
+
+		else if (sw=="--brain_mutate_percentchanceplasticneuron")
+			brain_mutate_percentchanceplasticneuron = true;
+
+		else if ( checkSwitch("--brain_minplasticitystrengthen", brain_minplasticitystrengthen, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				brain_maxplasticityweaken = value;
-			else { cerr << "brain_maxplasticityweaken must match >=1 and <=1000000" << endl; exit(1); }
-	        }
+
+		else if ( checkSwitch("--brain_maxplasticitystrengthen", brain_maxplasticitystrengthen, 1, 1000000, optind, argv) )
+			optind++;
+
+		else if ( checkSwitch("--brain_minplasticityweaken", brain_minplasticityweaken, 1, 1000000, optind, argv) )
+			optind++;
+
+		else if ( checkSwitch("--brain_maxplasticityweaken", brain_maxplasticityweaken, 1, 1000000, optind, argv) )
+			optind++;
+
 		else if (sw=="--brain_mutate_plasticityfactors")
-		{
 			brain_mutate_plasticityfactors = true;
-	        }
-		else if (sw=="--brain_minfiringthreshold")
-		{
+
+		else if ( checkSwitch("--brain_minfiringthreshold", brain_minfiringthreshold, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				brain_minfiringthreshold = value;
-			else { cerr << "brain_minfiringthreshold must match >=1 and <=1000000" << endl; exit(1); }
-	        }
+
 		else if (sw=="--brain_mutate_minfiringthreshold")
-		{
 			brain_mutate_minfiringthreshold = true;
-	        }
-		else if (sw=="--brain_maxfiringthreshold")
-		{
+
+		else if ( checkSwitch("--brain_maxfiringthreshold", brain_maxfiringthreshold, 1, 1000000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000000 )
-				brain_maxfiringthreshold = value;
-			else { cerr << "brain_maxfiringthreshold must match >=1 and <=1000000" << endl; exit(1); }
-	        }
+
 		else if (sw=="--brain_mutate_maxfiringthreshold")
-		{
 			brain_mutate_maxfiringthreshold = true;
-	        }
-		else if (sw=="--brain_maxdendridicbranches")
-		{
+
+		else if ( checkSwitch("--brain_maxdendridicbranches", brain_maxdendridicbranches, 1, 1000, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 1 && value <= 1000 )
-				brain_maxdendridicbranches = value;
-			else { cerr << "brain_maxdendridicbranches must match >=1 and <=1000" << endl; exit(1); }
-	        }
+
 		else if (sw=="--brain_mutate_maxdendridicbranches")
-		{
 			brain_mutate_maxdendridicbranches = true;
-	        }
-		else if (sw=="--brain_percentchanceconsistentsynapses")
-		{
+
+		else if ( checkSwitch("--brain_percentchanceconsistentsynapses", brain_percentchanceconsistentsynapses, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				brain_percentchanceconsistentsynapses = value;
-			else { cerr << "brain_percentchanceconsistentsynapses must match >=0 and <=100" << endl; exit(1); }
-	        }
+
 		else if (sw=="--brain_mutate_percentchanceconsistentsynapses")
-		{
 			brain_mutate_percentchanceconsistentsynapses = true;
-	        }
-		else if (sw=="--brain_percentchanceinhibitorysynapses")
-		{
+
+		else if ( checkSwitch("--brain_percentchanceinhibitorysynapses", brain_percentchanceinhibitorysynapses, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				brain_percentchanceinhibitorysynapses = value;
-			else { cerr << "brain_percentchanceinhibitorysynapses must match >=0 and <=100" << endl; exit(1); }
-	        }
+
 		else if (sw=="--brain_mutate_percentchanceinhibitorysynapses")
-		{
 			brain_mutate_percentchanceinhibitorysynapses = true;
-	        }
-		else if (sw=="--brain_percentchancesensorysynapse")
-		{
+
+		else if ( checkSwitch("--brain_percentchancesensorysynapse", brain_percentchancesensorysynapse, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				brain_percentchancesensorysynapse = value;
-			else { cerr << "brain_percentchancesensorysynapse must match >=0 and <=100" << endl; exit(1); }
-	        }
+
 		else if (sw=="--brain_mutate_percentchancesensorysynapse")
-		{
 			brain_mutate_percentchancesensorysynapse = true;
-	        }
-		else if (sw=="--brain_percentmutateeffectaddneuron")
-		{
+
+		else if ( checkSwitch("--brain_percentmutateeffectaddneuron", brain_percentmutateeffectaddneuron, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				brain_percentmutateeffectaddneuron = value;
-			else { cerr << "brain_percentmutateeffectaddneuron must match >=0 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_percentmutateeffectremoveneuron")
-		{
+
+		else if ( checkSwitch("--brain_percentmutateeffectremoveneuron", brain_percentmutateeffectremoveneuron, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				brain_percentmutateeffectremoveneuron = value;
-			else { cerr << "brain_percentmutateeffectremoveneuron must match >=0 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_percentmutateeffectalterneuron")
-		{
+
+		else if ( checkSwitch("--brain_percentmutateeffectalterneuron", brain_percentmutateeffectalterneuron, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				brain_percentmutateeffectalterneuron = value;
-			else { cerr << "brain_percentmutateeffectalterneuron must match >=0 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_percentmutateeffectaddsynapse")
-		{
+
+		else if ( checkSwitch("--brain_percentmutateeffectaddsynapse", brain_percentmutateeffectaddsynapse, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				brain_percentmutateeffectaddsynapse = value;
-			else { cerr << "brain_percentmutateeffectaddsynapse must match >=0 and <=100" << endl; exit(1); }
-	        }
-		else if (sw=="--brain_percentmutateeffectremovesynapse")
-		{
+
+		else if ( checkSwitch("--brain_percentmutateeffectremovesynapse", brain_percentmutateeffectremovesynapse, 0, 100, optind, argv) )
 			optind++;
-			unsigned int value = atoi(argv[optind]);
-			if ( value >= 0 && value <= 100 )
-				brain_percentmutateeffectremovesynapse = value;
-			else { cerr << "brain_percentmutateeffectremovesynapse must match >=0 and <=100" << endl; exit(1); }
-	        }
+
 		else if (sw=="--brain_mutate_mutateeffects")
-		{
 			brain_mutate_mutateeffects = true;
-	        }
 
 		else if (sw=="--help")
 		{
@@ -728,9 +478,9 @@ int main(int argc, char *argv[])
 		mainscene.world.critter_minenergyfire = critter_minenergyfire;
 		mainscene.world.critter_maxchildren = critter_maxchildren;
 		mainscene.world.critter_maxbullets = critter_maxbullets;
-		mainscene.world.critter_size = critter_size;
-		mainscene.world.critter_speed = critter_speed;
-		mainscene.world.critter_sightrange = critter_sightrange;
+		mainscene.world.critter_size = (float)critter_size / 100.0f;
+		mainscene.world.critter_speed = (float)critter_speed / 1000.0f;
+		mainscene.world.critter_sightrange = (float)critter_sightrange / 10.0f;
 		mainscene.world.critter_retinasize = critter_retinasize;
 		mainscene.world.critter_colorneurons = critter_colorneurons;
 		mainscene.world.critter_maxmutations = critter_maxmutations;
@@ -741,12 +491,12 @@ int main(int argc, char *argv[])
 		// food
 		mainscene.world.food_maxlifetime = food_maxlifetime;
 		mainscene.world.food_maxenergy = food_maxenergy;
-		mainscene.world.food_size = food_size;
+		mainscene.world.food_size = (float)food_size / 100.0f;
 
 		// corpse
 		mainscene.world.corpse_maxlifetime = corpse_maxlifetime;
 		mainscene.world.corpse_maxenergy = corpse_maxenergy;
-		mainscene.world.corpse_size = corpse_size;
+		mainscene.world.corpse_size = (float)corpse_size / 100.0f;
 
 		// brain
 		mainscene.world.brain_maxneurons = brain_maxneurons;
