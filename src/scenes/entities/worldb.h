@@ -7,7 +7,7 @@
 #include <math.h>
 #include <vector>
 #include <string>
-
+#include <cstring> 
 #include "../../utils/dir.h"
 #include "../../utils/file.h"
 #include "../../utils/parser.h"

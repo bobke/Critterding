@@ -2,12 +2,11 @@
 ---------
 critters are now classified as herbivore or carnivore
 corpse is poison to a herbivore/green food is poison to a carnivore
-fixed a show stopper alpha color bug
-engine improvements: backface culling + display lists
-simplified (more usable) camera, with adjustable sensitivity
-critters can now carry food
+fixed a alpha color bug in critter vision (vidia cards)
+engine improvements: backface & frustrum culling + display lists
 more efficient copying of brains at procreation time
-30 a 50 % speedup overall
+simplified (more usable) camera with adjustable sensitivity
+critters can now pick up and drop food
 
 1.0-beta6
 ---------
