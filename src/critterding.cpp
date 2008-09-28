@@ -234,208 +234,101 @@ int main(int argc, char *argv[])
 
 	// Global Settings
 
-		else if ( checkSwitch("--worldsize", worldsize, 1, 5000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--energy", energy, 0, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--mincritters", mincritters, 0, 1000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--retinasperrow", retinasperrow, 1, 1000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--camerasensitivity", camerasensitivity, 1, 1000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--worldsize", worldsize, 1, 5000, optind, argv) ) optind++;
+		else if ( checkSwitch("--energy", energy, 0, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--mincritters", mincritters, 0, 1000, optind, argv) ) optind++;
+		else if ( checkSwitch("--retinasperrow", retinasperrow, 1, 1000, optind, argv) ) optind++;
+		else if ( checkSwitch("--camerasensitivity", camerasensitivity, 1, 1000, optind, argv) ) optind++;
 
 	// Critter Settings
 
-		else if ( checkSwitch("--critter_maxlifetime", critter_maxlifetime, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_maxenergy", critter_maxenergy, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_startenergy", critter_startenergy, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_maxchildren", critter_maxchildren, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_maxbullets", critter_maxbullets, 0, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_minenergyproc", critter_minenergyproc, 0, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_minenergyfire", critter_minenergyfire, 0, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_size", critter_size, 1, 100, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_speed", critter_speed, 1, 1000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_sightrange", critter_sightrange, 1, 1000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_retinasize", critter_retinasize, 1, 1000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_colorneurons", critter_colorneurons, 2, 100, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_mutationrate", critter_mutationrate, 0, 100, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_maxmutations", critter_maxmutations, 1, 100, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--critter_percentchangetype", critter_percentchangetype, 0, 100, optind, argv) )
-			optind++;
-
-		else if (sw=="--critter_flipnewborns")
-			critter_flipnewborns = true;
+		else if ( checkSwitch("--critter_maxlifetime", critter_maxlifetime, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_maxenergy", critter_maxenergy, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_startenergy", critter_startenergy, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_maxchildren", critter_maxchildren, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_maxbullets", critter_maxbullets, 0, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_minenergyproc", critter_minenergyproc, 0, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_minenergyfire", critter_minenergyfire, 0, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_size", critter_size, 1, 100, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_speed", critter_speed, 1, 1000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_sightrange", critter_sightrange, 1, 1000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_retinasize", critter_retinasize, 1, 1000, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_colorneurons", critter_colorneurons, 2, 100, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_mutationrate", critter_mutationrate, 0, 100, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_maxmutations", critter_maxmutations, 1, 100, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_percentchangetype", critter_percentchangetype, 0, 100, optind, argv) ) optind++;
+		else if (sw=="--critter_flipnewborns") critter_flipnewborns = true;
 
 	// Food Settings
 
-		else if ( checkSwitch("--food_maxlifetime", food_maxlifetime, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--food_maxenergy", food_maxenergy, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--food_size", food_size, 1, 100, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--food_maxlifetime", food_maxlifetime, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--food_maxenergy", food_maxenergy, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--food_size", food_size, 1, 100, optind, argv) ) optind++;
 
 	// Corpse Settings
 
-		else if ( checkSwitch("--corpse_maxlifetime", corpse_maxlifetime, 0, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--corpse_maxlifetime", corpse_maxlifetime, 0, 1000000, optind, argv) ) optind++;
 
-		else if ( checkSwitch("--corpse_maxenergy", corpse_maxenergy, 1, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--corpse_maxenergy", corpse_maxenergy, 1, 1000000, optind, argv) ) optind++;
 
-		else if ( checkSwitch("--corpse_size", corpse_size, 1, 100, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--corpse_size", corpse_size, 1, 100, optind, argv) ) optind++;
 
 	// Brain Settings
 
-		else if ( checkSwitch("--brain_maxneurons", brain_maxneurons, 1, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_maxneurons", brain_maxneurons, 1, 1000000, optind, argv) ) optind++;
 
-		else if ( checkSwitch("--brain_minsynapses", brain_minsynapses, 1, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_minsynapses", brain_minsynapses, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_maxsynapses", brain_maxsynapses, 1, 1000000, optind, argv) ) optind++;
 
-		else if ( checkSwitch("--brain_maxsynapses", brain_maxsynapses, 1, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_minneuronsatbuildtime", brain_minneuronsatbuildtime, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_maxneuronsatbuildtime", brain_maxneuronsatbuildtime, 1, 1000000, optind, argv) ) optind++;
 
-		else if ( checkSwitch("--brain_minneuronsatbuildtime", brain_minneuronsatbuildtime, 1, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_minsynapsesatbuildtime", brain_minsynapsesatbuildtime, 1, 1000000, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_minsynapsesatbuildtime") brain_mutate_minsynapsesatbuildtime = true;
 
-		else if ( checkSwitch("--brain_maxneuronsatbuildtime", brain_maxneuronsatbuildtime, 1, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_maxsynapsesatbuildtime", brain_maxsynapsesatbuildtime, 1, 1000000, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_maxsynapsesatbuildtime") brain_mutate_maxsynapsesatbuildtime = true;
 
-		else if ( checkSwitch("--brain_minsynapsesatbuildtime", brain_minsynapsesatbuildtime, 1, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_percentchanceinhibitoryneuron", brain_percentchanceinhibitoryneuron, 0, 100, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_percentchanceinhibitoryneuron") brain_mutate_percentchanceinhibitoryneuron = true;
 
-		else if (sw=="--brain_mutate_minsynapsesatbuildtime")
-			brain_mutate_minsynapsesatbuildtime = true;
+		else if ( checkSwitch("--brain_percentchancemotorneuron", brain_percentchancemotorneuron, 0, 100, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_percentchancemotorneuron") brain_mutate_percentchancemotorneuron = true;
 
-		else if ( checkSwitch("--brain_maxsynapsesatbuildtime", brain_maxsynapsesatbuildtime, 1, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_percentchanceplasticneuron", brain_percentchanceplasticneuron, 0, 100, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_percentchanceplasticneuron") brain_mutate_percentchanceplasticneuron = true;
 
-		else if (sw=="--brain_mutate_maxsynapsesatbuildtime")
-			brain_mutate_maxsynapsesatbuildtime = true;
+		else if ( checkSwitch("--brain_minplasticitystrengthen", brain_minplasticitystrengthen, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_maxplasticitystrengthen", brain_maxplasticitystrengthen, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_minplasticityweaken", brain_minplasticityweaken, 1, 1000000, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_maxplasticityweaken", brain_maxplasticityweaken, 1, 1000000, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_plasticityfactors") brain_mutate_plasticityfactors = true;
 
-		else if ( checkSwitch("--brain_percentchanceinhibitoryneuron", brain_percentchanceinhibitoryneuron, 0, 100, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_minfiringthreshold", brain_minfiringthreshold, 1, 1000000, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_minfiringthreshold") brain_mutate_minfiringthreshold = true;
 
-		else if (sw=="--brain_mutate_percentchanceinhibitoryneuron")
-			brain_mutate_percentchanceinhibitoryneuron = true;
+		else if ( checkSwitch("--brain_maxfiringthreshold", brain_maxfiringthreshold, 1, 1000000, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_maxfiringthreshold") brain_mutate_maxfiringthreshold = true;
 
-		else if ( checkSwitch("--brain_percentchancemotorneuron", brain_percentchancemotorneuron, 0, 100, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_maxdendridicbranches", brain_maxdendridicbranches, 1, 1000, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_maxdendridicbranches") brain_mutate_maxdendridicbranches = true;
 
-		else if (sw=="--brain_mutate_percentchancemotorneuron")
-			brain_mutate_percentchancemotorneuron = true;
+		else if ( checkSwitch("--brain_percentchanceconsistentsynapses", brain_percentchanceconsistentsynapses, 0, 100, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_percentchanceconsistentsynapses") brain_mutate_percentchanceconsistentsynapses = true;
 
-		else if ( checkSwitch("--brain_percentchanceplasticneuron", brain_percentchanceplasticneuron, 0, 100, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_percentchanceinhibitorysynapses", brain_percentchanceinhibitorysynapses, 0, 100, optind, argv) ) optind++;
 
-		else if (sw=="--brain_mutate_percentchanceplasticneuron")
-			brain_mutate_percentchanceplasticneuron = true;
+		else if (sw=="--brain_mutate_percentchanceinhibitorysynapses") brain_mutate_percentchanceinhibitorysynapses = true;
 
-		else if ( checkSwitch("--brain_minplasticitystrengthen", brain_minplasticitystrengthen, 1, 1000000, optind, argv) )
-			optind++;
+		else if ( checkSwitch("--brain_percentchancesensorysynapse", brain_percentchancesensorysynapse, 0, 100, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_percentchancesensorysynapse") brain_mutate_percentchancesensorysynapse = true;
 
-		else if ( checkSwitch("--brain_maxplasticitystrengthen", brain_maxplasticitystrengthen, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--brain_minplasticityweaken", brain_minplasticityweaken, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--brain_maxplasticityweaken", brain_maxplasticityweaken, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if (sw=="--brain_mutate_plasticityfactors")
-			brain_mutate_plasticityfactors = true;
-
-		else if ( checkSwitch("--brain_minfiringthreshold", brain_minfiringthreshold, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if (sw=="--brain_mutate_minfiringthreshold")
-			brain_mutate_minfiringthreshold = true;
-
-		else if ( checkSwitch("--brain_maxfiringthreshold", brain_maxfiringthreshold, 1, 1000000, optind, argv) )
-			optind++;
-
-		else if (sw=="--brain_mutate_maxfiringthreshold")
-			brain_mutate_maxfiringthreshold = true;
-
-		else if ( checkSwitch("--brain_maxdendridicbranches", brain_maxdendridicbranches, 1, 1000, optind, argv) )
-			optind++;
-
-		else if (sw=="--brain_mutate_maxdendridicbranches")
-			brain_mutate_maxdendridicbranches = true;
-
-		else if ( checkSwitch("--brain_percentchanceconsistentsynapses", brain_percentchanceconsistentsynapses, 0, 100, optind, argv) )
-			optind++;
-
-		else if (sw=="--brain_mutate_percentchanceconsistentsynapses")
-			brain_mutate_percentchanceconsistentsynapses = true;
-
-		else if ( checkSwitch("--brain_percentchanceinhibitorysynapses", brain_percentchanceinhibitorysynapses, 0, 100, optind, argv) )
-			optind++;
-
-		else if (sw=="--brain_mutate_percentchanceinhibitorysynapses")
-			brain_mutate_percentchanceinhibitorysynapses = true;
-
-		else if ( checkSwitch("--brain_percentchancesensorysynapse", brain_percentchancesensorysynapse, 0, 100, optind, argv) )
-			optind++;
-
-		else if (sw=="--brain_mutate_percentchancesensorysynapse")
-			brain_mutate_percentchancesensorysynapse = true;
-
-		else if ( checkSwitch("--brain_percentmutateeffectaddneuron", brain_percentmutateeffectaddneuron, 0, 100, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--brain_percentmutateeffectremoveneuron", brain_percentmutateeffectremoveneuron, 0, 100, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--brain_percentmutateeffectalterneuron", brain_percentmutateeffectalterneuron, 0, 100, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--brain_percentmutateeffectaddsynapse", brain_percentmutateeffectaddsynapse, 0, 100, optind, argv) )
-			optind++;
-
-		else if ( checkSwitch("--brain_percentmutateeffectremovesynapse", brain_percentmutateeffectremovesynapse, 0, 100, optind, argv) )
-			optind++;
-
-		else if (sw=="--brain_mutate_mutateeffects")
-			brain_mutate_mutateeffects = true;
+		else if ( checkSwitch("--brain_percentmutateeffectaddneuron", brain_percentmutateeffectaddneuron, 0, 100, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_percentmutateeffectremoveneuron", brain_percentmutateeffectremoveneuron, 0, 100, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_percentmutateeffectalterneuron", brain_percentmutateeffectalterneuron, 0, 100, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_percentmutateeffectaddsynapse", brain_percentmutateeffectaddsynapse, 0, 100, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_percentmutateeffectremovesynapse", brain_percentmutateeffectremovesynapse, 0, 100, optind, argv) ) optind++;
+		else if (sw=="--brain_mutate_mutateeffects") brain_mutate_mutateeffects = true;
 
 		else if (sw=="--help")
 		{
