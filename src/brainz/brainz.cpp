@@ -862,6 +862,99 @@ Brainz::Brainz()
 		}
 	}
 
+	void Brainz::mergeFrom(Brainz& otherBrain1, Brainz& otherBrain2)
+	{
+		numberOfInputs				= otherBrain1.numberOfInputs;
+		numberOfOutputs				= otherBrain1.numberOfOutputs;
+		maxNeurons				= otherBrain1.maxNeurons;
+		minSynapses				= otherBrain1.minSynapses;
+		maxSynapses				= otherBrain1.maxSynapses;
+		minSynapsesAtBuildtime			= otherBrain1.minSynapsesAtBuildtime;
+		mutate_minSynapsesAtBuildtime		= otherBrain1.mutate_minSynapsesAtBuildtime;
+		maxSynapsesAtBuildtime			= otherBrain1.maxSynapsesAtBuildtime;
+		mutate_maxSynapsesAtBuildtime		= otherBrain1.mutate_maxSynapsesAtBuildtime;
+		percentMutation				= otherBrain1.percentMutation;
+		mutate_percentMutation			= otherBrain1.mutate_percentMutation;
+		percentChanceInhibitoryNeuron		= otherBrain1.percentChanceInhibitoryNeuron;
+		mutate_percentChanceInhibitoryNeuron	= otherBrain1.mutate_percentChanceInhibitoryNeuron;
+
+		percentChanceMotorNeuron		= otherBrain1.percentChanceMotorNeuron;
+		mutate_percentChanceMotorNeuron		= otherBrain1.mutate_percentChanceMotorNeuron;
+		percentChancePlasticNeuron		= otherBrain1.percentChancePlasticNeuron;
+		mutate_percentChancePlasticNeuron	= otherBrain1.mutate_percentChancePlasticNeuron;
+		minPlasticityStrengthen			= otherBrain1.minPlasticityStrengthen;
+		maxPlasticityStrengthen			= otherBrain1.maxPlasticityStrengthen;
+		minPlasticityWeaken			= otherBrain1.minPlasticityWeaken;
+		maxPlasticityWeaken			= otherBrain1.maxPlasticityWeaken;
+
+		mutate_PlasticityFactors		= otherBrain1.mutate_PlasticityFactors;
+		minFiringThreshold			= otherBrain1.minFiringThreshold;
+		mutate_minFiringThreshold		= otherBrain1.mutate_minFiringThreshold;
+		maxFiringThreshold			= otherBrain1.maxFiringThreshold;
+		mutate_maxFiringThreshold		= otherBrain1.mutate_maxFiringThreshold;
+		maxDendridicBranches			= otherBrain1.maxDendridicBranches;
+		mutate_maxDendridicBranches		= otherBrain1.mutate_maxDendridicBranches;
+		percentChanceConsistentSynapses		= otherBrain1.percentChanceConsistentSynapses;
+		mutate_percentChanceConsistentSynapses	= otherBrain1.mutate_percentChanceConsistentSynapses;
+		percentChanceInhibitorySynapses		= otherBrain1.percentChanceInhibitorySynapses;
+		mutate_percentChanceInhibitorySynapses	= otherBrain1.mutate_percentChanceInhibitorySynapses;
+		percentChanceSensorySynapse		= otherBrain1.percentChanceSensorySynapse;
+		mutate_percentChanceSensorySynapse	= otherBrain1.mutate_percentChanceSensorySynapse;
+		percentMutateEffectAddNeuron		= otherBrain1.percentMutateEffectAddNeuron;
+		percentMutateEffectRemoveNeuron		= otherBrain1.percentMutateEffectRemoveNeuron;
+		percentMutateEffectAlterNeuron		= otherBrain1.percentMutateEffectAlterNeuron;
+		percentMutateEffectAddSynapse		= otherBrain1.percentMutateEffectAddSynapse;
+		percentMutateEffectRemoveSynapse	= otherBrain1.percentMutateEffectRemoveSynapse;
+		mutate_MutateEffects			= otherBrain1.mutate_MutateEffects;
+
+		// take biggest
+		unsigned int loops = otherBrain1.ArchNeurons.size();
+		if ( otherBrain2.ArchNeurons.size() < loops ) loops = otherBrain2.ArchNeurons.size();
+
+		bool even = false;
+		for ( unsigned int i = 0; i < loops; i++ )
+		{
+			even = !even;
+			ArchNeuronz an;
+
+			ArchNeuronz *oan;
+
+			if ( i < otherBrain1.ArchNeurons.size() && even )
+				oan = &otherBrain1.ArchNeurons[i];
+
+			else //if ( i < otherBrain2.ArchNeurons.size() && !even )
+				oan = &otherBrain2.ArchNeurons[i];
+
+			an.isInhibitory = oan->isInhibitory;
+
+			an.hasConsistentSynapses = oan->hasConsistentSynapses;
+			an.hasInhibitorySynapses = oan->hasInhibitorySynapses;
+			an.firingThreshold = oan->firingThreshold;
+			an.dendridicBranches = oan->dendridicBranches;
+
+			an.isMotor = oan->isMotor;
+			an.motorFunc = oan->motorFunc;
+			an.isPlastic = oan->isPlastic;
+			an.isPlastic = oan->isPlastic;
+			an.plasticityStrengthen = oan->plasticityStrengthen;
+			an.plasticityWeaken = oan->plasticityWeaken;
+
+			// inputs
+			for ( unsigned int j = 0; j < oan->ArchSynapses.size(); j++ )
+			{
+				ArchSynapse as;
+				ArchSynapse *oas = &oan->ArchSynapses[j];
+
+				as.isSensorNeuron	= oas->isSensorNeuron;
+				as.neuronID		= oas->neuronID;
+				as.dendriteBranch	= oas->dendriteBranch;
+				as.weight		= oas->weight;
+				an.ArchSynapses.push_back( as );
+			}
+			ArchNeurons.push_back( an );
+		}
+	}
+
 // SERIALIZE FUNC
 
 	void Brainz::setArch(string* content)

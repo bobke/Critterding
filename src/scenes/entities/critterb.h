@@ -7,6 +7,7 @@
 #include "vector3f.h"
 #include "food.h"
 #include "corpse.h"
+#include "seed.h"
 #include "GL/gl.h"
 #include <cmath>
 #include <vector>
@@ -20,6 +21,7 @@ class CritterB
 	public:
 		CritterB();
 		CritterB(CritterB &other);
+		CritterB(CritterB &other1, Seed &other2);
 		CritterB(string &critterstring);
 		~CritterB();
 
@@ -38,8 +40,19 @@ class CritterB
 		float			halfsize;
 		float			speedfactor;
 
+		void			moveForward();
+		void			moveBackward();
+		void			moveRight();
+		void			moveLeft();
+		void 			rotateRight();
+		void			rotateLeft();
+
 		Vector3f		position;
 		Vector3f		newposition;
+
+		void			prepNewPoss();
+		void			moveToNewPoss();
+		void			calcFrustrumTriangle();
 
 		float			rotation;
 		void			calcRotSinCos();
@@ -57,27 +70,40 @@ class CritterB
 		unsigned int		totalFrames;
 		unsigned int		maxtotalFrames;
 
+		bool			moved;
+		bool			touchingFood;
+		unsigned int		touchedFoodID;
+		bool			touchingCorpse;
+		unsigned int		touchedCorpseID;
+		bool			touchingSeed;
+		unsigned int		touchedSeedID;
+
+		bool			carrydrop;
+
 		bool			carriesFood;
 		Food*			foodBeingCarried;
 
 		bool			carriesCorpse;
 		Corpse*			corpseBeingCarried;
 
+		bool			procreate;
+		bool			canProcreate;
 		unsigned int		procreateTimeCount;
 		unsigned int		procreateTimeTrigger;
 		float			minprocenergyLevel;
 
+		bool			fire;
+		bool			canFire;
 		unsigned int		fireTimeCount;
 		unsigned int		fireTimeTrigger;
 		float			minfireenergyLevel;
-
-		bool			moved;
-		bool			touchingFood;
-		unsigned int		touchedFoodID;
-		bool			touchingCorpse;
-		unsigned int		touchedCorpseID;
-		bool			canProcreate;
 		bool			wasShot;
+
+		bool			dropseed;
+		bool			canDropseed;
+		unsigned int		dropseedTimeCount;
+		unsigned int		dropseedTimeTrigger;
+		float			dropseedcost;
 
 		unsigned char		*retina;
 		unsigned int		items;
@@ -101,21 +127,8 @@ class CritterB
 		void			setup();
 		void			mutate(unsigned int maxMutateRuns, unsigned int percentChangeType);
 
-		void			moveForward();
-		void			moveBackward();
-		void			moveRight();
-		void			moveLeft();
-		void 			rotateRight();
-		void			rotateLeft();
 		bool			eat;
-		bool			fire;
-		bool			canFire;
-		bool			procreate;
-		bool			carrydrop;
 
-		void			prepNewPoss();
-		void			moveToNewPoss();
-		void			calcFrustrumTriangle();
 		// variables used as caching for checking if withing sight
 		float			v1x;
 		float			v1z;

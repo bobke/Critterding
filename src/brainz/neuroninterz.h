@@ -23,7 +23,7 @@ class NeuronInterz
 
 		bool			isInhibitory;
 
-		int			firingThreshold;
+		unsigned int		firingThreshold;
 		unsigned int		dendridicBranches;
 
 		bool			isMotor;

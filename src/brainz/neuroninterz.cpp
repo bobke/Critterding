@@ -11,7 +11,7 @@ NeuronInterz::NeuronInterz()
 	dendridicBranches		= 10;
 
 	// processing
-	firingThreshold			= 30;
+	firingThreshold			= 30.0f;
 	potential			= 0.0f;
 	potentialDecay			= 0.95f;
 
@@ -40,10 +40,9 @@ void NeuronInterz::process()
 	unsigned int ssize = Synapses.size();
 	for ( unsigned int i=0; i < ssize; i++ )
 	{
-		// lower synaptic weights & drop synapse if necessary, noh don't drop
+		// lower synaptic weights
 		if (isPlastic)
 			Synapses[i].weight = Synapses[i].weight * plasticityWeaken;
-			//if ( Synapses[i].weight < 0.01f && Synapses[i].weight >-0.01f ) Synapses.erase(Synapses.begin()+i);
 
 		if ( *Synapses[i].ref != 0 )
 			potential += (Synapses[i].weight * Synapses[i].dendriteBranch * *Synapses[i].ref);
@@ -52,7 +51,7 @@ void NeuronInterz::process()
 	if ( isInhibitory )
 	{
 		// do we spike/fire
-		if ( potential <= -1.0f * (float)firingThreshold )
+		if ( potential <= -1.0f * firingThreshold )
 		{
 			// reset neural potential
 			potential = 0.0f;
@@ -86,7 +85,7 @@ void NeuronInterz::process()
 	else
 	{
 		// do we spike/fire
-		if ( potential >= (float)firingThreshold )
+		if ( potential >= firingThreshold )
 		{
 			// reset neural potential
 			potential = 0.0f;

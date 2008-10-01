@@ -117,6 +117,7 @@ class Brainz
 
 		// functions
 			void			copyFrom(Brainz& otherBrain);
+			void			mergeFrom(Brainz& otherBrain1, Brainz& otherBrain2);
 			void			buildArch();
 			void			mutate(unsigned int runs);
 			void			wireArch();
