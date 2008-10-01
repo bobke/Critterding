@@ -28,6 +28,7 @@ class Evolution : public GLScene {
 		Camera camera;
 
 		WorldB world;
+		bool exit_if_empty;
 
 	private:
 		Sleeper sleeper;

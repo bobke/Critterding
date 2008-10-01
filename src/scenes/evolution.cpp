@@ -57,8 +57,13 @@ void Evolution::draw()
 	Timer::Instance()->mark();
 	sleeper.mark();
 
-//	glDisableClientState(GL_VERTEX_ARRAY);  // disable vertex arrays where's the enable one anyway... not that we
-//	still use it
+	if ( exit_if_empty && world.critters.size() == 0 )
+	{
+		cerr << "world is empty, exiting..." << endl;
+		exit(0);
+	}
+
+//	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void Evolution::handlekey(const KeySym& key)
