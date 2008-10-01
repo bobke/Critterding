@@ -2,6 +2,7 @@
 #define EVOLUTION_H
 
 #include "../gl/glscene.h"
+#include "../utils/timer.h"
 #include "../utils/sleeper.h"
 #include "entities/camera.h"
 #include "entities/worldb.h"

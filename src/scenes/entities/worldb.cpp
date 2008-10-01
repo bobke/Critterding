@@ -26,6 +26,8 @@ WorldB::WorldB()
 	doTimedInserts		= false;
 	timedInsertsCounter	= 0;
 
+	autosaveCounter		= 0.0f;
+
 	// home & program directory
 	createDirs();
 
@@ -145,6 +147,20 @@ void WorldB::startfoodamount(unsigned int amount)
 
 void WorldB::process()
 {
+
+	// Autosave Critters?
+	if ( critter_autosaveinterval > 0 )
+	{
+		autosaveCounter += Timer::Instance()->elapsed;
+		if ( autosaveCounter > critter_autosaveinterval )
+		{
+			autosaveCounter = 0.0f;
+			saveAllCritters();
+		}
+	}
+
+
+
 	// Bullets
 	for( unsigned int i=0; i < bullets.size(); i++)
 	{

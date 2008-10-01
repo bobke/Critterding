@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <cstring> 
+#include "../../utils/timer.h"
 #include "../../utils/dir.h"
 #include "../../utils/file.h"
 #include "../../utils/parser.h"
@@ -53,6 +54,7 @@ class WorldB
 		unsigned int		critter_maxmutations;
 		unsigned int		critter_percentchangetype;
 		bool			critter_flipnewborns;
+		unsigned int		critter_autosaveinterval;
 
 		unsigned int		food_maxlifetime;
 		float			food_maxenergy;
@@ -105,8 +107,6 @@ class WorldB
 		unsigned int		brain_percentmutateeffectremovesynapse;
 		bool			brain_mutate_mutateeffects;
 
-
-
 		unsigned int		selectedCritter;
 		bool			isSelected;
 
@@ -125,6 +125,8 @@ class WorldB
 		void			positionCritterB(unsigned int cid);
 		void			saveAllCritters();
 		void			loadAllCritters();
+
+		float			autosaveCounter;
 
 		void			increaseMincritters();
 		void			decreaseMincritters();
