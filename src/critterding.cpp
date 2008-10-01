@@ -9,6 +9,7 @@ using namespace std;
 	unsigned int mincritters						= 10;
 	unsigned int retinasperrow						= 20;
 	unsigned int camerasensitivity						= 10;
+	bool exit_if_empty							= false;
 
 // Critter Settings
 	unsigned int critter_maxlifetime					= 2000;
@@ -130,6 +131,8 @@ int main(int argc, char *argv[])
 	helpinfo << "  --mincritters               [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
 	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;
+	helpinfo << "  --exit_if_empty                If set, the program will exit when no critters exist" << endl;
+
 	helpinfo << endl;
 	helpinfo << "  Critter Settings" << endl;
 	helpinfo << "  --critter_maxlifetime     [" << critter_maxlifetime << "]  Max amount of frames a critter can live" << endl;
@@ -236,17 +239,12 @@ int main(int argc, char *argv[])
 			energy = 8000;
 	        }
 
-		else if (sw=="--disable-corpses")
-		{
-			corpse_maxlifetime = 0;
-			critter_percentchangetype = 0;
-	        }
-
 		else if ( checkSwitch("--worldsize", worldsize, 1, 5000, optind, argv) ) optind++;
 		else if ( checkSwitch("--energy", energy, 0, 1000000, optind, argv) ) optind++;
 		else if ( checkSwitch("--mincritters", mincritters, 0, 1000, optind, argv) ) optind++;
 		else if ( checkSwitch("--retinasperrow", retinasperrow, 1, 1000, optind, argv) ) optind++;
 		else if ( checkSwitch("--camerasensitivity", camerasensitivity, 1, 1000, optind, argv) ) optind++;
+		else if ( sw=="--exit-if-empty") exit_if_empty = true;
 
 	// Critter Settings
 
@@ -276,10 +274,13 @@ int main(int argc, char *argv[])
 
 	// Corpse Settings
 
+		else if (sw=="--corpse_disable")
+		{
+			corpse_maxlifetime = 0;
+			critter_percentchangetype = 0;
+	        }
 		else if ( checkSwitch("--corpse_maxlifetime", corpse_maxlifetime, 0, 1000000, optind, argv) ) optind++;
-
 		else if ( checkSwitch("--corpse_maxenergy", corpse_maxenergy, 1, 1000000, optind, argv) ) optind++;
-
 		else if ( checkSwitch("--corpse_size", corpse_size, 1, 100, optind, argv) ) optind++;
 
 	// Brain Settings
@@ -370,6 +371,8 @@ int main(int argc, char *argv[])
 		mainscene.camera.position = Vector3f(-0.5f*worldsize, -1.1f*worldsize, -0.9f*worldsize);
 		mainscene.camera.sensitivity = camerasensitivity;
 
+		mainscene.exit_if_empty = exit_if_empty;
+
 		//mainscene.camera.position = cameraposition;
 
 		// critter
@@ -390,6 +393,7 @@ int main(int argc, char *argv[])
 		mainscene.world.critter_percentchangetype = critter_percentchangetype;
 		mainscene.world.critter_flipnewborns = critter_flipnewborns;
 		mainscene.world.critter_autosaveinterval = critter_autosaveinterval;
+
 
 		// food
 		mainscene.world.food_maxlifetime = food_maxlifetime;
