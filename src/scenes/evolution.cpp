@@ -55,7 +55,7 @@ void Evolution::draw()
 	world.drawWithGrid();
 
 	Timer::Instance()->mark();
-	sleeper.mark();
+	fps.mark();
 
 	if ( exit_if_empty && world.critters.size() == 0 )
 	{
@@ -87,7 +87,7 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_F2:
-			sleeper.swap();
+			fps.swap();
 		break;
 
 		case XK_F3:

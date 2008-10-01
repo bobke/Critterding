@@ -1,6 +1,6 @@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libutils.la
-noinst_HEADERS = dir.h file.h parser.h randgen.h timer.h sleeper.h
-libutils_la_SOURCES = dir.cpp file.cpp parser.cpp randgen.cpp timer.cpp sleeper.cpp
+noinst_HEADERS = dir.h file.h parser.h randgen.h timer.h fps.h sleeper.h
+libutils_la_SOURCES = dir.cpp file.cpp parser.cpp randgen.cpp timer.cpp fps.cpp sleeper.cpp
 libutils_la_LDFLAGS = -avoid-version -no-undefined
