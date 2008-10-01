@@ -54,9 +54,11 @@ void Evolution::draw()
 
 	world.drawWithGrid();
 
+	Timer::Instance()->mark();
 	sleeper.mark();
 
-//	glDisableClientState(GL_VERTEX_ARRAY);  // disable vertex arrays
+//	glDisableClientState(GL_VERTEX_ARRAY);  // disable vertex arrays where's the enable one anyway... not that we
+//	still use it
 }
 
 void Evolution::handlekey(const KeySym& key)

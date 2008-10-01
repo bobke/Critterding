@@ -1,8 +1,8 @@
 #ifndef SLEEPER_H
 #define SLEEPER_H
 
+#include "timer.h"
 #include <iostream>
-#include <sys/time.h>
 
 using std::cerr;
 using std::endl;
@@ -27,9 +27,6 @@ class Sleeper
 		int		dispcounter;
 		int		dispevery;
 		float		dispsum;
-
-		struct timezone	timer_tz;
-		struct timeval	lasttime;
 
 };
 

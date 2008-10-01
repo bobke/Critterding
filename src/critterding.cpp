@@ -27,6 +27,7 @@ using namespace std;
 	unsigned int critter_maxmutations					= 3;
 	unsigned int critter_percentchangetype					= 1;
 	bool critter_flipnewborns						= false;
+	unsigned int critter_autosaveinterval					= 0;
 
 // Food Settings
 	unsigned int food_maxlifetime						= 500;
@@ -147,6 +148,7 @@ int main(int argc, char *argv[])
 	helpinfo << "  --critter_maxmutations       [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
 	helpinfo << "  --critter_percentchangetype  [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
 	helpinfo << "  --critter_flipnewborns            If set, newborns will be flipped 180 degrees" << endl;
+	helpinfo << "  --critter_autosaveinterval  [" << critter_autosaveinterval << "]  Save all critters every N seconds (0=disabled)" << endl;
 	helpinfo << endl;
 	helpinfo << "  Food Settings" << endl;
 	helpinfo << "  --food_maxlifetime         [" << food_maxlifetime << "]  Maximum amount of frames food exists" << endl;
@@ -264,6 +266,7 @@ int main(int argc, char *argv[])
 		else if ( checkSwitch("--critter_maxmutations", critter_maxmutations, 1, 100, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_percentchangetype", critter_percentchangetype, 0, 100, optind, argv) ) optind++;
 		else if (sw=="--critter_flipnewborns") critter_flipnewborns = true;
+		else if ( checkSwitch("--critter_autosaveinterval", critter_autosaveinterval, 1, 1000000, optind, argv) ) optind++;
 
 	// Food Settings
 
@@ -386,6 +389,7 @@ int main(int argc, char *argv[])
 		mainscene.world.critter_mutationrate = critter_mutationrate;
 		mainscene.world.critter_percentchangetype = critter_percentchangetype;
 		mainscene.world.critter_flipnewborns = critter_flipnewborns;
+		mainscene.world.critter_autosaveinterval = critter_autosaveinterval;
 
 		// food
 		mainscene.world.food_maxlifetime = food_maxlifetime;
