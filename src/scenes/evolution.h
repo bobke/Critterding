@@ -3,7 +3,7 @@
 
 #include "../gl/glscene.h"
 #include "../utils/timer.h"
-#include "../utils/sleeper.h"
+#include "../utils/fps.h"
 #include "entities/camera.h"
 #include "entities/worldb.h"
 
@@ -31,7 +31,7 @@ class Evolution : public GLScene {
 		bool exit_if_empty;
 
 	private:
-		Sleeper sleeper;
+		Fps fps;
 
 		bool drawCVNeurons;
 };
