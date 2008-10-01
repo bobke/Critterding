@@ -123,7 +123,6 @@ int main(int argc, char *argv[])
 	helpinfo << "  --medium                          Creates a 25x25 world with 500 energy (default)" << endl;
 	helpinfo << "  --big                             Creates a 50x50 world with 2000 energy" << endl;
 	helpinfo << "  --huge                            Creates a 100x100 world with 8000 energy" << endl;
-	helpinfo << "  --disable-corpses                 Sets corpse_maxlifetime=0, critter_percentchangetype=0" << endl;
 
 	helpinfo << "  --worldsize                 [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
 	helpinfo << "  --energy                   [" << energy << "]  Energy in the system: " << energy << "*food_energy(" << food_maxenergy << ") = " << energy*food_maxenergy << "" << endl;
@@ -139,9 +138,9 @@ int main(int argc, char *argv[])
 	helpinfo << "  --critter_maxbullets       [" << critter_maxbullets << "]  Max amount of bullets a critter can fire" << endl;
 	helpinfo << "  --critter_minenergyproc   [" << critter_minenergyproc << "]  Min amount of energy required for procreation" << endl;
 	helpinfo << "  --critter_minenergyfire      [" << critter_minenergyfire << "]  Min amount of energy required for firing a bullet" << endl;
-	helpinfo << "  --critter_size              [" << critter_size*100.0f << "]  Size of a critter" << endl;
-	helpinfo << "  --critter_speed             [" << critter_speed*1000.0f << "]  Critter speed" << endl;
-	helpinfo << "  --critter_sightrange        [" << critter_sightrange*10.0f << "]  Distance a critter can see (" << critter_sightrange*10.0f << " = " << critter_sightrange << " floor squares)" << endl;
+	helpinfo << "  --critter_size              [" << critter_size << "]  Size of a critter" << endl;
+	helpinfo << "  --critter_speed             [" << critter_speed << "]  Critter speed" << endl;
+	helpinfo << "  --critter_sightrange        [" << critter_sightrange << "]  Distance a critter can see (" << critter_sightrange*10.0f << " = " << critter_sightrange << " floor squares)" << endl;
 	helpinfo << "  --critter_retinasize         [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
 	helpinfo << "  --critter_colorneurons       [" << critter_colorneurons << "]  Earch color of every pixel (RGBA) will get [" << critter_colorneurons << "] neurons (only for new adams)" << endl;
 	helpinfo << "  --critter_mutationrate       [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
@@ -152,12 +151,13 @@ int main(int argc, char *argv[])
 	helpinfo << "  Food Settings" << endl;
 	helpinfo << "  --food_maxlifetime         [" << food_maxlifetime << "]  Maximum amount of frames food exists" << endl;
 	helpinfo << "  --food_maxenergy          [" << food_maxenergy << "]  Maximum amount of energy in a food unit" << endl;
-	helpinfo << "  --food_size                 [" << food_size*100.0f << "]  Size of a food unit" << endl;
+	helpinfo << "  --food_size                 [" << food_size << "]  Size of a food unit" << endl;
 	helpinfo << endl;
 	helpinfo << "  Corpse Settings" << endl;
+	helpinfo << "  --corpse_disable                  Sets corpse_maxlifetime=0, critter_percentchangetype=0" << endl;
 	helpinfo << "  --corpse_maxlifetime      [" << corpse_maxlifetime << "]  Maximum amount of frames a corpse exists" << endl;
 	helpinfo << "  --corpse_maxenergy        [" << corpse_maxenergy << "]  Maximum amount of energy in a corpse unit" << endl;
-	helpinfo << "  --corpse_size               [" << corpse_size*100.0f << "]  Size of a corpse unit" << endl;
+	helpinfo << "  --corpse_size               [" << corpse_size << "]  Size of a corpse unit" << endl;
 	helpinfo << endl;
 	helpinfo << "  Brain Settings" << endl;
 	helpinfo << "  --brain_maxneurons                           [" << brain_maxneurons << "]  Max neurons per critter" << endl;
