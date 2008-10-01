@@ -20,7 +20,6 @@ void Sleeper::mark()
 {
 	if ( active )
 	{
-
 		// get now
 		timeval now;
 		gettimeofday(&now, &timer_tz);

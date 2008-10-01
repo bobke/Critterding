@@ -123,6 +123,7 @@ int main(int argc, char *argv[])
 	helpinfo << "  --medium                          Creates a 25x25 world with 500 energy (default)" << endl;
 	helpinfo << "  --big                             Creates a 50x50 world with 2000 energy" << endl;
 	helpinfo << "  --huge                            Creates a 100x100 world with 8000 energy" << endl;
+	helpinfo << "  --disable-corpses                 Sets corpse_maxlifetime=0, critter_percentchangetype=0" << endl;
 
 	helpinfo << "  --worldsize                 [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
 	helpinfo << "  --energy                   [" << energy << "]  Energy in the system: " << energy << "*food_energy(" << food_maxenergy << ") = " << energy*food_maxenergy << "" << endl;
@@ -207,7 +208,8 @@ int main(int argc, char *argv[])
 	{
 		string sw = argv[optind];
 
-	// X Settings
+	// Global Settings
+
 		if (sw=="--small")
 		{
 			worldsize = 10;
@@ -232,7 +234,11 @@ int main(int argc, char *argv[])
 			energy = 8000;
 	        }
 
-	// Global Settings
+		else if (sw=="--disable-corpses")
+		{
+			corpse_maxlifetime = 0;
+			critter_percentchangetype = 0;
+	        }
 
 		else if ( checkSwitch("--worldsize", worldsize, 1, 5000, optind, argv) ) optind++;
 		else if ( checkSwitch("--energy", energy, 0, 1000000, optind, argv) ) optind++;
@@ -354,7 +360,7 @@ int main(int argc, char *argv[])
 	cout << endl << endl;
 
 	GLWindow glwindow;
-	glwindow.create("Critterding beta7", 600, 600, 24, False);
+	glwindow.create("Critterding beta8", 600, 600, 24, False);
 
 		Evolution mainscene;
 
