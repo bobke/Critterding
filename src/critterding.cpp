@@ -98,11 +98,19 @@ bool checkSwitch(string matchsw, unsigned int &var, unsigned int min, unsigned i
 {
 	if ( matchsw == argv[optind] )
 	{
-		unsigned int value = atoi(argv[optind+1]);
-		if ( value >= min && value <= max )
+		if ( argv[optind+1] )
 		{
-			var = value;
-			return true;
+			unsigned int value = atoi(argv[optind+1]);
+			if ( value >= min && value <= max )
+			{
+				var = value;
+				return true;
+			}
+			else
+			{
+				cerr << matchsw << " expects a value that is >=" << min << " and <=" << max << endl;
+				exit(1);
+			}
 		}
 		else
 		{

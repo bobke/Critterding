@@ -69,7 +69,7 @@ void Evolution::draw()
 void Evolution::handlekey(const KeySym& key)
 {
 
-	if ( pause && key != XK_F1 )
+	if ( pause && key != XK_F1 && key != XK_p )
 	{
 		usleep(10000);
 		return;
@@ -174,6 +174,10 @@ void Evolution::handlekey(const KeySym& key)
 
 		// Critter controls
 		case XK_z:
+		break;
+
+		case XK_p:
+			pause = !pause;
 		break;
 		case XK_s:
 		break;
