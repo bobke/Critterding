@@ -18,7 +18,7 @@ class Evolution : public GLScene {
 		Evolution();
 		~Evolution();
 
-		bool			pause;
+		bool pause;
 
 		void draw();
 
