@@ -54,6 +54,7 @@ class WorldB
 		unsigned int		critter_maxmutations;
 		unsigned int		critter_percentchangetype;
 		bool			critter_flipnewborns;
+		bool			critter_randomrotatenewborns;
 		unsigned int		critter_autosaveinterval;
 
 		unsigned int		food_maxlifetime;
