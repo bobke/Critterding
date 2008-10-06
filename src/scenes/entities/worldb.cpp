@@ -3,6 +3,7 @@
 WorldB::WorldB()
 {
 	critter_flipnewborns = false;
+	critter_randomrotatenewborns = false;
 
 	brain_mutate_minsynapsesatbuildtime = false;
 	brain_mutate_maxsynapsesatbuildtime = false;
@@ -695,12 +696,19 @@ void WorldB::process()
 						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
 						if ( mutant ) cerr << " (m)";
 
-						// optional rotate 180 of new borne
+						// optional rotate 180 of newborn
 						if ( critter_flipnewborns ) nc->rotation = nc->rotation + 180.0f;
 
-						// split energies in half
+						// optional random rotate of newborn
+						if ( critter_randomrotatenewborns ) nc->rotation = randgen.get(0,360);
+
+						// transfer energy
 						nc->energyLevel = + used;
 						c->energyLevel -= used;
+
+						// give it some free energy from the system
+						//freeEnergy -= 2000.0f;
+						//nc->energyLevel = + 2000.0f;
 
 						// reset procreation energy count
 						c->procreateTimeCount = 0;
@@ -743,7 +751,7 @@ void WorldB::process()
 	
 
 
-		// procreate
+/*		// procreate
 			//procreation if procreation energy trigger is hit
 			if ( c->procreate && c->canProcreate )
 			{
@@ -807,7 +815,7 @@ void WorldB::process()
 						cerr << endl;
 					}
 				}
-			}
+			}*/
 	}
 
 
@@ -851,7 +859,7 @@ void WorldB::prepCritter(CritterB *c)
 	c->minprocenergyLevel = critter_minenergyproc;
 	c->minfireenergyLevel = critter_minenergyfire;
 //	c->mindropseedenergyLevel = critter_minenergydropseed;
-	c->dropseedcost = 1500.0f;
+	c->dropseedcost = 500.0f;
 
 	c->setup();
 	c->retina = retina;
