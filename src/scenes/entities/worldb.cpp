@@ -240,27 +240,6 @@ void WorldB::process()
 		}
 	}
 
-	// Remove seeds
-	for( unsigned int i=0; i < seeds.size(); i++)
-	{
-		// old seed
-		if ( ++seeds[i]->totalFrames >= 2000 )// FIXME
-		{
-			freeEnergy += seeds[i]->energy;
-			delete seeds[i];
-			seeds.erase(seeds.begin()+i);
-			i--;
-		}
-
-		// picked up
-		else if ( seeds[i]->pickedup )
-		{
-			delete seeds[i];
-			seeds.erase(seeds.begin()+i);
-			i--;
-		}
-	}
-
 	// remove all dead critters
 	for( unsigned int i=0; i < critters.size(); i++)
 	{
@@ -320,20 +299,6 @@ void WorldB::process()
 				}
 			}
 
-			glColor4f( 1.0f, 1.0f, 1.0f, 0.1f );
-			for( unsigned int j=0; j < seeds.size(); j++)
-			{
-				Seed *f = seeds[j];
-				if ( c->isWithinSight(f->position) )
-				{
-					glPushMatrix();
-						glTranslatef( f->position.x, f->position.y, f->position.z );
-						glScalef( f->size, f->size, f->size );
-						glCallList(displayLists);
-					glPopMatrix();
-				}
-			}
-		
 			glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
 			for( unsigned int j=0; j < food.size(); j++)
 			{
@@ -446,19 +411,6 @@ void WorldB::process()
 				}
 			}
 	
-		// over seed input neuron
-			c->touchingSeed = false;
-			for( unsigned int f=0; f < seeds.size() && !c->touchingSeed; f++)
-			{
-				Seed *se = seeds[f];
-				float avgSize = (c->size + se->size) / 2;
-				if ( fabs(c->position.x - se->position.x) <= avgSize && fabs(c->position.z - se->position.z) <= avgSize )
-				{
-					c->touchingSeed = true;
-					c->touchedSeedID = f;
-				}
-			}
-
 		// process
 			c->process();
 
@@ -643,115 +595,7 @@ void WorldB::process()
 				}
 			}
 
-		// sex
-			if ( c->dropseed && c->canDropseed && c->touchingSeed ) // 
-			{
-
-				// move critter it's half size to the left
-				c->prepNewPoss();
-				c->newposition.x -= c->reuseRotSinY * c->halfsize;
-				c->newposition.z -= c->reuseRotCosY * c->halfsize;
-
-				float used = seeds[c->touchedSeedID]->energy * 2.0f;
-
-				if (spotIsFree(c->newposition, c->size, i) && c->energyLevel - used >= 0.0f)
-				{
-					// move new critter to the right by sum of halfsizes
-					Vector3f newpos = c->position;
-					newpos.x += c->reuseRotSinY * (2.0f*c->halfsize + 0.01);
-					newpos.z += c->reuseRotCosY * (2.0f*c->halfsize + 0.01);
-
-					if (spotIsFree(newpos, critter_size, i))
-					{
-						seeds[c->touchedSeedID]->pickedup = true;
-
-						c->energyLevel += seeds[c->touchedSeedID]->energy;
-
-						seeds[c->touchedSeedID]->energy = 0.0f;
-
-						CritterB *nc = new CritterB(*c, *seeds[c->touchedSeedID]);
-
-						// mutate or not
-						bool mutant = false;
-						if ( randgen.get(1,100) <= critter_mutationrate )
-						{
-							mutant = true;
-							nc->mutate(critter_maxmutations, critter_percentchangetype);
-						}
-
-						// same positions / rotation
-						nc->position = newpos;
-						nc->rotation = c->rotation;
-						nc->prepNewPoss();
-
-						prepCritter(nc);
-
-						cerr << "critter " << i << "(ad:" << c->adamdist << ") HAS SEX\n";
-
-						cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: ";
-						if ( c->crittertype == 1 ) cerr << "C";
-						else cerr << "H";
-						cerr << ", ad: " << setw(4) << c->adamdist << ")";
-
-						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
-						if ( mutant ) cerr << " (m)";
-
-						// optional rotate 180 of newborn
-						if ( critter_flipnewborns ) nc->rotation = nc->rotation + 180.0f;
-
-						// optional random rotate of newborn
-						if ( critter_randomrotatenewborns ) nc->rotation = randgen.get(0,360);
-
-						// transfer energy
-						nc->energyLevel = + used;
-						c->energyLevel -= used;
-
-						// give it some free energy from the system
-						//freeEnergy -= 2000.0f;
-						//nc->energyLevel = + 2000.0f;
-
-						// reset procreation energy count
-						c->procreateTimeCount = 0;
-	
-						nc->calcFramePos(critters.size(), retinasperrow);
-
-						c->moveToNewPoss();
-						nc->moveToNewPoss();
-
-						critters.push_back( nc );
-
-						cerr << endl;
-					}
-				}
-			}
-
-		// drop seed
-			else if ( c->dropseed && c->canDropseed )
-			{
-				//cerr << "critter " << i << "(ad:" << c->adamdist << ") DROPS A SEED\n";
-				c->dropseedTimeCount = 0;
-
-				c->energyLevel -= c->dropseedcost;
-
-				Seed *s = new Seed;
-				s->energy = c->dropseedcost;
-
-				s->brain.copyFrom(c->brain);
-				s->color[0] = c->color[0];
-				s->color[1] = c->color[1];
-				s->color[2] = c->color[2];
-				s->color[3] = c->color[3];
-				s->adamdist = c->adamdist;
-				s->crittertype = c->crittertype;
-
-				s->position = c->position;
-	
-				seeds.push_back( s );
-			}
-	
-
-
-/*		// procreate
+		// procreate
 			//procreation if procreation energy trigger is hit
 			if ( c->procreate && c->canProcreate )
 			{
@@ -815,7 +659,7 @@ void WorldB::process()
 						cerr << endl;
 					}
 				}
-			}*/
+			}
 	}
 
 
@@ -855,11 +699,8 @@ void WorldB::prepCritter(CritterB *c)
 	c->sightrange = critter_sightrange;
 	c->procreateTimeTrigger = critter_maxlifetime / critter_maxchildren;
 	c->fireTimeTrigger = critter_maxlifetime / critter_maxbullets;
-	c->dropseedTimeTrigger = critter_maxlifetime / 100; // FIXME
 	c->minprocenergyLevel = critter_minenergyproc;
 	c->minfireenergyLevel = critter_minenergyfire;
-//	c->mindropseedenergyLevel = critter_minenergydropseed;
-	c->dropseedcost = 500.0f;
 
 	c->setup();
 	c->retina = retina;
@@ -1106,17 +947,6 @@ void WorldB::drawWithGrid()
 {
 	// draw floor
 	grid.draw();
-
-	glColor4f( 1.0f, 1.0f, 1.0f, 0.1f );
-	for( unsigned int i=0; i < seeds.size(); i++)
-	{
-		Seed *f = seeds[i];
-		glPushMatrix();
-			glTranslatef( f->position.x, f->position.y, f->position.z );
-			glScalef( f->halfsize, f->halfsize, f->halfsize );
-			glCallList(displayLists);
-		glPopMatrix();
-	}
 
 	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
 	for( unsigned int i=0; i < food.size(); i++)

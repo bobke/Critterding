@@ -7,7 +7,6 @@
 #include "vector3f.h"
 #include "food.h"
 #include "corpse.h"
-#include "seed.h"
 #include "GL/gl.h"
 #include <cmath>
 #include <vector>
@@ -21,7 +20,6 @@ class CritterB
 	public:
 		CritterB();
 		CritterB(CritterB &other);
-		CritterB(CritterB &other1, Seed &other2);
 		CritterB(string &critterstring);
 		~CritterB();
 
@@ -75,8 +73,6 @@ class CritterB
 		unsigned int		touchedFoodID;
 		bool			touchingCorpse;
 		unsigned int		touchedCorpseID;
-		bool			touchingSeed;
-		unsigned int		touchedSeedID;
 
 		bool			carrydrop;
 
@@ -98,12 +94,6 @@ class CritterB
 		unsigned int		fireTimeTrigger;
 		float			minfireenergyLevel;
 		bool			wasShot;
-
-		bool			dropseed;
-		bool			canDropseed;
-		unsigned int		dropseedTimeCount;
-		unsigned int		dropseedTimeTrigger;
-		float			dropseedcost;
 
 		unsigned char		*retina;
 		unsigned int		items;
