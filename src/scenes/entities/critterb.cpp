@@ -78,43 +78,12 @@ CritterB::CritterB(CritterB &other)
 
 }
 
-CritterB::CritterB(CritterB &other1, Seed &other2)
-{
-	initConst();
-
-	color[0]					= (other1.color[0] + other2.color[0]) / 2.0f;
-	color[1]					= (other1.color[1] + other2.color[1]) / 2.0f;
-	color[2]					= (other1.color[2] + other2.color[2]) / 2.0f;
-	color[3]					= (other1.color[3] + other2.color[3]) / 2.0f;
-
-	// pick one
-	unsigned int mode = randgen.get( 0, 1 );
-	if (mode == 0)
-		crittertype = other1.crittertype;
-	else
-		crittertype = other2.crittertype;
-
-	// the highest one
-	adamdist					= other1.adamdist;
-	if ( other2.adamdist > adamdist )
-		adamdist = other2.adamdist;
-
-	retinasize					= other1.retinasize;
-	colorNeurons					= other1.colorNeurons;
-
-	brain.mergeFrom(other1.brain, other2.brain);
-
-	items = retinasize * retinasize * components;
-
-}
-
-
 void CritterB::calcInputOutputNeurons()
 {
 	items = retinasize * retinasize * components;
 
-	brain.numberOfInputs = (items*colorNeurons)+28; // 1 over food + 1 over corpse + 1 over seed + 1 can fire bullet + 1 can drop seed + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
-	brain.numberOfOutputs = 11;
+	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
+	brain.numberOfOutputs = 10;
 }
 
 void CritterB::calcRotSinCos()
@@ -134,7 +103,6 @@ void CritterB::setup()
 
 	procreateTimeCount	= 0;
 	fireTimeCount		= 0;
-	dropseedTimeCount	= 0;
 
 //	colorDivider		= 256.0f / colorNeurons;
 	colorDivider		= 128.0f / colorNeurons;
@@ -149,14 +117,12 @@ void CritterB::process()
 		totalFrames++;
 		procreateTimeCount++;
 		fireTimeCount++;
-		dropseedTimeCount++;
 
 	// reset motor bools
 		eat		= false;
 		fire		= false;
 		procreate	= false;
 		carrydrop	= false;
-		dropseed	= false;
 
 	// wasShot (used in world)
 		wasShot		= false;
@@ -276,31 +242,12 @@ void CritterB::procInputNeurons()
 
 	overstep++;
 
-	// over corpse sensor neuron
-		if ( touchingSeed )	brain.Inputs[overstep].output = 1;
-		else			brain.Inputs[overstep].output = 0;
-
-	overstep++;
-
 	// can fire a bullet
 		canFire		= false;
 		if ( fireTimeCount > fireTimeTrigger && energyLevel > minfireenergyLevel )
 		{
 			brain.Inputs[overstep].output = 1;
 			canFire = true;
-		}
-		else brain.Inputs[overstep].output = 0;
-
-	overstep++;
-
-	// can drop a seed
-		canDropseed	= false;
-		if ( dropseedTimeCount > dropseedTimeTrigger && energyLevel > dropseedcost )
-		{
-			//cerr << "drop: " << dropseedTimeCount << ">" << dropseedTimeTrigger << " && " << energyLevel << ">" << dropseedcost << endl;
-
-			brain.Inputs[overstep].output = 1;
-			canDropseed = true;
 		}
 		else brain.Inputs[overstep].output = 0;
 
@@ -357,7 +304,7 @@ void CritterB::procOutputNeurons()
 {
 	motorneuronsfired = 0;
 
-	// there are 11 motor neurons
+	// there are 10 motor neurons
 
 	if ( brain.Outputs[0].output > 0 )
 	{
@@ -416,12 +363,6 @@ void CritterB::procOutputNeurons()
 	if ( brain.Outputs[9].output > 0 )
 	{
 		carrydrop = true;
-		motorneuronsfired++;
-	}
-
-	if ( brain.Outputs[10].output > 0 )
-	{
-		dropseed = true;
 		motorneuronsfired++;
 	}
 }

@@ -26,7 +26,7 @@ void Evolution::draw()
 	glDisable(GL_DITHER);
 	glDisable(GL_POLYGON_SMOOTH);
 
-	glEnable(GL_CULL_FACE);
+//	glEnable(GL_CULL_FACE);
 
 	world.process();
 
