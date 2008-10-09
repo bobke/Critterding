@@ -13,6 +13,7 @@
 #include <cstring>
 
 #include "glscene.h"
+#include "../utils/settings.h"
 
 using std::cerr;
 using std::endl;
@@ -38,9 +39,6 @@ struct Structure {
 
 class GLWindow {
 
-		//	Resize Window
-		void resize();
-
 	public:
 		GLWindow();
 		~GLWindow();
@@ -55,6 +53,10 @@ class GLWindow {
 		//	Main loop for the program.
 		void runGLScene(GLScene &glscene);
 
+	private:
+
+		//	Resize Window
+		void resize();
 };
 
 #endif	// GLWINDOW_H

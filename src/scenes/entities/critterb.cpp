@@ -4,34 +4,23 @@
 
 void CritterB::initConst()
 {
-	speedfactor		= 0.0f;
-	size			= 0.0f;
-	halfsize		= 0.0f;
-	colorNeurons		= 0;
+	settings = Settings::Instance();
+
 	totalFrames		= 0;
-	maxtotalFrames		= 0;
-	maxEnergyLevel		= 0.0f;
-
-	procreateTimeTrigger	= 0;
-	fireTimeTrigger		= 0;
-
-	visionPosition		= 0;
-	retinasperrow		= 0;
-	retinaColumnStart	= 0;
-	retinaRowStart		= 0;
-	retinaRowLength		= 0;
-
-	sightrange		= 0.0f;
+	procreateTimeCount	= 0;
+	fireTimeCount		= 0;
 
 	carriesFood		= false;
 	carriesCorpse		= false;
 
+	resize(settings->critter_size);
+
+	speedfactor = settings->critter_speed;
+
+	sightrange = settings->critter_sightrange;
+
 	components		= 4;
-	colorDivider		= 0;
-	retinasize		= 0;
-
 	colorTrim		= 0.5f;
-
 }
 
 CritterB::CritterB()
@@ -42,11 +31,73 @@ CritterB::CritterB()
 	crittertype		= 0;
 	adamdist		= 0;
 
+	colorNeurons						= settings->critter_colorneurons;
+	retinasize						= settings->critter_retinasize;
+
+	brain.maxNeurons					= settings->brain_maxneurons;
+	brain.minSynapses					= settings->brain_minsynapses;
+	brain.maxSynapses					= settings->brain_maxsynapses;
+
+	brain.minNeuronsAtBuildtime				= settings->brain_minneuronsatbuildtime;
+	brain.maxNeuronsAtBuildtime				= settings->brain_maxneuronsatbuildtime;
+
+	brain.minSynapsesAtBuildtime				= settings->brain_minsynapsesatbuildtime;
+		brain.mutate_minSynapsesAtBuildtime		= settings->brain_mutate_minsynapsesatbuildtime;
+
+	brain.maxSynapsesAtBuildtime				= settings->brain_maxsynapsesatbuildtime;
+		brain.mutate_maxSynapsesAtBuildtime		= settings->brain_mutate_maxsynapsesatbuildtime;
+
+	brain.percentChanceInhibitoryNeuron			= settings->brain_percentchanceinhibitoryneuron;
+		brain.mutate_percentChanceInhibitoryNeuron	= settings->brain_mutate_percentchanceinhibitoryneuron;
+
+	brain.percentChanceConsistentSynapses			= settings->brain_percentchanceconsistentsynapses;
+		brain.mutate_percentChanceConsistentSynapses		= settings->brain_mutate_percentchanceconsistentsynapses;
+
+	brain.percentChanceInhibitorySynapses			= settings->brain_percentchanceinhibitorysynapses;
+		brain.mutate_percentChanceInhibitorySynapses		= settings->brain_mutate_percentchanceinhibitorysynapses;
+
+	brain.percentChanceMotorNeuron				= settings->brain_percentchancemotorneuron;
+		brain.mutate_percentChanceMotorNeuron		= settings->brain_mutate_percentchancemotorneuron;
+
+	brain.percentChancePlasticNeuron				= settings->brain_percentchanceplasticneuron;
+		brain.mutate_percentChancePlasticNeuron		= settings->brain_mutate_percentchanceplasticneuron;
+
+	brain.minPlasticityStrengthen				= settings->brain_minplasticitystrengthen;
+	brain.maxPlasticityStrengthen				= settings->brain_maxplasticitystrengthen;
+	brain.minPlasticityWeaken				= settings->brain_minplasticityweaken;
+	brain.maxPlasticityWeaken				= settings->brain_maxplasticityweaken;
+		brain.mutate_PlasticityFactors				= settings->brain_mutate_plasticityfactors;
+
+	brain.percentChanceSensorySynapse			= settings->brain_percentchancesensorysynapse;
+		brain.mutate_percentChanceSensorySynapse	= settings->brain_mutate_percentchancesensorysynapse;
+
+	brain.minFiringThreshold				= settings->brain_minfiringthreshold;
+		brain.mutate_minFiringThreshold				= settings->brain_mutate_minfiringthreshold;
+
+	brain.maxFiringThreshold				= settings->brain_maxfiringthreshold;
+		brain.mutate_maxFiringThreshold				= settings->brain_mutate_maxfiringthreshold;
+
+	brain.maxDendridicBranches				= settings->brain_maxdendridicbranches;
+		brain.mutate_maxDendridicBranches		= settings->brain_mutate_maxdendridicbranches;
+
+	brain.percentMutateEffectAddNeuron			= settings->brain_percentmutateeffectaddneuron;
+	brain.percentMutateEffectRemoveNeuron			= settings->brain_percentmutateeffectremoveneuron;
+	brain.percentMutateEffectAlterNeuron			= settings->brain_percentmutateeffectalterneuron;
+	brain.percentMutateEffectAddSynapse			= settings->brain_percentmutateeffectaddsynapse;
+	brain.percentMutateEffectRemoveSynapse			= settings->brain_percentmutateeffectremovesynapse;
+		brain.mutate_MutateEffects				= settings->brain_mutate_mutateeffects;
+
 	// give it a random color
 	color[0] = (float)randgen.get( 50,100 ) / 100.0f;
 	color[1] = (float)randgen.get( 50,100 ) / 100.0f;
 	color[2] = (float)randgen.get( 50,100 ) / 100.0f;
 	color[3] = 0.0f;
+
+	items = retinasize * retinasize * components;
+	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
+	brain.numberOfOutputs = 10;
+
+	brain.buildArch();
 }
 
 CritterB::CritterB(string &critterstring)
@@ -75,15 +126,6 @@ CritterB::CritterB(CritterB &other)
 	brain.copyFrom(other.brain);
 
 	items = retinasize * retinasize * components;
-
-}
-
-void CritterB::calcInputOutputNeurons()
-{
-	items = retinasize * retinasize * components;
-
-	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
-	brain.numberOfOutputs = 10;
 }
 
 void CritterB::calcRotSinCos()
@@ -100,9 +142,6 @@ void CritterB::calcRotSinCos()
 void CritterB::setup()
 {
 	calcRotSinCos();
-
-	procreateTimeCount	= 0;
-	fireTimeCount		= 0;
 
 //	colorDivider		= 256.0f / colorNeurons;
 	colorDivider		= 128.0f / colorNeurons;
@@ -153,16 +192,15 @@ void CritterB::process()
 	energyLevel -= energyUsed;
 }
 
-void CritterB::calcFramePos(unsigned int pos, unsigned int cretinasperrow)
+void CritterB::calcFramePos(unsigned int pos)
 {
 	visionPosition = pos;
-	retinasperrow = cretinasperrow;
 
 	// Calc 2D cartesian vectors X & Y for frame positioning of retina
 	framePosY = 0;
-	while ( pos >= retinasperrow )
+	while ( pos >= settings->retinasperrow )
 	{
-		pos -= retinasperrow;
+		pos -= settings->retinasperrow;
 		framePosY += retinasize;
 	}
 	framePosX = (pos * retinasize) + pos;
@@ -172,13 +210,13 @@ void CritterB::calcFramePos(unsigned int pos, unsigned int cretinasperrow)
 	retinaRowStart = 0;
 
 	// determine on which row of the retina to start for this critter
-	retinaRowLength = retinasperrow * (retinasize+1) * components;
+	retinaRowLength = settings->retinasperrow * (retinasize+1) * components;
 
 	// determine on which column to start
-	while ( target >= retinasperrow )
+	while ( target >= settings->retinasperrow )
 	{
 		retinaRowStart += retinasize * retinaRowLength;
-		target -= retinasperrow;
+		target -= settings->retinasperrow;
 	}
 	retinaColumnStart = target * (retinasize+1) * components;
 
@@ -244,7 +282,7 @@ void CritterB::procInputNeurons()
 
 	// can fire a bullet
 		canFire		= false;
-		if ( fireTimeCount > fireTimeTrigger && energyLevel > minfireenergyLevel )
+		if ( fireTimeCount > settings->critter_fireinterval && energyLevel > settings->critter_minenergyfire )
 		{
 			brain.Inputs[overstep].output = 1;
 			canFire = true;
@@ -255,7 +293,7 @@ void CritterB::procInputNeurons()
 
 	// can procreate sensor neuron
 		canProcreate	= false;
-		if ( procreateTimeCount > procreateTimeTrigger && energyLevel > minprocenergyLevel )
+		if ( procreateTimeCount > settings->critter_procinterval && energyLevel > settings->critter_minenergyproc )
 		{
 			brain.Inputs[overstep].output = 1;
 			canProcreate = true;
@@ -265,7 +303,7 @@ void CritterB::procInputNeurons()
 	overstep++;
 
 	// energy neurons
-		unsigned int NeuronToFire = (int)((energyLevel / (maxEnergyLevel+1)) * 10) + overstep;
+		unsigned int NeuronToFire = (int)((energyLevel / (settings->critter_maxenergy+1)) * 10) + overstep;
 		unsigned int count = 10 + overstep;
 		while ( overstep < count )
 		{
@@ -275,7 +313,7 @@ void CritterB::procInputNeurons()
 		}
 
 	// age neurons
-		NeuronToFire = (int)(((float)totalFrames / (maxtotalFrames+1)) * 10) + overstep;
+		NeuronToFire = (int)(((float)totalFrames / (settings->critter_maxlifetime+1)) * 10) + overstep;
 		count = 10 + overstep;
 		while ( overstep < count )
 		{
@@ -367,12 +405,12 @@ void CritterB::procOutputNeurons()
 	}
 }
 
-void CritterB::mutate(unsigned int maxMutateRuns, unsigned int percentChangeType)
+void CritterB::mutate()
 {
 	adamdist++;
 
 	// herbivore / carnivore switch
-	if ( randgen.get(1,100) <= percentChangeType )
+	if ( randgen.get(1,100) <= settings->critter_percentchangetype )
 	{
 		if ( crittertype == 0 )
 			crittertype = 1;
@@ -395,7 +433,7 @@ void CritterB::mutate(unsigned int maxMutateRuns, unsigned int percentChangeType
 		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
 	}
 
-	unsigned int runs = randgen.get(1, maxMutateRuns);
+	unsigned int runs = randgen.get(1, settings->critter_maxmutations);
 	brain.mutate( runs ); // 0 for random
 }
 
@@ -412,7 +450,7 @@ void CritterB::place()
 	glViewport(framePosX, framePosY, retinasize, retinasize);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, 5.0f);
+	glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, sightrange);
 
 	glRotatef(rotation, 0.0f, -1.0f, 0.0f);
 	glTranslatef(-cameraposition.x, -cameraposition.y, -cameraposition.z);

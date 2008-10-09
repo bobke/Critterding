@@ -162,8 +162,8 @@ void GLWindow::runGLScene(GLScene &glscene)
 	int running = 1;
 
 //	glscene.init();
-	glscene.width = &GLWin.width;
-	glscene.height = &GLWin.height;
+	Settings::Instance()->winWidth = &GLWin.width;
+	Settings::Instance()->winHeight = &GLWin.height;
 
 	while(running)
 	{

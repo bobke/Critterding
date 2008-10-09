@@ -2,6 +2,8 @@
 
 Evolution::Evolution()
 {
+	settings = Settings::Instance();
+
 	pause = false;
 	drawCVNeurons = true;
 }
@@ -30,7 +32,7 @@ void Evolution::draw()
 
 	world.process();
 
-	if ( !drawCVNeurons )
+	if ( !drawCVNeurons || world.isSelected )
 	{
 		glDisable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -45,19 +47,20 @@ void Evolution::draw()
 
 	if ( world.isSelected )
 	{
-		camera.follow(width, height, world.critters[world.selectedCritter], world.critter_sightrange);
+		camera.follow(world.critters[world.selectedCritter]);
+		world.drawWithinCritterSight(world.selectedCritter);
 	}
 	else
 	{
-		camera.place(width, height);
+		camera.place();
+		world.drawWithGrid();
 	}
 
-	world.drawWithGrid();
 
 	Timer::Instance()->mark();
 	fps.mark();
 
-	if ( exit_if_empty && world.critters.size() == 0 )
+	if ( settings->exit_if_empty && world.critters.size() == 0 )
 	{
 		cerr << "world is empty, exiting..." << endl;
 		exit(0);
@@ -91,41 +94,41 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_F3:
-			world.decreaseMincritters();
-			cerr << "min c: " << world.mincritters << endl;
+			if ( settings->mincritters > 0 ) settings->mincritters--;
+			cerr << "min c: " << settings->mincritters << endl;
 		break;
 		case XK_F4:
-			world.increaseMincritters();
-			cerr << "min c: " << world.mincritters << endl;
+			settings->mincritters++;
+			cerr << "min c: " << settings->mincritters << endl;
 		break;
 
 		case XK_F5:
-			if ( (world.freeEnergyInfo-(world.food_maxenergy*25.0f)) / world.food_maxenergy >= 0.0f )
+			if ( (world.freeEnergyInfo-(settings->food_maxenergy*25.0f)) / settings->food_maxenergy >= 0.0f )
 			{
-				world.freeEnergyInfo -= world.food_maxenergy * 25.0f;
-				world.freeEnergy -= world.food_maxenergy * 25.0f;
-				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.food_maxenergy) << "*" << world.food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
+				world.freeEnergyInfo -= settings->food_maxenergy * 25.0f;
+				world.freeEnergy -= settings->food_maxenergy * 25.0f;
+				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
 			}
 		break;
 		case XK_F6:
-			world.freeEnergyInfo += world.food_maxenergy * 25.0f;
-			world.freeEnergy += world.food_maxenergy * 25.0f;
-			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.food_maxenergy) << "*" << world.food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
+			world.freeEnergyInfo += settings->food_maxenergy * 25.0f;
+			world.freeEnergy += settings->food_maxenergy * 25.0f;
+			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
 		break;
 
 		case XK_KP_Subtract:
-			if ( (world.freeEnergyInfo-world.food_maxenergy) / world.food_maxenergy >= 0.0f )
+			if ( (world.freeEnergyInfo-settings->food_maxenergy) / settings->food_maxenergy >= 0.0f )
 			{
-				world.freeEnergyInfo -= world.food_maxenergy;
-				world.freeEnergy -= world.food_maxenergy;
-				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.food_maxenergy) << "*" << world.food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
+				world.freeEnergyInfo -= settings->food_maxenergy;
+				world.freeEnergy -= settings->food_maxenergy;
+				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
 			}
 		break;
 
 		case XK_KP_Add:
-			world.freeEnergyInfo += world.food_maxenergy;
-			world.freeEnergy += world.food_maxenergy;
-			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / world.food_maxenergy) << "*" << world.food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
+			world.freeEnergyInfo += settings->food_maxenergy;
+			world.freeEnergy += settings->food_maxenergy;
+			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
 		break;
 
 		case XK_F7:
@@ -136,31 +139,31 @@ void Evolution::handlekey(const KeySym& key)
 			cerr << endl << "timed food inserts: "<< world.doTimedInserts << endl << endl;
 		break;
 		case XK_F9:
-			if ( world.critter_maxmutations >= 2 )
+			if ( settings->critter_maxmutations >= 2 )
 			{
-				world.critter_maxmutations -= 1;
-				cerr << endl << "Max Mutations: "<< world.critter_maxmutations << endl << endl;
+				settings->critter_maxmutations -= 1;
+				cerr << endl << "Max Mutations: "<< settings->critter_maxmutations << endl << endl;
 			}
 		break;
 		case XK_F10:
-			if ( world.critter_maxmutations <= 999 )
+			if ( settings->critter_maxmutations <= 999 )
 			{
-				world.critter_maxmutations += 1;
-				cerr << endl << "Max Mutations: "<< world.critter_maxmutations << endl << endl;
+				settings->critter_maxmutations += 1;
+				cerr << endl << "Max Mutations: "<< settings->critter_maxmutations << endl << endl;
 			}
 		break;
 		case XK_F11:
-			if ( world.critter_mutationrate >= 1 )
+			if ( settings->critter_mutationrate >= 1 )
 			{
-				world.critter_mutationrate -= 1;
-				cerr << endl << "Mutation Rate: "<< world.critter_mutationrate << "%" << endl << endl;
+				settings->critter_mutationrate -= 1;
+				cerr << endl << "Mutation Rate: "<< settings->critter_mutationrate << "%" << endl << endl;
 			}
 		break;
 		case XK_F12:
-			if ( world.critter_mutationrate <= 99 )
+			if ( settings->critter_mutationrate <= 99 )
 			{
-				world.critter_mutationrate += 1;
-				cerr << endl << "Mutation Rate: "<< world.critter_mutationrate << "%" << endl << endl;
+				settings->critter_mutationrate += 1;
+				cerr << endl << "Mutation Rate: "<< settings->critter_mutationrate << "%" << endl << endl;
 			}
 		break;
 
@@ -218,16 +221,16 @@ void Evolution::handlekey(const KeySym& key)
 
 		// Camera Looking
 		case XK_KP_Right:
-			camera.lookRight(1.0f);
+			camera.lookRight(0.1f);
 		break;
 		case XK_KP_Left:
-			camera.lookLeft(1.0f);
+			camera.lookLeft(0.1f);
 		break;
 		case XK_KP_Up:
-			camera.lookUp(1.0f);
+			camera.lookUp(0.1f);
 		break;
 		case XK_KP_Down:
-			camera.lookDown(1.0f);
+			camera.lookDown(0.1f);
 		break;
 		case XK_KP_Page_Down:
 			//camera.rollLeft(1.0f);
