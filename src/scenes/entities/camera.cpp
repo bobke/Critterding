@@ -13,14 +13,14 @@ Camera::Camera()
 	sensitivity	= 1;
 }
 
-void Camera::place(unsigned int *width, unsigned int *height)
+void Camera::place()
 {
-	glViewport(0,0,*width,*height);
+	glViewport(0,0,*Settings::Instance()->winWidth,*Settings::Instance()->winHeight);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	float nheight = 0.5f * ((float)(*height) / *width);
+	float nheight = 0.5f * ((float)(*Settings::Instance()->winHeight) / *Settings::Instance()->winWidth);
 	glFrustum(-0.5f,0.5f,-nheight,nheight,1.0f,10000.0f);
 
 	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
@@ -32,15 +32,14 @@ void Camera::place(unsigned int *width, unsigned int *height)
 	glLoadIdentity();
 }
 
-void Camera::follow(unsigned int *width, unsigned int *height, CritterB *c, float crittersightrange)
+// FIXME as in take the REAL camera of the critter to look at
+void Camera::follow(CritterB *c)
 {
-	glViewport(0,0,*width,*height);
-
+	float nheight = 0.05f * ((float)(*Settings::Instance()->winHeight) / *Settings::Instance()->winWidth);
+	glViewport(0,0,*Settings::Instance()->winWidth,*Settings::Instance()->winHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
-	float nheight = 0.05f * ((float)(*height) / *width);
-	glFrustum(-0.05f,0.05f,-nheight,nheight,0.1f,crittersightrange);
+	glFrustum( -0.05f, 0.05f,-nheight,nheight, 0.1f, c->sightrange);
 
 	glRotatef(c->rotation, 0.0f, -1.0f, 0.0f);
 	glTranslatef(-c->cameraposition.x, -c->cameraposition.y, -c->cameraposition.z);

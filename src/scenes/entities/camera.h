@@ -1,6 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "../../utils/settings.h"
 #include "GL/gl.h"
 #include "vector3f.h"
 #include "critterb.h"
@@ -19,8 +20,8 @@ public:
 
 	unsigned int sensitivity;
 
-	void place(unsigned int *width, unsigned int *height);
-	void follow(unsigned int *width, unsigned int *height, CritterB *c, float crittersightrange);
+	void place();
+	void follow(CritterB *c);
 
 	void lookRight(const float& factor);
 	void lookLeft(const float& factor);

@@ -2,24 +2,7 @@
 
 WorldB::WorldB()
 {
-	critter_flipnewborns = false;
-	critter_randomrotatenewborns = false;
-
-	brain_mutate_minsynapsesatbuildtime = false;
-	brain_mutate_maxsynapsesatbuildtime = false;
-	brain_mutate_percentchanceinhibitoryneuron = false;
-	brain_mutate_percentchanceconsistentsynapses = false;
-
-	brain_mutate_percentchanceinhibitorysynapses = false;
-	brain_mutate_percentchancemotorneuron = false;
-	brain_mutate_percentchanceplasticneuron = false;
-	brain_mutate_plasticityfactors = false;
-
-	brain_mutate_percentchancesensorysynapse = false;
-	brain_mutate_minfiringthreshold = false;
-	brain_mutate_maxfiringthreshold = false;
-	brain_mutate_maxdendridicbranches = false;
-	brain_mutate_mutateeffects = false;
+	settings = Settings::Instance();
 
 	selectedCritter		= 0;
 	isSelected		= false;
@@ -142,7 +125,7 @@ void WorldB::resize(unsigned int newsize)
 
 void WorldB::startfoodamount(unsigned int amount)
 {
-	freeEnergy		= food_maxenergy * amount;
+	freeEnergy		= settings->food_maxenergy * amount;
 	freeEnergyInfo		= freeEnergy;
 }
 
@@ -150,10 +133,10 @@ void WorldB::process()
 {
 
 	// Autosave Critters?
-	if ( critter_autosaveinterval > 0 )
+	if ( settings->critter_autosaveinterval > 0 )
 	{
 		autosaveCounter += Timer::Instance()->elapsed;
-		if ( autosaveCounter > critter_autosaveinterval )
+		if ( autosaveCounter > settings->critter_autosaveinterval )
 		{
 			autosaveCounter = 0.0f;
 			saveAllCritters();
@@ -180,15 +163,15 @@ void WorldB::process()
 	}
 
 	// Insert Food
-	while ( freeEnergy >= food_maxenergy )
+	while ( freeEnergy >= settings->food_maxenergy )
 	{
-		insertRandomFood(1, food_maxenergy);
-		freeEnergy -= food_maxenergy;
+		insertRandomFood(1, settings->food_maxenergy);
+		freeEnergy -= settings->food_maxenergy;
 		//cerr << "food: " << food.size() << endl;
 	}
 
 	// insert critter if < minimum
-	if ( critters.size() < mincritters ) insertCritter();
+	if ( critters.size() < settings->mincritters ) insertCritter();
 
 	// Remove food
 	for( unsigned int i=0; i < food.size(); i++)
@@ -205,7 +188,7 @@ void WorldB::process()
 			}
 
 			// old food, this should remove stuff from corners
-			else if ( ++food[i]->totalFrames >= food_maxlifetime )
+			else if ( ++food[i]->totalFrames >= settings->food_maxlifetime )
 			{
 				freeEnergy += food[i]->energy;
 				delete food[i];
@@ -230,7 +213,7 @@ void WorldB::process()
 			}
 
 			// old corpse
-			else if ( ++corpses[i]->totalFrames >= corpse_maxlifetime )
+			else if ( ++corpses[i]->totalFrames >= settings->corpse_maxlifetime )
 			{
 				freeEnergy += corpses[i]->energy;
 				delete corpses[i];
@@ -251,14 +234,14 @@ void WorldB::process()
 			i--;
 		}
 		// see if died from bullet
-		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames && critters[i]->wasShot )
+		else if ( critters[i]->totalFrames > settings->critter_maxlifetime && critters[i]->wasShot )
 		{
 			cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: killed" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// die of old age
-		else if ( critters[i]->totalFrames > critters[i]->maxtotalFrames )
+		else if ( critters[i]->totalFrames > settings->critter_maxlifetime )
 		{
 			cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: old age" << endl;
 			removeCritter(i);
@@ -272,103 +255,23 @@ void WorldB::process()
 	// for all critters do
 	for( unsigned int i=0; i < critters.size(); i++)
 	{
-		CritterB *c = critters[i];
-
-		c->place();
-
-		// draw everything in it's sight
-
-//			draw floor;
-			glPushMatrix();
-				glScalef( floor.gridsize, floor.gridsize, floor.gridsize );
-				glCallList(displayLists+2);
-			glPopMatrix();
-
-			for( unsigned int j=0; j < critters.size(); j++)
-			{
-				CritterB *f = critters[j];
-				if ( c->isWithinSight(f->position) )
-				{
-					glPushMatrix();
-						glColor4f( f->color[0], f->color[1], f->color[2], f->color[3] );
-						glTranslatef( f->position.x, f->position.y, f->position.z );
-						glRotatef( f->rotation, 0.0, 1.0, 0.0 );
-						glScalef( f->size, f->size, f->size );
-						glCallList(displayLists+1);
-					glPopMatrix();
-				}
-			}
-
-			glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
-			for( unsigned int j=0; j < food.size(); j++)
-			{
-				Food *f = food[j];
-				if ( c->isWithinSight(f->position) )
-				{
-					glPushMatrix();
-						glTranslatef( f->position.x, f->position.y, f->position.z );
-						glScalef( f->size, f->size, f->size );
-						glCallList(displayLists);
-					glPopMatrix();
-				}
-			}
-		
-			glColor4f( 0.0f, 0.5f, 0.0f, 0.5f );
-			for( unsigned int j=0; j < corpses.size(); j++)
-			{
-				Corpse *f = corpses[j];
-				if ( c->isWithinSight(f->position) )
-				{
-					glPushMatrix();
-						glTranslatef( f->position.x, f->position.y, f->position.z );
-						glScalef( f->size, f->size, f->size );
-						glCallList(displayLists);
-					glPopMatrix();
-				}
-			}
-		
-			glColor4f( 0.5f, 0.5f, 0.0f, 0.0f );
-			for( unsigned int j=0; j < walls.size(); j++)
-			{
-				Wall *f = walls[j];
-				if ( !f->disabled && c->isWithinSight(f->position) )
-				{
-					glPushMatrix();
-						glTranslatef( f->position.x, f->position.y, f->position.z );
-						glScalef( f->size, f->size, f->size );
-						glCallList(displayLists);
-					glPopMatrix();
-				}
-			}
-		
-			glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
-			for( unsigned int j=0; j < bullets.size(); j++)
-			{
-				Bullet *f = bullets[j];
-				if ( c->isWithinSight(f->position) )
-				{
-					glPushMatrix();
-						glTranslatef( f->position.x, f->position.y, f->position.z );
-						glScalef( f->size, f->size, f->size );
-						glCallList(displayLists);
-					glPopMatrix();
-				}
-			}
+		critters[i]->place();
+		drawWithinCritterSight(i);
 	}
 
 	// Read pixels into retina
 	if ( critters.size() > 0 )
 	{
 		// determine width
-		unsigned int picwidth = (retinasperrow * (critter_retinasize+1));
+		unsigned int picwidth = (settings->retinasperrow * (settings->critter_retinasize+1));
 
 		// determine height
-		unsigned int picheight = critter_retinasize;
+		unsigned int picheight = settings->critter_retinasize;
 		unsigned int rows = critters.size();
-		while ( rows > retinasperrow )
+		while ( rows > settings->retinasperrow )
 		{
-			picheight += critter_retinasize;
-			rows -= retinasperrow;
+			picheight += settings->critter_retinasize;
+			rows -= settings->retinasperrow;
 		}
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 	}
@@ -435,8 +338,8 @@ void WorldB::process()
 					// is food
 					if ( c->touchingFood )
 					{
-						float eaten = c->maxEnergyLevel / 50.0f;
-						if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
+						float eaten = settings->critter_maxenergy / 50.0f;
+						if ( c->energyLevel + eaten > settings->critter_maxenergy ) eaten -= (c->energyLevel + eaten) - settings->critter_maxenergy;
 						if ( food[c->touchedFoodID]->energy - eaten < 0 ) eaten = food[c->touchedFoodID]->energy;
 			
 						c->energyLevel += eaten;
@@ -446,7 +349,7 @@ void WorldB::process()
 					// is poison
 					if ( c->touchingCorpse )
 					{
-						float eaten = c->maxEnergyLevel / 50.0f;
+						float eaten = settings->critter_maxenergy / 50.0f;
 						if ( c->energyLevel - eaten < 0.0f ) eaten = c->energyLevel;
 						if ( corpses[c->touchedCorpseID]->energy - eaten < 0.0f ) eaten = corpses[c->touchedCorpseID]->energy;
 			
@@ -465,8 +368,8 @@ void WorldB::process()
 					// is food
 					if ( c->touchingCorpse )
 					{
-						float eaten = c->maxEnergyLevel / 50.0f;
-						if ( c->energyLevel + eaten > critter_maxenergy ) eaten -= (c->energyLevel + eaten) - critter_maxenergy;
+						float eaten = settings->critter_maxenergy / 50.0f;
+						if ( c->energyLevel + eaten > settings->critter_maxenergy ) eaten -= (c->energyLevel + eaten) - settings->critter_maxenergy;
 						if ( corpses[c->touchedCorpseID]->energy - eaten < 0.0f ) eaten = corpses[c->touchedCorpseID]->energy;
 			
 						c->energyLevel += eaten;
@@ -476,7 +379,7 @@ void WorldB::process()
 					// is poison
 					if ( c->touchingFood )
 					{
-						float eaten = c->maxEnergyLevel / 50.0f;
+						float eaten = settings->critter_maxenergy / 50.0f;
 						if ( c->energyLevel - eaten < 0.0f ) eaten = c->energyLevel;
 						if ( food[c->touchedFoodID]->energy - eaten < 0.0f ) eaten = food[c->touchedFoodID]->energy;
 			
@@ -504,8 +407,8 @@ void WorldB::process()
 							c->carriesFood = true;
 
 							// calculate a new speedfactor depending on food energy
-							float halfcrspeed = (critter_speed / 2.0f);
-							c->speedfactor = halfcrspeed + (halfcrspeed - ((c->foodBeingCarried->energy/food_maxenergy)*halfcrspeed) );
+							float halfcrspeed = (settings->critter_speed / 2.0f);
+							c->speedfactor = halfcrspeed + (halfcrspeed - ((c->foodBeingCarried->energy/settings->food_maxenergy)*halfcrspeed) );
 
 							c->foodBeingCarried->isCarried = true;
 							c->foodBeingCarried->position.x = c->position.x;
@@ -521,7 +424,7 @@ void WorldB::process()
 				else if ( c->carriesFood ) // ! else
 				{
 					c->carriesFood = false;
-					c->speedfactor = critter_speed;
+					c->speedfactor = settings->critter_speed;
 					c->foodBeingCarried->isCarried = false;
 					c->foodBeingCarried->position.y -= c->size;
 					//cerr << "DROPPING" << endl;
@@ -538,8 +441,8 @@ void WorldB::process()
 							c->carriesCorpse = true;
 
 							// calculate a new speedfactor depending on corpse energy
-							float halfcrspeed = (critter_speed / 2.0f);
-							c->speedfactor = halfcrspeed + (halfcrspeed - ((c->corpseBeingCarried->energy/corpse_maxenergy)*halfcrspeed) );
+							float halfcrspeed = (settings->critter_speed / 2.0f);
+							c->speedfactor = halfcrspeed + (halfcrspeed - ((c->corpseBeingCarried->energy/settings->corpse_maxenergy)*halfcrspeed) );
 
 							c->corpseBeingCarried->isCarried = true;
 							c->corpseBeingCarried->position.x = c->position.x;
@@ -555,7 +458,7 @@ void WorldB::process()
 				else if ( c->carriesCorpse ) // ! else
 				{
 					c->carriesCorpse = false;
-					c->speedfactor = critter_speed;
+					c->speedfactor = settings->critter_speed;
 					c->corpseBeingCarried->isCarried = false;
 					c->corpseBeingCarried->position.y -= c->size;
 					//cerr << "DROPPING" << endl;
@@ -567,7 +470,7 @@ void WorldB::process()
 			{
 				//cerr << "critter " << i << "(ad:" << c->adamdist << ") FIRES\n";
 				c->fireTimeCount = 0;
-				float used = c->maxEnergyLevel * 0.01f;
+				float used = settings->critter_maxenergy * 0.01f;
 				c->energyLevel -= used;
 				freeEnergy += used;
 	
@@ -588,7 +491,7 @@ void WorldB::process()
 				float avgSize = (c->size + b->size) / 2;
 				if ( fabs(c->position.x - b->position.x) <= avgSize && fabs(c->position.z - b->position.z) <= avgSize )
 				{
-					c->totalFrames += (c->maxtotalFrames/2) ;
+					c->totalFrames += (settings->critter_maxlifetime/2) ;
 					c->wasShot = true;
 					delete b;
 					bullets.erase(bullets.begin()+f);
@@ -611,17 +514,17 @@ void WorldB::process()
 					newpos.x += c->reuseRotSinY * (2.0f*c->halfsize + 0.01);
 					newpos.z += c->reuseRotCosY * (2.0f*c->halfsize + 0.01);
 
-					if (spotIsFree(newpos, critter_size, i))
+					if (spotIsFree(newpos, settings->critter_size, i))
 					{
 
 						CritterB *nc = new CritterB(*c);
 
 						// mutate or not
 						bool mutant = false;
-						if ( randgen.get(1,100) <= critter_mutationrate )
+						if ( randgen.get(1,100) <= settings->critter_mutationrate )
 						{
 							mutant = true;
-							nc->mutate(critter_maxmutations, critter_percentchangetype);
+							nc->mutate();
 						}
 
 						// same positions / rotation
@@ -629,7 +532,8 @@ void WorldB::process()
 						nc->rotation = c->rotation;
 						nc->prepNewPoss();
 
-						prepCritter(nc);
+						nc->setup();
+						nc->retina = retina;
 
 						cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: ";
 						if ( c->crittertype == 1 ) cerr << "C";
@@ -640,7 +544,7 @@ void WorldB::process()
 						if ( mutant ) cerr << " (m)";
 
 						// optional rotate 180 of new borne
-						if ( critter_flipnewborns ) nc->rotation = nc->rotation + 180.0f;
+						if ( settings->critter_flipnewborns ) nc->rotation = nc->rotation + 180.0f;
 
 						// split energies in half
 						nc->energyLevel = c->energyLevel/2.0f;
@@ -649,7 +553,7 @@ void WorldB::process()
 						// reset procreation energy count
 						c->procreateTimeCount = 0;
 	
-						nc->calcFramePos(critters.size(), retinasperrow);
+						nc->calcFramePos(critters.size());
 
 						c->moveToNewPoss();
 						nc->moveToNewPoss();
@@ -670,40 +574,23 @@ void WorldB::process()
 	{
 		timedInsertsCounter++;
 
-		if ( timedInsertsCounter == 3*critter_maxlifetime )
+		if ( timedInsertsCounter == 3*settings->critter_maxlifetime )
 		{
 			cerr << "inserting 100 food" << endl;
 
-			freeEnergyInfo += food_maxenergy * 100.0f;
-			freeEnergy += food_maxenergy * 100.0f;
+			freeEnergyInfo += settings->food_maxenergy * 100.0f;
+			freeEnergy += settings->food_maxenergy * 100.0f;
 		}
-		else if ( timedInsertsCounter == (3*critter_maxlifetime)+1 )
+		else if ( timedInsertsCounter == (3*settings->critter_maxlifetime)+1 )
 		{
 			cerr << "removing 100 food" << endl;
 
-			freeEnergyInfo -= food_maxenergy * 100.0f;
-			freeEnergy -= food_maxenergy * 100.0f;
+			freeEnergyInfo -= settings->food_maxenergy * 100.0f;
+			freeEnergy -= settings->food_maxenergy * 100.0f;
 
 			timedInsertsCounter = 0;
 		}
 	}
-}
-
-void WorldB::prepCritter(CritterB *c)
-{
-	c->resize(critter_size);
-
-	c->speedfactor = critter_speed;
-	c->maxEnergyLevel = critter_maxenergy;
-	c->maxtotalFrames = critter_maxlifetime;
-	c->sightrange = critter_sightrange;
-	c->procreateTimeTrigger = critter_maxlifetime / critter_maxchildren;
-	c->fireTimeTrigger = critter_maxlifetime / critter_maxbullets;
-	c->minprocenergyLevel = critter_minenergyproc;
-	c->minfireenergyLevel = critter_minenergyfire;
-
-	c->setup();
-	c->retina = retina;
 }
 
 void WorldB::toggleTimedInserts()
@@ -721,9 +608,9 @@ void WorldB::insertRandomFood(int amount, float energy)
 	for ( int i=0; i < amount; i++ )
 	{
 		Food *f = new Food;
-		f->maxenergy = food_maxenergy;
+		f->maxenergy = settings->food_maxenergy;
 		f->energy = energy;
-		f->maxsize = food_size;
+		f->maxsize = settings->food_size;
 		f->position = findEmptySpace(f->size);
 
 		f->resize();
@@ -737,74 +624,15 @@ void WorldB::insertCritter()
 
 	critters.push_back( c );
 
-	c->brain.maxNeurons					= brain_maxneurons;
-	c->brain.minSynapses					= brain_minsynapses;
-	c->brain.maxSynapses					= brain_maxsynapses;
-
-	c->brain.minNeuronsAtBuildtime				= brain_minneuronsatbuildtime;
-	c->brain.maxNeuronsAtBuildtime				= brain_maxneuronsatbuildtime;
-
-	c->brain.minSynapsesAtBuildtime				= brain_minsynapsesatbuildtime;
-		c->brain.mutate_minSynapsesAtBuildtime		= brain_mutate_minsynapsesatbuildtime;
-
-	c->brain.maxSynapsesAtBuildtime				= brain_maxsynapsesatbuildtime;
-		c->brain.mutate_maxSynapsesAtBuildtime		= brain_mutate_maxsynapsesatbuildtime;
-
-	c->brain.percentChanceInhibitoryNeuron			= brain_percentchanceinhibitoryneuron;
-		c->brain.mutate_percentChanceInhibitoryNeuron	= brain_mutate_percentchanceinhibitoryneuron;
-
-	c->brain.percentChanceConsistentSynapses		= brain_percentchanceconsistentsynapses;
-		c->brain.mutate_percentChanceConsistentSynapses	= brain_mutate_percentchanceconsistentsynapses;
-
-	c->brain.percentChanceInhibitorySynapses		= brain_percentchanceinhibitorysynapses;
-		c->brain.mutate_percentChanceInhibitorySynapses	= brain_mutate_percentchanceinhibitorysynapses;
-
-	c->brain.percentChanceMotorNeuron			= brain_percentchancemotorneuron;
-		c->brain.mutate_percentChanceMotorNeuron	= brain_mutate_percentchancemotorneuron;
-
-	c->brain.percentChancePlasticNeuron			= brain_percentchanceplasticneuron;
-		c->brain.mutate_percentChancePlasticNeuron	= brain_mutate_percentchanceplasticneuron;
-
-	c->brain.minPlasticityStrengthen			= brain_minplasticitystrengthen;
-	c->brain.maxPlasticityStrengthen			= brain_maxplasticitystrengthen;
-	c->brain.minPlasticityWeaken				= brain_minplasticityweaken;
-	c->brain.maxPlasticityWeaken				= brain_maxplasticityweaken;
-		c->brain.mutate_PlasticityFactors		= brain_mutate_plasticityfactors;
-
-	c->brain.percentChanceSensorySynapse			= brain_percentchancesensorysynapse;
-		c->brain.mutate_percentChanceSensorySynapse	= brain_mutate_percentchancesensorysynapse;
-
-	c->brain.minFiringThreshold				= brain_minfiringthreshold;
-		c->brain.mutate_minFiringThreshold		= brain_mutate_minfiringthreshold;
-
-	c->brain.maxFiringThreshold				= brain_maxfiringthreshold;
-		c->brain.mutate_maxFiringThreshold		= brain_mutate_maxfiringthreshold;
-
-	c->brain.maxDendridicBranches				= brain_maxdendridicbranches;
-		c->brain.mutate_maxDendridicBranches		= brain_mutate_maxdendridicbranches;
-
-	c->brain.percentMutateEffectAddNeuron			= brain_percentmutateeffectaddneuron;
-	c->brain.percentMutateEffectRemoveNeuron		= brain_percentmutateeffectremoveneuron;
-	c->brain.percentMutateEffectAlterNeuron			= brain_percentmutateeffectalterneuron;
-	c->brain.percentMutateEffectAddSynapse			= brain_percentmutateeffectaddsynapse;
-	c->brain.percentMutateEffectRemoveSynapse		= brain_percentmutateeffectremovesynapse;
-		c->brain.mutate_MutateEffects			= brain_mutate_mutateeffects;
-
-	c->colorNeurons = critter_colorneurons;
-	c->retinasize = critter_retinasize;
-	c->calcInputOutputNeurons();
-
-	c->brain.buildArch();
-	c->rotation = randgen.get( 0, 360 );
-
-	c->energyLevel		= critter_startenergy;
-
-	prepCritter(c);
-
-	// record it's energy
+	// start energy
+	c->energyLevel = settings->critter_startenergy;
 	freeEnergy -= c->energyLevel;
 
 	positionCritterB(critters.size()-1);
+	c->rotation = randgen.get( 0, 360 );
+
+	c->setup();
+	c->retina = retina;
 }
 
 void WorldB::positionCritterB(unsigned int cid)
@@ -813,26 +641,26 @@ void WorldB::positionCritterB(unsigned int cid)
 	critters[cid]->newposition.y = critters[cid]->halfsize;
 	critters[cid]->moveToNewPoss();
 
-	critters[cid]->calcFramePos(cid, retinasperrow);
+	critters[cid]->calcFramePos(cid);
 	critters[cid]->calcCamPos();
 }
 
 void WorldB::removeCritter(unsigned int cid)
 {
 	bool hasCorpse = false;
-	if ( critters[cid]->energyLevel > 0.0f && corpse_maxlifetime > 0 )
+	if ( critters[cid]->energyLevel > 0.0f && settings->corpse_maxlifetime > 0 )
 	{
 		hasCorpse = true;
 
 		Corpse *c = new Corpse;
-		c->maxenergy = corpse_maxenergy;
-		c->maxsize = corpse_size;
+		c->maxenergy = settings->corpse_maxenergy;
+		c->maxsize = settings->corpse_size;
 		c->position = critters[cid]->position;
 
 		// put max energy allowed in corpse
-		if ( critters[cid]->energyLevel > corpse_maxenergy )
+		if ( critters[cid]->energyLevel > settings->corpse_maxenergy )
 		{
-			c->energy = corpse_maxenergy;
+			c->energy = settings->corpse_maxenergy;
 		}
 		else
 		{
@@ -851,14 +679,14 @@ void WorldB::removeCritter(unsigned int cid)
 // 	if ( critters[cid]->energyLevel > 0.0f )
 // 	{
 // 		Food *f = new Food;
-// 		f->maxenergy = food_maxenergy;
-// 		f->maxsize = food_size;
-// 		f->maxtotalFrames = food_maxlifetime;
+// 		f->maxenergy = settings->food_maxenergy;
+// 		f->maxsize = settings->food_size;
+// 		f->maxtotalFrames = settings->food_maxlifetime;
 // 		f->position = critters[cid]->position;
 // 
-// 		if ( critters[cid]->energyLevel > food_maxenergy )
+// 		if ( critters[cid]->energyLevel > settings->food_maxenergy )
 // 		{
-// 			f->energy = food_maxenergy;
+// 			f->energy = settings->food_maxenergy;
 // 		}
 // 		else
 // 		{
@@ -871,7 +699,7 @@ void WorldB::removeCritter(unsigned int cid)
 // 
 // 		// put 50% of energy in food, rest back in space
 // 
-// 		//f->resize(food_size);
+// 		//f->resize(settings->food_size);
 // 		f->resize();
 // 		food.push_back( f );
 // 	}
@@ -911,7 +739,7 @@ void WorldB::removeCritter(unsigned int cid)
 
 	for ( unsigned int c = cid; c < critters.size(); c++ )
 	{
-		critters[c]->calcFramePos(c, retinasperrow);
+		critters[c]->calcFramePos(c);
 	}
 }
 
@@ -942,6 +770,93 @@ void WorldB::toggleGate(unsigned int wid)
 	if ( wid < walls.size() ) walls[wid]->toggle();
 }
 
+void WorldB::drawWithinCritterSight(unsigned int cid)
+{
+	CritterB *c = critters[cid];
+	//c->place();
+
+	// draw everything in it's sight
+
+//	draw floor;
+	glPushMatrix();
+		glScalef( floor.gridsize, floor.gridsize, floor.gridsize );
+		glCallList(displayLists+2);
+	glPopMatrix();
+
+	for( unsigned int j=0; j < critters.size(); j++)
+	{
+		if ( cid != j )
+		{
+			CritterB *f = critters[j];
+			if ( c->isWithinSight(f->position) )
+			{
+				glPushMatrix();
+					glColor4f( f->color[0], f->color[1], f->color[2], f->color[3] );
+					glTranslatef( f->position.x, f->position.y, f->position.z );
+					glRotatef( f->rotation, 0.0, 1.0, 0.0 );
+					glScalef( f->size, f->size, f->size );
+					glCallList(displayLists+1);
+				glPopMatrix();
+			}
+		}
+	}
+
+	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
+	for( unsigned int j=0; j < food.size(); j++)
+	{
+		Food *f = food[j];
+		if ( c->isWithinSight(f->position) )
+		{
+			glPushMatrix();
+				glTranslatef( f->position.x, f->position.y, f->position.z );
+				glScalef( f->size, f->size, f->size );
+				glCallList(displayLists);
+			glPopMatrix();
+		}
+	}
+
+	glColor4f( 0.5f, 0.0f, 0.0f, 0.5f );
+	for( unsigned int j=0; j < corpses.size(); j++)
+	{
+		Corpse *f = corpses[j];
+		if ( c->isWithinSight(f->position) )
+		{
+			glPushMatrix();
+				glTranslatef( f->position.x, f->position.y, f->position.z );
+				glScalef( f->size, f->size, f->size );
+				glCallList(displayLists);
+			glPopMatrix();
+		}
+	}
+
+	glColor4f( 0.5f, 0.5f, 0.0f, 0.0f );
+	for( unsigned int j=0; j < walls.size(); j++)
+	{
+		Wall *f = walls[j];
+		if ( !f->disabled && c->isWithinSight(f->position) )
+		{
+			glPushMatrix();
+				glTranslatef( f->position.x, f->position.y, f->position.z );
+				glScalef( f->size, f->size, f->size );
+				glCallList(displayLists);
+			glPopMatrix();
+		}
+	}
+
+	glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
+	for( unsigned int j=0; j < bullets.size(); j++)
+	{
+		Bullet *f = bullets[j];
+		if ( c->isWithinSight(f->position) )
+		{
+			glPushMatrix();
+				glTranslatef( f->position.x, f->position.y, f->position.z );
+				glScalef( f->size, f->size, f->size );
+				glCallList(displayLists);
+			glPopMatrix();
+		}
+	}
+}
 
 void WorldB::drawWithGrid()
 {
@@ -1021,22 +936,6 @@ void WorldB::drawWithGrid()
 	}
 }
 
-// min critter control
-void WorldB::increaseMincritters()
-{
-	mincritters++;
-}
-
-void WorldB::decreaseMincritters()
-{
-	if ( mincritters > 0 ) mincritters--;
-}
-
-void WorldB::setMincritters(unsigned int c)
-{
-	mincritters = c;
-}
-
 void WorldB::loadAllCritters()
 {
 	vector<string> files;
@@ -1054,26 +953,25 @@ void WorldB::loadAllCritters()
 
 			unsigned int error = 0;
 
-			if ( c->retinasize != critter_retinasize ) error = 1;
+			if ( c->retinasize != settings->critter_retinasize ) error = 1;
 
 			if ( !error)
 			{
 				critters.push_back( c );
 
+				// start energy
+				c->energyLevel = settings->critter_startenergy;
+				freeEnergy -= c->energyLevel;
+
+				positionCritterB(critters.size()-1);
 				c->rotation = randgen.get( 0, 360 );
 
-				c->energyLevel		= critter_startenergy;
-
-				prepCritter(c);
-
-				// record it's energy
-				freeEnergy -= c->energyLevel;
-				positionCritterB(critters.size()-1);
+				c->setup();
+				c->retina = retina;
 			}
-
-			if ( error == 1 )
+			else if ( error == 1 )
 			{
-				cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << critter_retinasize << ")" << endl;
+				cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << endl;
 			}
 		}
 	}
@@ -1274,78 +1172,79 @@ void WorldB::printSettings()
 	cout << endl << "CURRENT SETTINGS" << endl << endl;
 	cout << "Global Settings" << endl;
 	cout << "  World size                  = " << size << "x" << size << endl;
-	cout << "  Energy in system            = " << freeEnergyInfo/food_maxenergy << "*" << food_maxenergy << " = " << freeEnergyInfo << endl;
-	cout << "  Minimal amount of critters  = " << mincritters << endl;
-	cout << "  Retinas per row             = " << retinasperrow << endl;
+	cout << "  Energy in system            = " << freeEnergyInfo/settings->food_maxenergy << "*" << settings->food_maxenergy << " = " << freeEnergyInfo << endl;
+	cout << "  Minimal amount of critters  = " << settings->mincritters << endl;
+	cout << "  Retinas per row             = " << settings->retinasperrow << endl;
 
 	cout << endl << "Critter Settings" << endl;
-	cout << "  max Lifetime                = " << critter_maxlifetime << endl;
-	cout << "  max Energy                  = " << critter_maxenergy << endl;
-	cout << "  Energy at start             = " << critter_startenergy << endl;
-	cout << "  max Children                = " << critter_maxchildren << endl;
-	cout << "  max Bullets                 = " << critter_maxbullets << endl;
-	cout << "  min Energy for procreation  = " << critter_minenergyproc << endl;
-	cout << "  max Energy for firing       = " << critter_minenergyfire << endl;
+	cout << "  max Lifetime                = " << settings->critter_maxlifetime << endl;
+	cout << "  max Energy                  = " << settings->critter_maxenergy << endl;
+	cout << "  Energy at start             = " << settings->critter_startenergy << endl;
+	cout << "  Procreation Interval        = " << settings->critter_procinterval << endl;
+	cout << "  Fire Interval               = " << settings->critter_fireinterval << endl;
+	cout << "  min Energy for procreation  = " << settings->critter_minenergyproc << endl;
+	cout << "  max Energy for firing       = " << settings->critter_minenergyfire << endl;
 
-	cout << "  Size                        = " << critter_size*100.0f << endl;
-	cout << "  Speed                       = " << critter_speed*1000.0f << endl;
-	cout << "  Sight range                 = " << critter_sightrange*10.0f << endl;
-	cout << "  Retina size                 = " << critter_retinasize << endl;
-	cout << "  Color neurons               = " << critter_colorneurons << endl;
-	cout << "  Mutationrate                = " << critter_mutationrate << endl;
-	cout << "  max Mutations / mutant      = " << critter_maxmutations << endl;
-	cout << "  % Mutants change type       = " << critter_percentchangetype << endl;
-	cout << "  Flip newborns               = " << critter_flipnewborns << endl;
+	cout << "  Size                        = " << settings->critter_size*100.0f << endl;
+	cout << "  Speed                       = " << settings->critter_speed*1000.0f << endl;
+	cout << "  Sight range                 = " << settings->critter_sightrange*10.0f << endl;
+	cout << "  Retina size                 = " << settings->critter_retinasize << endl;
+	cout << "  Color neurons               = " << settings->critter_colorneurons << endl;
+	cout << "  Mutationrate                = " << settings->critter_mutationrate << endl;
+	cout << "  max Mutations / mutant      = " << settings->critter_maxmutations << endl;
+	cout << "  % Mutants change type       = " << settings->critter_percentchangetype << endl;
+	cout << "  Flip newborns               = " << settings->critter_flipnewborns << endl;
+	cout << "  Rotate newborns randomly    = " << settings->critter_randomrotatenewborns << endl;
 
 	cout << endl << "Food Settings" << endl;
-	cout << "  max Lifetime                = " << food_maxlifetime << endl;
-	cout << "  max Energy                  = " << food_maxenergy << endl;
-	cout << "  Size                        = " << food_size*100.0f << endl;
+	cout << "  max Lifetime                = " << settings->food_maxlifetime << endl;
+	cout << "  max Energy                  = " << settings->food_maxenergy << endl;
+	cout << "  Size                        = " << settings->food_size*100.0f << endl;
 
 	cout << endl << "Corpse Settings" << endl;
-	cout << "  max Lifetime                = " << corpse_maxlifetime << endl;
-	cout << "  max Energy                  = " << corpse_maxenergy << endl;
-	cout << "  Size                        = " << corpse_size*100.0f << endl;
+	cout << "  max Lifetime                = " << settings->corpse_maxlifetime << endl;
+	cout << "  max Energy                  = " << settings->corpse_maxenergy << endl;
+	cout << "  Size                        = " << settings->corpse_size*100.0f << endl;
 
 	cout << endl << "Brain Settings" << endl;
-	cout << "  max Neurons per critter     = " << brain_maxneurons << endl;
-	cout << "  min Synapses per neuron     = " << brain_minsynapses << endl;
-	cout << "  max Synapses per neuron     = " << brain_maxsynapses << endl;
-	cout << "  min Neurons at build time   = " << brain_minneuronsatbuildtime << endl;
-	cout << "  max Neurons at build time   = " << brain_maxneuronsatbuildtime << endl;
-	cout << "  min Synapses at build time  = " << brain_minsynapsesatbuildtime << endl;
-	cout << "    mutate                    = " << brain_mutate_minsynapsesatbuildtime << endl;
-	cout << "  max Synapses at build time  = " << brain_maxsynapsesatbuildtime << endl;
-	cout << "    mutate                    = " << brain_mutate_maxsynapsesatbuildtime << endl;
-	cout << "  % Inhibitory neuron         = " << brain_percentchanceinhibitoryneuron << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitoryneuron << endl;
-	cout << "  % Motor neuron              = " << brain_percentchancemotorneuron << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchancemotorneuron << endl;
-	cout << "  % Plastic neuron            = " << brain_percentchanceplasticneuron << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceplasticneuron << endl;
-	cout << "  min Plasticity strengthen   = " << brain_minplasticitystrengthen << endl;
-	cout << "  max Plasticity strengthen   = " << brain_maxplasticitystrengthen << endl;
-	cout << "  min Plasticity weaken       = " << brain_minplasticityweaken << endl;
-	cout << "  max Plasticity weaken       = " << brain_maxplasticityweaken << endl;
-	cout << "    mutate plasticityfactors  = " << brain_mutate_plasticityfactors << endl;
-	cout << "  min Firing threshold        = " << brain_minfiringthreshold << endl;
-	cout << "    mutate                    = " << brain_mutate_minfiringthreshold << endl;
-	cout << "  max Firing threshold        = " << brain_maxfiringthreshold << endl;
-	cout << "    mutate                    = " << brain_mutate_maxfiringthreshold << endl;
-	cout << "  max Dendridic branches      = " << brain_maxdendridicbranches << endl;
-	cout << "    mutate                    = " << brain_mutate_maxdendridicbranches << endl;
-	cout << "  % Consistent synapses       = " << brain_percentchanceconsistentsynapses << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceconsistentsynapses << endl;
-	cout << "  % Inhibitory synapses       = " << brain_percentchanceinhibitorysynapses << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchanceinhibitorysynapses << endl;
-	cout << "  % Sensory Synapse           = " << brain_percentchancesensorysynapse << endl;
-	cout << "    mutate                    = " << brain_mutate_percentchancesensorysynapse << endl;
-	cout << "  % Effect: add neuron        = " << brain_percentmutateeffectaddneuron << endl;
-	cout << "  % Effect: remove neuron     = " << brain_percentmutateeffectremoveneuron << endl;
-	cout << "  % Effect: alter neuron      = " << brain_percentmutateeffectalterneuron << endl;
-	cout << "  % Effect: add synapse       = " << brain_percentmutateeffectaddsynapse << endl;
-	cout << "  % Effect: remove synapse    = " << brain_percentmutateeffectremovesynapse << endl;
-	cout << "    mutate effects            = " << brain_mutate_mutateeffects << endl;
+	cout << "  max Neurons per critter     = " << settings->brain_maxneurons << endl;
+	cout << "  min Synapses per neuron     = " << settings->brain_minsynapses << endl;
+	cout << "  max Synapses per neuron     = " << settings->brain_maxsynapses << endl;
+	cout << "  min Neurons at build time   = " << settings->brain_minneuronsatbuildtime << endl;
+	cout << "  max Neurons at build time   = " << settings->brain_maxneuronsatbuildtime << endl;
+	cout << "  min Synapses at build time  = " << settings->brain_minsynapsesatbuildtime << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_minsynapsesatbuildtime << endl;
+	cout << "  max Synapses at build time  = " << settings->brain_maxsynapsesatbuildtime << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_maxsynapsesatbuildtime << endl;
+	cout << "  % Inhibitory neuron         = " << settings->brain_percentchanceinhibitoryneuron << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_percentchanceinhibitoryneuron << endl;
+	cout << "  % Motor neuron              = " << settings->brain_percentchancemotorneuron << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_percentchancemotorneuron << endl;
+	cout << "  % Plastic neuron            = " << settings->brain_percentchanceplasticneuron << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_percentchanceplasticneuron << endl;
+	cout << "  min Plasticity strengthen   = " << settings->brain_minplasticitystrengthen << endl;
+	cout << "  max Plasticity strengthen   = " << settings->brain_maxplasticitystrengthen << endl;
+	cout << "  min Plasticity weaken       = " << settings->brain_minplasticityweaken << endl;
+	cout << "  max Plasticity weaken       = " << settings->brain_maxplasticityweaken << endl;
+	cout << "    mutate plasticityfactors  = " << settings->brain_mutate_plasticityfactors << endl;
+	cout << "  min Firing threshold        = " << settings->brain_minfiringthreshold << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_minfiringthreshold << endl;
+	cout << "  max Firing threshold        = " << settings->brain_maxfiringthreshold << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_maxfiringthreshold << endl;
+	cout << "  max Dendridic branches      = " << settings->brain_maxdendridicbranches << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_maxdendridicbranches << endl;
+	cout << "  % Consistent synapses       = " << settings->brain_percentchanceconsistentsynapses << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_percentchanceconsistentsynapses << endl;
+	cout << "  % Inhibitory synapses       = " << settings->brain_percentchanceinhibitorysynapses << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_percentchanceinhibitorysynapses << endl;
+	cout << "  % Sensory Synapse           = " << settings->brain_percentchancesensorysynapse << endl;
+	cout << "    mutate                    = " << settings->brain_mutate_percentchancesensorysynapse << endl;
+	cout << "  % Effect: add neuron        = " << settings->brain_percentmutateeffectaddneuron << endl;
+	cout << "  % Effect: remove neuron     = " << settings->brain_percentmutateeffectremoveneuron << endl;
+	cout << "  % Effect: alter neuron      = " << settings->brain_percentmutateeffectalterneuron << endl;
+	cout << "  % Effect: add synapse       = " << settings->brain_percentmutateeffectaddsynapse << endl;
+	cout << "  % Effect: remove synapse    = " << settings->brain_percentmutateeffectremovesynapse << endl;
+	cout << "    mutate effects            = " << settings->brain_mutate_mutateeffects << endl;
 
 	cout << endl << "BUTTONS" << endl << endl;
 	cout << "Engine / World Operations" << endl;
@@ -1388,6 +1287,7 @@ void WorldB::printSettings()
 WorldB::~WorldB()
 {
 	for ( unsigned int i=0; i < food.size(); i++ )		delete food[i];
+	for ( unsigned int i=0; i < corpses.size(); i++ )	delete corpses[i];
 	for ( unsigned int i=0; i < bullets.size(); i++ )	delete bullets[i];
 	for ( unsigned int i=0; i < critters.size(); i++ )	delete critters[i];
 	free(retina);

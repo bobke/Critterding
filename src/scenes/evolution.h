@@ -4,6 +4,7 @@
 #include "../gl/glscene.h"
 #include "../utils/timer.h"
 #include "../utils/fps.h"
+#include "../utils/settings.h"
 #include "entities/camera.h"
 #include "entities/worldb.h"
 
@@ -28,9 +29,9 @@ class Evolution : public GLScene {
 		Camera camera;
 
 		WorldB world;
-		bool exit_if_empty;
 
 	private:
+		Settings *settings;
 		Fps fps;
 
 		bool drawCVNeurons;

@@ -29,9 +29,6 @@ class GLScene {
 		virtual void handlekey(const KeySym& key);
 
 		virtual void clean();
-
-		unsigned int *width;
-		unsigned int *height;
 };
 
 #endif	// GLSCENE_H
