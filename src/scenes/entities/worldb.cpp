@@ -615,12 +615,9 @@ void WorldB::insertRandomFood(int amount, float energy)
 	for ( int i=0; i < amount; i++ )
 	{
 		Food *f = new Food;
-		f->maxenergy = settings->food_maxenergy;
 		f->energy = energy;
-		f->maxsize = settings->food_size;
-		f->position = findEmptySpace(f->size);
-
 		f->resize();
+		f->position = findEmptySpace(f->size);
 		food.push_back( f );
 	}
 }
@@ -660,8 +657,6 @@ void WorldB::removeCritter(unsigned int cid)
 		hasCorpse = true;
 
 		Corpse *c = new Corpse;
-		c->maxenergy = settings->corpse_maxenergy;
-		c->maxsize = settings->corpse_size;
 		c->position = critters[cid]->position;
 
 		// put max energy allowed in corpse

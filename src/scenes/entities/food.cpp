@@ -2,23 +2,18 @@
 
 Food::Food()
 {
-	maxsize		= 0.0f;
- 	maxenergy	= 0.0f;
-
-	size		= maxsize;
- 	energy		= maxenergy;
-
+	settings	= Settings::Instance();
 	totalFrames	= 0;
-
 	isCarried	= false;
 }
 
 void Food::resize()
 {
 	// spillover failsafe
-	if ( energy > maxenergy ) energy = maxenergy;
+	if ( energy > settings->food_maxenergy )
+		energy = settings->food_maxenergy;
 
-	size = (maxsize / maxenergy) * energy;
+	size = settings->food_lifeenergyratio * energy;
 
 	halfsize = size / 2.0f;
 
