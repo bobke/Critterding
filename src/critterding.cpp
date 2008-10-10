@@ -299,6 +299,8 @@ int main(int argc, char *argv[])
 		settings->food_size = (float)settings->food_sizeI / 100.0f;
 		settings->corpse_size = (float)settings->corpse_sizeI / 100.0f;
 
+		settings->food_lifeenergyratio = settings->food_size / settings->food_maxenergy;
+		settings->corpse_lifeenergyratio = settings->corpse_size / settings->corpse_maxenergy;
 
 		// global
 		mainscene.world.resize(settings->worldsize);

@@ -27,8 +27,8 @@ Settings::Settings()
 	critter_sightrangeI		= 40;
 	critter_retinasize		= 7;
 	critter_colorneurons		= 3;
-	critter_mutationrate		= 8;
-	critter_maxmutations		= 3;
+	critter_mutationrate		= 10;
+	critter_maxmutations		= 10;
 	critter_percentchangetype	= 0;
 	critter_flipnewborns		= false;
 	critter_randomrotatenewborns	= false;
@@ -42,6 +42,9 @@ Settings::Settings()
 	corpse_maxlifetime		= 1000;
 	corpse_maxenergy		= 2500;
 	corpse_sizeI			= 15;
+
+	food_lifeenergyratio		= 0;
+	corpse_lifeenergyratio		= 0;
 
 	brain_maxneurons		= 1000;
 	brain_minsynapses		= 1;

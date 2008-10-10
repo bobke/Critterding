@@ -54,6 +54,8 @@ class Settings
 		unsigned int corpse_sizeI;
 		float corpse_size;
 
+		float food_lifeenergyratio;
+		float corpse_lifeenergyratio;
 
 		unsigned int brain_maxneurons;
 		unsigned int brain_minsynapses;

@@ -3,6 +3,7 @@
 
 #include "GL/gl.h"
 #include "vector3f.h"
+#include "../../utils/settings.h"
 #include <vector>
 #include <iostream>
 
@@ -18,9 +19,6 @@ class Food
 		float			halfsize;
 		float			energy;
 
-		float			maxsize;
-		float			maxenergy;
-
 		Vector3f		position;
 
 		unsigned int		totalFrames;
@@ -29,6 +27,7 @@ class Food
 
 		void			resize();
 	private:
+		Settings		*settings;
 };
 
 #endif
