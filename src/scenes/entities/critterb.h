@@ -99,6 +99,7 @@ class CritterB
 		void			process();
 		void			resize(float newsize);
 
+		void			setRotation(unsigned int r);
 		void			calcFramePos(unsigned int pos);
 		void			calcCamPos();
 		void			printVision();
@@ -125,6 +126,8 @@ class CritterB
 
 		Settings		*settings;
 		Parser			parseH;
+		RandGen			*randgen;
+		//RandGen			randgen;
 
 		// frame capturing options
 		unsigned int		components;
@@ -140,8 +143,6 @@ class CritterB
 		unsigned int		visionPosition;
 
 		unsigned int		motorneuronsfired;
-
-		RandGen			randgen;
 
 		void			initConst();
 		void			procInputNeurons();

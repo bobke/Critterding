@@ -136,7 +136,8 @@ class Brainz
 	private:
 		// utilities
 			Parser			parseH;
-			RandGen			randgen;
+			//RandGen		randgen;
+			RandGen			*randgen;
 
 		// vectors
 			vector<ArchNeuronz>	ArchNeurons;

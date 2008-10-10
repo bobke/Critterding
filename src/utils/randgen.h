@@ -6,21 +6,21 @@
 
 using namespace std;
 
-class RandGen{
-
+class RandGen
+{
 	public:
-		RandGen();
-		~RandGen();
+		static RandGen* Instance();
 
 		unsigned int		get(unsigned int minimum, unsigned int maximum);
-
+	protected:
+		RandGen();
 	private:
+		static RandGen* _instance;
 
 		struct timezone		timer_tz;
 		struct timeval		now;
 
 		unsigned int		count;
-
 };
 
 #endif

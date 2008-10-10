@@ -1,5 +1,11 @@
 #include "randgen.h"
 
+RandGen* RandGen::Instance () 
+{
+	static RandGen t;
+	return &t; // _instance isn't needed in this case
+}
+
 RandGen::RandGen()
 {
 	gettimeofday(&now, &timer_tz);
@@ -25,10 +31,3 @@ unsigned int RandGen::get(unsigned int minimum, unsigned int maximum)
 		return minimum;
 	}
 }
-
-
-RandGen::~RandGen()
-{
-}
-
-

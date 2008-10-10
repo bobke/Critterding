@@ -48,6 +48,7 @@ class Settings
 		unsigned int food_sizeI;
 		float food_size;
 
+		bool corpse_enable;
 		unsigned int corpse_maxlifetime;
 		unsigned int corpse_maxenergy;
 		unsigned int corpse_sizeI;

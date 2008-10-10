@@ -50,14 +50,9 @@ void Camera::follow(CritterB *c)
 
 // Moving
 
-void Camera::moveForward(const float& factor)
+void Camera::moveForwardXZ(const float& factor)
 {
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
-
-//	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
-// 	position.x += sin(reusedY) * cos(reusedX) * factor * sensitivity;
-// 	position.y -= sin(reusedX) * factor * sensitivity;
-// 	position.z += cos(reusedY) * cos(reusedX) * factor * sensitivity;
 
 	position.x += sin(reusedY) * factor * sensitivity;
 	position.z += cos(reusedY) * factor * sensitivity;
@@ -66,17 +61,38 @@ void Camera::moveForward(const float& factor)
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
 }
 
-void Camera::moveBackward(const float& factor)
+void Camera::moveBackwardXZ(const float& factor)
 {
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-//	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
-//	position.x -= sin(reusedY) * cos(reusedX) * factor * sensitivity;
-//	position.y += sin(reusedX) * factor * sensitivity;
-//	position.z -= cos(reusedY) * cos(reusedX) * factor * sensitivity;
-
 	position.x -= sin(reusedY) * factor * sensitivity;
 	position.z -= cos(reusedY) * factor * sensitivity;
+
+/*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
+}
+
+void Camera::moveForwardXYZ(const float& factor)
+{
+	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
+	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
+
+	position.x += sin(reusedY) * cos(reusedX) * factor * sensitivity;
+	position.y -= sin(reusedX) * factor * sensitivity;
+	position.z += cos(reusedY) * cos(reusedX) * factor * sensitivity;
+
+/*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
+}
+
+void Camera::moveBackwardXYZ(const float& factor)
+{
+	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
+	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
+
+	position.x -= sin(reusedY) * cos(reusedX) * factor * sensitivity;
+	position.y += sin(reusedX) * factor * sensitivity;
+	position.z -= cos(reusedY) * cos(reusedX) * factor * sensitivity;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/

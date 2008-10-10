@@ -83,7 +83,7 @@ Brainz::Brainz()
 			ArchNeurons.clear();
 	
 		// determine number of neurons this brain will start with
-			unsigned int NeuronAmount = randgen.get( minNeuronsAtBuildtime, maxNeuronsAtBuildtime );
+			unsigned int NeuronAmount = randgen->Instance()->get( minNeuronsAtBuildtime, maxNeuronsAtBuildtime );
 	
 		// create the architectural neurons
 			for ( unsigned i = 0; i < NeuronAmount; i++ ) addRandomArchNeuron();
@@ -92,7 +92,7 @@ Brainz::Brainz()
 		for ( unsigned neuronID = 0; neuronID < NeuronAmount; neuronID++ )
 		{
 			// determine amount of synapses this neuron will start with
-				unsigned int SynapseAmount = randgen.get( minSynapsesAtBuildtime, maxSynapsesAtBuildtime );
+				unsigned int SynapseAmount = randgen->Instance()->get( minSynapsesAtBuildtime, maxSynapsesAtBuildtime );
 
 			// create the architectural neurons
 				for ( unsigned j = 0; j < SynapseAmount; j++ ) addRandomArchSynapse(neuronID);
@@ -106,13 +106,13 @@ Brainz::Brainz()
 			ArchNeuronz an;
 
 		// is it inhibitory ?
-			if ( randgen.get(1,100) <= percentChanceInhibitoryNeuron )
+			if ( randgen->Instance()->get(1,100) <= percentChanceInhibitoryNeuron )
 				an.isInhibitory = true;
 
 		// if not, is it motor ?
-			else if ( randgen.get(1,100) <= percentChanceMotorNeuron )
+			else if ( randgen->Instance()->get(1,100) <= percentChanceMotorNeuron )
 			{
-				unsigned int motorFunc = randgen.get( 0, numberOfOutputs-1 );
+				unsigned int motorFunc = randgen->Instance()->get( 0, numberOfOutputs-1 );
 
 				// check if motor already used
 				bool proceed = true;
@@ -127,30 +127,30 @@ Brainz::Brainz()
 			}
 
 		// does it have synaptic plasticity ?
-			if ( randgen.get(1,100) <= percentChancePlasticNeuron )
+			if ( randgen->Instance()->get(1,100) <= percentChancePlasticNeuron )
 			{
 				an.isPlastic = true;
-				an.plasticityStrengthen = randgen.get( minPlasticityStrengthen, maxPlasticityStrengthen );
-				an.plasticityWeaken = randgen.get( minPlasticityWeaken, maxPlasticityWeaken );
+				an.plasticityStrengthen = randgen->Instance()->get( minPlasticityStrengthen, maxPlasticityStrengthen );
+				an.plasticityWeaken = randgen->Instance()->get( minPlasticityWeaken, maxPlasticityWeaken );
 			}
 
 		// does it have consistent synapses ?
-			if ( randgen.get(1,100) <= percentChanceConsistentSynapses )
+			if ( randgen->Instance()->get(1,100) <= percentChanceConsistentSynapses )
 			{
 				an.hasConsistentSynapses = true;
 
 				// if so, does it have inhibitory synapses ?
-					if ( randgen.get(1,100) <= percentChanceInhibitorySynapses )
+					if ( randgen->Instance()->get(1,100) <= percentChanceInhibitorySynapses )
 						an.hasInhibitorySynapses = true;
 			}
 
 		// determine firing threshold
 			if ( an.isMotor ) an.firingThreshold = maxFiringThreshold;
-			else an.firingThreshold = randgen.get( minFiringThreshold, maxFiringThreshold );
+			else an.firingThreshold = randgen->Instance()->get( minFiringThreshold, maxFiringThreshold );
 
 		// determine dendritic branches
 			if ( an.isMotor ) an.dendridicBranches = maxDendridicBranches;
-			else an.dendridicBranches = randgen.get( 1, maxDendridicBranches );
+			else an.dendridicBranches = randgen->Instance()->get( 1, maxDendridicBranches );
 			
 
 		// push it on the vector
@@ -164,23 +164,23 @@ Brainz::Brainz()
 	
 		// is it connected to a sensor neuron ?
 										// < 2 because if only 1 archneuron, it can't connect to other one
-			if ( randgen.get( 1, 100 ) <= percentChanceSensorySynapse || ArchNeurons.size() < 2 )
+			if ( randgen->Instance()->get( 1, 100 ) <= percentChanceSensorySynapse || ArchNeurons.size() < 2 )
 			{
 				as.isSensorNeuron = true;
 
 				// sensor neuron id synapse is connected to
-				as.neuronID = randgen.get( 0, numberOfInputs-1 );
+				as.neuronID = randgen->Instance()->get( 0, numberOfInputs-1 );
 
 			}
 		// if not determine inter neuron id
 	 		else
 			{
 				// as in real life, neurons can connect to themselves
-				as.neuronID = randgen.get( 0, ArchNeurons.size()-1 );
+				as.neuronID = randgen->Instance()->get( 0, ArchNeurons.size()-1 );
 	 		}
 	
 		// dendrite branch number
-			as.dendriteBranch = randgen.get( 1, ArchNeurons[parentneuron].dendridicBranches );
+			as.dendriteBranch = randgen->Instance()->get( 1, ArchNeurons[parentneuron].dendridicBranches );
 
 		// synaptic weight
 			if ( ArchNeurons[parentneuron].hasConsistentSynapses )
@@ -192,7 +192,7 @@ Brainz::Brainz()
 			}
 			else
 			{
-				if ( randgen.get(1,100) <= percentChanceInhibitorySynapses )
+				if ( randgen->Instance()->get(1,100) <= percentChanceInhibitorySynapses )
 					as.weight	=-1.0f;
 				else
 					as.weight	=1.0f;
@@ -279,13 +279,13 @@ Brainz::Brainz()
 
 		if ( runs == 0 )
 		{
-			runs = randgen.get(1, (int)(totalSynapses/(100/percentMutation)));
+			runs = randgen->Instance()->get(1, (int)(totalSynapses/(100/percentMutation)));
 		}
 
 		for ( unsigned int i=0; i < runs; i++ )
 		{
 
-			unsigned int mode = randgen.get(1,100);
+			unsigned int mode = randgen->Instance()->get(1,100);
 
 		// add a new neuron
 			if ( mode <= percentMutateEffectAddNeuron )
@@ -301,7 +301,7 @@ Brainz::Brainz()
 					int maxSynapsesAtMutation = (2*(totalSynapses/totalNeurons)) + minSynapsesAtBuildtime;
 					//cerr << "2*(" << totalSynapses << "/" << totalNeurons << "):" << maxSynapsesAtMutation << endl;
 
-					unsigned int cAmount = randgen.get( minSynapsesAtBuildtime, maxSynapsesAtMutation );
+					unsigned int cAmount = randgen->Instance()->get( minSynapsesAtBuildtime, maxSynapsesAtMutation );
 					for ( unsigned j = 0; j < cAmount; j++ )
 					{
 						addRandomArchSynapse(nid);
@@ -316,7 +316,7 @@ Brainz::Brainz()
 				if ( ArchNeurons.size() > 0 )
 				{
 					// pick a random neuron
-					unsigned int nid = randgen.get( 0, ArchNeurons.size()-1 );
+					unsigned int nid = randgen->Instance()->get( 0, ArchNeurons.size()-1 );
 					//cerr << "\t-N " << nid << endl;
 
 					// first remove all connections to this neuron
@@ -353,10 +353,10 @@ Brainz::Brainz()
 				{
 
 					// pick a random neuron
-						unsigned int nid = randgen.get( 0, ArchNeurons.size()-1 );
+						unsigned int nid = randgen->Instance()->get( 0, ArchNeurons.size()-1 );
 
 					// decide what to alter
-						unsigned int jmode = randgen.get(1,6);
+						unsigned int jmode = randgen->Instance()->get(1,6);
 
 					// inhibitory function
 						if ( jmode == 1 )
@@ -368,7 +368,7 @@ Brainz::Brainz()
 							ArchNeurons[nid].isInhibitory = false;
 
 							// redetermine
-							if ( randgen.get(1,100) <= percentChanceInhibitoryNeuron )
+							if ( randgen->Instance()->get(1,100) <= percentChanceInhibitoryNeuron )
 								ArchNeurons[nid].isInhibitory = true;
 
 							// make sure we mutate
@@ -386,9 +386,9 @@ Brainz::Brainz()
 							ArchNeurons[nid].motorFunc = 0;
 
 							// redetermine
-							if ( !ArchNeurons[nid].isInhibitory && randgen.get(1,100) <= percentChanceMotorNeuron )
+							if ( !ArchNeurons[nid].isInhibitory && randgen->Instance()->get(1,100) <= percentChanceMotorNeuron )
 							{
-								unsigned int motorFunc = randgen.get( 0, numberOfOutputs-1 );
+								unsigned int motorFunc = randgen->Instance()->get( 0, numberOfOutputs-1 );
 								bool proceed = true;
 								for ( unsigned int i=0; i < ArchNeurons.size(); i++ )
 									if ( ArchNeurons[i].isMotor && ArchNeurons[i].motorFunc == motorFunc ) proceed = false;
@@ -417,11 +417,11 @@ Brainz::Brainz()
 							ArchNeurons[nid].plasticityWeaken = 1;
 
 							// redetermine
-							if ( randgen.get(1,100) <= percentChancePlasticNeuron )
+							if ( randgen->Instance()->get(1,100) <= percentChancePlasticNeuron )
 							{
 								ArchNeurons[nid].isPlastic = true;
-								ArchNeurons[nid].plasticityStrengthen = randgen.get( minPlasticityStrengthen, maxPlasticityStrengthen );
-								ArchNeurons[nid].plasticityWeaken = randgen.get( minPlasticityWeaken, maxPlasticityWeaken );
+								ArchNeurons[nid].plasticityStrengthen = randgen->Instance()->get( minPlasticityStrengthen, maxPlasticityStrengthen );
+								ArchNeurons[nid].plasticityWeaken = randgen->Instance()->get( minPlasticityWeaken, maxPlasticityWeaken );
 							}
 
 							// make sure we mutate
@@ -439,12 +439,12 @@ Brainz::Brainz()
 							ArchNeurons[nid].hasConsistentSynapses = false;
 
 							// redetermine
-							if ( randgen.get(1,100) <= percentChanceConsistentSynapses )
+							if ( randgen->Instance()->get(1,100) <= percentChanceConsistentSynapses )
 							{
 								ArchNeurons[nid].hasConsistentSynapses = true;
 				
 								// if so, does it have inhibitory synapses ?
-									if ( randgen.get(1,100) <= percentChanceInhibitorySynapses )
+									if ( randgen->Instance()->get(1,100) <= percentChanceInhibitorySynapses )
 										ArchNeurons[nid].hasInhibitorySynapses = true;
 							}
 
@@ -458,7 +458,7 @@ Brainz::Brainz()
 							// backup old
 							unsigned int old = ArchNeurons[nid].firingThreshold;
 
-							ArchNeurons[nid].firingThreshold = randgen.get( minFiringThreshold, maxFiringThreshold );
+							ArchNeurons[nid].firingThreshold = randgen->Instance()->get( minFiringThreshold, maxFiringThreshold );
 
 							// make sure we mutate
 							if ( old == ArchNeurons[nid].firingThreshold ) runs++;
@@ -470,7 +470,7 @@ Brainz::Brainz()
 							// backup old
 							unsigned int old = ArchNeurons[nid].dendridicBranches;
 
-							ArchNeurons[nid].dendridicBranches = randgen.get( 1, maxDendridicBranches );
+							ArchNeurons[nid].dendridicBranches = randgen->Instance()->get( 1, maxDendridicBranches );
 
 							// make sure we mutate
 							if ( old == ArchNeurons[nid].dendridicBranches ) runs++;
@@ -485,7 +485,7 @@ Brainz::Brainz()
 				if ( ArchNeurons.size() > 0 )
 				{
 					// pick a random neuron
-					unsigned int nid = randgen.get( 0, ArchNeurons.size()-1 );
+					unsigned int nid = randgen->Instance()->get( 0, ArchNeurons.size()-1 );
 
 					// don't go over maximum connections
 					if ( ArchNeurons[nid].ArchSynapses.size() < maxSynapses )
@@ -504,13 +504,13 @@ Brainz::Brainz()
 				if ( ArchNeurons.size() > 0 )
 				{
 					// pick a random neuron
-					unsigned int nid = randgen.get( 0, ArchNeurons.size()-1 );
+					unsigned int nid = randgen->Instance()->get( 0, ArchNeurons.size()-1 );
 
 					// don't go under minimum connections
 					if ( ArchNeurons[nid].ArchSynapses.size() > minSynapses )
 					{
 						//cerr << "\t-C " << nid << endl;
-						unsigned int sID = randgen.get(0, ArchNeurons[nid].ArchSynapses.size()-1);
+						unsigned int sID = randgen->Instance()->get(0, ArchNeurons[nid].ArchSynapses.size()-1);
 						//delete ArchNeurons[nid].ArchSynapses[connid];
 						ArchNeurons[nid].ArchSynapses.erase(ArchNeurons[nid].ArchSynapses.begin()+sID);
 					}
@@ -522,12 +522,12 @@ Brainz::Brainz()
 		// change a mutatable
 			else
 			{
-				unsigned int imode = randgen.get(1,14);
+				unsigned int imode = randgen->Instance()->get(1,14);
 
 				if ( imode == 1 && mutate_percentChanceInhibitoryNeuron )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && percentChanceInhibitoryNeuron < 100-factor )	percentChanceInhibitoryNeuron+=factor;
 					else if ( percentChanceInhibitoryNeuron > 0+factor )		percentChanceInhibitoryNeuron-=factor;
@@ -535,8 +535,8 @@ Brainz::Brainz()
 
 				else if ( imode == 2 && mutate_percentChanceConsistentSynapses )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && percentChanceConsistentSynapses < 100-factor )	percentChanceConsistentSynapses+=factor;
 					else if ( percentChanceConsistentSynapses > 0+factor )			percentChanceConsistentSynapses-=factor;
@@ -544,8 +544,8 @@ Brainz::Brainz()
 
 				else if ( imode == 3 && mutate_percentChanceInhibitorySynapses )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && percentChanceInhibitorySynapses < 100-factor )	percentChanceInhibitorySynapses+=factor;
 					else if ( percentChanceInhibitorySynapses > 0+factor )			percentChanceInhibitorySynapses-=factor;
@@ -553,8 +553,8 @@ Brainz::Brainz()
 
 				else if ( imode == 4 && mutate_percentChanceMotorNeuron )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && percentChanceMotorNeuron < 100-factor )	percentChanceMotorNeuron+=factor;
 					else if ( percentChanceMotorNeuron > 0+factor )			percentChanceMotorNeuron-=factor; // !!! > 1
@@ -562,8 +562,8 @@ Brainz::Brainz()
 
 				else if ( imode == 5 && mutate_percentChancePlasticNeuron )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && percentChancePlasticNeuron < 100-factor )	percentChancePlasticNeuron+=factor;
 					else if ( percentChancePlasticNeuron > 0+factor )		percentChancePlasticNeuron-=factor;
@@ -571,8 +571,8 @@ Brainz::Brainz()
 
 				else if ( imode == 6 && mutate_percentChanceSensorySynapse )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && percentChanceSensorySynapse < 100-factor )	percentChanceSensorySynapse+=factor;
 					else if ( percentChanceSensorySynapse > minSynapses+factor )	percentChanceSensorySynapse-=factor;
@@ -580,8 +580,8 @@ Brainz::Brainz()
 
 				else if ( imode == 7 && mutate_minSynapsesAtBuildtime )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && minSynapsesAtBuildtime < maxSynapsesAtBuildtime-factor )	minSynapsesAtBuildtime+=factor;
 					else if ( minSynapsesAtBuildtime > 1+factor )					minSynapsesAtBuildtime-=factor; // !!! > 1
@@ -589,8 +589,8 @@ Brainz::Brainz()
 
 				else if ( imode == 8 && mutate_maxSynapsesAtBuildtime )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && maxSynapsesAtBuildtime < maxSynapses-factor )	maxSynapsesAtBuildtime+=factor; // !!! < maxSynapses
 					else if ( maxSynapsesAtBuildtime > minSynapsesAtBuildtime+factor )	maxSynapsesAtBuildtime-=factor; // !!! > minSynapsesAtBuildtime
@@ -598,8 +598,8 @@ Brainz::Brainz()
 
 				else if ( imode == 9 && mutate_minFiringThreshold )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && minFiringThreshold < maxFiringThreshold-factor )	minFiringThreshold+=factor; // watch out idd
 					else if ( minFiringThreshold > 1+factor )				minFiringThreshold-=factor; // !!! > 1
@@ -607,8 +607,8 @@ Brainz::Brainz()
 
 				else if ( imode == 10 && mutate_maxFiringThreshold )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && maxFiringThreshold < 1000-factor )		maxFiringThreshold+=factor;
 					else if ( maxFiringThreshold > minFiringThreshold+factor )	maxFiringThreshold-=factor; // !!! > minFiringThreshold
@@ -616,8 +616,8 @@ Brainz::Brainz()
 
 				else if ( imode == 11 && mutate_maxDendridicBranches )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && maxDendridicBranches < 100-factor )	maxDendridicBranches+=factor;
 					else if ( maxDendridicBranches > 1+factor )		maxDendridicBranches-=factor; // !!! > 1
@@ -625,8 +625,8 @@ Brainz::Brainz()
 
 				else if ( imode == 12 && mutate_percentMutation )
 				{
-					unsigned int jmode = randgen.get(1,2);
-					unsigned int factor = randgen.get(1,5);
+					unsigned int jmode = randgen->Instance()->get(1,2);
+					unsigned int factor = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && percentMutation < 100-factor )	percentMutation+=factor;
 					else if ( percentMutation > 1+factor )			percentMutation-=factor; // !!! > 1 or no more mutation at all
@@ -635,10 +635,10 @@ Brainz::Brainz()
 				else if ( imode == 13 && mutate_MutateEffects )
 				{
 					// up or down
-					unsigned int jmode = randgen.get(1,2);
+					unsigned int jmode = randgen->Instance()->get(1,2);
 
 					// which of 5
-					unsigned int kmode = randgen.get(1,5);
+					unsigned int kmode = randgen->Instance()->get(1,5);
 
 					if ( jmode == 1 && percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron + percentMutateEffectAlterNeuron + percentMutateEffectAddSynapse + percentMutateEffectRemoveSynapse < 99 ) // !!! not 100 or we'll never come here again
 					{
@@ -661,13 +661,13 @@ Brainz::Brainz()
 				else if ( imode == 14 && mutate_PlasticityFactors )
 				{
 					// up or down
-					unsigned int jmode = randgen.get(1,2);
+					unsigned int jmode = randgen->Instance()->get(1,2);
 
 					// which of 4
-					unsigned int kmode = randgen.get(1,4);
+					unsigned int kmode = randgen->Instance()->get(1,4);
 
 					// factor
-					unsigned int factor = randgen.get(10,1000);
+					unsigned int factor = randgen->Instance()->get(10,1000);
 
 					if ( jmode == 1 )
 					{
