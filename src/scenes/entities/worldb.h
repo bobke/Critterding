@@ -69,7 +69,8 @@ class WorldB
 	private:
 
 		Settings		*settings;
-		RandGen			randgen;
+		//RandGen			randgen;
+		RandGen			*randgen;
 
 		vector<Food*>		food;
 		vector<Corpse*>		corpses;

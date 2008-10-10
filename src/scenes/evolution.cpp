@@ -265,10 +265,10 @@ void Evolution::handlekey(const KeySym& key)
 			cerr << endl << "Camera Sensitivity: "<< camera.sensitivity << endl << endl;
 		break;
 		case XK_Up:
-			camera.moveForward(0.1f);
+			camera.moveForwardXZ(0.1f);
 		break;
 		case XK_Down:
-			camera.moveBackward(0.1f);
+			camera.moveBackwardXZ(0.1f);
 		break;
 		case XK_Left:
 			camera.moveLeft(0.1f);

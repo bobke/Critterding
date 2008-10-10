@@ -22,7 +22,7 @@ class Vector3f {
 		float lengthsquared() const;
 		void normalize();
 		float dot(const Vector3f& vector);
-		void crossproduct(const Vector3f& v1, const Vector3f& v2);
+// 		void crossproduct(const Vector3f& v1, const Vector3f& v2);
 
 		float	x;
 		float	y;

@@ -29,7 +29,9 @@ class brainstore
 		brainstore();
 		~brainstore();
 
-		RandGen				randgen;
+		//RandGen			randgen;
+		RandGen				*randgen;
+
 
 		unsigned int			selectBrains;
 	

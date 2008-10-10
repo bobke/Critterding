@@ -49,7 +49,7 @@ extern "C" void *procCritters( void *ptr )
 					string* arch = other->brain.getArch();
 					bu->brain.setArch(arch);
 				
-					bu->brain.mutate( b->randgen.get( 1, 10 ) );
+					bu->brain.mutate( b->randgen->Instance()->get( 1, 10 ) );
 				
 					bu->brain.wireArch();
 				

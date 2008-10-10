@@ -78,12 +78,12 @@ float Vector3f::dot(const Vector3f& vector)
         return ( (x*vector.x) + (y*vector.y) + (z*vector.z) );
 }
 
-void Vector3f::crossproduct(const Vector3f& v1, const Vector3f& v2)
-{
-        float vx = v1.y*v2.z - v1.z*v2.y;
-        float vy = v1.z*v2.x - v1.x*v2.z;
-        float vz = v1.x*v2.y - v1.y*v2.x;
-}
+// void Vector3f::crossproduct(const Vector3f& v1, const Vector3f& v2)
+// {
+//         float vx = v1.y*v2.z - v1.z*v2.y;
+//         float vy = v1.z*v2.x - v1.x*v2.z;
+//         float vz = v1.x*v2.y - v1.y*v2.x;
+// }
 
 Vector3f::~Vector3f()
 {

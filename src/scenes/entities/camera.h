@@ -31,6 +31,10 @@ public:
 	void lookRollLeft(const float& factor);
 	void moveForward(const float& factor);
 	void moveBackward(const float& factor);
+	void moveForwardXZ(const float& factor);
+	void moveBackwardXZ(const float& factor);
+	void moveForwardXYZ(const float& factor);
+	void moveBackwardXYZ(const float& factor);
 	void moveRight(const float& factor);
 	void moveLeft(const float& factor);
 	void moveUp(const float& factor);

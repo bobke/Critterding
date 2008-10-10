@@ -88,9 +88,9 @@ CritterB::CritterB()
 		brain.mutate_MutateEffects				= settings->brain_mutate_mutateeffects;
 
 	// give it a random color
-	color[0] = (float)randgen.get( 50,100 ) / 100.0f;
-	color[1] = (float)randgen.get( 50,100 ) / 100.0f;
-	color[2] = (float)randgen.get( 50,100 ) / 100.0f;
+	color[0] = (float)randgen->Instance()->get( 50,100 ) / 100.0f;
+	color[1] = (float)randgen->Instance()->get( 50,100 ) / 100.0f;
+	color[2] = (float)randgen->Instance()->get( 50,100 ) / 100.0f;
 	color[3] = 0.0f;
 
 	items = retinasize * retinasize * components;
@@ -141,8 +141,6 @@ void CritterB::calcRotSinCos()
 
 void CritterB::setup()
 {
-	calcRotSinCos();
-
 //	colorDivider		= 256.0f / colorNeurons;
 	colorDivider		= 128.0f / colorNeurons;
 
@@ -410,7 +408,7 @@ void CritterB::mutate()
 	adamdist++;
 
 	// herbivore / carnivore switch
-	if ( randgen.get(1,100) <= settings->critter_percentchangetype )
+	if ( randgen->Instance()->get(1,100) <= settings->critter_percentchangetype )
 	{
 		if ( crittertype == 0 )
 			crittertype = 1;
@@ -419,21 +417,21 @@ void CritterB::mutate()
 	}
 
 	// mutate color
-	unsigned int mode = randgen.get(1,2);
-	unsigned int ncolor = randgen.get(0,2);
+	unsigned int mode = randgen->Instance()->get(1,2);
+	unsigned int ncolor = randgen->Instance()->get(0,2);
 
 	if ( mode == 1 )
 	{
-		color[ncolor] += (float)randgen.get(1,10)/120.0f;
+		color[ncolor] += (float)randgen->Instance()->get(1,10)/100.0f;
 		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
 	}
 	else
 	{
-		color[ncolor] -= (float)randgen.get(1,10)/120.0f;
+		color[ncolor] -= (float)randgen->Instance()->get(1,10)/100.0f;
 		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
 	}
 
-	unsigned int runs = randgen.get(1, settings->critter_maxmutations);
+	unsigned int runs = randgen->Instance()->get(1, settings->critter_maxmutations);
 	brain.mutate( runs ); // 0 for random
 }
 
@@ -612,6 +610,16 @@ void CritterB::resize(float newsize)
 	{
 		rotation -= speedfactor*20.0f;
 		if ( rotation < 0.0f ) rotation += 360.0f;
+
+		calcRotSinCos();
+		calcFrustrumTriangle();
+		calcCamPos();
+	}
+
+	void CritterB::setRotation(unsigned int r)
+	{
+		rotation = r;
+		if ( rotation > 360.0f ) rotation -= 360.0f;
 
 		calcRotSinCos();
 		calcFrustrumTriangle();

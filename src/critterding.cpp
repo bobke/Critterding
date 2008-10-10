@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 	helpinfo << "  --food_size                 [" << settings->food_sizeI << "]  Size of a food unit" << endl;
 	helpinfo << endl;
 	helpinfo << "  Corpse Settings" << endl;
-	helpinfo << "  --corpse_disable                  Sets corpse_maxlifetime=0, critter_percentchangetype=0" << endl;
+	helpinfo << "  --corpse_enable                   Enable corpses (act as poison)" << endl;
 	helpinfo << "  --corpse_maxlifetime      [" << settings->corpse_maxlifetime << "]  Maximum amount of frames a corpse exists" << endl;
 	helpinfo << "  --corpse_maxenergy        [" << settings->corpse_maxenergy << "]  Maximum amount of energy in a corpse unit" << endl;
 	helpinfo << "  --corpse_size               [" << settings->corpse_sizeI << "]  Size of a corpse unit" << endl;
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
 		else if ( checkSwitch("--critter_maxmutations", settings->critter_maxmutations, 1, 100, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_percentchangetype", settings->critter_percentchangetype, 0, 100, optind, argv) ) optind++;
 		else if (sw=="--critter_flipnewborns") settings->critter_flipnewborns = true;
-		else if (sw=="--critter_randomrotatenewborns") settings->critter_flipnewborns = true;
+		else if (sw=="--critter_randomrotatenewborns") settings->critter_randomrotatenewborns = true;
 		else if ( checkSwitch("--critter_autosaveinterval", settings->critter_autosaveinterval, 1, 1000000, optind, argv) ) optind++;
 
 	// Food Settings
@@ -198,12 +198,8 @@ int main(int argc, char *argv[])
 
 	// Corpse Settings
 
-		else if (sw=="--corpse_disable")
-		{
-			settings->corpse_maxlifetime = 0;
-			settings->critter_percentchangetype = 0;
-	        }
-		else if ( checkSwitch("--corpse_maxlifetime", settings->corpse_maxlifetime, 0, 1000000, optind, argv) ) optind++;
+		else if (sw=="--corpse_enable") settings->corpse_enable = true;
+		else if ( checkSwitch("--corpse_maxlifetime", settings->corpse_maxlifetime, 1, 1000000, optind, argv) ) optind++;
 		else if ( checkSwitch("--corpse_maxenergy", settings->corpse_maxenergy, 1, 1000000, optind, argv) ) optind++;
 		else if ( checkSwitch("--corpse_size", settings->corpse_sizeI, 1, 100, optind, argv) ) optind++;
 

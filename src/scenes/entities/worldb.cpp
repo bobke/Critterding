@@ -131,7 +131,6 @@ void WorldB::startfoodamount(unsigned int amount)
 
 void WorldB::process()
 {
-
 	// Autosave Critters?
 	if ( settings->critter_autosaveinterval > 0 )
 	{
@@ -143,23 +142,19 @@ void WorldB::process()
 		}
 	}
 
-
-
-	// Bullets
+	// Bullet movement
 	for( unsigned int i=0; i < bullets.size(); i++)
 	{
 		// forward it fires
 		bullets[i]->moveForward();
 
-		// check if outside world
-			// left border
-			if ( bullets[i]->totalSteps > 10 ) //bullets[i]->position.x - bullets[i]->halfsize <= 0 || bullets[i]->position.x + bullets[i]->halfsize >= size || bullets[i]->position.z - bullets[i]->halfsize <= 0 || bullets[i]->position.z + bullets[i]->halfsize >= size || 
-			{
-				delete bullets[i];
-				bullets.erase(bullets.begin()+i);
-				i--;
-			}
-		
+		// die of age
+		if ( bullets[i]->totalSteps > 10 )
+		{
+			delete bullets[i];
+			bullets.erase(bullets.begin()+i);
+			i--;
+		}
 	}
 
 	// Insert Food
@@ -521,7 +516,7 @@ void WorldB::process()
 
 						// mutate or not
 						bool mutant = false;
-						if ( randgen.get(1,100) <= settings->critter_mutationrate )
+						if ( randgen->Instance()->get(1,100) <= settings->critter_mutationrate )
 						{
 							mutant = true;
 							nc->mutate();
@@ -529,7 +524,21 @@ void WorldB::process()
 
 						// same positions / rotation
 						nc->position = newpos;
-						nc->rotation = c->rotation;
+
+						// optional rotate 180 of new borne
+						if ( settings->critter_flipnewborns )
+						{
+							nc->setRotation(c->rotation + 180.0f);
+						}
+						else if ( settings->critter_randomrotatenewborns )
+						{
+							nc->setRotation( randgen->Instance()->get(0,360) );
+						}
+						else
+						{
+							nc->setRotation(c->rotation);
+						}
+
 						nc->prepNewPoss();
 
 						nc->setup();
@@ -543,8 +552,6 @@ void WorldB::process()
 						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
 						if ( mutant ) cerr << " (m)";
 
-						// optional rotate 180 of new borne
-						if ( settings->critter_flipnewborns ) nc->rotation = nc->rotation + 180.0f;
 
 						// split energies in half
 						nc->energyLevel = c->energyLevel/2.0f;
@@ -629,7 +636,7 @@ void WorldB::insertCritter()
 	freeEnergy -= c->energyLevel;
 
 	positionCritterB(critters.size()-1);
-	c->rotation = randgen.get( 0, 360 );
+	c->setRotation( randgen->Instance()->get(0,360) );
 
 	c->setup();
 	c->retina = retina;
@@ -648,7 +655,7 @@ void WorldB::positionCritterB(unsigned int cid)
 void WorldB::removeCritter(unsigned int cid)
 {
 	bool hasCorpse = false;
-	if ( critters[cid]->energyLevel > 0.0f && settings->corpse_maxlifetime > 0 )
+	if ( critters[cid]->energyLevel > 0.0f && settings->corpse_enable )
 	{
 		hasCorpse = true;
 
@@ -659,13 +666,9 @@ void WorldB::removeCritter(unsigned int cid)
 
 		// put max energy allowed in corpse
 		if ( critters[cid]->energyLevel > settings->corpse_maxenergy )
-		{
 			c->energy = settings->corpse_maxenergy;
-		}
 		else
-		{
 			c->energy = critters[cid]->energyLevel;
-		}
 
 		// put rest back in space
 		freeEnergy += critters[cid]->energyLevel;
@@ -964,7 +967,7 @@ void WorldB::loadAllCritters()
 				freeEnergy -= c->energyLevel;
 
 				positionCritterB(critters.size()-1);
-				c->rotation = randgen.get( 0, 360 );
+				c->setRotation( randgen->Instance()->get(0,360) );
 
 				c->setup();
 				c->retina = retina;
@@ -1154,13 +1157,13 @@ bool WorldB::isTouchingAnything(float size, float x, float z)
 Vector3f WorldB::findEmptySpace(float objectsize)
 {
 	Vector3f pos;
-	pos.x = (float)randgen.get( 0, 100*size ) / 100;
-	pos.z = (float)randgen.get( 0, 100*size ) / 100;
+	pos.x = (float)randgen->Instance()->get( 0, 100*size ) / 100;
+	pos.z = (float)randgen->Instance()->get( 0, 100*size ) / 100;
 
 	while ( !spotIsFree(pos, objectsize) )
 	{
-		pos.x = (float)randgen.get( 0, 100*size ) / 100;
-		pos.z = (float)randgen.get( 0, 100*size ) / 100;
+		pos.x = (float)randgen->Instance()->get( 0, 100*size ) / 100;
+		pos.z = (float)randgen->Instance()->get( 0, 100*size ) / 100;
 	}
 	return pos;
 }
@@ -1248,7 +1251,7 @@ void WorldB::printSettings()
 
 	cout << endl << "BUTTONS" << endl << endl;
 	cout << "Engine / World Operations" << endl;
-	cout << "  F1            : print settings and toggle pause program" << endl;
+	cout << "  F1            : print settings and pause" << endl;
 	cout << "  F2            : show fps (100 frames average)" << endl << endl;
 	cout << "  F3/F4         : adjust minimum critters" << endl;
 	cout << "  F5/F6         : adjust energy in the system (by 25 units)" << endl;
