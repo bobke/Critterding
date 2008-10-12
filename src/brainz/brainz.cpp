@@ -960,36 +960,36 @@ Brainz::Brainz()
 	void Brainz::setArch(string* content)
 	{
 		string contentCopy = *content;
-		string line = parseH.returnUntillStrip( "\n", contentCopy );
+		string line = parseH->Instance()->returnUntillStrip( "\n", contentCopy );
 		while ( !line.empty() )
 		{
 			// neuron(ft=24|iwr=20|mtr=4|inputs(|s,78,6|s,186,-12|s,123,10|n,19,5|n,3,3|n,11,-19));
 
-			if ( parseH.beginMatchesStrip( "n(", line ) )
+			if ( parseH->Instance()->beginMatchesStrip( "n(", line ) )
 			{
 				ArchNeuronz an;
 //				unsigned int nid = (ArchNeurons.size()-1);
 	
-				if ( parseH.beginMatchesStrip( "i=", line ) )
+				if ( parseH->Instance()->beginMatchesStrip( "i=", line ) )
 				{
-					string II = parseH.returnUntillStrip( "|", line );
+					string II = parseH->Instance()->returnUntillStrip( "|", line );
 					//cerr << "II: " << II  << endl;
 					int isIt;
 					if(EOF == sscanf(II.c_str(), "%d", &isIt))				cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( isIt == 1 ) an.isInhibitory = true;
 				}
 
-				if ( parseH.beginMatchesStrip( "cs=", line ) )
+				if ( parseH->Instance()->beginMatchesStrip( "cs=", line ) )
 				{
-					string CS = parseH.returnUntillStrip( "|", line );
+					string CS = parseH->Instance()->returnUntillStrip( "|", line );
 					//cerr << "II: " << II  << endl;
 					int isItC;
 					if(EOF == sscanf(CS.c_str(), "%d", &isItC))				cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( isItC == 1 ) an.hasConsistentSynapses = true;
 
-					if ( parseH.beginMatchesStrip( "is=", line ) )
+					if ( parseH->Instance()->beginMatchesStrip( "is=", line ) )
 					{
-						string IS = parseH.returnUntillStrip( "|", line );
+						string IS = parseH->Instance()->returnUntillStrip( "|", line );
 						//cerr << "II: " << II  << endl;
 						int isIt;
 						if(EOF == sscanf(IS.c_str(), "%d", &isIt))				cerr << "ERROR INSERTING CRITTER" << endl;
@@ -997,45 +997,45 @@ Brainz::Brainz()
 					}
 				}
 
-				if ( parseH.beginMatchesStrip( "f=", line ) )
+				if ( parseH->Instance()->beginMatchesStrip( "f=", line ) )
 				{
-					string FT = parseH.returnUntillStrip( "|", line );
+					string FT = parseH->Instance()->returnUntillStrip( "|", line );
 					//cerr << "FT: " << FT  << endl;
 					if(EOF == sscanf(FT.c_str(), "%d", &an.firingThreshold))		cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
-				if ( parseH.beginMatchesStrip( "d=", line ) )
+				if ( parseH->Instance()->beginMatchesStrip( "d=", line ) )
 				{
-					string DB = parseH.returnUntillStrip( "|", line );
+					string DB = parseH->Instance()->returnUntillStrip( "|", line );
 					//cerr << "IWR: " << IWR  << endl;
 					if(EOF == sscanf(DB.c_str(), "%d", &an.dendridicBranches))		cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
-				if ( parseH.beginMatchesStrip( "m=", line ) )
+				if ( parseH->Instance()->beginMatchesStrip( "m=", line ) )
 				{
-					string MTR = parseH.returnUntillStrip( "|", line );
+					string MTR = parseH->Instance()->returnUntillStrip( "|", line );
 					//cerr << "MTR: " << MTR  << endl;
 					if(EOF == sscanf(MTR.c_str(), "%d", &an.motorFunc))			cerr << "ERROR INSERTING CRITTER" << endl;
 					an.isMotor = true;
 				}
 
-				if ( parseH.beginMatchesStrip( "p=", line ) )
+				if ( parseH->Instance()->beginMatchesStrip( "p=", line ) )
 				{
-					string PLAS = parseH.returnUntillStrip( ",", line );
-					string PLAW = parseH.returnUntillStrip( "|", line );
+					string PLAS = parseH->Instance()->returnUntillStrip( ",", line );
+					string PLAW = parseH->Instance()->returnUntillStrip( "|", line );
 					if(EOF == sscanf(PLAS.c_str(), "%d", &an.plasticityStrengthen))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if(EOF == sscanf(PLAW.c_str(), "%d", &an.plasticityWeaken))			cerr << "ERROR INSERTING CRITTER" << endl;
 					an.isPlastic = true;
 				}
 
-				while ( parseH.beginMatchesStrip( "s=", line ) )
+				while ( parseH->Instance()->beginMatchesStrip( "s=", line ) )
 				{
 						ArchSynapse as;
 
-						string SY = parseH.returnUntillStrip( "|", line );
-						string isSensorNeuron	= parseH.returnUntillStrip( ",", SY );
-						string neuronID		= parseH.returnUntillStrip( ",", SY );
-						string dendriteBranch	= parseH.returnUntillStrip( ",", SY );
+						string SY = parseH->Instance()->returnUntillStrip( "|", line );
+						string isSensorNeuron	= parseH->Instance()->returnUntillStrip( ",", SY );
+						string neuronID		= parseH->Instance()->returnUntillStrip( ",", SY );
+						string dendriteBranch	= parseH->Instance()->returnUntillStrip( ",", SY );
 						string weight	= SY;
 
 						int isIt;
@@ -1051,273 +1051,273 @@ Brainz::Brainz()
 				ArchNeurons.push_back( an );
 			}
 
-			else if ( parseH.beginMatchesStrip( "numberOfInputs=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "numberOfInputs=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &numberOfInputs))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-			else if ( parseH.beginMatchesStrip( "numberOfOutputs=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "numberOfOutputs=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &numberOfOutputs))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-			else if ( parseH.beginMatchesStrip( "maxNeurons=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "maxNeurons=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &maxNeurons))					cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-			else if ( parseH.beginMatchesStrip( "minSynapses=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "minSynapses=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &minSynapses))					cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-			else if ( parseH.beginMatchesStrip( "maxSynapses=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "maxSynapses=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &maxSynapses))					cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-			else if ( parseH.beginMatchesStrip( "percentChanceInhibitoryNeuron=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentChanceInhibitoryNeuron=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentChanceInhibitoryNeuron))			cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_percentChanceInhibitoryNeuron=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_percentChanceInhibitoryNeuron=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_percentChanceInhibitoryNeuron = true;
 					else			mutate_percentChanceInhibitoryNeuron = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "percentChanceConsistentSynapses=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentChanceConsistentSynapses=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentChanceConsistentSynapses))		cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_percentChanceConsistentSynapses=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_percentChanceConsistentSynapses=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_percentChanceConsistentSynapses = true;
 					else			mutate_percentChanceConsistentSynapses = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "percentChanceInhibitorySynapses=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentChanceInhibitorySynapses=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentChanceInhibitorySynapses))		cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_percentChanceInhibitorySynapses=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_percentChanceInhibitorySynapses=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_percentChanceInhibitorySynapses = true;
 					else			mutate_percentChanceInhibitorySynapses = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "percentChanceMotorNeuron=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentChanceMotorNeuron=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentChanceMotorNeuron))			cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_percentChanceMotorNeuron=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_percentChanceMotorNeuron=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_percentChanceMotorNeuron = true;
 					else			mutate_percentChanceMotorNeuron = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "percentChancePlasticNeuron=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentChancePlasticNeuron=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentChancePlasticNeuron))			cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_percentChancePlasticNeuron=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_percentChancePlasticNeuron=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_percentChancePlasticNeuron = true;
 					else			mutate_percentChancePlasticNeuron = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "percentChanceSensorySynapse=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentChanceSensorySynapse=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentChanceSensorySynapse))			cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_percentChanceSensorySynapse=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_percentChanceSensorySynapse=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_percentChanceSensorySynapse = true;
 					else			mutate_percentChanceSensorySynapse = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "minSynapsesAtBuildtime=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "minSynapsesAtBuildtime=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &minSynapsesAtBuildtime))			cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_minSynapsesAtBuildtime=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_minSynapsesAtBuildtime=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_minSynapsesAtBuildtime = true;
 					else			mutate_minSynapsesAtBuildtime = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "maxSynapsesAtBuildtime=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "maxSynapsesAtBuildtime=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &maxSynapsesAtBuildtime))			cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_maxSynapsesAtBuildtime=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_maxSynapsesAtBuildtime=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_maxSynapsesAtBuildtime = true;
 					else			mutate_maxSynapsesAtBuildtime = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "minFiringThreshold=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "minFiringThreshold=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &minFiringThreshold))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_minFiringThreshold=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_minFiringThreshold=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_minFiringThreshold = true;
 					else			mutate_minFiringThreshold = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "maxFiringThreshold=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "maxFiringThreshold=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &maxFiringThreshold))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_maxFiringThreshold=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_maxFiringThreshold=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_maxFiringThreshold = true;
 					else			mutate_maxFiringThreshold = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "maxDendridicBranches=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "maxDendridicBranches=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &maxDendridicBranches))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_maxDendridicBranches=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_maxDendridicBranches=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_maxDendridicBranches = true;
 					else			mutate_maxDendridicBranches = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "percentMutation=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentMutation=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutation))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_percentMutation=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_percentMutation=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_percentMutation = true;
 					else			mutate_percentMutation = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "percentMutateEffectAddNeuron=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentMutateEffectAddNeuron=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutateEffectAddNeuron))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-			else if ( parseH.beginMatchesStrip( "percentMutateEffectRemoveNeuron=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentMutateEffectRemoveNeuron=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutateEffectRemoveNeuron))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-			else if ( parseH.beginMatchesStrip( "percentMutateEffectAlterNeuron=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentMutateEffectAlterNeuron=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutateEffectAlterNeuron))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-			else if ( parseH.beginMatchesStrip( "percentMutateEffectAddSynapse=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentMutateEffectAddSynapse=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutateEffectAddSynapse))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-			else if ( parseH.beginMatchesStrip( "percentMutateEffectRemoveSynapse=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "percentMutateEffectRemoveSynapse=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutateEffectRemoveSynapse))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-				else if ( parseH.beginMatchesStrip( "mutate_MutateEffects=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_MutateEffects=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_MutateEffects = true;
 					else			mutate_MutateEffects = false;
 				}
 
-			else if ( parseH.beginMatchesStrip( "minPlasticityStrengthen=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "minPlasticityStrengthen=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &minPlasticityStrengthen))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-			else if ( parseH.beginMatchesStrip( "maxPlasticityStrengthen=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "maxPlasticityStrengthen=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &maxPlasticityStrengthen))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-			else if ( parseH.beginMatchesStrip( "minPlasticityWeaken=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "minPlasticityWeaken=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &minPlasticityWeaken))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
-			else if ( parseH.beginMatchesStrip( "maxPlasticityWeaken=", line ) )
+			else if ( parseH->Instance()->beginMatchesStrip( "maxPlasticityWeaken=", line ) )
 			{
-				string Holder = parseH.returnUntillStrip( ";", line );
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &maxPlasticityWeaken))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
 
-				else if ( parseH.beginMatchesStrip( "mutate_PlasticityFactors=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "mutate_PlasticityFactors=", line ) )
 				{
-					string Holder = parseH.returnUntillStrip( ";", line );
+					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 					int result;
 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
 					if ( result == 1 )	mutate_PlasticityFactors = true;
 					else			mutate_PlasticityFactors = false;
 				}
 
-			line = parseH.returnUntillStrip( "\n", contentCopy );
+			line = parseH->Instance()->returnUntillStrip( "\n", contentCopy );
 		}
 	}
 	

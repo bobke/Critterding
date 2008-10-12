@@ -1,5 +1,11 @@
 #include "parser.h"
 
+Parser* Parser::Instance () 
+{
+	static Parser t;
+	return &t; // _instance isn't needed in this case
+}
+
 Parser::Parser()
 {
 }
@@ -45,9 +51,4 @@ bool Parser::endMatches(string stop, string &line)
 	if ( line.substr( line.size()-stop.size(), stop.size() ) == stop ) return true;
 	else return false;
 }
-
-Parser::~Parser()
-{
-}
-
 

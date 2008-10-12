@@ -125,7 +125,7 @@ class CritterB
 	private:
 
 		Settings		*settings;
-		Parser			parseH;
+		Parser			*parseH;
 		RandGen			*randgen;
 		//RandGen			randgen;
 

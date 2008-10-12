@@ -71,6 +71,7 @@ class WorldB
 		Settings		*settings;
 		//RandGen			randgen;
 		RandGen			*randgen;
+		Parser			*parseH;
 
 		vector<Food*>		food;
 		vector<Corpse*>		corpses;
@@ -79,7 +80,6 @@ class WorldB
 
 		Dir			dirH;
 		File			fileH;
-		Parser			parseH;
 
 		unsigned int		timedInsertsCounter;
 
