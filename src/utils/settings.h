@@ -1,10 +1,11 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <string>
 #include <iostream>
+#include <sstream>
 
-using std::cerr;
-using std::endl;
+using namespace std;
 
 class Settings
 {
@@ -110,11 +111,16 @@ class Settings
 			bool brain_mutate_mutateeffects;
 
 
+		void doCommandLineOptions(int argc, char *argv[]);
+		stringstream helpinfo;
+		void createHelpInfo();
 
 	protected:
 		Settings();
 	private:
 		static Settings* _instance;
+
+		bool checkSwitch(string matchsw, unsigned int &var, unsigned int min, unsigned int max, int optind, char *argv[]);
 };
 
 #endif
