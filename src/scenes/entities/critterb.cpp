@@ -631,16 +631,16 @@ void CritterB::resize(float newsize)
 	void CritterB::loadCritterB(string &content)
 	{
 		string passToBrain;
-		string line = parseH.returnUntillStrip( "\n", content );
+		string line = parseH->Instance()->returnUntillStrip( "\n", content );
 		while ( !line.empty() )
 		{
 			// color=0.03,0.82,0.12,0;
-				if ( parseH.beginMatchesStrip( "color=", line ) )
+				if ( parseH->Instance()->beginMatchesStrip( "color=", line ) )
 				{
-					string R = parseH.returnUntillStrip( ",", line );
-					string G = parseH.returnUntillStrip( ",", line );
-					string B = parseH.returnUntillStrip( ",", line );
-					string A = parseH.returnUntillStrip( ";", line );
+					string R = parseH->Instance()->returnUntillStrip( ",", line );
+					string G = parseH->Instance()->returnUntillStrip( ",", line );
+					string B = parseH->Instance()->returnUntillStrip( ",", line );
+					string A = parseH->Instance()->returnUntillStrip( ";", line );
 		/*			cerr << "R: " << R  << endl;
 					cerr << "G: " << G << endl;
 					cerr << "B: " << B << endl;
@@ -653,45 +653,45 @@ void CritterB::resize(float newsize)
 				}
 	
 			// type=0;
-				else if ( parseH.beginMatchesStrip( "type=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "type=", line ) )
 				{
-					string CTYPE = parseH.returnUntillStrip( ";", line );
+					string CTYPE = parseH->Instance()->returnUntillStrip( ";", line );
 					//cerr << "CTYPE: " << CTYPE << endl;
 					if(EOF == sscanf(CTYPE.c_str(), "%d", &crittertype)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 
 			// adamdist=690;
-				else if ( parseH.beginMatchesStrip( "adamdist=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "adamdist=", line ) )
 				{
-					string AD = parseH.returnUntillStrip( ";", line );
+					string AD = parseH->Instance()->returnUntillStrip( ";", line );
 					//cerr << "AD: " << AD << endl;
 					if(EOF == sscanf(AD.c_str(), "%d", &adamdist)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
 			// retinasize=9;
-				else if ( parseH.beginMatchesStrip( "retinasize=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "retinasize=", line ) )
 				{
-					string RES = parseH.returnUntillStrip( ";", line );
+					string RES = parseH->Instance()->returnUntillStrip( ";", line );
 					//cerr << "RES: " << RES << endl;
 					if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 
 			// colorneurons=1;
-				else if ( parseH.beginMatchesStrip( "colorneurons=", line ) )
+				else if ( parseH->Instance()->beginMatchesStrip( "colorneurons=", line ) )
 				{
-					string VD = parseH.returnUntillStrip( ";", line );
+					string VD = parseH->Instance()->returnUntillStrip( ";", line );
 					//cerr << "AD: " << AD  << endl;
 					if(EOF == sscanf(VD.c_str(), "%d", &colorNeurons)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 
 			// the rest goes to the brain
-				else //  if ( parseH.beginMatches( "n(", line ) )
+				else //  if ( parseH->Instance()->beginMatches( "n(", line ) )
 				{
 					passToBrain.append(line);
 					passToBrain.append("\n");
 				}
 	
-			line = parseH.returnUntillStrip( "\n", content );
+			line = parseH->Instance()->returnUntillStrip( "\n", content );
 		}
 
 		brain.setArch(&passToBrain);

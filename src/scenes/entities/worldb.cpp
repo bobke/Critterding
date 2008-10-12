@@ -941,7 +941,7 @@ void WorldB::loadAllCritters()
 
 	for ( unsigned int i = 0; i < files.size(); i++ )
 	{
-		if ( parseH.endMatches( ".cr", files[i] ) )
+		if ( parseH->Instance()->endMatches( ".cr", files[i] ) )
 		{
 			cout << "loading " << files[i] << endl;
 			string content;

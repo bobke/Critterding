@@ -148,8 +148,6 @@ OTHER THINGS
    Again watch out the retinas do not leave the window boundaries, the option --retinasperrow
    can be used to adjust your needs.
 
- - Hiding the retinas is (slightly) more costly than leaving them on.
-
 
 Bob Winckelmans <bob.winckelmans@telenet.be>
 IRC: #critterding@irc.freenode.org
