@@ -72,14 +72,13 @@ class WorldB
 		//RandGen			randgen;
 		RandGen			*randgen;
 		Parser			*parseH;
+		Dir			dirH;
+		File			fileH;
 
 		vector<Food*>		food;
 		vector<Corpse*>		corpses;
 		vector<Wall*>		walls;
 		vector<Bullet*>		bullets;
-
-		Dir			dirH;
-		File			fileH;
 
 		unsigned int		timedInsertsCounter;
 
