@@ -980,12 +980,16 @@ void WorldB::saveAllCritters()
 {
 	// determine save directory
 	stringstream buf;
-	buf << savedir << "/" << time(0);
+	buf << savedir << "/" << settings->profileName;
+	string subprofiledir = buf.str();
+	
+	buf << "/" << time(0);
 	string subsavedir = buf.str();
 
 	// makde dirs
-	if ( !dirH.exists(savedir) )	dirH.make(savedir);
-	if ( !dirH.exists(subsavedir) )	dirH.make(subsavedir);
+	if ( !dirH.exists(savedir) )		dirH.make(savedir);
+	if ( !dirH.exists(subprofiledir) )	dirH.make(subprofiledir);
+	if ( !dirH.exists(subsavedir) )		dirH.make(subsavedir);
 
 	for ( unsigned int i = 0; i < critters.size(); i++ )
 	{
@@ -1193,6 +1197,7 @@ void WorldB::printSettings()
 	cout << "  % Mutants change type       = " << settings->critter_percentchangetype << endl;
 	cout << "  Flip newborns               = " << settings->critter_flipnewborns << endl;
 	cout << "  Rotate newborns randomly    = " << settings->critter_randomrotatenewborns << endl;
+	cout << "  Autosave interval           = " << settings->critter_autosaveinterval << endl;
 
 	cout << endl << "Food Settings" << endl;
 	cout << "  max Lifetime                = " << settings->food_maxlifetime << endl;
@@ -1200,6 +1205,7 @@ void WorldB::printSettings()
 	cout << "  Size                        = " << settings->food_size*100.0f << endl;
 
 	cout << endl << "Corpse Settings" << endl;
+	cout << "  Enabled                     = " << settings->corpse_enable << endl;
 	cout << "  max Lifetime                = " << settings->corpse_maxlifetime << endl;
 	cout << "  max Energy                  = " << settings->corpse_maxenergy << endl;
 	cout << "  Size                        = " << settings->corpse_size*100.0f << endl;
