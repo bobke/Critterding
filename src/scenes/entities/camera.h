@@ -4,7 +4,6 @@
 #include "../../utils/settings.h"
 #include "GL/gl.h"
 #include "vector3f.h"
-#include "critterb.h"
 
 class Camera{
 public:
@@ -21,7 +20,7 @@ public:
 	unsigned int sensitivity;
 
 	void place();
-	void follow(CritterB *c);
+	void follow(Vector3f &cameraposition, float &rotation);
 
 	void lookRight(const float& factor);
 	void lookLeft(const float& factor);

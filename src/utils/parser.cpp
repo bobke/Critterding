@@ -1,6 +1,6 @@
 #include "parser.h"
 
-Parser* Parser::Instance () 
+Parser* Parser::Instance() 
 {
 	static Parser t;
 	return &t; // _instance isn't needed in this case

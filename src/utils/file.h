@@ -20,9 +20,11 @@ class File
 		File();
 		~File();
 
+		bool		exists(string &file);
 		void		save(string &filename, string &content);
 		void		save(string &filename, string* content);
-		void		open(string &filename, string &content);
+		bool		open(string &filename, string &content);
+		bool		open(char* filename, string &content);
 };
 
 #endif
