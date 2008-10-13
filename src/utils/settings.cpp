@@ -330,9 +330,16 @@ void Settings::loadProfile(char* filename)
 		{
 			cerr << "line contains '" << line << "'" << endl;
 
-			while ( parseH->Instance()->beginMatchesStrip( " ", line ) )
+			// trim spaces
+			while ( parseH->Instance()->beginMatchesStrip( " ", line ) || parseH->Instance()->beginMatchesStrip( "\t", line ) )
 			{
 				// nothing needed, i hate how this looks
+			}
+
+			// remove comment lines
+			if ( parseH->Instance()->beginMatchesStrip( "#", line ) )
+			{
+				line="";
 			}
 
 			if ( !line.empty() )
@@ -427,6 +434,12 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("brain_percentmutateeffectremovesynapse ", brain_percentmutateeffectremovesynapse, brain_percentmutateeffectremovesynapseMin, brain_percentmutateeffectremovesynapseMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("brain_mutate_mutateeffects", brain_mutate_mutateeffects, line) ) uselesscounter++;
 
+			else
+			{
+				cout << "Unknown option in profile: " << line << endl;
+				exit(1);
+			}
+
 			}
 
 			line = parseH->Instance()->returnUntillStrip( "\n", content );
@@ -434,7 +447,7 @@ void Settings::loadProfile(char* filename)
 	}
 	else
 	{
-		cerr << "cannot open config file '" << filename << "'" << endl;
+		cerr << "cannot open profile '" << filename << "'" << endl;
 		exit(1);
 	}
 
