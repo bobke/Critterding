@@ -314,9 +314,16 @@ void Settings::loadConfigFile(char* filename)
 		string line = parseH->Instance()->returnUntillStrip( "\n", content );
 
 		unsigned int uselesscounter = 0;
-		while ( !line.empty() )
+		while ( !content.empty() )
 		{
 			cerr << "line contains '" << line << "'" << endl;
+
+			while ( parseH->Instance()->beginMatchesStrip( " ", line ) )
+			{
+			}
+
+			if ( !line.empty() )
+			{
 
 			if ( checkConfigFileValue("worldsize ", worldsize, worldsizeMin, worldsizeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("energy ", startenergy, startenergyMin, startenergyMax, line) ) uselesscounter++;
@@ -359,7 +366,7 @@ void Settings::loadConfigFile(char* filename)
 			else if ( checkConfigFileValue("brain_maxsynapses ", brain_maxsynapses, brain_maxsynapsesMin, brain_maxsynapsesMax, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("brain_minneuronsatbuildtime ", brain_minneuronsatbuildtime, brain_minneuronsatbuildtimeMin, brain_minneuronsatbuildtimeMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("brain_maxneuronsatbuildtime ", brain_maxneuronsatbuildtime, brain_maxneuronsatbuildtimeMin, brain_maxneuronsatbuildtimeMax, line) ) {uselesscounter++; cerr << "passed " << endl;}
+			else if ( checkConfigFileValue("brain_maxneuronsatbuildtime ", brain_maxneuronsatbuildtime, brain_maxneuronsatbuildtimeMin, brain_maxneuronsatbuildtimeMax, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("brain_minsynapsesatbuildtime ", brain_minsynapsesatbuildtime, brain_minsynapsesatbuildtimeMin, brain_minsynapsesatbuildtimeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("brain_mutate_minsynapsesatbuildtime", brain_mutate_minsynapsesatbuildtime, line) ) uselesscounter++;
@@ -406,6 +413,8 @@ void Settings::loadConfigFile(char* filename)
 			else if ( checkConfigFileValue("brain_percentmutateeffectaddsynapse ", brain_percentmutateeffectaddsynapse, brain_percentmutateeffectaddsynapseMin, brain_percentmutateeffectaddsynapseMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("brain_percentmutateeffectremovesynapse ", brain_percentmutateeffectremovesynapse, brain_percentmutateeffectremovesynapseMin, brain_percentmutateeffectremovesynapseMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("brain_mutate_mutateeffects", brain_mutate_mutateeffects, line) ) uselesscounter++;
+
+			}
 
 			line = parseH->Instance()->returnUntillStrip( "\n", content );
 		}
@@ -647,8 +656,7 @@ bool Settings::checkConfigFileValue(string matchsw, bool &var, string &line)
 		if(EOF == sscanf(line.c_str(), "%d", &value)) notpassed = true;
 
 		line.clear();
-cerr << "da value in "<< line << " is " << value << endl;
-		if ( notpassed || value != 0 )
+		if ( notpassed || value == 1 )
 			var=true;
 		else
 			var=false;
