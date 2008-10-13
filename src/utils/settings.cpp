@@ -8,6 +8,8 @@ Settings* Settings::Instance ()
 
 Settings::Settings()
 {
+	profileName			= "default";
+
 	worldsize			= 25;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
@@ -196,10 +198,10 @@ Settings::Settings()
 	brain_percentmutateeffectalterneuron		= 20;
 		brain_percentmutateeffectalterneuronMin		= 0;
 		brain_percentmutateeffectalterneuronMax		= 100;
-	brain_percentmutateeffectaddsynapse		= 30;
+	brain_percentmutateeffectaddsynapse		= 29;
 		brain_percentmutateeffectaddsynapseMin		= 0;
 		brain_percentmutateeffectaddsynapseMax		= 100;
-	brain_percentmutateeffectremovesynapse		= 30;
+	brain_percentmutateeffectremovesynapse		= 29;
 		brain_percentmutateeffectremovesynapseMin	= 0;
 		brain_percentmutateeffectremovesynapseMax	= 100;
 		brain_mutate_mutateeffects			= false;
@@ -301,9 +303,19 @@ void Settings::createHelpInfo()
 	helpinfo << "    --brain_mutate_mutateeffects                       If set, all values above will mutate" << endl;
 }
 
-void Settings::loadConfigFile(char* filename)
+void Settings::loadProfile(char* filename)
 {
 	cerr << "loading settins from '" << filename << "'" << endl;
+
+	// nasty code for stripping dir names from the given profile name
+	profileName = filename;
+	string dirs("");
+	dirs = parseH->Instance()->returnUntillStrip( "/", profileName );
+	while ( !dirs.empty() )
+	{
+		dirs="";
+		dirs = parseH->Instance()->returnUntillStrip( "/", profileName );
+	}
 
 	string content;
 	if ( fileH.open( filename, content ) )
@@ -320,6 +332,7 @@ void Settings::loadConfigFile(char* filename)
 
 			while ( parseH->Instance()->beginMatchesStrip( " ", line ) )
 			{
+				// nothing needed, i hate how this looks
 			}
 
 			if ( !line.empty() )
@@ -437,12 +450,12 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 
 	// Global Settings
 
-		if (sw=="--configfile")
+		if (sw=="--profile")
 		{
 			if ( argv[optind+1] )
 			{
 				optind++;
-				loadConfigFile(argv[optind]);
+				loadProfile(argv[optind]);
 			}
 	        }
 

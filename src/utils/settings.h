@@ -14,6 +14,8 @@ class Settings
 	public:
 		static Settings* Instance();
 
+		string profileName;
+
 		unsigned int *winWidth;
 		unsigned int *winHeight;
 
@@ -220,7 +222,7 @@ class Settings
 
 
 		void doCommandLineOptions(int argc, char *argv[]);
-		void loadConfigFile(char* filename);
+		void loadProfile(char* filename);
 
 	protected:
 		Settings();
