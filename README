@@ -12,6 +12,7 @@ STARTUP OPTIONS
   option           [default value]
 
   Global Settings
+  --profile                 [none]  Specify the location of a profile file to load
   --small                           Creates a 10x10 world with 200 energy
   --medium                          Creates a 25x25 world with 500 energy (default)
   --big                             Creates a 50x50 world with 2000 energy         
