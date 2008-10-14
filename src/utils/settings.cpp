@@ -27,7 +27,7 @@ Settings::Settings()
 		camerasensitivityMax		= 1000;
 	exit_if_empty			= false;
 
-	critter_maxlifetime		= 2000;
+	critter_maxlifetime		= 1000;
 		critter_maxlifetimeMin		= 1;
 		critter_maxlifetimeMax		= 1000000;
 	critter_maxenergy		= 5000;
@@ -89,7 +89,7 @@ Settings::Settings()
 		food_sizeIMax			= 100;
 
 	corpse_enable			= false;
-	corpse_maxlifetime		= 1000;
+	corpse_maxlifetime		= 1200;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
 	corpse_maxenergy		= 2500;
@@ -320,7 +320,7 @@ void Settings::loadProfile(char* filename)
 	string content;
 	if ( fileH.open( filename, content ) )
 	{
-		cerr << "config file contains '" << content << "'" << endl;
+		//cerr << "config file contains '" << content << "'" << endl;
 
 		content.append("\n");
 		string line = parseH->Instance()->returnUntillStrip( "\n", content );
@@ -328,7 +328,7 @@ void Settings::loadProfile(char* filename)
 		unsigned int uselesscounter = 0;
 		while ( !content.empty() )
 		{
-			cerr << "line contains '" << line << "'" << endl;
+			//cerr << "line contains '" << line << "'" << endl;
 
 			// trim spaces
 			while ( parseH->Instance()->beginMatchesStrip( " ", line ) || parseH->Instance()->beginMatchesStrip( "\t", line ) )

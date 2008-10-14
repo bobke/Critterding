@@ -20,7 +20,7 @@ void CritterB::initConst()
 	sightrange = settings->critter_sightrange;
 
 	components		= 4;
-	colorTrim		= 0.5f;
+	colorTrim		= 0.375f; // (1/256) * 96
 }
 
 CritterB::CritterB()
@@ -88,9 +88,9 @@ CritterB::CritterB()
 		brain.mutate_MutateEffects				= settings->brain_mutate_mutateeffects;
 
 	// give it a random color
-	color[0] = (float)randgen->Instance()->get( 50,100 ) / 100.0f;
-	color[1] = (float)randgen->Instance()->get( 50,100 ) / 100.0f;
-	color[2] = (float)randgen->Instance()->get( 50,100 ) / 100.0f;
+	color[0] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	color[1] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	color[2] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[3] = 0.0f;
 
 	items = retinasize * retinasize * components;
@@ -142,7 +142,7 @@ void CritterB::calcRotSinCos()
 void CritterB::setup()
 {
 //	colorDivider		= 256.0f / colorNeurons;
-	colorDivider		= 128.0f / colorNeurons;
+	colorDivider		= 160.0f / colorNeurons; // 256 - 96
 
 	// setup brain from architecture
 	brain.wireArch();
@@ -258,7 +258,7 @@ void CritterB::procInputNeurons()
 			{
 				if ( (unsigned int)retina[w]>127 ) // >> 127 due to window resizing being a problem.
 				{
-					brain.Inputs[(i*colorNeurons) + (int)(((float)retina[w]-128) / colorDivider)].output = 1;
+					brain.Inputs[(i*colorNeurons) + (int)(((float)retina[w]-96) / colorDivider)].output = 1; // 96 = 256 - 160
 				}
 				i++;
 			}
