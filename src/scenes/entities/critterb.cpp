@@ -94,6 +94,7 @@ CritterB::CritterB()
 	color[3] = 0.0f;
 
 	items = retinasize * retinasize * components;
+//	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
 	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
 	brain.numberOfOutputs = 10;
 
@@ -256,7 +257,7 @@ void CritterB::procInputNeurons()
 		{
 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
 			{
-				if ( (unsigned int)retina[w]>127 ) // >> 127 due to window resizing being a problem.
+				if ( (unsigned int)retina[w] >= 96 ) // >> 96 due to window resizing being a problem.
 				{
 					brain.Inputs[(i*colorNeurons) + (int)(((float)retina[w]-96) / colorDivider)].output = 1; // 96 = 256 - 160
 				}
