@@ -279,7 +279,6 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_KP_End:
 			//camera.rollRight(1.0f);
 		break;
-
 	}
 }
 
