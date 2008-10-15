@@ -19,16 +19,6 @@ int main(int argc, char *argv[])
 		mainscene.camera.position = Vector3f(-0.5f*settings->worldsize, -1.1f*settings->worldsize, -0.9f*settings->worldsize);
 		mainscene.camera.sensitivity = settings->camerasensitivity;
 
-		// calc some floats
-		settings->critter_size = (float)settings->critter_sizeI / 100.0f;
-		settings->critter_speed = (float)settings->critter_speedI / 1000.0f;
-		settings->critter_sightrange = (float)settings->critter_sightrangeI / 10.0f;
-
-		settings->food_size = (float)settings->food_sizeI / 100.0f;
-		settings->corpse_size = (float)settings->corpse_sizeI / 100.0f;
-
-		settings->food_lifeenergyratio = settings->food_size / settings->food_maxenergy;
-		settings->corpse_lifeenergyratio = settings->corpse_size / settings->corpse_maxenergy;
 
 		// global
 		mainscene.world.resize(settings->worldsize);

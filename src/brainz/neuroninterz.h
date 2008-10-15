@@ -17,8 +17,11 @@ class NeuronInterz
 		NeuronInterz();
 		~NeuronInterz();
 
-		int			output;
-		int			waitoutput;
+//		int			output;
+//		int			waitoutput;
+ 		float			output;
+ 		float			waitoutput;
+
 		unsigned int		maxSynapses;
 
 		bool			isInhibitory;
@@ -30,7 +33,8 @@ class NeuronInterz
 		unsigned int		motorFunc;
 
 		void			process();
-		void			connec( int *output, unsigned int dendriteBranch, float synapticWeight );
+//		void			connec( int *output, unsigned int dendriteBranch, float synapticWeight );
+		void			connec( float *output, unsigned int dendriteBranch, float synapticWeight );
 
 		vector<Synapse>		Synapses;
 

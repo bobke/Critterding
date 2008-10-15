@@ -64,8 +64,6 @@ class WorldB
 
 		void			printSettings();
 
-		bool			spotIsFree(Vector3f &position, float osize, unsigned int exclude);
-
 	private:
 
 		Settings		*settings;
@@ -95,10 +93,11 @@ class WorldB
 		// methods
 
 		void			removeCritter(unsigned int cid);
-		bool			isTouchingAnything(float size, float x, float z);
-		Vector3f		findEmptySpace(float objectsize);
+		//bool			isTouchingAnything(float halfsize, float x, float z);
+		Vector3f		findEmptySpace(float halfsize);
 		void			createDirs();
-		bool			spotIsFree(Vector3f &position, float osize);
+		bool			spotIsFree(Vector3f &position, float halfsize);
+		bool			spotIsFree(Vector3f &position, float halfsize, unsigned int exclude);
 
 		GLuint			displayLists;
 		void			generateList();

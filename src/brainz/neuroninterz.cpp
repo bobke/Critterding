@@ -119,7 +119,8 @@ void NeuronInterz::process()
 
 }
 
-void NeuronInterz::connec( int *output, unsigned int dendriteBranch, float synapticWeight )
+void NeuronInterz::connec( float *output, unsigned int dendriteBranch, float synapticWeight )
+//void NeuronInterz::connec( int *output, unsigned int dendriteBranch, float synapticWeight )
 {
 		Synapse s;
 		s.ref = output;
