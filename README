@@ -7,46 +7,46 @@ TERMINOLOGY
       : generations with mutations since adam
 
 
-STARTUP OPTIONS                                                                                                                                                                                                         
+STARTUP OPTIONS                                                              
 
   option           [default value]
 
   Global Settings
-  --profile                 [none]  Specify the location of a profile file to load
-  --small                           Creates a 10x10 world with 200 energy
-  --medium                          Creates a 25x25 world with 500 energy (default)
-  --big                             Creates a 50x50 world with 2000 energy         
-  --huge                            Creates a 100x100 world with 8000 energy       
-  --worldsize                 [25]  Creates a 25x25 world                          
-  --energy                   [500]  Energy in the system: 500*food_energy(1000) = 500000
+  --worldsize                 [25]  Creates a 25x25 world
+  --energy                   [300]  Energy in the system: 300*food_energy(2000) = 600000
   --mincritters               [10]  If less than 10 critters are present, insert an adam
   --retinasperrow             [20]  Place 20 retinas on a row (bottom left of window)   
   --camerasensitivity         [10]  Camera sensitivity                                  
+  --exit_if_empty                   If set, the program will exit when no critters exist
 
   Critter Settings
   --critter_maxlifetime     [2000]  Max amount of frames a critter can live
   --critter_maxenergy       [5000]  Max amount of energy in a critter      
   --critter_startenergy     [2500]  Starting amount of energy for a new critter
-  --critter_maxchildren      [100]  Max amount of children a critter can spawn 
-  --critter_maxbullets       [200]  Max amount of bullets a critter can fire
+  --critter_procinterval      [20]  Time (in frames) between procreations      
+  --critter_fireinterval       [10]  Time (in frames) between bullets being fired
   --critter_minenergyproc   [3000]  Min amount of energy required for procreation
   --critter_minenergyfire      [1]  Min amount of energy required for firing a bullet
-  --critter_size              [10]  Size of a critter
+  --critter_size              [10]  Size of a critter                                
   --critter_speed             [50]  Critter speed
-  --critter_sightrange        [40]  Distance a critter can see (40 = 4 floor squares)
+  --critter_sightrange        [40]  Distance a critter can see (400 = 40 floor squares)
   --critter_retinasize         [7]  Resolution of critter's retina: 7x7
   --critter_colorneurons       [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
-  --critter_mutationrate       [8]  When a critter procreates there is a 8% chance it will mutate
-  --critter_maxmutations       [3]  When a critter mutates, it can do 3 mutations at maximum
-  --critter_percentchangetype  [1]  When a critter mutates, percent chance it changes type
+  --critter_mutationrate       [10]  When a critter procreates there is a 10% chance it will mutate
+  --critter_maxmutations       [10]  When a critter mutates, it can do 10 mutations at maximum
+  --critter_percentchangetype  [0]  When a critter mutates, percent chance it changes type
   --critter_flipnewborns            If set, newborns will be flipped 180 degrees
+  --critter_randomrotatenewborns    If set, newborns will be rotated randomly
+  --critter_enablecarrying          If set, critters will be able to carry food and corpses
+  --critter_autosaveinterval   [0]  Save all critters every N seconds (0=disabled)
 
   Food Settings
   --food_maxlifetime         [500]  Maximum amount of frames food exists
-  --food_maxenergy          [1000]  Maximum amount of energy in a food unit
+  --food_maxenergy          [2000]  Maximum amount of energy in a food unit
   --food_size                 [15]  Size of a food unit
 
   Corpse Settings
+  --corpse_enable                   Enable corpses (act as poison)
   --corpse_maxlifetime      [1000]  Maximum amount of frames a corpse exists
   --corpse_maxenergy        [2500]  Maximum amount of energy in a corpse unit
   --corpse_size               [15]  Size of a corpse unit
@@ -90,10 +90,9 @@ STARTUP OPTIONS
   --brain_percentmutateeffectaddneuron           [10]  % chance of adding a neuron for a mutationrun
   --brain_percentmutateeffectremoveneuron        [10]  % chance of removing a neuron for a mutationrun
   --brain_percentmutateeffectalterneuron         [20]  % chance of altering a neuron for a mutationrun
-  --brain_percentmutateeffectaddsynapse          [30]  % chance of adding a synapse for a mutationrun
-  --brain_percentmutateeffectremovesynapse       [30]  % chance of removing a synapse for a mutationrun
+  --brain_percentmutateeffectaddsynapse          [29]  % chance of adding a synapse for a mutationrun
+  --brain_percentmutateeffectremovesynapse       [29]  % chance of removing a synapse for a mutationrun
     --brain_mutate_mutateeffects                       If set, all values above will mutate
-
 
 BUTTONS
 

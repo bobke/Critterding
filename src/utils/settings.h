@@ -86,6 +86,7 @@ class Settings
 			unsigned int critter_percentchangetypeMax;
 		bool critter_flipnewborns;
 		bool critter_randomrotatenewborns;
+		bool critter_enablecarrying;
 		unsigned int critter_autosaveinterval;
 			unsigned int critter_autosaveintervalMin;
 			unsigned int critter_autosaveintervalMax;

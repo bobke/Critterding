@@ -7,7 +7,8 @@ class NeuronSensorz
 		NeuronSensorz();
 		~NeuronSensorz();
 	
-		int output;
+		//int output;
+		float output;
 };
 
 #endif

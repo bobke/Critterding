@@ -8,7 +8,8 @@ class Synapse
 		~Synapse();
 
 		// InputNeuron's Output Pointer
-		int *ref;
+		//int *ref;
+		float *ref;
 
 		// dendridic branch synapse is located on
 		float dendriteBranch;

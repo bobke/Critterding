@@ -94,8 +94,8 @@ CritterB::CritterB()
 	color[3] = 0.0f;
 
 	items = retinasize * retinasize * components;
-//	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
 	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
+	//brain.numberOfInputs = items+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
 	brain.numberOfOutputs = 10;
 
 	brain.buildArch();
@@ -142,7 +142,6 @@ void CritterB::calcRotSinCos()
 
 void CritterB::setup()
 {
-//	colorDivider		= 256.0f / colorNeurons;
 	colorDivider		= 160.0f / colorNeurons; // 256 - 96
 
 	// setup brain from architecture
@@ -261,54 +260,47 @@ void CritterB::procInputNeurons()
 				{
 					brain.Inputs[(i*colorNeurons) + (int)(((float)retina[w]-96) / colorDivider)].output = 1; // 96 = 256 - 160
 				}
+				//brain.Inputs[i].output = (float)retina[w] / 256.0f;
 				i++;
 			}
 		}
 
 	unsigned int overstep = items*colorNeurons;
+	//unsigned int overstep = items;
 
 	// over food sensor neuron
-		if ( touchingFood )	brain.Inputs[overstep].output = 1;
-		else			brain.Inputs[overstep].output = 0;
-
-	overstep++;
+		if ( touchingFood )	brain.Inputs[overstep++].output = 1;
+		else			brain.Inputs[overstep++].output = 0;
 
 	// over corpse sensor neuron
-		if ( touchingCorpse )	brain.Inputs[overstep].output = 1;
-		else			brain.Inputs[overstep].output = 0;
-
-	overstep++;
+		if ( touchingCorpse )	brain.Inputs[overstep++].output = 1;
+		else			brain.Inputs[overstep++].output = 0;
 
 	// can fire a bullet
 		canFire		= false;
 		if ( fireTimeCount > settings->critter_fireinterval && energyLevel > settings->critter_minenergyfire )
 		{
-			brain.Inputs[overstep].output = 1;
+			brain.Inputs[overstep++].output = 1;
 			canFire = true;
 		}
-		else brain.Inputs[overstep].output = 0;
-
-	overstep++;
+		else brain.Inputs[overstep++].output = 0;
 
 	// can procreate sensor neuron
 		canProcreate	= false;
 		if ( procreateTimeCount > settings->critter_procinterval && energyLevel > settings->critter_minenergyproc )
 		{
-			brain.Inputs[overstep].output = 1;
+			brain.Inputs[overstep++].output = 1;
 			canProcreate = true;
 		}
-		else brain.Inputs[overstep].output = 0;
-
-	overstep++;
+		else brain.Inputs[overstep++].output = 0;
 
 	// energy neurons
 		unsigned int NeuronToFire = (int)((energyLevel / (settings->critter_maxenergy+1)) * 10) + overstep;
 		unsigned int count = 10 + overstep;
 		while ( overstep < count )
 		{
-			if ( overstep <= NeuronToFire )	brain.Inputs[overstep].output = 1; // !!! <=
-			else 				brain.Inputs[overstep].output = 0;
-			overstep++;
+			if ( overstep <= NeuronToFire )	brain.Inputs[overstep++].output = 1; // !!! <=
+			else 				brain.Inputs[overstep++].output = 0;
 		}
 
 	// age neurons
@@ -316,21 +308,18 @@ void CritterB::procInputNeurons()
 		count = 10 + overstep;
 		while ( overstep < count )
 		{
-			if ( overstep <= NeuronToFire )	brain.Inputs[overstep].output = 1; // !!! <=
-			else 				brain.Inputs[overstep].output = 0;
-			overstep++;
+			if ( overstep <= NeuronToFire )	brain.Inputs[overstep++].output = 1; // !!! <=
+			else 				brain.Inputs[overstep++].output = 0;
 		}
 
 	// carries food
-		if (carriesFood) brain.Inputs[overstep].output = 1;
-
-	overstep++;
+		if (carriesFood) brain.Inputs[overstep++].output = 1;
 
 	// carries corpse
-		if (carriesCorpse) brain.Inputs[overstep].output = 1;
+		if (carriesCorpse) brain.Inputs[overstep++].output = 1;
 
 	// debugging check
-// 		if ( overstep != brain.Inputs.size()-1 )
+// 		if ( overstep-1 != brain.Inputs.size()-1 )
 // 		{
 // 			cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
 // 			exit(0);

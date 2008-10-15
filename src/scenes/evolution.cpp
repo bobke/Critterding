@@ -55,7 +55,7 @@ void Evolution::draw()
 		camera.place();
 		world.drawWithGrid();
 	}
-
+//		world.drawWithGrid();
 
 	Timer::Instance()->mark();
 	fps.mark();
@@ -217,36 +217,6 @@ void Evolution::handlekey(const KeySym& key)
 			world.toggleGate((unsigned int)(world.size*2.0f)+1);
 		break;
 
-
-
-		// Camera Looking
-		case XK_KP_Right:
-			camera.lookRight(0.1f);
-		break;
-		case XK_KP_Left:
-			camera.lookLeft(0.1f);
-		break;
-		case XK_KP_Up:
-			camera.lookUp(0.1f);
-		break;
-		case XK_KP_Down:
-			camera.lookDown(0.1f);
-		break;
-		case XK_KP_Page_Down:
-			//camera.rollLeft(1.0f);
-		break;
-		case XK_KP_End:
-			//camera.rollRight(1.0f);
-		break;
-
-		// Camera Moving
-		case XK_Home:
-			camera.moveUp(0.2f);
-		break;
-		case XK_End:
-			camera.moveDown(0.2f);
-		break;
-
 		case XK_Insert:
 			drawCVNeurons = !drawCVNeurons;
 		break;
@@ -264,21 +234,50 @@ void Evolution::handlekey(const KeySym& key)
 			camera.sensitivity++;
 			cerr << endl << "Camera Sensitivity: "<< camera.sensitivity << endl << endl;
 		break;
+
+		// Camera Moving
+		case XK_Home:
+			camera.moveUp(0.05f);
+		break;
+		case XK_End:
+			camera.moveDown(0.05f);
+		break;
+
 		case XK_Up:
-			camera.moveForwardXZ(0.1f);
+			camera.moveForwardXZ(0.05f);
 		break;
 		case XK_Down:
-			camera.moveBackwardXZ(0.1f);
+			camera.moveBackwardXZ(0.05f);
 		break;
 		case XK_Left:
-			camera.moveLeft(0.1f);
+			camera.moveLeft(0.05f);
 		break;
 		case XK_Right:
-			camera.moveRight(0.1f);
+			camera.moveRight(0.05f);
 		break;
 		case XK_BackSpace:
 			camera.position = Vector3f(-0.5f*world.size, -1.1f*world.size, -0.9f*world.size);
 			camera.rotation = Vector3f( 76.0f,  0.0f, 0.0f);
+		break;
+
+		// Camera Looking
+		case XK_KP_Right:
+			camera.lookRight(0.25f);
+		break;
+		case XK_KP_Left:
+			camera.lookLeft(0.25f);
+		break;
+		case XK_KP_Up:
+			camera.lookUp(0.25f);
+		break;
+		case XK_KP_Down:
+			camera.lookDown(0.25f);
+		break;
+		case XK_KP_Page_Down:
+			//camera.rollLeft(1.0f);
+		break;
+		case XK_KP_End:
+			//camera.rollRight(1.0f);
 		break;
 
 	}

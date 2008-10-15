@@ -27,7 +27,7 @@ Settings::Settings()
 		camerasensitivityMax		= 1000;
 	exit_if_empty			= false;
 
-	critter_maxlifetime		= 1000;
+	critter_maxlifetime		= 2000;
 		critter_maxlifetimeMin		= 1;
 		critter_maxlifetimeMax		= 1000000;
 	critter_maxenergy		= 5000;
@@ -66,7 +66,7 @@ Settings::Settings()
 	critter_mutationrate		= 10;
 		critter_mutationrateMin		= 0;
 		critter_mutationrateMax		= 100;
-	critter_maxmutations		= 10;
+	critter_maxmutations		= 5;
 		critter_maxmutationsMin		= 1;
 		critter_maxmutationsMax		= 100;
 	critter_percentchangetype	= 0;
@@ -74,6 +74,7 @@ Settings::Settings()
 		critter_percentchangetypeMax	= 100;
 	critter_flipnewborns		= false;
 	critter_randomrotatenewborns	= false;
+	critter_enablecarrying		= false;
 	critter_autosaveinterval	= 0;
 		critter_autosaveintervalMin	= 0;
 		critter_autosaveintervalMax	= 1000000;
@@ -81,7 +82,7 @@ Settings::Settings()
 	food_maxlifetime		= 500;
 		food_maxlifetimeMin		= 1;
 		food_maxlifetimeMax		= 1000000;
-	food_maxenergy			= 1000;
+	food_maxenergy			= 2000;
 		food_maxenergyMin		= 1;
 		food_maxenergyMax		= 1000000;
 	food_sizeI			= 15;
@@ -89,7 +90,7 @@ Settings::Settings()
 		food_sizeIMax			= 100;
 
 	corpse_enable			= false;
-	corpse_maxlifetime		= 1200;
+	corpse_maxlifetime		= 1000;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
 	corpse_maxenergy		= 2500;
@@ -98,11 +99,6 @@ Settings::Settings()
 	corpse_sizeI			= 15;
 		corpse_sizeIMin			= 1;
 		corpse_sizeIMax			= 100;
-
-	food_lifeenergyratio		= 0;
-	corpse_lifeenergyratio		= 0;
-
-
 
 	brain_maxneurons		= 1000;
 		brain_maxneuronsMin		= 1;
@@ -214,17 +210,13 @@ void Settings::createHelpInfo()
 	helpinfo << "STARTUP OPTIONS" << endl << endl;
 	helpinfo << "  option           [default value]" << endl << endl;
 	helpinfo << "  Global Settings" << endl;
-	helpinfo << "  --small                           Creates a 10x10 world with 200 energy" << endl;
-	helpinfo << "  --medium                          Creates a 25x25 world with 500 energy (default)" << endl;
-	helpinfo << "  --big                             Creates a 50x50 world with 2000 energy" << endl;
-	helpinfo << "  --huge                            Creates a 100x100 world with 8000 energy" << endl;
 
 	helpinfo << "  --worldsize                 [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
 	helpinfo << "  --energy                   [" << startenergy << "]  Energy in the system: " << startenergy << "*food_energy(" << food_maxenergy << ") = " << startenergy*food_maxenergy << "" << endl;
 	helpinfo << "  --mincritters               [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
 	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;
-	helpinfo << "  --exit_if_empty                   If set, the program will exit when no critters exist" << endl;
+	helpinfo << "  --exit_if_empty                   If set, the program will exit when no are left" << endl;
 
 	helpinfo << endl;
 	helpinfo << "  Critter Settings" << endl;
@@ -232,7 +224,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --critter_maxenergy       [" << critter_maxenergy << "]  Max amount of energy in a critter" << endl;
 	helpinfo << "  --critter_startenergy     [" << critter_startenergy << "]  Starting amount of energy for a new critter" << endl;
 	helpinfo << "  --critter_procinterval      [" << critter_procinterval << "]  Time (in frames) between procreations" << endl;
-	helpinfo << "  --critter_fireinterval       [" << critter_fireinterval << "]  Time (in frames) between bullets being fired" << endl;
+	helpinfo << "  --critter_fireinterval      [" << critter_fireinterval << "]  Time (in frames) between bullets being fired" << endl;
 	helpinfo << "  --critter_minenergyproc   [" << critter_minenergyproc << "]  Min amount of energy required for procreation" << endl;
 	helpinfo << "  --critter_minenergyfire      [" << critter_minenergyfire << "]  Min amount of energy required for firing a bullet" << endl;
 	helpinfo << "  --critter_size              [" << critter_sizeI << "]  Size of a critter" << endl;
@@ -240,12 +232,12 @@ void Settings::createHelpInfo()
 	helpinfo << "  --critter_sightrange        [" << critter_sightrangeI << "]  Distance a critter can see (" << critter_sightrangeI*10.0f << " = " << critter_sightrangeI << " floor squares)" << endl;
 	helpinfo << "  --critter_retinasize         [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
 	helpinfo << "  --critter_colorneurons       [" << critter_colorneurons << "]  Earch color of every pixel (RGBA) will get [" << critter_colorneurons << "] neurons (only for new adams)" << endl;
-	helpinfo << "  --critter_mutationrate       [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
+	helpinfo << "  --critter_mutationrate      [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
 	helpinfo << "  --critter_maxmutations       [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
 	helpinfo << "  --critter_percentchangetype  [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
 	helpinfo << "  --critter_flipnewborns            If set, newborns will be flipped 180 degrees" << endl;
 	helpinfo << "  --critter_randomrotatenewborns    If set, newborns will be rotated randomly" << endl;
-
+	helpinfo << "  --critter_enablecarrying          If set, critters will be able to carry food and corpses" << endl;
 	helpinfo << "  --critter_autosaveinterval   [" << critter_autosaveinterval << "]  Save all critters every N seconds (0=disabled)" << endl;
 	helpinfo << endl;
 	helpinfo << "  Food Settings" << endl;
@@ -369,6 +361,7 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("critter_percentchangetype ", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_flipnewborns", critter_flipnewborns, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_randomrotatenewborns", critter_randomrotatenewborns, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("critter_enablecarrying", critter_enablecarrying, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_autosaveinterval ", critter_autosaveinterval, critter_autosaveintervalMin, critter_autosaveintervalMax, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("food_maxlifetime ", food_maxlifetime, food_maxlifetimeMin, food_maxlifetimeMax, line) ) uselesscounter++;
@@ -472,30 +465,6 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 			}
 	        }
 
-		else if (sw=="--small")
-		{
-			worldsize = 10;
-			startenergy = 200;
-	        }
-
-		else if (sw=="--medium")
-		{
-			worldsize = 25;
-			startenergy = 500;
-	        }
-
-		else if (sw=="--big")
-		{
-			worldsize = 50;
-			startenergy = 2000;
-	        }
-
-		else if (sw=="--huge")
-		{
-			worldsize = 100;
-			startenergy = 8000;
-	        }
-
 		else if ( checkSwitch("--worldsize", worldsize, worldsizeMin, worldsizeMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--energy", startenergy, startenergyMin, startenergyMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--mincritters", mincritters, mincrittersMin, mincrittersMax, optind, argv) ) optind++;
@@ -522,6 +491,7 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--critter_percentchangetype", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, optind, argv) ) optind++;
 		else if (sw=="--critter_flipnewborns") critter_flipnewborns = true;
 		else if (sw=="--critter_randomrotatenewborns") critter_randomrotatenewborns = true;
+		else if (sw=="--critter_enablecarrying") critter_enablecarrying = true;
 		else if ( checkSwitch("--critter_autosaveinterval", critter_autosaveinterval, critter_autosaveintervalMin, critter_autosaveintervalMax, optind, argv) ) optind++;
 
 	// Food Settings
@@ -616,6 +586,18 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		exit(1);
 	}
 	cout << endl << endl;
+
+	
+	// finalizing: calc some floats
+		critter_size = (float)critter_sizeI / 100.0f;
+		critter_speed = (float)critter_speedI / 1000.0f;
+		critter_sightrange = (float)critter_sightrangeI / 10.0f;
+
+		food_size = (float)food_sizeI / 100.0f;
+		corpse_size = (float)corpse_sizeI / 100.0f;
+
+		food_lifeenergyratio = food_size / food_maxenergy;
+		corpse_lifeenergyratio = corpse_size / corpse_maxenergy;
 
 }
 
