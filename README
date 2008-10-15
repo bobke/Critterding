@@ -7,24 +7,26 @@ TERMINOLOGY
       : generations with mutations since adam
 
 
-STARTUP OPTIONS                                                              
+STARTUP OPTIONS                                                                                                                                         
 
   option           [default value]
 
   Global Settings
+  --profile                 [none]  Load a settings profile
+
   --worldsize                 [25]  Creates a 25x25 world
-  --energy                   [300]  Energy in the system: 300*food_energy(2000) = 600000
-  --mincritters               [10]  If less than 10 critters are present, insert an adam
-  --retinasperrow             [20]  Place 20 retinas on a row (bottom left of window)   
-  --camerasensitivity         [10]  Camera sensitivity                                  
-  --exit_if_empty                   If set, the program will exit when no critters exist
+  --energy                   [500]  Energy in the system: 500*food_energy(2000) = 1000000
+  --mincritters               [10]  If less than 10 critters are present, insert an adam 
+  --retinasperrow             [20]  Place 20 retinas on a row (bottom left of window)    
+  --camerasensitivity         [10]  Camera sensitivity                                   
+  --exit_if_empty                   If set, the program will exit when no are left       
 
   Critter Settings
   --critter_maxlifetime     [2000]  Max amount of frames a critter can live
   --critter_maxenergy       [5000]  Max amount of energy in a critter      
   --critter_startenergy     [2500]  Starting amount of energy for a new critter
   --critter_procinterval      [20]  Time (in frames) between procreations      
-  --critter_fireinterval       [10]  Time (in frames) between bullets being fired
+  --critter_fireinterval      [10]  Time (in frames) between bullets being fired
   --critter_minenergyproc   [3000]  Min amount of energy required for procreation
   --critter_minenergyfire      [1]  Min amount of energy required for firing a bullet
   --critter_size              [10]  Size of a critter                                
@@ -32,8 +34,8 @@ STARTUP OPTIONS
   --critter_sightrange        [40]  Distance a critter can see (400 = 40 floor squares)
   --critter_retinasize         [7]  Resolution of critter's retina: 7x7
   --critter_colorneurons       [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
-  --critter_mutationrate       [10]  When a critter procreates there is a 10% chance it will mutate
-  --critter_maxmutations       [10]  When a critter mutates, it can do 10 mutations at maximum
+  --critter_mutationrate      [10]  When a critter procreates there is a 10% chance it will mutate
+  --critter_maxmutations       [5]  When a critter mutates, it can do 5 mutations at maximum
   --critter_percentchangetype  [0]  When a critter mutates, percent chance it changes type
   --critter_flipnewborns            If set, newborns will be flipped 180 degrees
   --critter_randomrotatenewborns    If set, newborns will be rotated randomly
@@ -93,6 +95,7 @@ STARTUP OPTIONS
   --brain_percentmutateeffectaddsynapse          [29]  % chance of adding a synapse for a mutationrun
   --brain_percentmutateeffectremovesynapse       [29]  % chance of removing a synapse for a mutationrun
     --brain_mutate_mutateeffects                       If set, all values above will mutate
+
 
 BUTTONS
 
