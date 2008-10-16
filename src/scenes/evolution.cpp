@@ -83,7 +83,7 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_F1:
 			if ( !pause )
 			{
-				world.printSettings();
+				settings->printSettings();
 				pause = true;
 			}
 			else pause = false;
@@ -103,32 +103,32 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_F5:
-			if ( (world.freeEnergyInfo-(settings->food_maxenergy*25.0f)) / settings->food_maxenergy >= 0.0f )
+			if ( (settings->freeEnergyInfo-(settings->food_maxenergy*25.0f)) / settings->food_maxenergy >= 0.0f )
 			{
-				world.freeEnergyInfo -= settings->food_maxenergy * 25.0f;
+				settings->freeEnergyInfo -= settings->food_maxenergy * 25.0f;
 				world.freeEnergy -= settings->food_maxenergy * 25.0f;
-				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
+				cerr << endl << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << settings->freeEnergyInfo  << endl << endl;
 			}
 		break;
 		case XK_F6:
-			world.freeEnergyInfo += settings->food_maxenergy * 25.0f;
+			settings->freeEnergyInfo += settings->food_maxenergy * 25.0f;
 			world.freeEnergy += settings->food_maxenergy * 25.0f;
-			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
+			cerr << endl << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << settings->freeEnergyInfo  << endl << endl;
 		break;
 
 		case XK_KP_Subtract:
-			if ( (world.freeEnergyInfo-settings->food_maxenergy) / settings->food_maxenergy >= 0.0f )
+			if ( (settings->freeEnergyInfo-settings->food_maxenergy) / settings->food_maxenergy >= 0.0f )
 			{
-				world.freeEnergyInfo -= settings->food_maxenergy;
+				settings->freeEnergyInfo -= settings->food_maxenergy;
 				world.freeEnergy -= settings->food_maxenergy;
-				cerr << endl << "Energy in system: " << (world.freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
+				cerr << endl << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << settings->freeEnergyInfo  << endl << endl;
 			}
 		break;
 
 		case XK_KP_Add:
-			world.freeEnergyInfo += settings->food_maxenergy;
+			settings->freeEnergyInfo += settings->food_maxenergy;
 			world.freeEnergy += settings->food_maxenergy;
-			cerr << endl << "Energy in system: " << (world.freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << world.freeEnergyInfo  << endl << endl;
+			cerr << endl << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << settings->freeEnergyInfo  << endl << endl;
 		break;
 
 		case XK_F7:

@@ -34,7 +34,7 @@ class WorldB
 
 		int			size;
 		float			freeEnergy;
-		float			freeEnergyInfo;
+		//float			freeEnergyInfo;
 
 		unsigned int		selectedCritter;
 		bool			isSelected;
@@ -61,8 +61,6 @@ class WorldB
 		void			createWall();
 		void			destroyWall();
 		void			toggleGate(unsigned int wid);
-
-		void			printSettings();
 
 	private:
 

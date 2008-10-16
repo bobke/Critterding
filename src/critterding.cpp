@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 		mainscene.world.resize(settings->worldsize);
 		mainscene.world.startfoodamount(settings->startenergy);
 
-		mainscene.world.printSettings();
+		settings->printSettings();
 
 		glwindow.runGLScene(mainscene);
 

@@ -125,8 +125,8 @@ void WorldB::resize(unsigned int newsize)
 
 void WorldB::startfoodamount(unsigned int amount)
 {
-	freeEnergy		= settings->food_maxenergy * amount;
-	freeEnergyInfo		= freeEnergy;
+	freeEnergy = settings->food_maxenergy * amount;
+		settings->freeEnergyInfo = freeEnergy;
 }
 
 void WorldB::process()
@@ -585,14 +585,14 @@ void WorldB::process()
 		{
 			cerr << "inserting 100 food" << endl;
 
-			freeEnergyInfo += settings->food_maxenergy * 100.0f;
+			settings->freeEnergyInfo += settings->food_maxenergy * 100.0f;
 			freeEnergy += settings->food_maxenergy * 100.0f;
 		}
 		else if ( timedInsertsCounter == (3*settings->critter_maxlifetime)+1 )
 		{
 			cerr << "removing 100 food" << endl;
 
-			freeEnergyInfo -= settings->food_maxenergy * 100.0f;
+			settings->freeEnergyInfo -= settings->food_maxenergy * 100.0f;
 			freeEnergy -= settings->food_maxenergy * 100.0f;
 
 			timedInsertsCounter = 0;
@@ -1130,122 +1130,6 @@ Vector3f WorldB::findEmptySpace(float halfsize)
 		pos.z = (float)randgen->Instance()->get( 0, 100*size ) / 100;
 	}
 	return pos;
-}
-
-void WorldB::printSettings()
-{
-	cout << endl << "CURRENT SETTINGS" << endl << endl;
-	cerr << "profile " << settings->profileName << endl;
-	cerr << "worldsize " << settings->worldsize << endl;
-	cerr << "energy " << settings->startenergy << endl;
-	cerr << "mincritters " << settings->mincritters << endl;
-	cerr << "retinasperrow " << settings->retinasperrow << endl;
-	cerr << "camerasensitivity " << settings->camerasensitivity << endl;
-	cerr << "exit-if-empty " << settings->exit_if_empty << endl << endl;
-
-	cerr << "critter_maxlifetime " << settings->critter_maxlifetime << endl;
-	cerr << "critter_maxenergy " << settings->critter_maxenergy << endl;
-	cerr << "critter_startenergy " << settings->critter_startenergy << endl;
-	cerr << "critter_procinterval " << settings->critter_procinterval << endl;
-	cerr << "critter_fireinterval " << settings->critter_fireinterval << endl;
-	cerr << "critter_minenergyproc " << settings->critter_minenergyproc << endl;
-	cerr << "critter_minenergyfire " << settings->critter_minenergyfire << endl;
-	cerr << "critter_size " << settings->critter_sizeI << endl;
-	cerr << "critter_speed " << settings->critter_speedI << endl;
-	cerr << "critter_sightrange " << settings->critter_sightrangeI << endl;
-	cerr << "critter_retinasize " << settings->critter_retinasize << endl;
-	cerr << "critter_mutationrate " << settings->critter_mutationrate << endl;
-	cerr << "critter_maxmutations " << settings->critter_maxmutations << endl;
-	cerr << "critter_percentchangetype " << settings->critter_percentchangetype << endl;
-	cerr << "critter_flipnewborns " << settings->critter_flipnewborns << endl;
-	cerr << "critter_randomrotatenewborns " << settings->critter_randomrotatenewborns << endl;
-	cerr << "critter_enablecarrying " << settings->critter_enablecarrying << endl;
-	cerr << "critter_autosaveinterval  " << settings->critter_autosaveinterval << endl << endl;
-
-	cerr << "food_maxlifetime  " << settings->food_maxlifetime << endl;
-	cerr << "food_maxenergy  " << settings->food_maxenergy << endl;
-	cerr << "food_size  " << settings->food_sizeI << endl << endl;
-
-	cerr << "corpse_enable  " << settings->corpse_enable << endl;
-	cerr << "corpse_maxlifetime  " << settings->corpse_maxlifetime << endl;
-	cerr << "corpse_maxenergy  " << settings->corpse_maxenergy << endl;
-	cerr << "corpse_size  " << settings->corpse_sizeI << endl << endl;
-
-	cerr << "brain_maxneurons  " << settings->brain_maxneurons << endl;
-	cerr << "brain_minsynapses  " << settings->brain_minsynapses << endl;
-	cerr << "brain_maxsynapses  " << settings->brain_maxsynapses << endl;
-	cerr << "brain_minneuronsatbuildtime  " << settings->brain_minneuronsatbuildtime << endl;
-	cerr << "brain_maxneuronsatbuildtime  " << settings->brain_maxneuronsatbuildtime << endl;
-	cerr << "brain_minsynapsesatbuildtime  " << settings->brain_minsynapsesatbuildtime << endl;
-	cerr << "brain_mutate_minsynapsesatbuildtime  " << settings->brain_mutate_minsynapsesatbuildtime << endl;
-	cerr << "brain_maxsynapsesatbuildtime  " << settings->brain_maxsynapsesatbuildtime << endl;
-	cerr << "brain_mutate_maxsynapsesatbuildtime  " << settings->brain_mutate_maxsynapsesatbuildtime << endl;
-	cerr << "brain_percentchanceinhibitoryneuron  " << settings->brain_percentchanceinhibitoryneuron << endl;
-	cerr << "brain_mutate_percentchanceinhibitoryneuron  " << settings->brain_mutate_percentchanceinhibitoryneuron << endl;
-	cerr << "brain_percentchancemotorneuron  " << settings->brain_percentchancemotorneuron << endl;
-	cerr << "brain_mutate_percentchancemotorneuron  " << settings->brain_mutate_percentchancemotorneuron << endl;
-	cerr << "brain_percentchanceplasticneuron  " << settings->brain_percentchanceplasticneuron << endl;
-	cerr << "brain_mutate_percentchanceplasticneuron  " << settings->brain_mutate_percentchanceplasticneuron << endl;
-	cerr << "brain_minplasticitystrengthen  " << settings->brain_minplasticitystrengthen << endl;
-	cerr << "brain_maxplasticitystrengthen  " << settings->brain_maxplasticitystrengthen << endl;
-	cerr << "brain_minplasticityweaken  " << settings->brain_minplasticityweaken << endl;
-	cerr << "brain_maxplasticityweaken  " << settings->brain_maxplasticityweaken << endl;
-	cerr << "brain_mutate_plasticityfactors  " << settings->brain_mutate_plasticityfactors << endl;
-	cerr << "brain_minfiringthreshold  " << settings->brain_minfiringthreshold << endl;
-	cerr << "brain_mutate_minfiringthreshold  " << settings->brain_mutate_minfiringthreshold << endl;
-	cerr << "brain_maxfiringthreshold  " << settings->brain_maxfiringthreshold << endl;
-	cerr << "brain_mutate_maxfiringthreshold  " << settings->brain_mutate_maxfiringthreshold << endl;
-	cerr << "brain_maxdendridicbranches  " << settings->brain_maxdendridicbranches << endl;
-	cerr << "brain_mutate_maxdendridicbranches  " << settings->brain_mutate_maxdendridicbranches << endl;
-	cerr << "brain_percentchanceconsistentsynapses  " << settings->brain_percentchanceconsistentsynapses << endl;
-	cerr << "brain_mutate_percentchanceconsistentsynapses  " << settings->brain_mutate_percentchanceconsistentsynapses << endl;
-	cerr << "brain_percentchanceinhibitorysynapses  " << settings->brain_percentchanceinhibitorysynapses << endl;
-	cerr << "brain_mutate_percentchanceinhibitorysynapses  " << settings->brain_mutate_percentchanceinhibitorysynapses << endl;
-	cerr << "brain_percentchancesensorysynapse  " << settings->brain_percentchancesensorysynapse << endl;
-	cerr << "brain_mutate_percentchancesensorysynapse  " << settings->brain_mutate_percentchancesensorysynapse << endl;
-	cerr << "brain_percentmutateeffectaddneuron  " << settings->brain_percentmutateeffectaddneuron << endl;
-	cerr << "brain_percentmutateeffectremoveneuron  " << settings->brain_percentmutateeffectremoveneuron << endl;
-	cerr << "brain_percentmutateeffectalterneuron  " << settings->brain_percentmutateeffectalterneuron << endl;
-	cerr << "brain_percentmutateeffectaddsynapse  " << settings->brain_percentmutateeffectaddsynapse << endl;
-	cerr << "brain_percentmutateeffectremovesynapse  " << settings->brain_percentmutateeffectremovesynapse << endl;
-	cerr << "brain_mutate_mutateeffects  " << settings->brain_mutate_mutateeffects << endl;
-
-	cout << endl << "BUTTONS" << endl << endl;
-	cout << "Engine / World Operations" << endl;
-	cout << "  F1            : print settings and pause" << endl;
-	cout << "  F2            : show fps (100 frames average)" << endl << endl;
-	cout << "  F3/F4         : adjust minimum critters" << endl;
-	cout << "  F5/F6         : adjust energy in the system (by 25 units)" << endl;
-	cout << "  keypad -/+    : adjust energy in the system (by 1 unit)" << endl;
-	cout << "  F7            : insert new critter (adam)" << endl << endl;
-	cout << "  F8            : toggle Timed Food Inserts" << endl;
-	cout << "                  inserts 100 food every 3 generations, driving the population up and down." << endl << endl;
-	cout << "  F9/F10        : adjust max mutations per mutant" << endl;
-	cout << "  F11/F12       : adjust mutation rate (%)" << endl;
-	cout << "  Insert        : toggle hide critter retinas." << endl << endl;
-	cout << "  w             : create a horizontal wall" << endl;
-	cout << "  x             : destroy the wall" << endl;
-	cout << "  c             : toggle gate in wall center" << endl << endl;
-	cout << "  f             : toggle follow the youngest critter untill it dies." << endl << endl;
-	cout << "  Page Up       : load all critters from \"~/.critterding/load\" directory" << endl;
-	cout << "  Page Down     : save all critters into \"~/.critterding/save/(timestamp)\" directory" << endl << endl;
-
-	cout << "Camera Operations" << endl;
-	cout << "  Backspace     : reset camera" << endl;
-	cout << "  Arrow Up      : move forward" << endl;
-	cout << "  Arrow Down    : move backward" << endl;
-	cout << "  Arrow Left    : strafe left" << endl;
-	cout << "  Arrow Right   : strafe right" << endl;
-	cout << "  Home          : move up" << endl;
-	cout << "  End           : move down" << endl;
-	cout << "  NumKey 2      : look up" << endl;
-	cout << "  NumKey 8      : look down" << endl;
-	cout << "  NumKey 4      : look left" << endl;
-	cout << "  NumKey 6      : look right" << endl;
-	cout << "  keypad /      : decrease camera sensitivity" << endl;
-	cout << "  keypad *      : increase camera sensitivity" << endl << endl;
-
-	cout << endl;
 }
 
 WorldB::~WorldB()
