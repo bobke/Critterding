@@ -541,7 +541,7 @@ void WorldB::process()
 
 						nc->prepNewPoss();
 
-						nc->setup();
+						nc->brain.wireArch();
 						nc->retina = retina;
 
 						cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: ";
@@ -635,7 +635,7 @@ void WorldB::insertCritter()
 	positionCritterB(critters.size()-1);
 	c->setRotation( randgen->Instance()->get(0,360) );
 
-	c->setup();
+	c->brain.wireArch();
 	c->retina = retina;
 }
 
@@ -964,8 +964,8 @@ void WorldB::loadAllCritters()
 				positionCritterB(critters.size()-1);
 				c->setRotation( randgen->Instance()->get(0,360) );
 
-				c->setup();
-				c->retina = retina;
+				c->brain.wireArch();
+			c->retina = retina;
 			}
 			else if ( error == 1 )
 			{
@@ -1116,39 +1116,6 @@ bool WorldB::spotIsFree(Vector3f &position, float halfsize)
 	return true;
 }
 
-// bool WorldB::isTouchingAnything(float halfsize, float x, float z)
-// {
-// 	// touches food?
-// 		for( unsigned int i=0; i < food.size(); i++)
-// 		{
-// 			float avgSize = halfsize + food[i]->halfsize;
-// 			if ( fabs(x - food[i]->position.x) <= avgSize && fabs(z - food[i]->position.z) <= avgSize )
-// 			{
-// 				return true;
-// 			}
-// 		}
-// 	// touches corpse?
-// 		for( unsigned int i=0; i < corpses.size(); i++)
-// 		{
-// 			float avgSize = halfsize + corpses[i]->halfsize;
-// 			if ( fabs(x - corpses[i]->position.x) <= avgSize && fabs(z - corpses[i]->position.z) <= avgSize )
-// 			{
-// 				return true;
-// 			}
-// 		}
-// 	// touches critter?
-// 		for( unsigned int i=0; i < critters.size(); i++)
-// 		{
-// 			float avgSize = halfsize + critters[i]->halfsize;
-// 			if ( fabs(x - critters[i]->position.x) <= avgSize && fabs(z - critters[i]->position.z) <= avgSize )
-// 			{
-// 				return true;
-// 			}
-// 		}
-// 
-// 	return false;
-// }
-
 Vector3f WorldB::findEmptySpace(float halfsize)
 {
 	Vector3f pos;
@@ -1187,7 +1154,6 @@ void WorldB::printSettings()
 	cerr << "critter_speed " << settings->critter_speedI << endl;
 	cerr << "critter_sightrange " << settings->critter_sightrangeI << endl;
 	cerr << "critter_retinasize " << settings->critter_retinasize << endl;
-	cerr << "critter_colorneurons " << settings->critter_colorneurons << endl;
 	cerr << "critter_mutationrate " << settings->critter_mutationrate << endl;
 	cerr << "critter_maxmutations " << settings->critter_maxmutations << endl;
 	cerr << "critter_percentchangetype " << settings->critter_percentchangetype << endl;

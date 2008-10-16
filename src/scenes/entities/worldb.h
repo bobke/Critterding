@@ -93,7 +93,6 @@ class WorldB
 		// methods
 
 		void			removeCritter(unsigned int cid);
-		//bool			isTouchingAnything(float halfsize, float x, float z);
 		Vector3f		findEmptySpace(float halfsize);
 		void			createDirs();
 		bool			spotIsFree(Vector3f &position, float halfsize);

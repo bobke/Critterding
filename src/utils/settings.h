@@ -72,9 +72,6 @@ class Settings
 		unsigned int critter_retinasize;
 			unsigned int critter_retinasizeMin;
 			unsigned int critter_retinasizeMax;
-		unsigned int critter_colorneurons;
-			unsigned int critter_colorneuronsMin;
-			unsigned int critter_colorneuronsMax;
 		unsigned int critter_mutationrate;
 			unsigned int critter_mutationrateMin;
 			unsigned int critter_mutationrateMax;

@@ -31,7 +31,6 @@ CritterB::CritterB()
 	crittertype		= 0;
 	adamdist		= 0;
 
-	colorNeurons						= settings->critter_colorneurons;
 	retinasize						= settings->critter_retinasize;
 
 	brain.maxNeurons					= settings->brain_maxneurons;
@@ -94,8 +93,7 @@ CritterB::CritterB()
 	color[3] = 0.0f;
 
 	items = retinasize * retinasize * components;
-	brain.numberOfInputs = (items*colorNeurons)+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
-	//brain.numberOfInputs = items+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
+	brain.numberOfInputs = items+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
 	brain.numberOfOutputs = 10;
 
 	brain.buildArch();
@@ -122,7 +120,6 @@ CritterB::CritterB(CritterB &other)
 	crittertype					= other.crittertype;
 	adamdist					= other.adamdist;
 	retinasize					= other.retinasize;
-	colorNeurons					= other.colorNeurons;
 
 	brain.copyFrom(other.brain);
 
@@ -138,14 +135,6 @@ void CritterB::calcRotSinCos()
 	reused = (90.0f+rotation) * 0.0174532925f;
 	reuseRotSinY = sin(reused);
 	reuseRotCosY = cos(reused);
-}
-
-void CritterB::setup()
-{
-	colorDivider		= 160.0f / colorNeurons; // 256 - 96
-
-	// setup brain from architecture
-	brain.wireArch();
 }
 
 void CritterB::process()
@@ -256,17 +245,11 @@ void CritterB::procInputNeurons()
 		{
 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
 			{
-				if ( (unsigned int)retina[w] >= 96 ) // >> 96 due to window resizing being a problem.
-				{
-					brain.Inputs[(i*colorNeurons) + (int)(((float)retina[w]-96) / colorDivider)].output = 1; // 96 = 256 - 160
-				}
-				//brain.Inputs[i].output = (float)retina[w] / 256.0f;
-				i++;
+				brain.Inputs[i++].output = (float)retina[w] / 256.0f;
 			}
 		}
 
-	unsigned int overstep = items*colorNeurons;
-	//unsigned int overstep = items;
+	unsigned int overstep = items;
 
 	// over food sensor neuron
 		if ( touchingFood )	brain.Inputs[overstep++].output = 1;
@@ -666,14 +649,6 @@ void CritterB::resize(float newsize)
 					if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 
-			// colorneurons=1;
-				else if ( parseH->Instance()->beginMatchesStrip( "colorneurons=", line ) )
-				{
-					string VD = parseH->Instance()->returnUntillStrip( ";", line );
-					//cerr << "AD: " << AD  << endl;
-					if(EOF == sscanf(VD.c_str(), "%d", &colorNeurons)) cerr << "ERROR INSERTING CRITTER" << endl;
-				}
-
 			// the rest goes to the brain
 				else //  if ( parseH->Instance()->beginMatches( "n(", line ) )
 				{
@@ -696,7 +671,6 @@ void CritterB::resize(float newsize)
 		buf << "type=" << crittertype << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
 		buf << "retinasize=" << retinasize << ";\n";
-		buf << "colorneurons=" << colorNeurons << ";\n";
 
 		string* arch = brain.getArch();
 		buf << *arch;
