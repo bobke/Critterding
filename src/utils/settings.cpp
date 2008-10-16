@@ -60,9 +60,6 @@ Settings::Settings()
 	critter_retinasize		= 7;
 		critter_retinasizeMin		= 1;
 		critter_retinasizeMax		= 1000;
-	critter_colorneurons		= 3;
-		critter_colorneuronsMin		= 2;
-		critter_colorneuronsMax		= 100;
 	critter_mutationrate		= 10;
 		critter_mutationrateMin		= 0;
 		critter_mutationrateMax		= 100;
@@ -119,27 +116,27 @@ Settings::Settings()
 	brain_minsynapsesatbuildtime			= 1;
 		brain_minsynapsesatbuildtimeMin			= 1;
 		brain_minsynapsesatbuildtimeMax			= 1000000;
-		brain_mutate_minsynapsesatbuildtime		= false;
+		brain_mutate_minsynapsesatbuildtime		= true;
 
 	brain_maxsynapsesatbuildtime			= 60;
 		brain_maxsynapsesatbuildtimeMin			= 1;
 		brain_maxsynapsesatbuildtimeMax			= 1000000;
-		brain_mutate_maxsynapsesatbuildtime		= false;
+		brain_mutate_maxsynapsesatbuildtime		= true;
 
 	brain_percentchanceinhibitoryneuron		= 50;
 		brain_percentchanceinhibitoryneuronMin		= 0;
 		brain_percentchanceinhibitoryneuronMax		= 100;
-		brain_mutate_percentchanceinhibitoryneuron	= false;
+		brain_mutate_percentchanceinhibitoryneuron	= true;
 
 	brain_percentchancemotorneuron			= 50;
 		brain_percentchancemotorneuronMin		= 0;
 		brain_percentchancemotorneuronMax		= 100;
-		brain_mutate_percentchancemotorneuron		= false;
+		brain_mutate_percentchancemotorneuron		= true;
 
 	brain_percentchanceplasticneuron		= 20;
 		brain_percentchanceplasticneuronMin		= 0;
 		brain_percentchanceplasticneuronMax		= 100;
-		brain_mutate_percentchanceplasticneuron		= false;
+		brain_mutate_percentchanceplasticneuron		= true;
 
 	brain_minplasticitystrengthen			= 100;
 		brain_minplasticitystrengthenMin		= 1;
@@ -153,37 +150,37 @@ Settings::Settings()
 	brain_maxplasticityweaken			= 10000;
 		brain_maxplasticityweakenMin			= 1;
 		brain_maxplasticityweakenMax			= 1000000;
-		brain_mutate_plasticityfactors			= false;
+		brain_mutate_plasticityfactors			= true;
 
 	brain_minfiringthreshold			= 2;
 		brain_minfiringthresholdMin			= 1;
 		brain_minfiringthresholdMax			= 1000000;
-		brain_mutate_minfiringthreshold			= false;
+		brain_mutate_minfiringthreshold			= true;
 
 	brain_maxfiringthreshold			= 10;
 		brain_maxfiringthresholdMin			= 1;
 		brain_maxfiringthresholdMax			= 1000000;
-		brain_mutate_maxfiringthreshold			= false;
+		brain_mutate_maxfiringthreshold			= true;
 
 	brain_maxdendridicbranches			= 3;
 		brain_maxdendridicbranchesMin			= 1;
 		brain_maxdendridicbranchesMax			= 1000;
-		brain_mutate_maxdendridicbranches		= false;
+		brain_mutate_maxdendridicbranches		= true;
 
 	brain_percentchanceconsistentsynapses		= 50;
 		brain_percentchanceconsistentsynapsesMin	= 0;
 		brain_percentchanceconsistentsynapsesMax	= 100;
-		brain_mutate_percentchanceconsistentsynapses	= false;
+		brain_mutate_percentchanceconsistentsynapses	= true;
 
 	brain_percentchanceinhibitorysynapses		= 50;
 		brain_percentchanceinhibitorysynapsesMin	= 0;
 		brain_percentchanceinhibitorysynapsesMax	= 100;
-		brain_mutate_percentchanceinhibitorysynapses	= false;
+		brain_mutate_percentchanceinhibitorysynapses	= true;
 
 	brain_percentchancesensorysynapse		= 20;
 		brain_percentchancesensorysynapseMin		= 0;
 		brain_percentchancesensorysynapseMax		= 100;
-		brain_mutate_percentchancesensorysynapse	= false;
+		brain_mutate_percentchancesensorysynapse	= true;
 
 	brain_percentmutateeffectaddneuron		= 10;
 		brain_percentmutateeffectaddneuronMin		= 0;
@@ -200,7 +197,7 @@ Settings::Settings()
 	brain_percentmutateeffectremovesynapse		= 29;
 		brain_percentmutateeffectremovesynapseMin	= 0;
 		brain_percentmutateeffectremovesynapseMax	= 100;
-		brain_mutate_mutateeffects			= false;
+		brain_mutate_mutateeffects			= true;
 
 	createHelpInfo();
 }
@@ -233,7 +230,6 @@ void Settings::createHelpInfo()
 	helpinfo << "  --critter_speed             [" << critter_speedI << "]  Critter speed" << endl;
 	helpinfo << "  --critter_sightrange        [" << critter_sightrangeI << "]  Distance a critter can see (" << critter_sightrangeI*10.0f << " = " << critter_sightrangeI << " floor squares)" << endl;
 	helpinfo << "  --critter_retinasize         [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
-	helpinfo << "  --critter_colorneurons       [" << critter_colorneurons << "]  Earch color of every pixel (RGBA) will get [" << critter_colorneurons << "] neurons (only for new adams)" << endl;
 	helpinfo << "  --critter_mutationrate      [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
 	helpinfo << "  --critter_maxmutations       [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
 	helpinfo << "  --critter_percentchangetype  [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
@@ -357,7 +353,6 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("critter_speed ", critter_speedI, critter_speedIMin, critter_speedIMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_sightrange ", critter_sightrangeI, critter_sightrangeIMin, critter_sightrangeIMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_retinasize ", critter_retinasize, critter_retinasizeMin, critter_retinasizeMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_colorneurons ", critter_colorneurons, critter_colorneuronsMin, critter_colorneuronsMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_mutationrate ", critter_mutationrate, critter_mutationrateMin, critter_mutationrateMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_maxmutations ", critter_maxmutations, critter_maxmutationsMin, critter_maxmutationsMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_percentchangetype ", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, line) ) uselesscounter++;
@@ -487,7 +482,6 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--critter_speed", critter_speedI, critter_speedIMin, critter_speedIMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_sightrange", critter_sightrangeI, critter_sightrangeIMin, critter_sightrangeIMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_retinasize", critter_retinasize, critter_retinasizeMin, critter_retinasizeMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--critter_colorneurons", critter_colorneurons, critter_colorneuronsMin, critter_colorneuronsMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_mutationrate", critter_mutationrate, critter_mutationrateMin, critter_mutationrateMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_maxmutations", critter_maxmutations, critter_maxmutationsMin, critter_maxmutationsMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_percentchangetype", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, optind, argv) ) optind++;

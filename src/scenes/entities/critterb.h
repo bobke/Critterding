@@ -103,7 +103,6 @@ class CritterB
 		void			calcFramePos(unsigned int pos);
 		void			calcCamPos();
 		void			printVision();
-		void			setup();
 		void			mutate();
 
 		// 3 vectors for frustrum culling
