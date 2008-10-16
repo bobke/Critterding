@@ -60,15 +60,12 @@ class Settings
 		unsigned int critter_sizeI;
 			unsigned int critter_sizeIMin;
 			unsigned int critter_sizeIMax;
-		float critter_size;
 		unsigned int critter_speedI;
 			unsigned int critter_speedIMin;
 			unsigned int critter_speedIMax;
-		float critter_speed;
 		unsigned int critter_sightrangeI;
 			unsigned int critter_sightrangeIMin;
 			unsigned int critter_sightrangeIMax;
-		float critter_sightrange;
 		unsigned int critter_retinasize;
 			unsigned int critter_retinasizeMin;
 			unsigned int critter_retinasizeMax;
@@ -97,7 +94,6 @@ class Settings
 		unsigned int food_sizeI;
 			unsigned int food_sizeIMin;
 			unsigned int food_sizeIMax;
-		float food_size;
 
 		bool corpse_enable;
 		unsigned int corpse_maxlifetime;
@@ -109,12 +105,6 @@ class Settings
 		unsigned int corpse_sizeI;
 			unsigned int corpse_sizeIMin;
 			unsigned int corpse_sizeIMax;
-		float corpse_size;
-
-		float food_lifeenergyratio;
-		float corpse_lifeenergyratio;
-
-
 
 		unsigned int brain_maxneurons;
 			unsigned int brain_maxneuronsMin;
@@ -218,9 +208,22 @@ class Settings
 			unsigned int brain_percentmutateeffectremovesynapseMax;
 			bool brain_mutate_mutateeffects;
 
+		// other vars
+		float critter_size;
+		float critter_speed;
+		float critter_sightrange;
+		float food_size;
+		float corpse_size;
+
+		float food_lifeenergyratio;
+		float corpse_lifeenergyratio;
+
+		float freeEnergyInfo;
 
 		void doCommandLineOptions(int argc, char *argv[]);
 		void loadProfile(char* filename);
+
+		void printSettings();
 
 	protected:
 		Settings();
