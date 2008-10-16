@@ -1,5 +1,5 @@
 worldsize 25   
-energy 250     
+energy 500     
 mincritters 10 
 retinasperrow 20
 camerasensitivity 10
@@ -18,7 +18,7 @@ critter_sightrange 40
 critter_retinasize 7      
 critter_colorneurons 3    
 critter_mutationrate 10   
-critter_maxmutations 10   
+critter_maxmutations 5    
 critter_percentchangetype 0
 critter_flipnewborns 0     
 critter_randomrotatenewborns 0
