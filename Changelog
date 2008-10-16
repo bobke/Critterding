@@ -1,3 +1,9 @@
+1.0-beta8
+---------
+new: custom settings profiles, critter autosaving, exit-if-empty
+corpses and carrying are disabled at default
+various fixes and cleanups
+
 1.0-beta7
 ---------
 critters are now classified as herbivore or carnivore
