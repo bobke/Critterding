@@ -789,12 +789,12 @@ Brainz::Brainz()
 		maxNeurons				= otherBrain.maxNeurons;
 		minSynapses				= otherBrain.minSynapses;
 		maxSynapses				= otherBrain.maxSynapses;
-		minSynapsesAtBuildtime			= otherBrain.minSynapsesAtBuildtime;
-		mutate_minSynapsesAtBuildtime		= otherBrain.mutate_minSynapsesAtBuildtime;
-		maxSynapsesAtBuildtime			= otherBrain.maxSynapsesAtBuildtime;
-		mutate_maxSynapsesAtBuildtime		= otherBrain.mutate_maxSynapsesAtBuildtime;
-		percentMutation				= otherBrain.percentMutation;
-		mutate_percentMutation			= otherBrain.mutate_percentMutation;
+// 		minSynapsesAtBuildtime			= otherBrain.minSynapsesAtBuildtime;
+// 		mutate_minSynapsesAtBuildtime		= otherBrain.mutate_minSynapsesAtBuildtime;
+// 		maxSynapsesAtBuildtime			= otherBrain.maxSynapsesAtBuildtime;
+// 		mutate_maxSynapsesAtBuildtime		= otherBrain.mutate_maxSynapsesAtBuildtime;
+// 		percentMutation				= otherBrain.percentMutation;
+// 		mutate_percentMutation			= otherBrain.mutate_percentMutation;
 		percentChanceInhibitoryNeuron		= otherBrain.percentChanceInhibitoryNeuron;
 		mutate_percentChanceInhibitoryNeuron	= otherBrain.mutate_percentChanceInhibitoryNeuron;
 
@@ -869,12 +869,12 @@ Brainz::Brainz()
 		maxNeurons				= otherBrain1.maxNeurons;
 		minSynapses				= otherBrain1.minSynapses;
 		maxSynapses				= otherBrain1.maxSynapses;
-		minSynapsesAtBuildtime			= otherBrain1.minSynapsesAtBuildtime;
-		mutate_minSynapsesAtBuildtime		= otherBrain1.mutate_minSynapsesAtBuildtime;
-		maxSynapsesAtBuildtime			= otherBrain1.maxSynapsesAtBuildtime;
-		mutate_maxSynapsesAtBuildtime		= otherBrain1.mutate_maxSynapsesAtBuildtime;
-		percentMutation				= otherBrain1.percentMutation;
-		mutate_percentMutation			= otherBrain1.mutate_percentMutation;
+// 		minSynapsesAtBuildtime			= otherBrain1.minSynapsesAtBuildtime;
+// 		mutate_minSynapsesAtBuildtime		= otherBrain1.mutate_minSynapsesAtBuildtime;
+// 		maxSynapsesAtBuildtime			= otherBrain1.maxSynapsesAtBuildtime;
+// 		mutate_maxSynapsesAtBuildtime		= otherBrain1.mutate_maxSynapsesAtBuildtime;
+//		percentMutation				= otherBrain1.percentMutation;
+// 		mutate_percentMutation			= otherBrain1.mutate_percentMutation;
 		percentChanceInhibitoryNeuron		= otherBrain1.percentChanceInhibitoryNeuron;
 		mutate_percentChanceInhibitoryNeuron	= otherBrain1.mutate_percentChanceInhibitoryNeuron;
 
@@ -1165,33 +1165,33 @@ Brainz::Brainz()
 					else			mutate_percentChanceSensorySynapse = false;
 				}
 
-			else if ( parseH->Instance()->beginMatchesStrip( "minSynapsesAtBuildtime=", line ) )
-			{
-				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-				if(EOF == sscanf(Holder.c_str(), "%d", &minSynapsesAtBuildtime))			cerr << "ERROR INSERTING CRITTER" << endl;
-			}
-				else if ( parseH->Instance()->beginMatchesStrip( "mutate_minSynapsesAtBuildtime=", line ) )
-				{
-					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-					int result;
-					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
-					if ( result == 1 )	mutate_minSynapsesAtBuildtime = true;
-					else			mutate_minSynapsesAtBuildtime = false;
-				}
-
-			else if ( parseH->Instance()->beginMatchesStrip( "maxSynapsesAtBuildtime=", line ) )
-			{
-				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-				if(EOF == sscanf(Holder.c_str(), "%d", &maxSynapsesAtBuildtime))			cerr << "ERROR INSERTING CRITTER" << endl;
-			}
-				else if ( parseH->Instance()->beginMatchesStrip( "mutate_maxSynapsesAtBuildtime=", line ) )
-				{
-					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-					int result;
-					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
-					if ( result == 1 )	mutate_maxSynapsesAtBuildtime = true;
-					else			mutate_maxSynapsesAtBuildtime = false;
-				}
+// 			else if ( parseH->Instance()->beginMatchesStrip( "minSynapsesAtBuildtime=", line ) )
+// 			{
+// 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 				if(EOF == sscanf(Holder.c_str(), "%d", &minSynapsesAtBuildtime))			cerr << "ERROR INSERTING CRITTER" << endl;
+// 			}
+// 				else if ( parseH->Instance()->beginMatchesStrip( "mutate_minSynapsesAtBuildtime=", line ) )
+// 				{
+// 					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 					int result;
+// 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
+// 					if ( result == 1 )	mutate_minSynapsesAtBuildtime = true;
+// 					else			mutate_minSynapsesAtBuildtime = false;
+// 				}
+// 
+// 			else if ( parseH->Instance()->beginMatchesStrip( "maxSynapsesAtBuildtime=", line ) )
+// 			{
+// 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 				if(EOF == sscanf(Holder.c_str(), "%d", &maxSynapsesAtBuildtime))			cerr << "ERROR INSERTING CRITTER" << endl;
+// 			}
+// 				else if ( parseH->Instance()->beginMatchesStrip( "mutate_maxSynapsesAtBuildtime=", line ) )
+// 				{
+// 					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 					int result;
+// 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
+// 					if ( result == 1 )	mutate_maxSynapsesAtBuildtime = true;
+// 					else			mutate_maxSynapsesAtBuildtime = false;
+// 				}
 
 			else if ( parseH->Instance()->beginMatchesStrip( "minFiringThreshold=", line ) )
 			{
@@ -1235,19 +1235,19 @@ Brainz::Brainz()
 					else			mutate_maxDendridicBranches = false;
 				}
 
-			else if ( parseH->Instance()->beginMatchesStrip( "percentMutation=", line ) )
-			{
-				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutation))				cerr << "ERROR INSERTING CRITTER" << endl;
-			}
-				else if ( parseH->Instance()->beginMatchesStrip( "mutate_percentMutation=", line ) )
-				{
-					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-					int result;
-					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
-					if ( result == 1 )	mutate_percentMutation = true;
-					else			mutate_percentMutation = false;
-				}
+// 			else if ( parseH->Instance()->beginMatchesStrip( "percentMutation=", line ) )
+// 			{
+// 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutation))				cerr << "ERROR INSERTING CRITTER" << endl;
+// 			}
+// 				else if ( parseH->Instance()->beginMatchesStrip( "mutate_percentMutation=", line ) )
+// 				{
+// 					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 					int result;
+// 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
+// 					if ( result == 1 )	mutate_percentMutation = true;
+// 					else			mutate_percentMutation = false;
+// 				}
 
 			else if ( parseH->Instance()->beginMatchesStrip( "percentMutateEffectAddNeuron=", line ) )
 			{
@@ -1332,13 +1332,13 @@ Brainz::Brainz()
 			buf << "minSynapses="				<< minSynapses << ";" << endl;
 			buf << "maxSynapses="				<< maxSynapses << ";" << endl;
 
-			buf << "minSynapsesAtBuildtime="		<< minSynapsesAtBuildtime << ";" << endl;
+/*			buf << "minSynapsesAtBuildtime="		<< minSynapsesAtBuildtime << ";" << endl;
 				buf << "mutate_minSynapsesAtBuildtime="		<< mutate_minSynapsesAtBuildtime << ";" << endl;
 			buf << "maxSynapsesAtBuildtime="		<< maxSynapsesAtBuildtime << ";" << endl;
-				buf << "mutate_maxSynapsesAtBuildtime="		<< mutate_maxSynapsesAtBuildtime << ";" << endl;
+				buf << "mutate_maxSynapsesAtBuildtime="		<< mutate_maxSynapsesAtBuildtime << ";" << endl;*/
 	
-			buf << "percentMutation="			<< percentMutation << ";" << endl;
-				buf << "mutate_percentMutation="		<< mutate_percentMutation << ";" << endl;
+/*			buf << "percentMutation="			<< percentMutation << ";" << endl;
+				buf << "mutate_percentMutation="		<< mutate_percentMutation << ";" << endl;*/
 	
 			buf << "percentChanceInhibitoryNeuron="		<< percentChanceInhibitoryNeuron << ";" << endl;
 				buf << "mutate_percentChanceInhibitoryNeuron="	<< mutate_percentChanceInhibitoryNeuron << ";" << endl;
