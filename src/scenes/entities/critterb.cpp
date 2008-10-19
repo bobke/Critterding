@@ -1,7 +1,5 @@
 #include "critterb.h"
 
-// todo : include mutation % (from world)
-
 void CritterB::initConst()
 {
 	settings = Settings::Instance();
@@ -27,7 +25,6 @@ CritterB::CritterB()
 {
 	initConst();
 
-	// frame capturing options
 	crittertype		= 0;
 	adamdist		= 0;
 
