@@ -650,15 +650,15 @@ void CritterB::resize(float newsize)
 				{
 					string R = parseH->Instance()->returnUntillStrip( ",", line );
 					string G = parseH->Instance()->returnUntillStrip( ",", line );
-					string B = parseH->Instance()->returnUntillStrip( ",", line );
+					string B = parseH->Instance()->returnUntillStrip( ";", line );
 		/*			cerr << "R: " << R  << endl;
 					cerr << "G: " << G << endl;
 					cerr << "B: " << B << endl;
 					cerr << "A: " << A << endl;*/
 	
-					if(EOF == sscanf(R.c_str(), "%f", &color[0])) cerr << "ERROR INSERTING CRITTER" << endl;
-					if(EOF == sscanf(G.c_str(), "%f", &color[1])) cerr << "ERROR INSERTING CRITTER" << endl;
-					if(EOF == sscanf(B.c_str(), "%f", &color[2])) cerr << "ERROR INSERTING CRITTER" << endl;
+					if(EOF == sscanf(R.c_str(), "%f", &color[0])) cerr << "ERROR INSERTING CRITTER (colorR)" << endl;
+					if(EOF == sscanf(G.c_str(), "%f", &color[1])) cerr << "ERROR INSERTING CRITTER (colorG)" << endl;
+					if(EOF == sscanf(B.c_str(), "%f", &color[2])) cerr << "ERROR INSERTING CRITTER (colorB)" << endl;
 				}
 	
 			// type=0;

@@ -1004,7 +1004,7 @@ void WorldB::loadAllCritters()
 				c->setRotation( randgen->Instance()->get(0,360) );
 
 				c->brain.wireArch();
-			c->retina = retina;
+				c->retina = retina;
 			}
 			else if ( error == 1 )
 			{
