@@ -188,15 +188,19 @@ Settings::Settings()
 	brain_percentmutateeffectremoveneuron		= 10;
 		brain_percentmutateeffectremoveneuronMin	= 0;
 		brain_percentmutateeffectremoveneuronMax	= 100;
-	brain_percentmutateeffectalterneuron		= 20;
+	brain_percentmutateeffectalterneuron		= 19;
 		brain_percentmutateeffectalterneuronMin		= 0;
 		brain_percentmutateeffectalterneuronMax		= 100;
-	brain_percentmutateeffectaddsynapse		= 29;
+	brain_percentmutateeffectaddsynapse		= 30;
 		brain_percentmutateeffectaddsynapseMin		= 0;
 		brain_percentmutateeffectaddsynapseMax		= 100;
-	brain_percentmutateeffectremovesynapse		= 29;
+	brain_percentmutateeffectremovesynapse		= 30;
 		brain_percentmutateeffectremovesynapseMin	= 0;
 		brain_percentmutateeffectremovesynapseMax	= 100;
+	brain_percentMutateEffectAlterMutable		= 1;
+		brain_percentMutateEffectAlterMutableMin	= 0;
+		brain_percentMutateEffectAlterMutableMax	= 100;
+
 		brain_mutate_mutateeffects			= true;
 
 	createHelpInfo();
@@ -290,6 +294,8 @@ void Settings::createHelpInfo()
 	helpinfo << "  --brain_percentmutateeffectalterneuron         [" << brain_percentmutateeffectalterneuron << "]  % chance of altering a neuron for a mutationrun" << endl;
 	helpinfo << "  --brain_percentmutateeffectaddsynapse          [" << brain_percentmutateeffectaddsynapse << "]  % chance of adding a synapse for a mutationrun" << endl;
 	helpinfo << "  --brain_percentmutateeffectremovesynapse       [" << brain_percentmutateeffectremovesynapse << "]  % chance of removing a synapse for a mutationrun" << endl;
+	helpinfo << "  --brain_percentMutateEffectAlterMutable        [" << brain_percentMutateEffectAlterMutable << "]  % chance of altering a mutable" << endl;
+
 	helpinfo << "    --brain_mutate_mutateeffects                       If set, all values above will mutate" << endl;
 }
 
@@ -422,6 +428,7 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("brain_percentmutateeffectalterneuron ", brain_percentmutateeffectalterneuron, brain_percentmutateeffectalterneuronMin, brain_percentmutateeffectalterneuronMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("brain_percentmutateeffectaddsynapse ", brain_percentmutateeffectaddsynapse, brain_percentmutateeffectaddsynapseMin, brain_percentmutateeffectaddsynapseMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("brain_percentmutateeffectremovesynapse ", brain_percentmutateeffectremovesynapse, brain_percentmutateeffectremovesynapseMin, brain_percentmutateeffectremovesynapseMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("brain_percentMutateEffectAlterMutable", brain_percentMutateEffectAlterMutable, brain_percentMutateEffectAlterMutableMin, brain_percentMutateEffectAlterMutableMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("brain_mutate_mutateeffects", brain_mutate_mutateeffects, line) ) uselesscounter++;
 
 			else
@@ -557,6 +564,8 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--brain_percentmutateeffectalterneuron", brain_percentmutateeffectalterneuron, brain_percentmutateeffectalterneuronMin, brain_percentmutateeffectalterneuronMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--brain_percentmutateeffectaddsynapse", brain_percentmutateeffectaddsynapse, brain_percentmutateeffectaddsynapseMin, brain_percentmutateeffectaddsynapseMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--brain_percentmutateeffectremovesynapse", brain_percentmutateeffectremovesynapse, brain_percentmutateeffectremovesynapseMin, brain_percentmutateeffectremovesynapseMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_percentMutateEffectAlterMutable", brain_percentMutateEffectAlterMutable, brain_percentMutateEffectAlterMutableMin, brain_percentMutateEffectAlterMutableMax, optind, argv) ) optind++;
+
 		else if (sw=="--brain_mutate_mutateeffects") brain_mutate_mutateeffects = true;
 
 		else if (sw=="--help")
@@ -746,6 +755,7 @@ void Settings::printSettings()
 	cerr << "brain_percentmutateeffectalterneuron  " << brain_percentmutateeffectalterneuron << endl;
 	cerr << "brain_percentmutateeffectaddsynapse  " << brain_percentmutateeffectaddsynapse << endl;
 	cerr << "brain_percentmutateeffectremovesynapse  " << brain_percentmutateeffectremovesynapse << endl;
+	cerr << "brain_percentMutateEffectAlterMutable  " << brain_percentMutateEffectAlterMutable << endl;
 	cerr << "brain_mutate_mutateeffects  " << brain_mutate_mutateeffects << endl;
 
 	cout << endl << "BUTTONS" << endl << endl;

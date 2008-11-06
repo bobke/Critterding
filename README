@@ -19,7 +19,7 @@ STARTUP OPTIONS
   --mincritters               [10]  If less than 10 critters are present, insert an adam 
   --retinasperrow             [20]  Place 20 retinas on a row (bottom left of window)    
   --camerasensitivity         [10]  Camera sensitivity                                   
-  --exit_if_empty                   If set, the program will exit when no are left       
+  --exit-if-empty                   If set, the program will exit when no are left       
 
   Critter Settings
   --critter_maxlifetime     [2000]  Max amount of frames a critter can live

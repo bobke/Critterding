@@ -206,6 +206,10 @@ class Settings
 		unsigned int brain_percentmutateeffectremovesynapse;
 			unsigned int brain_percentmutateeffectremovesynapseMin;
 			unsigned int brain_percentmutateeffectremovesynapseMax;
+		unsigned int brain_percentMutateEffectAlterMutable;
+			unsigned int brain_percentMutateEffectAlterMutableMin;
+			unsigned int brain_percentMutateEffectAlterMutableMax;
+
 			bool brain_mutate_mutateeffects;
 
 		// other vars

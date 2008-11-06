@@ -31,7 +31,6 @@ class CritterB
 		unsigned int		adamdist;
 		unsigned int		retinasize;
 
-		unsigned int		colorNeurons;
 		float			sightrange;
 
 		float			size;
@@ -40,7 +39,8 @@ class CritterB
 		Vector3f		position;
 		Vector3f		newposition;
 
-		float			color[4];
+		float			color[3];
+		float			nosecolor[3];
 		float			colorTrim;
 
 		float			energyLevel;
@@ -142,11 +142,13 @@ class CritterB
 		unsigned int		visionPosition;
 
 		unsigned int		motorneuronsfired;
+		unsigned int		movementsmade;
 
 		void			initConst();
 		void			procInputNeurons();
 		void			procOutputNeurons();
 		void			createInputOutputNeurons();
+		void			determineNoseColor();
 };
 
 #endif

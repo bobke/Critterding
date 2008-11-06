@@ -69,6 +69,7 @@ Brainz::Brainz()
 		percentMutateEffectAlterNeuron			= 5;
 		percentMutateEffectAddSynapse			= 40;
 		percentMutateEffectRemoveSynapse		= 40;
+		percentMutateEffectAlterMutable			= 5;
 			mutate_MutateEffects			= false;
 
 		// archBuffer
@@ -520,7 +521,7 @@ Brainz::Brainz()
 			}
 
 		// change a mutatable
-			else
+			else if (  mode <= percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron + percentMutateEffectAlterNeuron + percentMutateEffectAddSynapse + percentMutateEffectRemoveSynapse + percentMutateEffectAlterMutable )
 			{
 				unsigned int imode = randgen->Instance()->get(1,14);
 
@@ -638,15 +639,16 @@ Brainz::Brainz()
 					unsigned int jmode = randgen->Instance()->get(1,2);
 
 					// which of 5
-					unsigned int kmode = randgen->Instance()->get(1,5);
+					unsigned int kmode = randgen->Instance()->get(1,6);
 
-					if ( jmode == 1 && percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron + percentMutateEffectAlterNeuron + percentMutateEffectAddSynapse + percentMutateEffectRemoveSynapse < 99 ) // !!! not 100 or we'll never come here again
+					if ( jmode == 1 && percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron + percentMutateEffectAlterNeuron + percentMutateEffectAddSynapse + percentMutateEffectRemoveSynapse + percentMutateEffectAlterMutable <= 100 )
 					{
 						if ( kmode == 1 )	percentMutateEffectAddNeuron++;
 						else if ( kmode == 2 )	percentMutateEffectRemoveNeuron++;
 						else if ( kmode == 3 )	percentMutateEffectAlterNeuron++;
 						else if ( kmode == 4 )	percentMutateEffectAddSynapse++;
 						else if ( kmode == 5 )	percentMutateEffectRemoveSynapse++;
+						else if ( kmode == 6 )	percentMutateEffectAlterMutable++;
 					}
 					else if ( jmode == 2 )
 					{
@@ -655,6 +657,7 @@ Brainz::Brainz()
 						else if ( kmode == 3 && percentMutateEffectAlterNeuron > 0 )	percentMutateEffectAlterNeuron--;
 						else if ( kmode == 4 && percentMutateEffectAddSynapse > 0 )	percentMutateEffectAddSynapse--;
 						else if ( kmode == 5 && percentMutateEffectRemoveSynapse > 0 )	percentMutateEffectRemoveSynapse--;
+						else if ( kmode == 6 && percentMutateEffectAlterMutable > 0 )	percentMutateEffectAlterMutable--;
 					}
 				}
 
@@ -687,6 +690,7 @@ Brainz::Brainz()
 
 				else runs++;
 			}
+			else runs++;
 		}
 	}
 
@@ -825,6 +829,7 @@ Brainz::Brainz()
 		percentMutateEffectAlterNeuron		= otherBrain.percentMutateEffectAlterNeuron;
 		percentMutateEffectAddSynapse		= otherBrain.percentMutateEffectAddSynapse;
 		percentMutateEffectRemoveSynapse	= otherBrain.percentMutateEffectRemoveSynapse;
+		percentMutateEffectAlterMutable		= otherBrain.percentMutateEffectAlterMutable;
 		mutate_MutateEffects			= otherBrain.mutate_MutateEffects;
 
 		for ( unsigned int i = 0; i < otherBrain.ArchNeurons.size(); i++ )
@@ -905,6 +910,7 @@ Brainz::Brainz()
 		percentMutateEffectAlterNeuron		= otherBrain1.percentMutateEffectAlterNeuron;
 		percentMutateEffectAddSynapse		= otherBrain1.percentMutateEffectAddSynapse;
 		percentMutateEffectRemoveSynapse	= otherBrain1.percentMutateEffectRemoveSynapse;
+		percentMutateEffectAlterMutable		= otherBrain1.percentMutateEffectAlterMutable;
 		mutate_MutateEffects			= otherBrain1.mutate_MutateEffects;
 
 		// take biggest
@@ -1278,6 +1284,14 @@ Brainz::Brainz()
 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
 				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutateEffectRemoveSynapse))				cerr << "ERROR INSERTING CRITTER" << endl;
 			}
+
+			else if ( parseH->Instance()->beginMatchesStrip( "percentMutateEffectAlterMutable=", line ) )
+			{
+				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+				if(EOF == sscanf(Holder.c_str(), "%d", &percentMutateEffectAlterMutable))				cerr << "ERROR INSERTING CRITTER" << endl;
+			}
+
+
 				else if ( parseH->Instance()->beginMatchesStrip( "mutate_MutateEffects=", line ) )
 				{
 					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
@@ -1371,6 +1385,8 @@ Brainz::Brainz()
 			buf << "percentMutateEffectAlterNeuron="	<< percentMutateEffectAlterNeuron << ";" << endl;
 			buf << "percentMutateEffectAddSynapse="		<< percentMutateEffectAddSynapse << ";" << endl;
 			buf << "percentMutateEffectRemoveSynapse="	<< percentMutateEffectRemoveSynapse << ";" << endl;
+			buf << "percentMutateEffectAlterMutable="	<< percentMutateEffectAlterMutable << ";" << endl;
+
 				buf << "mutate_MutateEffects="			<< mutate_MutateEffects << ";" << endl;
 	
 	
