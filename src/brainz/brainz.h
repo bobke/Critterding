@@ -43,6 +43,7 @@ class Brainz
 			unsigned int		percentMutateEffectAlterNeuron;
 			unsigned int		percentMutateEffectAddSynapse;
 			unsigned int		percentMutateEffectRemoveSynapse;
+			unsigned int		percentMutateEffectAlterMutable;
 				bool			mutate_MutateEffects;
 
 		// percent chance that when adding a new random neuron, it's inhibitory

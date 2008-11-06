@@ -25,7 +25,7 @@ WorldB::WorldB()
 
 void WorldB::generateList()
 {
-	displayLists = glGenLists(3);
+	displayLists = glGenLists(4);
 
 	// 1 = food, corpse, bullet : normal cube
 	glNewList(displayLists,GL_COMPILE);
@@ -90,19 +90,47 @@ void WorldB::generateList()
 		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
 		glEnd();
 
-		// nose
- 		glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
+	glEndList();
+
+	// 3 = critter nose
+	glNewList(displayLists+2,GL_COMPILE);
+
+// 		glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
 
 		glBegin(GL_TRIANGLES);
-		glVertex3f( -1.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  1.0f,  -1.0f );
-		glVertex3f(  0.0f,  0.5f,  -1.3f );
+		// standard nose
+// 		glVertex3f( -1.0f,  1.0f,  -1.0f );
+// 		glVertex3f(  1.0f,  1.0f,  -1.0f );
+// 		glVertex3f(  0.0f,  0.5f,  -1.3f );
+
+		// owl nose
+// 		glVertex3f( -1.0f,  0.3f,  -1.0f );
+// 		glVertex3f(  1.0f,  0.3f,  -1.0f );
+// 		glVertex3f(  0.0f,  0.3f,  -1.3f );
+// 
+// 		glVertex3f( -1.0f,  0.3f,  -1.0f );
+// 		glVertex3f(  0.0f,  1.0f,  -1.0f );
+// 		glVertex3f(  0.0f,  0.3f,  -1.3f );
+// 
+// 		glVertex3f(  0.0f,  1.0f,  -1.0f );
+// 		glVertex3f(  1.0f,  0.3f,  -1.0f );
+// 		glVertex3f(  0.0f,  0.3f,  -1.3f );
+
+		// big nose
+		glVertex3f(  0.0f,  1.0f,  -1.0f );
+		glVertex3f(  1.0f,  0.0f,  -1.0f );
+		glVertex3f(  0.0f,  0.0f,  -1.5f );
+
+		glVertex3f(  0.0f,  1.0f,  -1.0f );
+		glVertex3f(  0.0f,  0.0f,  -1.5f );
+		glVertex3f( -1.0f,  0.0f,  -1.0f );
+
 		glEnd();
 
 	glEndList();
 
-	// 3 = floor
-	glNewList(displayLists+2,GL_COMPILE);
+	// 4 = floor
+	glNewList(displayLists+3,GL_COMPILE);
 
 		glColor4f( 0.0f, 0.0f, 1.0f, 0.0f );
 		glBegin(GL_QUADS);
@@ -778,7 +806,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 //	draw floor;
 	glPushMatrix();
 		glScalef( floor.gridsize, floor.gridsize, floor.gridsize );
-		glCallList(displayLists+2);
+		glCallList(displayLists+3);
 	glPopMatrix();
 
 	for( unsigned int j=0; j < critters.size(); j++)
@@ -789,11 +817,18 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 			if ( c->isWithinSight(f->position) )
 			{
 				glPushMatrix();
-					glColor4f( f->color[0], f->color[1], f->color[2], f->color[3] );
 					glTranslatef( f->position.x, f->position.y, f->position.z );
-					glRotatef( f->rotation, 0.0, 1.0, 0.0 );
+					glRotatef( f->rotation, 0.0f, 1.0f, 0.0f );
 					glScalef( f->halfsize, f->halfsize, f->halfsize );
+
+					// body
+					glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
 					glCallList(displayLists+1);
+
+					// nose
+					glColor4f( f->nosecolor[0], f->nosecolor[1], f->nosecolor[2], 0.0f );
+					glCallList(displayLists+2);
+
 				glPopMatrix();
 			}
 		}
@@ -912,13 +947,17 @@ void WorldB::drawWithGrid()
 	{
 		CritterB *f = critters[i];
 		glPushMatrix();
- 			glColor4f( f->color[0], f->color[1], f->color[2], f->color[3] );
 			glTranslatef( f->position.x, f->position.y, f->position.z );
-			glRotatef( f->rotation, 0.0, 1.0, 0.0 );
+			glRotatef( f->rotation, 0.0f, 1.0f, 0.0f );
 			glScalef( f->halfsize, f->halfsize, f->halfsize );
-			glCallList(displayLists+1);
 
- 			glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
+				// body
+				glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
+				glCallList(displayLists+1);
+
+				// nose
+				glColor4f( f->nosecolor[0], f->nosecolor[1], f->nosecolor[2], 0.0f );
+				glCallList(displayLists+2);
 
 		glPopMatrix();
 

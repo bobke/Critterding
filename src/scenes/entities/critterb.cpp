@@ -87,11 +87,10 @@ CritterB::CritterB()
 	color[0] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[1] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[2] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	color[3] = 0.0f;
 
 	items = retinasize * retinasize * components;
 	brain.numberOfInputs = items+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
-	brain.numberOfOutputs = 10;
+	brain.numberOfOutputs = 13;
 
 	brain.buildArch();
 }
@@ -112,7 +111,6 @@ CritterB::CritterB(CritterB &other)
 	color[0]					= other.color[0];
 	color[1]					= other.color[1];
 	color[2]					= other.color[2];
-	color[3]					= other.color[3];
 
 	crittertype					= other.crittertype;
 	adamdist					= other.adamdist;
@@ -142,10 +140,15 @@ void CritterB::process()
 		fireTimeCount++;
 
 	// reset motor bools
+		movementsmade	= 0;
 		eat		= false;
 		fire		= false;
 		procreate	= false;
 		carrydrop	= false;
+
+		nosecolor[0]	= 0.0f;
+		nosecolor[1]	= 0.0f;
+		nosecolor[2]	= 0.0f;
 
 	// wasShot (used in world)
 		wasShot		= false;
@@ -165,6 +168,20 @@ void CritterB::process()
 	// calc used energy, energyUsed is used in world aswell, don't remove
 
 		energyUsed = ( (float)brain.totalNeurons + (float)brain.neuronsFired + (2.0f*(float)motorneuronsfired) + ((float)brain.totalSynapses/10.0f) ) / 200.0f;
+
+// 		energyUsed = brain.totalNeurons * costofhavingneuron;
+// 		energyUsed = brain.totalSynapses * costofhavingsynapse;
+// 		energyUsed = brain.neuronsFired * costoffiringneuron;
+// 		energyUsed = motorneuronsfired * costoffiringmotorneuron;
+// 		energyUsed = movementsmade * costofmovement;
+
+	// make nose white if nosecolor is all 0
+		if ( nosecolor[0] == 0.0f && nosecolor[1] == 0.0f && nosecolor[2] == 0.0f )
+		{
+			nosecolor[0]	= 1.0f;
+			nosecolor[1]	= 1.0f;
+			nosecolor[2]	= 1.0f;
+		}
 
 // cerr << energyUsed << endl;
 // 
@@ -316,36 +333,42 @@ void CritterB::procOutputNeurons()
 	{
 		moveForward();
 		motorneuronsfired++;
+		movementsmade++;
 	}
 
 	if ( brain.Outputs[1].output > 0 )
 	{
 		moveBackward();
 		motorneuronsfired++;
+		movementsmade++;
 	}
 
 	if ( brain.Outputs[2].output > 0 )
 	{
 		moveLeft();
 		motorneuronsfired++;
+		movementsmade++;
 	}
 
 	if ( brain.Outputs[3].output > 0 )
 	{
 		moveRight();
 		motorneuronsfired++;
+		movementsmade++;
 	}
 
 	if ( brain.Outputs[4].output > 0 )
 	{
 		rotateLeft();
 		motorneuronsfired++;
+		movementsmade++;
 	}
 
 	if ( brain.Outputs[5].output > 0 )
 	{
 		rotateRight();
 		motorneuronsfired++;
+		movementsmade++;
 	}
 
 	if ( brain.Outputs[6].output > 0 )
@@ -369,6 +392,24 @@ void CritterB::procOutputNeurons()
 	if ( brain.Outputs[9].output > 0 )
 	{
 		carrydrop = true;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[10].output > 0 )
+	{
+		nosecolor[0] = 1.0f;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[11].output > 0 )
+	{
+		nosecolor[1] = 1.0f;
+		motorneuronsfired++;
+	}
+
+	if ( brain.Outputs[12].output > 0 )
+	{
+		nosecolor[2] = 1.0f;
 		motorneuronsfired++;
 	}
 }
@@ -610,7 +651,6 @@ void CritterB::resize(float newsize)
 					string R = parseH->Instance()->returnUntillStrip( ",", line );
 					string G = parseH->Instance()->returnUntillStrip( ",", line );
 					string B = parseH->Instance()->returnUntillStrip( ",", line );
-					string A = parseH->Instance()->returnUntillStrip( ";", line );
 		/*			cerr << "R: " << R  << endl;
 					cerr << "G: " << G << endl;
 					cerr << "B: " << B << endl;
@@ -619,7 +659,6 @@ void CritterB::resize(float newsize)
 					if(EOF == sscanf(R.c_str(), "%f", &color[0])) cerr << "ERROR INSERTING CRITTER" << endl;
 					if(EOF == sscanf(G.c_str(), "%f", &color[1])) cerr << "ERROR INSERTING CRITTER" << endl;
 					if(EOF == sscanf(B.c_str(), "%f", &color[2])) cerr << "ERROR INSERTING CRITTER" << endl;
-					if(EOF == sscanf(A.c_str(), "%f", &color[3])) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
 			// type=0;
@@ -664,7 +703,7 @@ void CritterB::resize(float newsize)
 	string CritterB::saveCritterB()
 	{
 		stringstream buf;
-		buf << "color=" << color[0] << "," << color[1] << "," << color[2] << "," << color[3] << ";\n";
+		buf << "color=" << color[0] << "," << color[1] << "," << color[2] << ";\n";
 		buf << "type=" << crittertype << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
 		buf << "retinasize=" << retinasize << ";\n";
