@@ -57,6 +57,9 @@ class Settings
 		unsigned int critter_minenergyfire;
 			unsigned int critter_minenergyfireMin;
 			unsigned int critter_minenergyfireMax;
+		unsigned int critter_firecost;
+			unsigned int critter_firecostMin;
+			unsigned int critter_firecostMax;
 		unsigned int critter_sizeI;
 			unsigned int critter_sizeIMin;
 			unsigned int critter_sizeIMax;
@@ -211,6 +214,19 @@ class Settings
 			unsigned int brain_percentMutateEffectAlterMutableMax;
 
 			bool brain_mutate_mutateeffects;
+
+		unsigned int brain_costhavingneuron;
+			unsigned int brain_costhavingneuronMin;
+			unsigned int brain_costhavingneuronMax;
+		unsigned int brain_costfiringneuron;
+			unsigned int brain_costfiringneuronMin;
+			unsigned int brain_costfiringneuronMax;
+		unsigned int brain_costfiringmotorneuron;
+			unsigned int brain_costfiringmotorneuronMin;
+			unsigned int brain_costfiringmotorneuronMax;
+		unsigned int brain_costhavingsynapse;
+			unsigned int brain_costhavingsynapseMin;
+			unsigned int brain_costhavingsynapseMax;
 
 		// other vars
 		float critter_size;

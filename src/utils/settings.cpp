@@ -48,6 +48,9 @@ Settings::Settings()
 	critter_minenergyfire		= 1;
 		critter_minenergyfireMin	= 0;
 		critter_minenergyfireMax	= 1000000;
+	critter_firecost		= 1;
+		critter_firecostMin		= 0;
+		critter_firecostMax		= 1000000;
 	critter_sizeI			= 10;
 		critter_sizeIMin		= 1;
 		critter_sizeIMax		= 100;
@@ -116,27 +119,27 @@ Settings::Settings()
 	brain_minsynapsesatbuildtime			= 1;
 		brain_minsynapsesatbuildtimeMin			= 1;
 		brain_minsynapsesatbuildtimeMax			= 1000000;
-		brain_mutate_minsynapsesatbuildtime		= true;
+		brain_mutate_minsynapsesatbuildtime		= false;
 
 	brain_maxsynapsesatbuildtime			= 60;
 		brain_maxsynapsesatbuildtimeMin			= 1;
 		brain_maxsynapsesatbuildtimeMax			= 1000000;
-		brain_mutate_maxsynapsesatbuildtime		= true;
+		brain_mutate_maxsynapsesatbuildtime		= false;
 
 	brain_percentchanceinhibitoryneuron		= 50;
 		brain_percentchanceinhibitoryneuronMin		= 0;
 		brain_percentchanceinhibitoryneuronMax		= 100;
-		brain_mutate_percentchanceinhibitoryneuron	= true;
+		brain_mutate_percentchanceinhibitoryneuron	= false;
 
 	brain_percentchancemotorneuron			= 50;
 		brain_percentchancemotorneuronMin		= 0;
 		brain_percentchancemotorneuronMax		= 100;
-		brain_mutate_percentchancemotorneuron		= true;
+		brain_mutate_percentchancemotorneuron		= false;
 
 	brain_percentchanceplasticneuron		= 20;
 		brain_percentchanceplasticneuronMin		= 0;
 		brain_percentchanceplasticneuronMax		= 100;
-		brain_mutate_percentchanceplasticneuron		= true;
+		brain_mutate_percentchanceplasticneuron		= false;
 
 	brain_minplasticitystrengthen			= 100;
 		brain_minplasticitystrengthenMin		= 1;
@@ -150,37 +153,37 @@ Settings::Settings()
 	brain_maxplasticityweaken			= 10000;
 		brain_maxplasticityweakenMin			= 1;
 		brain_maxplasticityweakenMax			= 1000000;
-		brain_mutate_plasticityfactors			= true;
+		brain_mutate_plasticityfactors			= false;
 
 	brain_minfiringthreshold			= 2;
 		brain_minfiringthresholdMin			= 1;
 		brain_minfiringthresholdMax			= 1000000;
-		brain_mutate_minfiringthreshold			= true;
+		brain_mutate_minfiringthreshold			= false;
 
 	brain_maxfiringthreshold			= 10;
 		brain_maxfiringthresholdMin			= 1;
 		brain_maxfiringthresholdMax			= 1000000;
-		brain_mutate_maxfiringthreshold			= true;
+		brain_mutate_maxfiringthreshold			= false;
 
 	brain_maxdendridicbranches			= 3;
 		brain_maxdendridicbranchesMin			= 1;
 		brain_maxdendridicbranchesMax			= 1000;
-		brain_mutate_maxdendridicbranches		= true;
+		brain_mutate_maxdendridicbranches		= false;
 
 	brain_percentchanceconsistentsynapses		= 50;
 		brain_percentchanceconsistentsynapsesMin	= 0;
 		brain_percentchanceconsistentsynapsesMax	= 100;
-		brain_mutate_percentchanceconsistentsynapses	= true;
+		brain_mutate_percentchanceconsistentsynapses	= false;
 
 	brain_percentchanceinhibitorysynapses		= 50;
 		brain_percentchanceinhibitorysynapsesMin	= 0;
 		brain_percentchanceinhibitorysynapsesMax	= 100;
-		brain_mutate_percentchanceinhibitorysynapses	= true;
+		brain_mutate_percentchanceinhibitorysynapses	= false;
 
 	brain_percentchancesensorysynapse		= 20;
 		brain_percentchancesensorysynapseMin		= 0;
 		brain_percentchancesensorysynapseMax		= 100;
-		brain_mutate_percentchancesensorysynapse	= true;
+		brain_mutate_percentchancesensorysynapse	= false;
 
 	brain_percentmutateeffectaddneuron		= 10;
 		brain_percentmutateeffectaddneuronMin		= 0;
@@ -188,20 +191,33 @@ Settings::Settings()
 	brain_percentmutateeffectremoveneuron		= 10;
 		brain_percentmutateeffectremoveneuronMin	= 0;
 		brain_percentmutateeffectremoveneuronMax	= 100;
-	brain_percentmutateeffectalterneuron		= 19;
+	brain_percentmutateeffectalterneuron		= 20;
 		brain_percentmutateeffectalterneuronMin		= 0;
 		brain_percentmutateeffectalterneuronMax		= 100;
-	brain_percentmutateeffectaddsynapse		= 30;
+	brain_percentmutateeffectaddsynapse		= 29;
 		brain_percentmutateeffectaddsynapseMin		= 0;
 		brain_percentmutateeffectaddsynapseMax		= 100;
-	brain_percentmutateeffectremovesynapse		= 30;
+	brain_percentmutateeffectremovesynapse		= 29;
 		brain_percentmutateeffectremovesynapseMin	= 0;
 		brain_percentmutateeffectremovesynapseMax	= 100;
 	brain_percentMutateEffectAlterMutable		= 1;
 		brain_percentMutateEffectAlterMutableMin	= 0;
 		brain_percentMutateEffectAlterMutableMax	= 100;
 
-		brain_mutate_mutateeffects			= true;
+		brain_mutate_mutateeffects			= false;
+
+	brain_costhavingneuron				= 100;
+		brain_costhavingneuronMin			= 0;
+		brain_costhavingneuronMax			= 1000000;
+	brain_costfiringneuron				= 100;
+		brain_costfiringneuronMin			= 0;
+		brain_costfiringneuronMax			= 1000000;
+	brain_costfiringmotorneuron			= 200;
+		brain_costfiringmotorneuronMin			= 0;
+		brain_costfiringmotorneuronMax			= 1000000;
+	brain_costhavingsynapse				= 10;
+		brain_costhavingsynapseMin			= 0;
+		brain_costhavingsynapseMax			= 1000000;
 
 	createHelpInfo();
 }
@@ -219,7 +235,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --mincritters               [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
 	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;
-	helpinfo << "  --exit_if_empty                   If set, the program will exit when no are left" << endl;
+	helpinfo << "  --exit-if-empty                   If set, the program will exit when no are left" << endl;
 
 	helpinfo << endl;
 	helpinfo << "  Critter Settings" << endl;
@@ -230,6 +246,8 @@ void Settings::createHelpInfo()
 	helpinfo << "  --critter_fireinterval      [" << critter_fireinterval << "]  Time (in frames) between bullets being fired" << endl;
 	helpinfo << "  --critter_minenergyproc   [" << critter_minenergyproc << "]  Min amount of energy required for procreation" << endl;
 	helpinfo << "  --critter_minenergyfire      [" << critter_minenergyfire << "]  Min amount of energy required for firing a bullet" << endl;
+	helpinfo << "  --critter_firecost           [" << critter_firecost << "]  Amount of energy it costs to fire a bullet" << endl;
+
 	helpinfo << "  --critter_size              [" << critter_sizeI << "]  Size of a critter" << endl;
 	helpinfo << "  --critter_speed             [" << critter_speedI << "]  Critter speed" << endl;
 	helpinfo << "  --critter_sightrange        [" << critter_sightrangeI << "]  Distance a critter can see (" << critter_sightrangeI*10.0f << " = " << critter_sightrangeI << " floor squares)" << endl;
@@ -294,9 +312,15 @@ void Settings::createHelpInfo()
 	helpinfo << "  --brain_percentmutateeffectalterneuron         [" << brain_percentmutateeffectalterneuron << "]  % chance of altering a neuron for a mutationrun" << endl;
 	helpinfo << "  --brain_percentmutateeffectaddsynapse          [" << brain_percentmutateeffectaddsynapse << "]  % chance of adding a synapse for a mutationrun" << endl;
 	helpinfo << "  --brain_percentmutateeffectremovesynapse       [" << brain_percentmutateeffectremovesynapse << "]  % chance of removing a synapse for a mutationrun" << endl;
-	helpinfo << "  --brain_percentMutateEffectAlterMutable        [" << brain_percentMutateEffectAlterMutable << "]  % chance of altering a mutable" << endl;
+	helpinfo << "  --brain_percentMutateEffectAlterMutable         [" << brain_percentMutateEffectAlterMutable << "]  % chance of altering a mutable" << endl;
 
 	helpinfo << "    --brain_mutate_mutateeffects                       If set, all values above will mutate" << endl;
+
+	helpinfo << "  --brain_costhavingneuron                        [" << brain_costhavingneuron << "]  Energycost per frame for having a neuron" << endl;
+	helpinfo << "  --brain_costfiringneuron                        [" << brain_costfiringneuron << "]  Energycost per frame for firing a neuron" << endl;
+	helpinfo << "  --brain_costfiringmotorneuron                   [" << brain_costfiringmotorneuron << "]  Energycost per frame for firing a motorneuron" << endl;
+	helpinfo << "  --brain_costhavingsynapse                       [" << brain_costhavingsynapse << "]  Energycost per frame for having a synapse" << endl;
+
 }
 
 void Settings::loadProfile(char* filename)
@@ -355,6 +379,7 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("critter_fireinterval ", critter_fireinterval, critter_fireintervalMin, critter_fireintervalMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_minenergyproc ", critter_minenergyproc, critter_minenergyprocMin, critter_minenergyprocMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_minenergyfire ", critter_minenergyfire, critter_minenergyfireMin, critter_minenergyfireMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("critter_firecost ", critter_firecost, critter_firecostMin, critter_firecostMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_size ", critter_sizeI, critter_sizeIMin, critter_sizeIMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_speed ", critter_speedI, critter_speedIMin, critter_speedIMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_sightrange ", critter_sightrangeI, critter_sightrangeIMin, critter_sightrangeIMax, line) ) uselesscounter++;
@@ -431,6 +456,11 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("brain_percentMutateEffectAlterMutable", brain_percentMutateEffectAlterMutable, brain_percentMutateEffectAlterMutableMin, brain_percentMutateEffectAlterMutableMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("brain_mutate_mutateeffects", brain_mutate_mutateeffects, line) ) uselesscounter++;
 
+			else if ( checkConfigFileValue("brain_costhavingneuron", brain_costhavingneuron, brain_costhavingneuronMin, brain_costhavingneuronMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("brain_costfiringneuron", brain_costfiringneuron, brain_costfiringneuronMin, brain_costfiringneuronMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("brain_costfiringmotorneuron", brain_costfiringmotorneuron, brain_costfiringmotorneuronMin, brain_costfiringmotorneuronMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("brain_costhavingsynapse", brain_costhavingsynapse, brain_costhavingsynapseMin, brain_costhavingsynapseMax, line) ) uselesscounter++;
+
 			else
 			{
 				cout << "Unknown option in profile: " << line << endl;
@@ -485,6 +515,7 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--critter_fireinterval", critter_fireinterval, critter_fireintervalMin, critter_fireintervalMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_minenergyproc", critter_minenergyproc, critter_minenergyprocMin, critter_minenergyprocMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_minenergyfire", critter_minenergyfire, critter_minenergyfireMin, critter_minenergyfireMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--critter_firecost", critter_firecost, critter_firecostMin, critter_firecostMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_size", critter_sizeI, critter_sizeIMin, critter_sizeIMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_speed", critter_speedI, critter_speedIMin, critter_speedIMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_sightrange", critter_sightrangeI, critter_sightrangeIMin, critter_sightrangeIMax, optind, argv) ) optind++;
@@ -567,6 +598,11 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--brain_percentMutateEffectAlterMutable", brain_percentMutateEffectAlterMutable, brain_percentMutateEffectAlterMutableMin, brain_percentMutateEffectAlterMutableMax, optind, argv) ) optind++;
 
 		else if (sw=="--brain_mutate_mutateeffects") brain_mutate_mutateeffects = true;
+
+		else if ( checkSwitch("--brain_costhavingneuron", brain_costhavingneuron, brain_costhavingneuronMin, brain_costhavingneuronMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_costfiringneuron", brain_costfiringneuron, brain_costfiringneuronMin, brain_costfiringneuronMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_costfiringmotorneuron", brain_costfiringmotorneuron, brain_costfiringmotorneuronMin, brain_costfiringmotorneuronMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_costhavingsynapse", brain_costhavingsynapse, brain_costhavingsynapseMin, brain_costhavingsynapseMax, optind, argv) ) optind++;
 
 		else if (sw=="--help")
 		{
@@ -697,6 +733,7 @@ void Settings::printSettings()
 	cerr << "critter_fireinterval " << critter_fireinterval << endl;
 	cerr << "critter_minenergyproc " << critter_minenergyproc << endl;
 	cerr << "critter_minenergyfire " << critter_minenergyfire << endl;
+	cerr << "critter_firecost " << critter_firecost << endl;
 	cerr << "critter_size " << critter_sizeI << endl;
 	cerr << "critter_speed " << critter_speedI << endl;
 	cerr << "critter_sightrange " << critter_sightrangeI << endl;
@@ -757,6 +794,11 @@ void Settings::printSettings()
 	cerr << "brain_percentmutateeffectremovesynapse  " << brain_percentmutateeffectremovesynapse << endl;
 	cerr << "brain_percentMutateEffectAlterMutable  " << brain_percentMutateEffectAlterMutable << endl;
 	cerr << "brain_mutate_mutateeffects  " << brain_mutate_mutateeffects << endl;
+
+	cerr << "brain_costhavingneuron  " << brain_costhavingneuron << endl;
+	cerr << "brain_costfiringneuron  " << brain_costfiringneuron << endl;
+	cerr << "brain_costfiringmotorneuron  " << brain_costfiringmotorneuron << endl;
+	cerr << "brain_costhavingsynapse  " << brain_costhavingsynapse << endl;
 
 	cout << endl << "BUTTONS" << endl << endl;
 	cout << "Engine / World Operations" << endl;

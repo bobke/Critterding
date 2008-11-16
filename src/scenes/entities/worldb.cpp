@@ -493,9 +493,9 @@ void WorldB::process()
 			{
 				//cerr << "critter " << i << "(ad:" << c->adamdist << ") FIRES\n";
 				c->fireTimeCount = 0;
-				float used = settings->critter_maxenergy * 0.01f;
-				c->energyLevel -= used;
-				freeEnergy += used;
+				//float used = settings->critter_maxenergy * 0.01f;
+				c->energyLevel -= settings->critter_firecost;
+				freeEnergy += settings->critter_firecost;
 	
 				Bullet *b = new Bullet;
 	
