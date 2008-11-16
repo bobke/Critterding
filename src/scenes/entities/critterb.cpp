@@ -167,13 +167,14 @@ void CritterB::process()
 
 	// calc used energy, energyUsed is used in world aswell, don't remove
 
-		energyUsed = ( (float)brain.totalNeurons + (float)brain.neuronsFired + (2.0f*(float)motorneuronsfired) + ((float)brain.totalSynapses/10.0f) ) / 200.0f;
+// 		energyUsed = ( (float)brain.totalNeurons + (float)brain.neuronsFired + (2.0f*(float)motorneuronsfired) + ((float)brain.totalSynapses/10.0f) ) / 200.0f;
 
-// 		energyUsed = brain.totalNeurons * costofhavingneuron;
-// 		energyUsed = brain.totalSynapses * costofhavingsynapse;
-// 		energyUsed = brain.neuronsFired * costoffiringneuron;
-// 		energyUsed = motorneuronsfired * costoffiringmotorneuron;
-// 		energyUsed = movementsmade * costofmovement;
+ 		energyUsed =  brain.totalNeurons	* settings->brain_costhavingneuron;
+ 		energyUsed += brain.neuronsFired	* settings->brain_costfiringneuron;
+ 		energyUsed += motorneuronsfired		* settings->brain_costfiringmotorneuron;
+ 		energyUsed += brain.totalSynapses	* settings->brain_costhavingsynapse;
+		energyUsed = energyUsed / 100000;
+// 		cerr << energyUsed << endl;
 
 	// make nose white if nosecolor is all 0
 		if ( nosecolor[0] == 0.0f && nosecolor[1] == 0.0f && nosecolor[2] == 0.0f )
