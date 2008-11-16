@@ -316,10 +316,10 @@ void Settings::createHelpInfo()
 
 	helpinfo << "    --brain_mutate_mutateeffects                       If set, all values above will mutate" << endl;
 
-	helpinfo << "  --brain_costhavingneuron                        [" << brain_costhavingneuron << "]  Energycost per frame for having a neuron" << endl;
-	helpinfo << "  --brain_costfiringneuron                        [" << brain_costfiringneuron << "]  Energycost per frame for firing a neuron" << endl;
-	helpinfo << "  --brain_costfiringmotorneuron                   [" << brain_costfiringmotorneuron << "]  Energycost per frame for firing a motorneuron" << endl;
-	helpinfo << "  --brain_costhavingsynapse                       [" << brain_costhavingsynapse << "]  Energycost per frame for having a synapse" << endl;
+	helpinfo << "  --brain_costhavingneuron                      [" << brain_costhavingneuron << "]  Energycost per frame for having a neuron" << endl;
+	helpinfo << "  --brain_costfiringneuron                      [" << brain_costfiringneuron << "]  Energycost per frame for firing a neuron" << endl;
+	helpinfo << "  --brain_costfiringmotorneuron                 [" << brain_costfiringmotorneuron << "]  Energycost per frame for firing a motorneuron" << endl;
+	helpinfo << "  --brain_costhavingsynapse                      [" << brain_costhavingsynapse << "]  Energycost per frame for having a synapse" << endl;
 
 }
 
