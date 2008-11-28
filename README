@@ -101,7 +101,7 @@ STARTUP OPTIONS
 BUTTONS
 
 Engine / World Operations
-  F1            : print settings and toggle pause program
+  F1            : print settings and pause
   F2            : show fps (100 frames average)
 
   F3/F4         : adjust minimum critters
@@ -119,6 +119,7 @@ Engine / World Operations
   w             : create a horizontal wall
   x             : destroy the wall
   c             : toggle gate in wall center
+  v             : toggle half wall
 
   f             : toggle follow the youngest critter untill it dies.
 
