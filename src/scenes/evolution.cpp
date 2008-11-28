@@ -216,6 +216,18 @@ void Evolution::handlekey(const KeySym& key)
 			world.toggleGate((unsigned int)(world.size*2.0f));
 			world.toggleGate((unsigned int)(world.size*2.0f)+1);
 		break;
+		case XK_v:
+
+			for ( unsigned int i=0; i <= world.size*2.0f; i++ )
+			{
+				world.toggleGate((unsigned int)(world.size*2.0f)-i);
+			}
+			world.toggleGate((unsigned int)(world.size*2.0f)+1);
+/*			world.toggleGate((unsigned int)(world.size*2.0f)-2);
+			world.toggleGate((unsigned int)(world.size*2.0f)-1);
+			world.toggleGate((unsigned int)(world.size*2.0f));
+			world.toggleGate((unsigned int)(world.size*2.0f)+1);*/
+		break;
 
 		case XK_Insert:
 			drawCVNeurons = !drawCVNeurons;

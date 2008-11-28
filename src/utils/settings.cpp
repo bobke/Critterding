@@ -822,7 +822,8 @@ void Settings::printSettings()
 	cout << "  Insert        : toggle hide critter retinas." << endl << endl;
 	cout << "  w             : create a horizontal wall" << endl;
 	cout << "  x             : destroy the wall" << endl;
-	cout << "  c             : toggle gate in wall center" << endl << endl;
+	cout << "  c             : toggle gate in wall center" << endl;
+	cout << "  v             : toggle half wall" << endl << endl;
 	cout << "  f             : toggle follow the youngest critter untill it dies." << endl << endl;
 	cout << "  Page Up       : load all critters from \"~/.critterding/load\" directory" << endl;
 	cout << "  Page Down     : save all critters into \"~/.critterding/save/(timestamp)\" directory" << endl << endl;
