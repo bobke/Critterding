@@ -25,6 +25,9 @@ int main(int argc, char *argv[])
 
 		settings->printSettings();
 
+		if (settings->autoload)
+			mainscene.world.loadAllCritters();
+
 		glwindow.runGLScene(mainscene);
 
 	glwindow.destroy();

@@ -35,6 +35,7 @@ class Settings
 			unsigned int camerasensitivityMin;
 			unsigned int camerasensitivityMax;
 		bool exit_if_empty;
+		bool autoload;
 
 		unsigned int critter_maxlifetime;
 			unsigned int critter_maxlifetimeMin;

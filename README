@@ -20,6 +20,7 @@ STARTUP OPTIONS
   --retinasperrow             [20]  Place 20 retinas on a row (bottom left of window)    
   --camerasensitivity         [10]  Camera sensitivity                                   
   --exit-if-empty                   If set, the program will exit when no are left       
+  --autoload                        If set, critters from the load directory will be loaded at startup
 
   Critter Settings
   --critter_maxlifetime     [2000]  Max amount of frames a critter can live

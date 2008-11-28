@@ -26,6 +26,9 @@ Settings::Settings()
 		camerasensitivityMin		= 1;
 		camerasensitivityMax		= 1000;
 	exit_if_empty			= false;
+	autoload			= false;
+
+
 
 	critter_maxlifetime		= 2000;
 		critter_maxlifetimeMin		= 1;
@@ -66,10 +69,10 @@ Settings::Settings()
 	critter_mutationrate		= 10;
 		critter_mutationrateMin		= 0;
 		critter_mutationrateMax		= 100;
-	critter_maxmutations		= 5;
+	critter_maxmutations		= 10;
 		critter_maxmutationsMin		= 1;
 		critter_maxmutationsMax		= 100;
-	critter_percentchangetype	= 0;
+	critter_percentchangetype	= 1;
 		critter_percentchangetypeMin	= 0;
 		critter_percentchangetypeMax	= 100;
 	critter_flipnewborns		= false;
@@ -90,7 +93,7 @@ Settings::Settings()
 		food_sizeIMax			= 100;
 
 	corpse_enable			= false;
-	corpse_maxlifetime		= 1000;
+	corpse_maxlifetime		= 3000;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
 	corpse_maxenergy		= 2500;
@@ -236,6 +239,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
 	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;
 	helpinfo << "  --exit-if-empty                   If set, the program will exit when no are left" << endl;
+	helpinfo << "  --autoload                        If set, critters from the load directory will be loaded at startup" << endl;
 
 	helpinfo << endl;
 	helpinfo << "  Critter Settings" << endl;
@@ -266,7 +270,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --food_size                 [" << food_sizeI << "]  Size of a food unit" << endl;
 	helpinfo << endl;
 	helpinfo << "  Corpse Settings" << endl;
-	helpinfo << "  --corpse_enable                   Enable corpses (act as poison)" << endl;
+	helpinfo << "  --corpse_enable                   Enable corpses" << endl;
 	helpinfo << "  --corpse_maxlifetime      [" << corpse_maxlifetime << "]  Maximum amount of frames a corpse exists" << endl;
 	helpinfo << "  --corpse_maxenergy        [" << corpse_maxenergy << "]  Maximum amount of energy in a corpse unit" << endl;
 	helpinfo << "  --corpse_size               [" << corpse_sizeI << "]  Size of a corpse unit" << endl;
@@ -371,6 +375,7 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("retinasperrow ", retinasperrow, retinasperrowMin, retinasperrowMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("camerasensitivity ", camerasensitivity, camerasensitivityMin, camerasensitivityMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("exit-if-empty", exit_if_empty, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("autoload", autoload, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("critter_maxlifetime ", critter_maxlifetime, critter_maxlifetimeMin, critter_maxlifetimeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_maxenergy ", critter_maxenergy, critter_maxenergyMin, critter_maxenergyMax, line) ) uselesscounter++;
@@ -505,6 +510,7 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--retinasperrow", retinasperrow, retinasperrowMin, retinasperrowMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--camerasensitivity", camerasensitivity, camerasensitivityMin, camerasensitivityMax, optind, argv) ) optind++;
 		else if ( sw=="--exit-if-empty") exit_if_empty = true;
+		else if ( sw=="--autoload") autoload = true;
 
 	// Critter Settings
 
@@ -725,6 +731,7 @@ void Settings::printSettings()
 	cerr << "retinasperrow " << retinasperrow << endl;
 	cerr << "camerasensitivity " << camerasensitivity << endl;
 	cerr << "exit-if-empty " << exit_if_empty << endl << endl;
+	cerr << "autoload " << autoload << endl << endl;
 
 	cerr << "critter_maxlifetime " << critter_maxlifetime << endl;
 	cerr << "critter_maxenergy " << critter_maxenergy << endl;
