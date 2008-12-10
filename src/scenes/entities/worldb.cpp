@@ -680,7 +680,7 @@ void WorldB::positionCritterB(unsigned int cid)
 void WorldB::removeCritter(unsigned int cid)
 {
 	bool hasCorpse = false;
-	if ( critters[cid]->energyLevel > 0.0f && settings->corpse_enable )
+	if ( critters[cid]->energyLevel > 0.0f && !settings->corpse_disable )
 	{
 		hasCorpse = true;
 

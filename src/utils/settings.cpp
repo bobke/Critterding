@@ -10,10 +10,10 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsize			= 25;
+	worldsize			= 10;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
-	startenergy			= 500;
+	startenergy			= 200;
 		startenergyMin			= 0;
 		startenergyMax			= 1000000;
 	mincritters			= 10;
@@ -60,7 +60,7 @@ Settings::Settings()
 	critter_speedI			= 50;
 		critter_speedIMin		= 1;
 		critter_speedIMax		= 1000;
-	critter_sightrangeI		= 40;
+	critter_sightrangeI		= 30;
 		critter_sightrangeIMin		= 1;
 		critter_sightrangeIMax		= 1000;
 	critter_retinasize		= 7;
@@ -69,7 +69,7 @@ Settings::Settings()
 	critter_mutationrate		= 10;
 		critter_mutationrateMin		= 0;
 		critter_mutationrateMax		= 100;
-	critter_maxmutations		= 10;
+	critter_maxmutations		= 5;
 		critter_maxmutationsMin		= 1;
 		critter_maxmutationsMax		= 100;
 	critter_percentchangetype	= 1;
@@ -82,7 +82,7 @@ Settings::Settings()
 		critter_autosaveintervalMin	= 0;
 		critter_autosaveintervalMax	= 1000000;
 
-	food_maxlifetime		= 500;
+	food_maxlifetime		= 1000;
 		food_maxlifetimeMin		= 1;
 		food_maxlifetimeMax		= 1000000;
 	food_maxenergy			= 2000;
@@ -92,8 +92,8 @@ Settings::Settings()
 		food_sizeIMin			= 1;
 		food_sizeIMax			= 100;
 
-	corpse_enable			= false;
-	corpse_maxlifetime		= 3000;
+	corpse_disable			= false;
+	corpse_maxlifetime		= 2000;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
 	corpse_maxenergy		= 2500;
@@ -212,13 +212,13 @@ Settings::Settings()
 	brain_costhavingneuron				= 100;
 		brain_costhavingneuronMin			= 0;
 		brain_costhavingneuronMax			= 1000000;
-	brain_costfiringneuron				= 100;
+	brain_costfiringneuron				= 500;
 		brain_costfiringneuronMin			= 0;
 		brain_costfiringneuronMax			= 1000000;
-	brain_costfiringmotorneuron			= 200;
+	brain_costfiringmotorneuron			= 500;
 		brain_costfiringmotorneuronMin			= 0;
 		brain_costfiringmotorneuronMax			= 1000000;
-	brain_costhavingsynapse				= 10;
+	brain_costhavingsynapse				= 20;
 		brain_costhavingsynapseMin			= 0;
 		brain_costhavingsynapseMax			= 1000000;
 
@@ -270,10 +270,10 @@ void Settings::createHelpInfo()
 	helpinfo << "  --food_size                 [" << food_sizeI << "]  Size of a food unit" << endl;
 	helpinfo << endl;
 	helpinfo << "  Corpse Settings" << endl;
-	helpinfo << "  --corpse_enable                   Enable corpses" << endl;
 	helpinfo << "  --corpse_maxlifetime      [" << corpse_maxlifetime << "]  Maximum amount of frames a corpse exists" << endl;
 	helpinfo << "  --corpse_maxenergy        [" << corpse_maxenergy << "]  Maximum amount of energy in a corpse unit" << endl;
 	helpinfo << "  --corpse_size               [" << corpse_sizeI << "]  Size of a corpse unit" << endl;
+	helpinfo << "  --corpse_disable                  Disable corpses" << endl;
 	helpinfo << endl;
 	helpinfo << "  Brain Settings" << endl;
 	helpinfo << "  --brain_maxneurons                           [" << brain_maxneurons << "]  Max neurons per critter" << endl;
@@ -401,7 +401,7 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("food_maxenergy ", food_maxenergy, food_maxenergyMin, food_maxenergyMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("food_size ", food_sizeI, food_sizeIMin, food_sizeIMax, line) ) uselesscounter++;
 
-			else if ( checkConfigFileValue("corpse_enable", corpse_enable, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("corpse_disable", corpse_disable, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("corpse_maxlifetime ", corpse_maxlifetime, corpse_maxlifetimeMin, corpse_maxlifetimeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("corpse_maxenergy ", corpse_maxenergy, corpse_maxenergyMin, corpse_maxenergyMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("corpse_size ", corpse_sizeI, corpse_sizeIMin, corpse_sizeIMax, line) ) uselesscounter++;
@@ -542,10 +542,10 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 
 	// Corpse Settings
 
-		else if (sw=="--corpse_enable") corpse_enable = true;
 		else if ( checkSwitch("--corpse_maxlifetime", corpse_maxlifetime, corpse_maxlifetimeMin, corpse_maxlifetimeMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--corpse_maxenergy", corpse_maxenergy, corpse_maxenergyMin, corpse_maxenergyMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--corpse_size", corpse_sizeI, corpse_sizeIMin, corpse_sizeIMax, optind, argv) ) optind++;
+		else if (sw=="--corpse_disable") corpse_disable = true;
 
 	// Brain Settings
 
@@ -757,7 +757,7 @@ void Settings::printSettings()
 	cerr << "food_maxenergy  " << food_maxenergy << endl;
 	cerr << "food_size  " << food_sizeI << endl << endl;
 
-	cerr << "corpse_enable  " << corpse_enable << endl;
+	cerr << "corpse_disable  " << corpse_disable << endl;
 	cerr << "corpse_maxlifetime  " << corpse_maxlifetime << endl;
 	cerr << "corpse_maxenergy  " << corpse_maxenergy << endl;
 	cerr << "corpse_size  " << corpse_sizeI << endl << endl;
@@ -822,7 +822,7 @@ void Settings::printSettings()
 	cout << "  Insert        : toggle hide critter retinas." << endl << endl;
 	cout << "  w             : create a horizontal wall" << endl;
 	cout << "  x             : destroy the wall" << endl;
-	cout << "  c             : toggle gate in wall center" << endl;
+	cout << "  c             : half the active wall" << endl;
 	cout << "  v             : toggle half wall" << endl << endl;
 	cout << "  f             : toggle follow the youngest critter untill it dies." << endl << endl;
 	cout << "  Page Up       : load all critters from \"~/.critterding/load\" directory" << endl;

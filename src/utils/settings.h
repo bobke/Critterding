@@ -99,7 +99,6 @@ class Settings
 			unsigned int food_sizeIMin;
 			unsigned int food_sizeIMax;
 
-		bool corpse_enable;
 		unsigned int corpse_maxlifetime;
 			unsigned int corpse_maxlifetimeMin;
 			unsigned int corpse_maxlifetimeMax;
@@ -109,6 +108,7 @@ class Settings
 		unsigned int corpse_sizeI;
 			unsigned int corpse_sizeIMin;
 			unsigned int corpse_sizeIMax;
+		bool corpse_disable;
 
 		unsigned int brain_maxneurons;
 			unsigned int brain_maxneuronsMin;
