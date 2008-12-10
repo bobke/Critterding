@@ -45,17 +45,26 @@ void Evolution::draw()
 		glDisable(GL_POLYGON_SMOOTH);
 	}
 
-	if ( world.isSelected )
-	{
+        if ( world.isSelected )
+        {
 		camera.follow(world.critters[world.selectedCritter]->cameraposition, world.critters[world.selectedCritter]->rotation);
-		world.drawWithinCritterSight(world.selectedCritter);
-	}
-	else
-	{
-		camera.place();
-		world.drawWithGrid();
-	}
-//		world.drawWithGrid();
+        }
+        else
+        {
+                camera.place();
+        }
+        world.drawWithGrid();
+
+// 	if ( world.isSelected )
+// 	{
+// 		camera.follow(world.critters[world.selectedCritter]->cameraposition, world.critters[world.selectedCritter]->rotation);
+// 		world.drawWithinCritterSight(world.selectedCritter);
+// 	}
+// 	else
+// 	{
+// 		camera.place();
+// 		world.drawWithGrid();
+// 	}
 
 	Timer::Instance()->mark();
 	fps.mark();

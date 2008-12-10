@@ -119,7 +119,7 @@ Engine / World Operations
   w             : create a horizontal wall
   x             : destroy the wall
   c             : toggle gate in wall center
-  v             : toggle half wall
+  v             : half the active wall
 
   f             : toggle follow the youngest critter untill it dies.
 
