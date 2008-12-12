@@ -10,7 +10,7 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsize			= 12;
+	worldsize			= 10;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
 	startenergy			= 200;
@@ -96,10 +96,10 @@ Settings::Settings()
 		food_sizeIMax			= 100;
 
 	corpse_disable			= false;
-	corpse_maxlifetime		= 4000;
+	corpse_maxlifetime		= 2000;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
-	corpse_maxenergy		= 2500;
+	corpse_maxenergy		= 5000;
 		corpse_maxenergyMin		= 1;
 		corpse_maxenergyMax		= 1000000;
 	corpse_sizeI			= 15;
