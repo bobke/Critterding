@@ -193,9 +193,9 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 		case XK_s:
 		break;
-		case XK_q:
-		break;
 		case XK_d:
+		break;
+		case XK_q:
 		break;
 		case XK_a:
 		break;
@@ -214,28 +214,16 @@ void Evolution::handlekey(const KeySym& key)
 			}
 		break;
 		case XK_w:
+			settings->walltype++;
+			if ( settings->walltype > settings->walltypeMax ) settings->walltype = settings->walltypeMin;
 			world.createWall();
 		break;
 		case XK_x:
 			world.destroyWall();
 		break;
 		case XK_c:
-			world.toggleGate((unsigned int)(world.size*2.0f)-2);
-			world.toggleGate((unsigned int)(world.size*2.0f)-1);
-			world.toggleGate((unsigned int)(world.size*2.0f));
-			world.toggleGate((unsigned int)(world.size*2.0f)+1);
 		break;
 		case XK_v:
-
-			for ( unsigned int i=0; i <= world.size*2.0f; i++ )
-			{
-				world.toggleGate((unsigned int)(world.size*2.0f)-i);
-			}
-			world.toggleGate((unsigned int)(world.size*2.0f)+1);
-/*			world.toggleGate((unsigned int)(world.size*2.0f)-2);
-			world.toggleGate((unsigned int)(world.size*2.0f)-1);
-			world.toggleGate((unsigned int)(world.size*2.0f));
-			world.toggleGate((unsigned int)(world.size*2.0f)+1);*/
 		break;
 
 		case XK_Insert:

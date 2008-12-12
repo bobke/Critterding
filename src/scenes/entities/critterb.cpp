@@ -89,7 +89,8 @@ CritterB::CritterB()
 	color[2] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
 	items = retinasize * retinasize * components;
-	brain.numberOfInputs = items+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron
+	//brain.numberOfInputs = items+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron + 3 my color neurons
+	brain.numberOfInputs = items+29; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron + 3 my color neurons
 	brain.numberOfOutputs = 13;
 
 	brain.buildArch();
@@ -313,8 +314,14 @@ void CritterB::procInputNeurons()
 	// carries food
 		if (carriesFood) brain.Inputs[overstep++].output = 1;
 
-	// carries corpse
-		if (carriesCorpse) brain.Inputs[overstep++].output = 1;
+	// R
+		if (carriesCorpse) brain.Inputs[overstep++].output = color[0];
+
+	// G
+		if (carriesCorpse) brain.Inputs[overstep++].output = color[1];
+
+	// B
+		if (carriesCorpse) brain.Inputs[overstep++].output = color[2];
 
 	// debugging check
 // 		if ( overstep-1 != brain.Inputs.size()-1 )

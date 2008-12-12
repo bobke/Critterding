@@ -28,6 +28,8 @@ int main(int argc, char *argv[])
 		if (settings->autoload)
 			mainscene.world.loadAllCritters();
 
+		mainscene.world.createWall();
+
 		glwindow.runGLScene(mainscene);
 
 	glwindow.destroy();

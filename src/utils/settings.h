@@ -34,6 +34,9 @@ class Settings
 		unsigned int camerasensitivity;
 			unsigned int camerasensitivityMin;
 			unsigned int camerasensitivityMax;
+		unsigned int walltype;
+			unsigned int walltypeMin;
+			unsigned int walltypeMax;
 		bool exit_if_empty;
 		bool autoload;
 
