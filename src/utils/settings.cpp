@@ -10,7 +10,7 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsize			= 10;
+	worldsize			= 12;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
 	startenergy			= 200;
@@ -25,6 +25,9 @@ Settings::Settings()
 	camerasensitivity		= 10;
 		camerasensitivityMin		= 1;
 		camerasensitivityMax		= 1000;
+	walltype			= 0;
+		walltypeMin			= 0;
+		walltypeMax			= 4;
 	exit_if_empty			= false;
 	autoload			= false;
 
@@ -93,7 +96,7 @@ Settings::Settings()
 		food_sizeIMax			= 100;
 
 	corpse_disable			= false;
-	corpse_maxlifetime		= 2000;
+	corpse_maxlifetime		= 4000;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
 	corpse_maxenergy		= 2500;
@@ -238,6 +241,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --mincritters               [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
 	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;
+	helpinfo << "  --walltype                  [" << walltype << "]  Walltype" << endl;
 	helpinfo << "  --exit-if-empty                   If set, the program will exit when no are left" << endl;
 	helpinfo << "  --autoload                        If set, critters from the load directory will be loaded at startup" << endl;
 
@@ -374,6 +378,7 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("mincritters ", mincritters, mincrittersMin, mincrittersMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("retinasperrow ", retinasperrow, retinasperrowMin, retinasperrowMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("camerasensitivity ", camerasensitivity, camerasensitivityMin, camerasensitivityMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("walltype", walltype, walltypeMin, walltypeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("exit-if-empty", exit_if_empty, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("autoload", autoload, line) ) uselesscounter++;
 
@@ -509,6 +514,7 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--mincritters", mincritters, mincrittersMin, mincrittersMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--retinasperrow", retinasperrow, retinasperrowMin, retinasperrowMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--camerasensitivity", camerasensitivity, camerasensitivityMin, camerasensitivityMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--walltype", walltype, walltypeMin, walltypeMax, optind, argv) ) optind++;
 		else if ( sw=="--exit-if-empty") exit_if_empty = true;
 		else if ( sw=="--autoload") autoload = true;
 
@@ -730,6 +736,7 @@ void Settings::printSettings()
 	cerr << "mincritters " << mincritters << endl;
 	cerr << "retinasperrow " << retinasperrow << endl;
 	cerr << "camerasensitivity " << camerasensitivity << endl;
+	cerr << "walltype " << walltype << endl;
 	cerr << "exit-if-empty " << exit_if_empty << endl << endl;
 	cerr << "autoload " << autoload << endl << endl;
 

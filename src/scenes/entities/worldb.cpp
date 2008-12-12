@@ -771,15 +771,82 @@ void WorldB::removeCritter(unsigned int cid)
 
 void WorldB::createWall()
 {
-	walls.clear();
-	for ( unsigned int i=0; i < (unsigned int)(4.0f*size); i++ )
+	destroyWall();
+	if ( settings->walltype == 1 )
 	{
-		Wall *w = new Wall();
-		walls.push_back( w );
-		walls[i]->resize(0.25f);
-		walls[i]->position.x = 0.125 + ((float)i*0.25);
-		walls[i]->position.z = size/2.0f;
+		for ( unsigned int i=0; i < (unsigned int)(4.0f*size); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[i]->resize(0.25f);
+			walls[i]->position.x = 0.125 + ((float)i*0.25);
+			walls[i]->position.z = size/2.0f;
+		}
 	}
+
+	else if ( settings->walltype == 2 )
+	{
+		for ( unsigned int i=0; i < (unsigned int)(4.0f*size); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[i]->resize(0.25f);
+			walls[i]->position.x = 0.125 + ((float)i*0.25);
+			walls[i]->position.z = size/2.0f;
+		}
+		walls[ (unsigned int)(size*2.0f)-2 ]->toggle();
+		walls[ (unsigned int)(size*2.0f)-1 ]->toggle();
+		walls[ (unsigned int)(size*2.0f)   ]->toggle();
+		walls[ (unsigned int)(size*2.0f)+1 ]->toggle();
+	}
+
+	else if ( settings->walltype == 3 )
+	{
+		unsigned int wcount = 0;
+		for ( unsigned int i = 0; i < (unsigned int)(2.7f*size); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[wcount]->resize(0.25f);
+			walls[wcount]->position.x = 0.125 + ((float)i*0.25);
+			walls[wcount]->position.z = 2*size/3.0f;
+			wcount++;
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(2.7f*size); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[wcount]->resize(0.25f);
+			walls[wcount]->position.x = size - 0.125 - ((float)i*0.25);
+			walls[wcount]->position.z = size/3.0f;
+			wcount++;
+		}
+	}
+
+	else if ( settings->walltype == 4 )
+	{
+		unsigned int wcount = 0;
+		for ( unsigned int i = 0; i < (unsigned int)(2.7f*size); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[wcount]->resize(0.25f);
+			walls[wcount]->position.x = 0.125 + ((float)i*0.25);
+			walls[wcount]->position.z = size/3.0f;
+			wcount++;
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(2.7f*size); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[wcount]->resize(0.25f);
+			walls[wcount]->position.x = size - 0.125 - ((float)i*0.25);
+			walls[wcount]->position.z = 2*size/3.0f;
+			wcount++;
+		}
+	}
+
+	cerr << "Wall type: " << settings->walltype << endl;
 }
 
 void WorldB::destroyWall()
@@ -789,11 +856,6 @@ void WorldB::destroyWall()
 		delete walls[0];
 		walls.erase( walls.begin() );
 	}
-}
-
-void WorldB::toggleGate(unsigned int wid)
-{
-	if ( wid < walls.size() ) walls[wid]->toggle();
 }
 
 void WorldB::drawWithinCritterSight(unsigned int cid)
