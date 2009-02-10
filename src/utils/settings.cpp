@@ -10,7 +10,7 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsize			= 10;
+	worldsize			= 12;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
 	startenergy			= 200;
@@ -30,10 +30,10 @@ Settings::Settings()
 		walltypeMax			= 4;
 	exit_if_empty			= false;
 	autoload			= false;
+	noverbose			= false;
 
 
-
-	critter_maxlifetime		= 2000;
+	critter_maxlifetime		= 2500;
 		critter_maxlifetimeMin		= 1;
 		critter_maxlifetimeMax		= 1000000;
 	critter_maxenergy		= 5000;
@@ -51,10 +51,10 @@ Settings::Settings()
 	critter_minenergyproc		= 3000;
 		critter_minenergyprocMin	= 0;
 		critter_minenergyprocMax	= 1000000;
-	critter_minenergyfire		= 1;
+	critter_minenergyfire		= 10;
 		critter_minenergyfireMin	= 0;
 		critter_minenergyfireMax	= 1000000;
-	critter_firecost		= 1;
+	critter_firecost		= 10;
 		critter_firecostMin		= 0;
 		critter_firecostMax		= 1000000;
 	critter_sizeI			= 10;
@@ -69,10 +69,10 @@ Settings::Settings()
 	critter_retinasize		= 7;
 		critter_retinasizeMin		= 1;
 		critter_retinasizeMax		= 1000;
-	critter_mutationrate		= 10;
+	critter_mutationrate		= 7;
 		critter_mutationrateMin		= 0;
 		critter_mutationrateMax		= 100;
-	critter_maxmutations		= 5;
+	critter_maxmutations		= 7;
 		critter_maxmutationsMin		= 1;
 		critter_maxmutationsMax		= 100;
 	critter_percentchangetype	= 1;
@@ -99,7 +99,7 @@ Settings::Settings()
 	corpse_maxlifetime		= 2000;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
-	corpse_maxenergy		= 5000;
+	corpse_maxenergy		= 3000;
 		corpse_maxenergyMin		= 1;
 		corpse_maxenergyMax		= 1000000;
 	corpse_sizeI			= 15;
@@ -115,10 +115,10 @@ Settings::Settings()
 	brain_maxsynapses		= 100;
 		brain_maxsynapsesMin		= 1;
 		brain_maxsynapsesMax		= 1000000;
-	brain_minneuronsatbuildtime	= 20;
+	brain_minneuronsatbuildtime	= 40;
 		brain_minneuronsatbuildtimeMin	= 1;
 		brain_minneuronsatbuildtimeMax	= 1000000;
-	brain_maxneuronsatbuildtime	= 30;
+	brain_maxneuronsatbuildtime	= 100;
 		brain_maxneuronsatbuildtimeMin	= 1;
 		brain_maxneuronsatbuildtimeMax	= 1000000;
 
@@ -127,7 +127,7 @@ Settings::Settings()
 		brain_minsynapsesatbuildtimeMax			= 1000000;
 		brain_mutate_minsynapsesatbuildtime		= false;
 
-	brain_maxsynapsesatbuildtime			= 60;
+	brain_maxsynapsesatbuildtime			= 30;
 		brain_maxsynapsesatbuildtimeMin			= 1;
 		brain_maxsynapsesatbuildtimeMax			= 1000000;
 		brain_mutate_maxsynapsesatbuildtime		= false;
@@ -212,7 +212,7 @@ Settings::Settings()
 
 		brain_mutate_mutateeffects			= false;
 
-	brain_costhavingneuron				= 100;
+	brain_costhavingneuron				= 200;
 		brain_costhavingneuronMin			= 0;
 		brain_costhavingneuronMax			= 1000000;
 	brain_costfiringneuron				= 500;
@@ -221,7 +221,7 @@ Settings::Settings()
 	brain_costfiringmotorneuron			= 500;
 		brain_costfiringmotorneuronMin			= 0;
 		brain_costfiringmotorneuronMax			= 1000000;
-	brain_costhavingsynapse				= 20;
+	brain_costhavingsynapse				= 50;
 		brain_costhavingsynapseMin			= 0;
 		brain_costhavingsynapseMax			= 1000000;
 
@@ -244,6 +244,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --walltype                  [" << walltype << "]  Walltype" << endl;
 	helpinfo << "  --exit-if-empty                   If set, the program will exit when no are left" << endl;
 	helpinfo << "  --autoload                        If set, critters from the load directory will be loaded at startup" << endl;
+	helpinfo << "  --noverbose                       If set, information about dying/procreating critters will not be shown" << endl;
 
 	helpinfo << endl;
 	helpinfo << "  Critter Settings" << endl;
@@ -381,6 +382,7 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("walltype", walltype, walltypeMin, walltypeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("exit-if-empty", exit_if_empty, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("autoload", autoload, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("noverbose", noverbose, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("critter_maxlifetime ", critter_maxlifetime, critter_maxlifetimeMin, critter_maxlifetimeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_maxenergy ", critter_maxenergy, critter_maxenergyMin, critter_maxenergyMax, line) ) uselesscounter++;
@@ -517,6 +519,7 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--walltype", walltype, walltypeMin, walltypeMax, optind, argv) ) optind++;
 		else if ( sw=="--exit-if-empty") exit_if_empty = true;
 		else if ( sw=="--autoload") autoload = true;
+		else if ( sw=="--noverbose") noverbose = true;
 
 	// Critter Settings
 
@@ -739,6 +742,7 @@ void Settings::printSettings()
 	cerr << "walltype " << walltype << endl;
 	cerr << "exit-if-empty " << exit_if_empty << endl << endl;
 	cerr << "autoload " << autoload << endl << endl;
+	cerr << "verbose " << !noverbose << endl << endl;
 
 	cerr << "critter_maxlifetime " << critter_maxlifetime << endl;
 	cerr << "critter_maxenergy " << critter_maxenergy << endl;
@@ -816,7 +820,7 @@ void Settings::printSettings()
 
 	cout << endl << "BUTTONS" << endl << endl;
 	cout << "Engine / World Operations" << endl;
-	cout << "  F1            : print settings and pause" << endl;
+	cout << "  F1            : print settings" << endl;
 	cout << "  F2            : show fps (100 frames average)" << endl << endl;
 	cout << "  F3/F4         : adjust minimum critters" << endl;
 	cout << "  F5/F6         : adjust energy in the system (by 25 units)" << endl;
@@ -827,13 +831,13 @@ void Settings::printSettings()
 	cout << "  F9/F10        : adjust max mutations per mutant" << endl;
 	cout << "  F11/F12       : adjust mutation rate (%)" << endl;
 	cout << "  Insert        : toggle hide critter retinas." << endl << endl;
-	cout << "  w             : create a horizontal wall" << endl;
+	cout << "  w             : activate wall/toggle wall types" << endl;
 	cout << "  x             : destroy the wall" << endl;
-	cout << "  c             : half the active wall" << endl;
-	cout << "  v             : toggle half wall" << endl << endl;
+	cout << "  v             : toggle verbosity" << endl << endl;
 	cout << "  f             : toggle follow the youngest critter untill it dies." << endl << endl;
 	cout << "  Page Up       : load all critters from \"~/.critterding/load\" directory" << endl;
 	cout << "  Page Down     : save all critters into \"~/.critterding/save/(timestamp)\" directory" << endl << endl;
+	cout << "  p             : pause" << endl << endl;
 
 	cout << "Camera Operations" << endl;
 	cout << "  Backspace     : reset camera" << endl;

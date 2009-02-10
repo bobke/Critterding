@@ -31,6 +31,7 @@ class WorldB
 		~WorldB();
 
 		vector<CritterB*>	critters;
+		unsigned long		currentCritterID;
 
 		int			size;
 		float			freeEnergy;

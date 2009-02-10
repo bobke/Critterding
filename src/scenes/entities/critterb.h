@@ -26,6 +26,8 @@ class CritterB
 
 		Brainz			brain;
 
+		unsigned long		critterID;
+
 		unsigned int		crittertype;
 
 		unsigned int		adamdist;

@@ -4,6 +4,8 @@ WorldB::WorldB()
 {
 	settings = Settings::Instance();
 
+	currentCritterID	= 0;
+
 	selectedCritter		= 0;
 	isSelected		= false;
 
@@ -177,7 +179,7 @@ void WorldB::process()
 		bullets[i]->moveForward();
 
 		// die of age
-		if ( bullets[i]->totalSteps > 10 )
+		if ( bullets[i]->totalSteps > 7 )
 		{
 			delete bullets[i];
 			bullets.erase(bullets.begin()+i);
@@ -252,21 +254,23 @@ void WorldB::process()
 		// see if energy level isn't below 0 -> die, or die of old age
 		if ( critters[i]->energyLevel <= 0.0f )
 		{
-			cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: starvation" << endl;
+//			if (!settings->noverbose) cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: starvation" << endl;
+			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " starved" << endl;
+
 			removeCritter(i);
 			i--;
 		}
 		// see if died from bullet
 		else if ( critters[i]->totalFrames > settings->critter_maxlifetime && critters[i]->wasShot )
 		{
-			cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: killed" << endl;
+			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " killed" << endl;
 			removeCritter(i);
 			i--;
 		}
 		// die of old age
 		else if ( critters[i]->totalFrames > settings->critter_maxlifetime )
 		{
-			cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: old age" << endl;
+			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " old" << endl;
 			removeCritter(i);
 			i--;
 		}
@@ -572,14 +576,19 @@ void WorldB::process()
 						nc->brain.wireArch();
 						nc->retina = retina;
 
-						cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: ";
-						if ( c->crittertype == 1 ) cerr << "C";
-						else cerr << "H";
-						cerr << ", ad: " << setw(4) << c->adamdist << ")";
+						nc->critterID = currentCritterID++;
 
-						cerr << " N: " << setw(4) << nc->brain.totalNeurons << " C: " << setw(5) << nc->brain.totalSynapses;
-						if ( mutant ) cerr << " (m)";
-
+						if (!settings->noverbose)
+						{
+//							cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: ";
+							cerr << "> " << setw(3) << critters.size()+1 << " | " << setw(4) << c->critterID << " procreates: " << setw(4) << nc->critterID << " (";
+							cerr << "ad: " << setw(4) << nc->adamdist;
+							cerr << ", N: " << setw(4) << nc->brain.totalNeurons << ", C: " << setw(5) << nc->brain.totalSynapses;
+							if ( nc->crittertype == 1 ) cerr << ", carnivore";
+							else cerr << ", herbivore";
+							if ( mutant ) cerr << ", mutant";
+							cerr << ")" << endl;
+						}
 
 						// split energies in half
 						nc->energyLevel = c->energyLevel/2.0f;
@@ -594,8 +603,6 @@ void WorldB::process()
 						nc->moveToNewPoss();
 
 						critters.push_back( nc );
-
-						cerr << endl;
 					}
 				}
 			}
@@ -611,14 +618,14 @@ void WorldB::process()
 
 		if ( timedInsertsCounter == 3*settings->critter_maxlifetime )
 		{
-			cerr << "inserting 100 food" << endl;
+			if (!settings->noverbose) cerr << "inserting 100 food" << endl;
 
 			settings->freeEnergyInfo += settings->food_maxenergy * 100.0f;
 			freeEnergy += settings->food_maxenergy * 100.0f;
 		}
 		else if ( timedInsertsCounter == (3*settings->critter_maxlifetime)+1 )
 		{
-			cerr << "removing 100 food" << endl;
+			if (!settings->noverbose) cerr << "removing 100 food" << endl;
 
 			settings->freeEnergyInfo -= settings->food_maxenergy * 100.0f;
 			freeEnergy -= settings->food_maxenergy * 100.0f;
@@ -655,6 +662,8 @@ void WorldB::insertCritter()
 	CritterB *c = new CritterB;
 
 	critters.push_back( c );
+
+	c->critterID = currentCritterID++;
 
 	// start energy
 	c->energyLevel = settings->critter_startenergy;
@@ -1057,6 +1066,8 @@ void WorldB::loadAllCritters()
 			if ( !error)
 			{
 				critters.push_back( c );
+
+				c->critterID = currentCritterID++;
 
 				// start energy
 				c->energyLevel = settings->critter_startenergy;

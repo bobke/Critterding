@@ -20,7 +20,7 @@ void Fps::mark()
 
 		if ( ++dispcounter == dispevery )
 		{
-			cerr << endl << "FPS: " << (dispsum/dispevery) << endl << endl;
+			cerr << "FPS: " << (dispsum/dispevery) << endl;
 			dispcounter = 0;
 			dispsum = 0.0f;
 		}
