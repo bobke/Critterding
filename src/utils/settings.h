@@ -39,6 +39,7 @@ class Settings
 			unsigned int walltypeMax;
 		bool exit_if_empty;
 		bool autoload;
+		bool noverbose;
 
 		unsigned int critter_maxlifetime;
 			unsigned int critter_maxlifetimeMin;

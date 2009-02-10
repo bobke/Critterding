@@ -101,7 +101,7 @@ STARTUP OPTIONS
 BUTTONS
 
 Engine / World Operations
-  F1            : print settings and pause
+  F1            : print settings
   F2            : show fps (100 frames average)
 
   F3/F4         : adjust minimum critters
@@ -116,6 +116,7 @@ Engine / World Operations
   F11/F12       : adjust mutation rate (%)
   Insert        : toggle hide critter retinas.
 
+  p             : pause
   w             : create a horizontal wall
   x             : destroy the wall
   c             : toggle gate in wall center

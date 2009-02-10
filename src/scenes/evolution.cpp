@@ -81,7 +81,7 @@ void Evolution::draw()
 void Evolution::handlekey(const KeySym& key)
 {
 
-	if ( pause && key != XK_F1 && key != XK_p )
+	if ( pause && key != XK_p )
 	{
 		usleep(10000);
 		return;
@@ -90,12 +90,7 @@ void Evolution::handlekey(const KeySym& key)
 	switch (key)
 	{
 		case XK_F1:
-			if ( !pause )
-			{
-				settings->printSettings();
-				pause = true;
-			}
-			else pause = false;
+			settings->printSettings();
 		break;
 
 		case XK_F2:
@@ -116,13 +111,13 @@ void Evolution::handlekey(const KeySym& key)
 			{
 				settings->freeEnergyInfo -= settings->food_maxenergy * 25.0f;
 				world.freeEnergy -= settings->food_maxenergy * 25.0f;
-				cerr << endl << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << settings->freeEnergyInfo  << endl << endl;
+				cerr << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << endl;
 			}
 		break;
 		case XK_F6:
 			settings->freeEnergyInfo += settings->food_maxenergy * 25.0f;
 			world.freeEnergy += settings->food_maxenergy * 25.0f;
-			cerr << endl << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << settings->freeEnergyInfo  << endl << endl;
+			cerr << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << endl;
 		break;
 
 		case XK_KP_Subtract:
@@ -130,14 +125,14 @@ void Evolution::handlekey(const KeySym& key)
 			{
 				settings->freeEnergyInfo -= settings->food_maxenergy;
 				world.freeEnergy -= settings->food_maxenergy;
-				cerr << endl << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << settings->freeEnergyInfo  << endl << endl;
+				cerr << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << endl;
 			}
 		break;
 
 		case XK_KP_Add:
 			settings->freeEnergyInfo += settings->food_maxenergy;
 			world.freeEnergy += settings->food_maxenergy;
-			cerr << endl << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << "*" << settings->food_maxenergy << " = " << settings->freeEnergyInfo  << endl << endl;
+			cerr << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << endl;
 		break;
 
 		case XK_F7:
@@ -145,34 +140,34 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 		case XK_F8:
 			world.toggleTimedInserts();
-			cerr << endl << "timed food inserts: "<< world.doTimedInserts << endl << endl;
+			cerr << "timed food inserts: "<< world.doTimedInserts << endl;
 		break;
 		case XK_F9:
 			if ( settings->critter_maxmutations >= 2 )
 			{
 				settings->critter_maxmutations -= 1;
-				cerr << endl << "Max Mutations: "<< settings->critter_maxmutations << endl << endl;
+				cerr << "Max Mutations: "<< settings->critter_maxmutations << endl;
 			}
 		break;
 		case XK_F10:
 			if ( settings->critter_maxmutations <= 999 )
 			{
 				settings->critter_maxmutations += 1;
-				cerr << endl << "Max Mutations: "<< settings->critter_maxmutations << endl << endl;
+				cerr << "Max Mutations: "<< settings->critter_maxmutations << endl;
 			}
 		break;
 		case XK_F11:
 			if ( settings->critter_mutationrate >= 1 )
 			{
 				settings->critter_mutationrate -= 1;
-				cerr << endl << "Mutation Rate: "<< settings->critter_mutationrate << "%" << endl << endl;
+				cerr << "Mutation Rate: "<< settings->critter_mutationrate << "%" << endl;
 			}
 		break;
 		case XK_F12:
 			if ( settings->critter_mutationrate <= 99 )
 			{
 				settings->critter_mutationrate += 1;
-				cerr << endl << "Mutation Rate: "<< settings->critter_mutationrate << "%" << endl << endl;
+				cerr << "Mutation Rate: "<< settings->critter_mutationrate << "%" << endl;
 			}
 		break;
 
@@ -191,15 +186,12 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_p:
 			pause = !pause;
 		break;
-		case XK_s:
-		break;
-		case XK_d:
-		break;
-		case XK_q:
-		break;
-		case XK_a:
-		break;
-		case XK_e:
+		case XK_v:
+			settings->noverbose = !settings->noverbose;
+			if ( settings->noverbose )
+				cerr << "verbose = off" << endl;
+			else
+				cerr << "verbose = on" << endl;
 		break;
 		case XK_f:
 			if ( world.isSelected )
@@ -219,11 +211,8 @@ void Evolution::handlekey(const KeySym& key)
 			world.createWall();
 		break;
 		case XK_x:
+			settings->walltype = 0;
 			world.destroyWall();
-		break;
-		case XK_c:
-		break;
-		case XK_v:
 		break;
 
 		case XK_Insert:
@@ -236,12 +225,12 @@ void Evolution::handlekey(const KeySym& key)
 			if ( camera.sensitivity > 1 )
 			{
 				camera.sensitivity--;
-				cerr << endl << "Camera Sensitivity: "<< camera.sensitivity << endl << endl;
+				cerr << "Camera Sensitivity: "<< camera.sensitivity << endl;
 			}
 		break;
 		case XK_KP_Multiply:
 			camera.sensitivity++;
-			cerr << endl << "Camera Sensitivity: "<< camera.sensitivity << endl << endl;
+			cerr << "Camera Sensitivity: "<< camera.sensitivity << endl;
 		break;
 
 		// Camera Moving
@@ -282,12 +271,12 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_KP_Down:
 			camera.lookDown(0.25f);
 		break;
-		case XK_KP_Page_Down:
+/*		case XK_KP_Page_Down:
 			//camera.rollLeft(1.0f);
 		break;
 		case XK_KP_End:
 			//camera.rollRight(1.0f);
-		break;
+		break;*/
 	}
 }
 
