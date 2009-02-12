@@ -3,8 +3,8 @@
 
 #include <GL/glx.h>
 
-#include "glscene.h"
 #include "../utils/settings.h"
+#include "glscene.h"
 
 struct Structure {
 	Display 			*dpy;		// The display. In X Windows, a display considers everything. Monitor, Mouse, Keyboard.

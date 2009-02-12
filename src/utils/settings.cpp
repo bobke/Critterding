@@ -72,7 +72,7 @@ Settings::Settings()
 	critter_mutationrate		= 7;
 		critter_mutationrateMin		= 0;
 		critter_mutationrateMax		= 100;
-	critter_maxmutations		= 7;
+	critter_maxmutations		= 3;
 		critter_maxmutationsMin		= 1;
 		critter_maxmutationsMax		= 100;
 	critter_percentchangetype	= 1;
