@@ -1,21 +1,12 @@
 #ifndef GLSCENE_H
 #define GLSCENE_H
 
-
 // Standard OpenGL/GLX header files
 #include <GL/gl.h>
 
 /* Headers needed for keys used in the program */
 #include <X11/Xlib.h>
-#include <X11/extensions/xf86vmode.h>
 #include <X11/keysym.h>
-// Standard C header files
-#include <iostream>
-#include <cmath>
-
-using std::cerr;
-using std::endl;
-
 
 class GLScene {
 	public:
