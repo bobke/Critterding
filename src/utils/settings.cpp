@@ -10,16 +10,16 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsize			= 12;
+	worldsize			= 16;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
-	startenergy			= 200;
+	startenergy			= 250;
 		startenergyMin			= 0;
 		startenergyMax			= 1000000;
 	mincritters			= 10;
 		mincrittersMin			= 0;
 		mincrittersMax			= 1000;
-	retinasperrow			= 20;
+	retinasperrow			= 30;
 		retinasperrowMin		= 1;
 		retinasperrowMax		= 1000;
 	camerasensitivity		= 10;
@@ -63,10 +63,10 @@ Settings::Settings()
 	critter_speedI			= 50;
 		critter_speedIMin		= 1;
 		critter_speedIMax		= 1000;
-	critter_sightrangeI		= 30;
+	critter_sightrangeI		= 35;
 		critter_sightrangeIMin		= 1;
 		critter_sightrangeIMax		= 1000;
-	critter_retinasize		= 7;
+	critter_retinasize		= 16;
 		critter_retinasizeMin		= 1;
 		critter_retinasizeMax		= 1000;
 	critter_mutationrate		= 7;
@@ -212,10 +212,10 @@ Settings::Settings()
 
 		brain_mutate_mutateeffects			= false;
 
-	brain_costhavingneuron				= 200;
+	brain_costhavingneuron				= 500;
 		brain_costhavingneuronMin			= 0;
 		brain_costhavingneuronMax			= 1000000;
-	brain_costfiringneuron				= 500;
+	brain_costfiringneuron				= 50;
 		brain_costfiringneuronMin			= 0;
 		brain_costfiringneuronMax			= 1000000;
 	brain_costfiringmotorneuron			= 500;

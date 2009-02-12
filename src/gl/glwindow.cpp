@@ -1,13 +1,10 @@
 #include "glwindow.h"
 
-
 GLWindow::GLWindow()
 {
 }
 
-
-
-void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fsflag)
+void GLWindow::create(const char* title, int width, int height, int bpp)
 {
 	int attrListSgl[] = {GLX_RGBA, GLX_RED_SIZE, 4,
 				GLX_GREEN_SIZE, 4,
@@ -26,36 +23,14 @@ void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fs
 
 	XVisualInfo *vi;
 	Colormap cmap;
-	int dpyWidth, dpyHeight;
-	int i;
-	int vidModeMajorVersion, vidModeMinorVersion;
-	XF86VidModeModeInfo **modes;
-	int modeNum;
-	int bestMode;
 	Atom wmDelete;
 	Window winDummy;
 	unsigned int borderDummy;
 
-	GLWin.fs = fsflag;
-	bestMode = 0;
-
 	GLWin.dpy = XOpenDisplay(0);
 	GLWin.screen = DefaultScreen(GLWin.dpy);
-	XF86VidModeQueryVersion(GLWin.dpy, &vidModeMajorVersion, &vidModeMinorVersion);
-
-	XF86VidModeGetAllModeLines(GLWin.dpy, GLWin.screen, &modeNum, &modes);
-
-	GLWin.deskMode = *modes[0];
 
 	GLWin.owidth=width; GLWin.oheight=height;
-
-	for (i = 0; i < modeNum; i++)
-	{
-		if ((modes[i]->hdisplay == width) && (modes[i]->vdisplay == height))
-		{
-			bestMode = i;
-		}
-	}
 
 	vi = glXChooseVisual(GLWin.dpy, GLWin.screen, attrListDbl);
 	if(NULL == vi)
@@ -74,28 +49,6 @@ void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fs
 	GLWin.attr.colormap = cmap;
 	GLWin.attr.border_pixel = 0;
 
-	if(GLWin.fs)
-	{
-		cerr << " Running: Fullscreen" << endl;
-		XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, modes[bestMode]);
-		XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
-		dpyWidth = modes[bestMode]->hdisplay;
-		dpyHeight = modes[bestMode]->vdisplay;
-		XFree(modes);
-		GLWin.attr.override_redirect = True;
-		GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask;
-		GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
-			0, 0, dpyWidth, dpyHeight, 0, vi->depth, InputOutput, vi->visual,
-			CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect,
-			&GLWin.attr);
-		XWarpPointer(GLWin.dpy, None, GLWin.win, 0, 0, 0, 0, 0, 0);
-		XMapRaised(GLWin.dpy, GLWin.win);
-		XGrabKeyboard(GLWin.dpy, GLWin.win, True, GrabModeAsync,GrabModeAsync, CurrentTime);
-		XGrabPointer(GLWin.dpy, GLWin.win, True, ButtonPressMask,
-			GrabModeAsync, GrabModeAsync, GLWin.win, None, CurrentTime);
-	}
-	else
-	{
 		//cerr << " Running: Windowed" << endl;
 		GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask;
 		GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
@@ -106,7 +59,6 @@ void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fs
 		XSetStandardProperties(GLWin.dpy, GLWin.win, title,
 			title, None, NULL, 0, NULL);
 		XMapRaised(GLWin.dpy, GLWin.win);
-	}
 
 	glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
 	XGetGeometry(GLWin.dpy, GLWin.win, &winDummy, &GLWin.x, &GLWin.y,
@@ -120,34 +72,13 @@ void GLWindow::create(const char* title, int width, int height, int bpp, BOOL fs
 	resize();
 }
 
-
 void GLWindow::destroy()
 {
-//	printf("Exiting\n");
-
 	glXMakeCurrent(GLWin.dpy, None, NULL);
 	glXDestroyContext(GLWin.dpy, GLWin.ctx);
 	XDestroyWindow(GLWin.dpy, GLWin.win);
 	XCloseDisplay(GLWin.dpy);
-
-/*	if(GLWin.ctx)
-	{
-		if(!glXMakeCurrent(GLWin.dpy, None, NULL))
-		{
-			printf("Error releasing drawing context : GLWindow::destroy\n");
-		}
-		glXDestroyContext(GLWin.dpy, GLWin.ctx);
-		GLWin.ctx = NULL;
-	}
-
-	if(GLWin.fs)
-	{
-		XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, &GLWin.deskMode);
-		XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
-	}
-	XCloseDisplay(GLWin.dpy);*/
 }
-
 
 void GLWindow::resize()
 {
@@ -155,13 +86,11 @@ void GLWindow::resize()
 	if ( GLWin.width == 0 ) GLWin.width = 1;
 }
 
-
 void GLWindow::runGLScene(GLScene &glscene)
 {
 	XEvent event;
 	int running = 1;
 
-//	glscene.init();
 	Settings::Instance()->winWidth = &GLWin.width;
 	Settings::Instance()->winHeight = &GLWin.height;
 
@@ -188,20 +117,8 @@ void GLWindow::runGLScene(GLScene &glscene)
 					switch(XLookupKeysym(&event.xkey,0))
 					{
  						case XK_Escape:			// Quit if windowed, windowed if fullscreen
-							if (GLWin.fs) {
-								destroy();
-								GLWin.fs = !GLWin.fs;
-								create("", GLWin.owidth, GLWin.oheight, GLWin.bpp, GLWin.fs);
-							}
-							else running = 0;
+							running = 0;
 						break;
-/*						case XK_F1:			// Switch Fullscreen/Windowed mode
-
-							destroy();
-
-							GLWin.fs = !GLWin.fs;
-							create("", GLWin.owidth, GLWin.oheight, GLWin.bpp, GLWin.fs);
-						break;*/
  						default:			// TODO ELSE pass event to the scene
 							glscene.handlekey(XLookupKeysym(&event.xkey,0));
 						break;
@@ -223,9 +140,6 @@ void GLWindow::runGLScene(GLScene &glscene)
 		glscene.draw();
 		glXSwapBuffers(GLWin.dpy, GLWin.win);
 	}
-
-	//glscene.clean();
-
 }
 
 

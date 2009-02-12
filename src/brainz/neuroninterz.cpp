@@ -3,15 +3,15 @@
 NeuronInterz::NeuronInterz()
 {
 
-	maxSynapses			= 150;
+// 	maxSynapses			= 150;
 
 	isInhibitory			= false;
 
 	// input weight range, 5 = -5 <-> +5	-> 10 in total because 0 will be excluded
-	dendridicBranches		= 10;
+// 	dendridicBranches		= 10;
 
 	// processing
-	firingThreshold			= 30.0f;
+// 	firingThreshold			= 30.0f;
 	potential			= 0.0f;
 	potentialDecay			= 0.95f;
 
@@ -21,8 +21,8 @@ NeuronInterz::NeuronInterz()
 
 	// plasticity up & down
 	isPlastic			= false;
-	plasticityStrengthen		= 1.0f+(1.0f/100.0f);
-	plasticityWeaken		= 1.0f-(1.0f/1000.0f);
+// 	plasticityStrengthen		= 1.0f+(1.0f/100.0f);
+// 	plasticityWeaken		= 1.0f-(1.0f/1000.0f);
 
 	// SPECIALO optional reference that makes this a MOTOR neuron, but it depends on not being defined
 	isMotor				= false;
@@ -31,10 +31,8 @@ NeuronInterz::NeuronInterz()
 
 void NeuronInterz::process()
 {
-
 	// potential decay
 	potential = potential * potentialDecay;
-
 
 	// make every connection do it's influence on the neuron's total potential
 	unsigned int ssize = Synapses.size();
@@ -65,12 +63,16 @@ void NeuronInterz::process()
 				for ( unsigned int i=0; i < ssize; i++ )
 				{
 					// if synapse fired, strenghten the weight
-					if ( *Synapses[i].ref != 0 )
+					if ( (*Synapses[i].ref < 0.0f && Synapses[i].weight > 0.0f) || (*Synapses[i].ref > 0.0f && Synapses[i].weight < 0.0f) )
+					{
+// 						cerr << endl << "Inhibitory firing" << endl << "synref: " << *Synapses[i].ref << endl << "pre weight:  " << Synapses[i].weight << endl;
 						Synapses[i].weight = Synapses[i].weight * plasticityStrengthen;
+// 						cerr << "post weight: " << Synapses[i].weight << endl;
+					}
 
-					// if weight > 2.0f back to 2.0f
- 					if	( Synapses[i].weight > 2.0f ) Synapses[i].weight = 2.0f;
- 					else if ( Synapses[i].weight <-2.0f ) Synapses[i].weight =-2.0f;
+					// if weight > max back to max
+ 					if	( Synapses[i].weight > 5.0f ) Synapses[i].weight = 5.0f;
+ 					else if ( Synapses[i].weight <-5.0f ) Synapses[i].weight =-5.0f;
 				}
 			}
 		}
@@ -99,12 +101,16 @@ void NeuronInterz::process()
 				for ( unsigned int i=0; i < ssize; i++ )
 				{
 					// if synapse fired, strenghten the weight
-					if ( *Synapses[i].ref != 0 )
+					if ( (*Synapses[i].ref > 0.0f && Synapses[i].weight > 0.0f) || (*Synapses[i].ref < 0.0f && Synapses[i].weight < 0.0f) )
+					{
+// 						cerr << endl << "Excititory firing" << endl << "synref: " << *Synapses[i].ref << endl << "pre weight:  " << Synapses[i].weight << endl;
 						Synapses[i].weight = Synapses[i].weight * plasticityStrengthen;
+// 						cerr << "post weight: " << Synapses[i].weight << endl;
+					}
 
-					// if weight > 2.0f back to 2.0f
- 					if	( Synapses[i].weight > 2.0f ) Synapses[i].weight = 2.0f;
- 					else if ( Synapses[i].weight <-2.0f ) Synapses[i].weight =-2.0f;
+					// if weight > max back to max
+ 					if	( Synapses[i].weight > 5.0f ) Synapses[i].weight = 5.0f;
+ 					else if ( Synapses[i].weight <-5.0f ) Synapses[i].weight =-5.0f;
 				}
 			}
 		}
