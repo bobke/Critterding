@@ -6,4 +6,4 @@ noinst_HEADERS = glwindow.h glscene.h
 libgl_la_SOURCES = glwindow.cpp glscene.cpp
 
 
-libgl_la_LIBADD = -L/usr/X11R6/lib -lGL -lX11 -lXxf86vm
+libgl_la_LIBADD = -L/usr/X11R6/lib -lX11
