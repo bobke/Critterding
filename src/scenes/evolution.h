@@ -5,6 +5,8 @@
 #include "../utils/timer.h"
 #include "../utils/fps.h"
 #include "../utils/settings.h"
+#include "../utils/infobar.h"
+#include "../utils/helpinfo.h"
 #include "entities/camera.h"
 #include "entities/worldb.h"
 
@@ -41,11 +43,13 @@ class Evolution : public GLScene {
 
 	private:
 		Settings *settings;
-		Fps fps;
+//		Fps fps;
+		Infobar infobar;
+		Helpinfo helpinfo;
 
 		bool drawCVNeurons;
 
-		void printGLf(const char *fmt, ...);
+		
 };
 
 #endif

@@ -817,42 +817,5 @@ void Settings::printSettings()
 	cerr << "brain_costfiringneuron  " << brain_costfiringneuron << endl;
 	cerr << "brain_costfiringmotorneuron  " << brain_costfiringmotorneuron << endl;
 	cerr << "brain_costhavingsynapse  " << brain_costhavingsynapse << endl;
-
-	cout << endl << "BUTTONS" << endl << endl;
-	cout << "Engine / World Operations" << endl;
-	cout << "  F1            : print settings" << endl;
-	cout << "  F2            : show fps (100 frames average)" << endl << endl;
-	cout << "  F3/F4         : adjust minimum critters" << endl;
-	cout << "  F5/F6         : adjust energy in the system (by 25 units)" << endl;
-	cout << "  keypad -/+    : adjust energy in the system (by 1 unit)" << endl;
-	cout << "  F7            : insert new critter (adam)" << endl << endl;
-	cout << "  F8            : toggle Timed Food Inserts" << endl;
-	cout << "                  inserts 100 food every 3 generations, driving the population up and down." << endl << endl;
-	cout << "  F9/F10        : adjust max mutations per mutant" << endl;
-	cout << "  F11/F12       : adjust mutation rate (%)" << endl;
-	cout << "  Insert        : toggle hide critter retinas." << endl << endl;
-	cout << "  w             : activate wall/toggle wall types" << endl;
-	cout << "  x             : destroy the wall" << endl;
-	cout << "  v             : toggle verbosity" << endl << endl;
-	cout << "  f             : toggle follow the youngest critter untill it dies." << endl << endl;
-	cout << "  Page Up       : load all critters from \"~/.critterding/load\" directory" << endl;
-	cout << "  Page Down     : save all critters into \"~/.critterding/save/(timestamp)\" directory" << endl << endl;
-	cout << "  p             : pause" << endl << endl;
-
-	cout << "Camera Operations" << endl;
-	cout << "  Backspace     : reset camera" << endl;
-	cout << "  Arrow Up      : move forward" << endl;
-	cout << "  Arrow Down    : move backward" << endl;
-	cout << "  Arrow Left    : strafe left" << endl;
-	cout << "  Arrow Right   : strafe right" << endl;
-	cout << "  Home          : move up" << endl;
-	cout << "  End           : move down" << endl;
-	cout << "  NumKey 2      : look up" << endl;
-	cout << "  NumKey 8      : look down" << endl;
-	cout << "  NumKey 4      : look left" << endl;
-	cout << "  NumKey 6      : look right" << endl;
-	cout << "  keypad /      : decrease camera sensitivity" << endl;
-	cout << "  keypad *      : increase camera sensitivity" << endl << endl;
-
 	cout << endl;
 }
