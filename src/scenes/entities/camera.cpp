@@ -8,7 +8,7 @@ using namespace std;
 Camera::Camera()
 {
 	position	= Vector3f( 0.0f, 0.0f, 0.0f);
-	rotation	= Vector3f( 76.0f,  0.0f, 0.0f);
+	rotation	= Vector3f( 75.0f,  0.0f, 0.0f);
 
 	sensitivity	= 1;
 }

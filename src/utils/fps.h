@@ -14,13 +14,10 @@ class Fps
 		~Fps();
 
 		void mark();
-		void swap();
 
 		float		currentfps;
 
 	private:
-
-		bool		active;
 
 		int		dispcounter;
 		int		dispevery;
