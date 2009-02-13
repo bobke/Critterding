@@ -16,6 +16,8 @@ class Fps
 		void mark();
 		void swap();
 
+		float		currentfps;
+
 	private:
 
 		bool		active;

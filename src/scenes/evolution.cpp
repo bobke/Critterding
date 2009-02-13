@@ -8,6 +8,24 @@ Evolution::Evolution()
 	drawCVNeurons = true;
 }
 
+void Evolution::printGLf(const char *fmt, ...)
+{
+    va_list ap;     /* our argument pointer */
+    char text[256];
+    if (fmt == NULL)    /* if there is no string to draw do nothing */
+        return;
+    va_start(ap, fmt);  /* make ap point to first unnamed arg */
+    /* FIXME: we *should* do boundschecking or something to prevent buffer
+     * overflows/segmentations faults
+     */
+    vsprintf(text, fmt, ap);
+    va_end(ap);
+    glPushAttrib(GL_LIST_BIT);
+    glListBase(settings->fontbase - 32);
+    glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);
+    glPopAttrib();
+}
+
 void Evolution::draw()
 {
 	if ( pause )
@@ -18,6 +36,7 @@ void Evolution::draw()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glShadeModel(GL_FLAT);
+
 	glEnable(GL_DEPTH_TEST);
 
 //	glEnableClientState(GL_VERTEX_ARRAY);
@@ -74,6 +93,35 @@ void Evolution::draw()
 		cerr << "world is empty, exiting..." << endl;
 		exit(0);
 	}
+
+	glPushMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, *settings->winWidth, *settings->winHeight, 0, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+		glColor4f(1.0f, 1.0f, 1.0f, 0.0f);
+
+		glRasterPos2f(10.0f, 15.0f);
+		printGLf("fps: %3.0f", fps.currentfps);
+
+		glRasterPos2f(10.0f, 30.0f);
+		printGLf("cr: %3.0f", (float)world.critters.size());
+
+		glRasterPos2f(10.0f, 45.0f);
+		printGLf("fo: %3.0f", (float)world.food.size());
+
+		glRasterPos2f(10.0f, 60.0f);
+		printGLf("co: %3.0f", (float)world.corpses.size());
+
+// 		glRasterPos2f(10.0f, 75.0f);
+// 		printGLf("Energy in system: %3.0f", (settings->freeEnergyInfo / settings->food_maxenergy));
+
+/*		glRasterPos2f(10.0f, 90.0f);
+		printGLf("Free Energy: %3.0f", world.freeEnergy);*/
+		
+	glPopMatrix();
 
 //	glDisableClientState(GL_VERTEX_ARRAY);
 }

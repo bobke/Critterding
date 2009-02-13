@@ -6,6 +6,7 @@
 #include <sstream>
 #include "file.h"
 #include "parser.h"
+#include <GL/gl.h>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ class Settings
 	public:
 		static Settings* Instance();
 
+		GLuint fontbase;
 		string profileName;
 
 		unsigned int *winWidth;

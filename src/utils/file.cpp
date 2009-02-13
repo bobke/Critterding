@@ -50,7 +50,7 @@ bool File::open(string &filename, string &content)
 	else return false;
 }
 
-bool File::open(char* filename, string &content)
+bool File::open(const char* filename, string &content)
 {
 	content.clear();
 	char str[2000];
