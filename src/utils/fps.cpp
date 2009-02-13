@@ -2,11 +2,12 @@
 
 Fps::Fps()
 {
- 	active		= false;
+ 	active		= true;
 
 	dispcounter	= 0;
-	dispevery	= 100;
+	dispevery	= 10;
 	dispsum		= 0.0f;
+	currentfps	= 0.0f;
 }
 
 void Fps::mark()
@@ -20,7 +21,8 @@ void Fps::mark()
 
 		if ( ++dispcounter == dispevery )
 		{
-			cerr << "FPS: " << (dispsum/dispevery) << endl;
+			currentfps = dispsum/dispevery;
+			//cerr << "FPS: " << currentfps << endl;
 			dispcounter = 0;
 			dispsum = 0.0f;
 		}

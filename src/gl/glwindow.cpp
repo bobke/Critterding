@@ -29,6 +29,7 @@ void GLWindow::create(const char* title, int width, int height, int bpp)
 
 	GLWin.dpy = XOpenDisplay(0);
 	GLWin.screen = DefaultScreen(GLWin.dpy);
+	cerr << GLWin.dpy << endl;
 
 	GLWin.owidth=width; GLWin.oheight=height;
 
@@ -70,6 +71,31 @@ void GLWindow::create(const char* title, int width, int height, int bpp)
 		cerr << " Direct Rendering: False" << endl;
 
 	resize();
+
+
+
+	// build font
+    XFontStruct *font;
+    
+    Settings::Instance()->fontbase = glGenLists(96);      /* storage for 96 characters */
+    /* load a font with a specific name in "Host Portable Character Encoding" */
+    font = XLoadQueryFont(GLWin.dpy,
+        "-*-helvetica-medium-r-normal--12-*-*-*-p-*-iso8859-1");
+    if (font == NULL)
+    {
+        /* this really *should* be available on every X Window System...*/
+        font = XLoadQueryFont(GLWin.dpy, "fixed");
+        if (font == NULL)
+        {
+            printf("Problems loading fonts :-(\n");
+            exit(1);
+        }
+    }
+    /* build 96 display lists out of our font starting at char 32 */
+    glXUseXFont(font->fid, 32, 96, Settings::Instance()->fontbase);
+    /* free our XFontStruct since we have our display lists */
+    XFreeFont(GLWin.dpy, font);
+
 }
 
 void GLWindow::destroy()

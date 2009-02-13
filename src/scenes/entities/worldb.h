@@ -31,6 +31,11 @@ class WorldB
 		~WorldB();
 
 		vector<CritterB*>	critters;
+		vector<Food*>		food;
+		vector<Corpse*>		corpses;
+		vector<Wall*>		walls;
+		vector<Bullet*>		bullets;
+
 		unsigned long		currentCritterID;
 
 		int			size;
@@ -71,11 +76,6 @@ class WorldB
 		Parser			*parseH;
 		Dir			dirH;
 		File			fileH;
-
-		vector<Food*>		food;
-		vector<Corpse*>		corpses;
-		vector<Wall*>		walls;
-		vector<Bullet*>		bullets;
 
 		unsigned int		timedInsertsCounter;
 
