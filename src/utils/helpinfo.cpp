@@ -31,7 +31,7 @@ void Helpinfo::draw()
 			float halfwidth = (*Settings::Instance()->winWidth/2.0f);
 			float halfheight = (*Settings::Instance()->winHeight/2.0f);
 
-			float halfboxwidth = 250.0f;
+			float halfboxwidth = 230.0f;
 			float halfboxheight = 250.0f;
 
 			// draw background box and border
