@@ -3,7 +3,7 @@
 Fps::Fps()
 {
 	dispcounter	= 0;
-	dispevery	= 100;
+	dispevery	= 25;
 	dispsum		= 0.0f;
 	currentfps	= 0.0f;
 }

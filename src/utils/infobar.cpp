@@ -36,10 +36,10 @@ void Infobar::draw()
 
 			glColor4f(0.0f, 0.0f, 0.0f, 0.9f);
 			glBegin(GL_QUADS);
-				glVertex2f(0.0f, 20.0f);
+				glVertex2f(0.0f, 40.0f);
 				glVertex2f(0.0f, 0.0f);
 				glVertex2f(*Settings::Instance()->winWidth, 0.0f);
-				glVertex2f(*Settings::Instance()->winWidth, 20.0f);
+				glVertex2f(*Settings::Instance()->winWidth, 40.0f);
 			glEnd();
 
 			glDisable(GL_BLEND);
@@ -59,6 +59,16 @@ void Infobar::draw()
 	
 			glRasterPos2f((*Settings::Instance()->winWidth/4)*3, 15.0f);
 			printGLf("corpses: %3u", corpses);
+
+			glRasterPos2f(5.0f, 30.0f);
+			printGLf("n/c: %3.2f", (float)Settings::Instance()->totalNeurons / critters);
+
+			glRasterPos2f((*Settings::Instance()->winWidth/4), 30.0f);
+			printGLf("s/c: %3.2f", (float)Settings::Instance()->totalSynapses / critters);
+
+			glRasterPos2f((*Settings::Instance()->winWidth/4)*2, 30.0f);
+			printGLf("s/n: %3.2f", (float)Settings::Instance()->totalSynapses / Settings::Instance()->totalNeurons);
+
 
 	// 		glRasterPos2f(10.0f, 75.0f);
 	// 		printGLf("Energy in system: %3.0f", (settings->freeEnergyInfo / settings->food_maxenergy));

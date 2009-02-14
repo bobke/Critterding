@@ -303,6 +303,9 @@ void WorldB::process()
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 	}
 
+	settings->totalNeurons	= 0;
+	settings->totalSynapses	= 0;
+
 	// process all critters
 	unsigned int lmax = critters.size();
 	for( unsigned int i=0; i < lmax; i++)
@@ -602,10 +605,17 @@ void WorldB::process()
 						c->moveToNewPoss();
 						nc->moveToNewPoss();
 
+						settings->totalNeurons += nc->brain.totalNeurons;
+						settings->totalSynapses += nc->brain.totalSynapses;
+
 						critters.push_back( nc );
 					}
 				}
 			}
+
+		settings->totalNeurons += c->brain.totalNeurons;
+		settings->totalSynapses += c->brain.totalSynapses;
+
 	}
 
 

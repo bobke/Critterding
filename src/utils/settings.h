@@ -18,6 +18,10 @@ class Settings
 		GLuint fontbase;
 		string profileName;
 
+		// info data
+		unsigned int totalNeurons;
+		unsigned int totalSynapses;
+
 		unsigned int *winWidth;
 		unsigned int *winHeight;
 
