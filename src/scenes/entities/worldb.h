@@ -97,7 +97,7 @@ class WorldB
 		bool			spotIsFree(Vector3f &position, float halfsize);
 		bool			spotIsFree(Vector3f &position, float halfsize, unsigned int exclude);
 
-		GLuint			displayLists;
+		int			displayLists;
 		void			generateList();
 
 };
