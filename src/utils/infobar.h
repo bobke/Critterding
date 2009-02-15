@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <GL/gl.h>
+#include <stdarg.h>
 #include "fps.h"
 #include "settings.h"
 
