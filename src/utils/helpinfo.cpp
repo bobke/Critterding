@@ -193,7 +193,6 @@ void Helpinfo::printGLf(const char *fmt, ...)
     /* FIXME: we *should* do boundschecking or something to prevent buffer
      * overflows/segmentations faults
      */
-//vprintf(fmt, ap);
     vsprintf(text, fmt, ap);
     va_end(ap);
     glListBase(Settings::Instance()->fontbase - 32);

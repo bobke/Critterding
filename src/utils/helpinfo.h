@@ -7,6 +7,7 @@
 #include <GL/gl.h>
 #include "fps.h"
 #include "settings.h"
+#include <stdarg.h>
 
 using namespace std;
 
