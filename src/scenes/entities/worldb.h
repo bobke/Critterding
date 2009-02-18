@@ -14,6 +14,7 @@
 #include "../../utils/parser.h"
 #include "../../utils/randgen.h"
 #include "../../utils/settings.h"
+#include "../../utils/textmessage.h"
 #include "grid.h"
 #include "floor.h"
 #include "food.h"

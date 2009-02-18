@@ -7,9 +7,11 @@
 #include "../utils/settings.h"
 #include "../utils/infobar.h"
 #include "../utils/helpinfo.h"
+#include "../utils/textmessage.h"
 #include "entities/camera.h"
 #include "entities/worldb.h"
 
+#include <sstream>
 #include <stdio.h>
 #include <stdarg.h>
 #include <math.h>

@@ -699,7 +699,7 @@ void WorldB::positionCritterB(unsigned int cid)
 void WorldB::removeCritter(unsigned int cid)
 {
 	bool hasCorpse = false;
-	if ( critters[cid]->energyLevel > 0.0f && !settings->corpse_disable )
+	if ( critters[cid]->energyLevel > 0.0f && !settings->corpse_disable && critters[cid]->crittertype==0 )
 	{
 		hasCorpse = true;
 
@@ -1063,7 +1063,10 @@ void WorldB::loadAllCritters()
 	{
 		if ( parseH->Instance()->endMatches( ".cr", files[i] ) )
 		{
-			cout << "loading " << files[i] << endl;
+			stringstream buf;
+			buf << "loading " << files[i];
+			Textmessage::Instance()->add(buf);
+
 			string content;
 			fileH.open( files[i], content );
 
@@ -1091,11 +1094,18 @@ void WorldB::loadAllCritters()
 			}
 			else if ( error == 1 )
 			{
-				cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << endl;
+				stringstream buf;
+				buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << files[i];
+				Textmessage::Instance()->add(buf);
+
+//				cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << endl;
 			}
 		}
 	}
-	cerr << endl << "Loaded critters from " << loaddir << endl << endl;
+	stringstream buf;
+	buf << "Loaded critters from " << loaddir;
+	Textmessage::Instance()->add(buf);
+	//cerr << endl << "Loaded critters from " << loaddir << endl << endl;
 }
 
 void WorldB::saveAllCritters()
@@ -1125,7 +1135,11 @@ void WorldB::saveAllCritters()
 		// save critters
 		fileH.save(sfilename, content);
 	}
-	cerr << endl << "Saved critters to " << subsavedir << endl << endl;
+ 	//cerr << endl << "Saved critters to " << subsavedir << endl << endl;
+	stringstream buf2;
+	buf2 << "Saved critters to " << subsavedir;
+	Textmessage::Instance()->add(buf2);
+
 }
 
 void WorldB::createDirs()

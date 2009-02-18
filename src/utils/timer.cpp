@@ -19,8 +19,13 @@ void Timer::mark()
 	gettimeofday(&now, &timer_tz);
 	
 	// calc diff between now and lasttime
-	elapsed = ( (float)((now.tv_sec - lasttime.tv_sec) * 1000000 + (now.tv_usec - lasttime.tv_usec)) / 1000000);
+	elapsed = timediff(now, lasttime);
 	//cerr << elapsed << endl;
 	
 	lasttime = now;
+}
+
+float Timer::timediff(struct timeval& now, struct timeval& lasttime)
+{
+	return ( (float)((now.tv_sec - lasttime.tv_sec) * 1000000 + (now.tv_usec - lasttime.tv_usec)) / 1000000);
 }

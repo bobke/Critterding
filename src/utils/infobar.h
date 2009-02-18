@@ -1,13 +1,8 @@
 #ifndef INFOBAR_H
 #define INFOBAR_H
 
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <GL/gl.h>
-#include <stdarg.h>
 #include "fps.h"
-#include "settings.h"
+#include "textprinter.h"
 
 using namespace std;
 
@@ -20,17 +15,15 @@ class Infobar
 		unsigned int critters;
 		unsigned int food;
 		unsigned int corpses;
+		unsigned int bullets;
 
 		void draw();
 		void swap();
 
 	private:
-		Settings *settings;
 		Fps fps;
 
 		bool active;
-
-		void printGLf(const char *fmt, ...);
 };
 
 #endif

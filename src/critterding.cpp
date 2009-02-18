@@ -16,14 +16,14 @@ int main(int argc, char *argv[])
 
 		Evolution mainscene;
 
-		mainscene.camera.position = Vector3f(-0.5f*settings->worldsize, -1.1f*settings->worldsize, -0.9f*settings->worldsize);
+		mainscene.camera.position = Vector3f(-0.5f*settings->worldsize, -1.1f*settings->worldsize, -0.86875f*settings->worldsize);
 		mainscene.camera.sensitivity = settings->camerasensitivity;
 
 		// global
 		mainscene.world.resize(settings->worldsize);
 		mainscene.world.startfoodamount(settings->startenergy);
 
-		settings->printSettings();
+		//settings->printSettings();
 
 		if (settings->autoload)
 			mainscene.world.loadAllCritters();

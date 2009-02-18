@@ -15,7 +15,7 @@ class Settings
 	public:
 		static Settings* Instance();
 
-		int fontbase;
+// 		int fontbase;
 		string profileName;
 
 		// info data
