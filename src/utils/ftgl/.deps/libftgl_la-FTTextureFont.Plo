@@ -1,0 +1,451 @@
+libftgl_la-FTTextureFont.lo libftgl_la-FTTextureFont.o:  \
+ FTFont/FTTextureFont.cpp ../../../config.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cassert \
+  /usr/include/assert.h /usr/include/features.h /usr/include/sys/cdefs.h \
+  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+  /usr/include/gnu/stubs-64.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/string \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/c++config.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/os_defines.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/cpu_defines.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stringfwd.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/char_traits.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstring \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstddef \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/stddef.h \
+  /usr/include/string.h /usr/include/xlocale.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_algobase.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/climits \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/limits.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/syslimits.h \
+  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/limits.h \
+  /usr/include/limits.h /usr/include/bits/posix1_lim.h \
+  /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
+  /usr/include/bits/posix2_lim.h /usr/include/bits/xopen_lim.h \
+  /usr/include/bits/stdio_lim.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstdlib \
+  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h /usr/include/endian.h \
+  /usr/include/bits/endian.h /usr/include/sys/types.h \
+  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+  /usr/include/time.h /usr/include/sys/select.h \
+  /usr/include/bits/select.h /usr/include/bits/sigset.h \
+  /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+  /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/iosfwd \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/c++locale.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstdio \
+  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+  /usr/include/wchar.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/stdarg.h \
+  /usr/include/bits/sys_errlist.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/clocale \
+  /usr/include/locale.h /usr/include/bits/locale.h \
+  /usr/include/langinfo.h /usr/include/nl_types.h /usr/include/iconv.h \
+  /usr/include/libintl.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstdarg \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/c++io.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/gthr.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/gthr-default.h \
+  /usr/include/pthread.h /usr/include/sched.h /usr/include/bits/sched.h \
+  /usr/include/signal.h /usr/include/bits/setjmp.h /usr/include/unistd.h \
+  /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+  /usr/include/bits/confname.h /usr/include/getopt.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cctype \
+  /usr/include/ctype.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/postypes.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cwchar \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/ctime \
+  /usr/include/bits/wchar.h /usr/include/stdint.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/functexcept.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/exception_defines.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_pair.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/cpp_type_traits.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/ext/type_traits.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/utility \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_relops.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_iterator_base_types.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_iterator_base_funcs.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/concept_check.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_iterator.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/debug/debug.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/memory \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/allocator.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/c++allocator.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/ext/new_allocator.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/new \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/exception \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_construct.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_uninitialized.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_raw_storage_iter.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/limits \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/ostream_insert.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_function.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/basic_string.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/ext/atomicity.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/atomic_word.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/algorithm \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_algo.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_heap.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_tempbuf.h \
+  /pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/basic_string.tcc \
+  FTGL/ftgl.h /usr/include/ft2build.h \
+  /usr/include/freetype/config/ftheader.h \
+  /usr/include/freetype/freetype.h \
+  /usr/include/freetype/config/ftconfig.h \
+  /usr/include/freetype/config/ftoption.h \
+  /usr/include/freetype/config/ftstdlib.h /usr/include/setjmp.h \
+  /usr/include/freetype/fterrors.h /usr/include/freetype/ftmoderr.h \
+  /usr/include/freetype/fterrdef.h /usr/include/freetype/fttypes.h \
+  /usr/include/freetype/ftsystem.h /usr/include/freetype/ftimage.h \
+  /usr/include/freetype/ftglyph.h /usr/include/freetype/ftoutln.h \
+  FTGL/FTPoint.h FTGL/FTBBox.h FTGL/FTBuffer.h FTGL/FTGlyph.h \
+  FTGL/FTBitmapGlyph.h FTGL/FTBufferGlyph.h FTGL/FTExtrdGlyph.h \
+  FTGL/FTOutlineGlyph.h FTGL/FTPixmapGlyph.h FTGL/FTPolyGlyph.h \
+  FTGL/FTTextureGlyph.h FTGL/FTFont.h FTGL/FTGLBitmapFont.h \
+  FTGL/FTBufferFont.h FTGL/FTGLExtrdFont.h FTGL/FTGLOutlineFont.h \
+  FTGL/FTGLPixmapFont.h FTGL/FTGLPolygonFont.h FTGL/FTGLTextureFont.h \
+  FTGL/FTLayout.h FTGL/FTSimpleLayout.h FTInternals.h FTGL/ftgl.h \
+  /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/inttypes.h \
+  /usr/include/GL/glu.h FTFont/../FTGlyph/FTTextureGlyphImpl.h \
+  FTFont/../FTGlyph/FTGlyphImpl.h FTGL/ftgl.h \
+  FTFont/./FTTextureFontImpl.h FTFont/./FTFontImpl.h FTGL/ftgl.h FTFace.h \
+  FTSize.h FTVector.h
+
+../../../config.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cassert:
+
+/usr/include/assert.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/string:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/c++config.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/os_defines.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/cpu_defines.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stringfwd.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/char_traits.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstring:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstddef:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/stddef.h:
+
+/usr/include/string.h:
+
+/usr/include/xlocale.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_algobase.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/climits:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/limits.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/syslimits.h:
+
+/usr/lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/limits.h:
+
+/usr/include/limits.h:
+
+/usr/include/bits/posix1_lim.h:
+
+/usr/include/bits/local_lim.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/bits/posix2_lim.h:
+
+/usr/include/bits/xopen_lim.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstdlib:
+
+/usr/include/stdlib.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/time.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/alloca.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/iosfwd:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/c++locale.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstdio:
+
+/usr/include/stdio.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/include/stdarg.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/clocale:
+
+/usr/include/locale.h:
+
+/usr/include/bits/locale.h:
+
+/usr/include/langinfo.h:
+
+/usr/include/nl_types.h:
+
+/usr/include/iconv.h:
+
+/usr/include/libintl.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cstdarg:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/c++io.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/gthr.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/gthr-default.h:
+
+/usr/include/pthread.h:
+
+/usr/include/sched.h:
+
+/usr/include/bits/sched.h:
+
+/usr/include/signal.h:
+
+/usr/include/bits/setjmp.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/environments.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cctype:
+
+/usr/include/ctype.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/postypes.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/cwchar:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/ctime:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/stdint.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/functexcept.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/exception_defines.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_pair.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/cpp_type_traits.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/ext/type_traits.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/utility:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_relops.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_iterator_base_types.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_iterator_base_funcs.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/concept_check.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_iterator.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/debug/debug.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/memory:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/allocator.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/c++allocator.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/ext/new_allocator.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/new:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/exception:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_construct.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_uninitialized.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_raw_storage_iter.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/limits:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/ostream_insert.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_function.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/basic_string.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/ext/atomicity.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/x86_64-unknown-linux-gnu/bits/atomic_word.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/algorithm:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_algo.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_heap.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/stl_tempbuf.h:
+
+/pkg/gcc/4.2.4/usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.2.4/../../../../include/c++/4.2.4/bits/basic_string.tcc:
+
+FTGL/ftgl.h:
+
+/usr/include/ft2build.h:
+
+/usr/include/freetype/config/ftheader.h:
+
+/usr/include/freetype/freetype.h:
+
+/usr/include/freetype/config/ftconfig.h:
+
+/usr/include/freetype/config/ftoption.h:
+
+/usr/include/freetype/config/ftstdlib.h:
+
+/usr/include/setjmp.h:
+
+/usr/include/freetype/fterrors.h:
+
+/usr/include/freetype/ftmoderr.h:
+
+/usr/include/freetype/fterrdef.h:
+
+/usr/include/freetype/fttypes.h:
+
+/usr/include/freetype/ftsystem.h:
+
+/usr/include/freetype/ftimage.h:
+
+/usr/include/freetype/ftglyph.h:
+
+/usr/include/freetype/ftoutln.h:
+
+FTGL/FTPoint.h:
+
+FTGL/FTBBox.h:
+
+FTGL/FTBuffer.h:
+
+FTGL/FTGlyph.h:
+
+FTGL/FTBitmapGlyph.h:
+
+FTGL/FTBufferGlyph.h:
+
+FTGL/FTExtrdGlyph.h:
+
+FTGL/FTOutlineGlyph.h:
+
+FTGL/FTPixmapGlyph.h:
+
+FTGL/FTPolyGlyph.h:
+
+FTGL/FTTextureGlyph.h:
+
+FTGL/FTFont.h:
+
+FTGL/FTGLBitmapFont.h:
+
+FTGL/FTBufferFont.h:
+
+FTGL/FTGLExtrdFont.h:
+
+FTGL/FTGLOutlineFont.h:
+
+FTGL/FTGLPixmapFont.h:
+
+FTGL/FTGLPolygonFont.h:
+
+FTGL/FTGLTextureFont.h:
+
+FTGL/FTLayout.h:
+
+FTGL/FTSimpleLayout.h:
+
+FTInternals.h:
+
+FTGL/ftgl.h:
+
+/usr/include/GL/gl.h:
+
+/usr/include/GL/glext.h:
+
+/usr/include/inttypes.h:
+
+/usr/include/GL/glu.h:
+
+FTFont/../FTGlyph/FTTextureGlyphImpl.h:
+
+FTFont/../FTGlyph/FTGlyphImpl.h:
+
+FTGL/ftgl.h:
+
+FTFont/./FTTextureFontImpl.h:
+
+FTFont/./FTFontImpl.h:
+
+FTGL/ftgl.h:
+
+FTFace.h:
+
+FTSize.h:
+
+FTVector.h:
