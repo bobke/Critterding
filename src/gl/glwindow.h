@@ -5,6 +5,7 @@
 
 #include "../utils/settings.h"
 #include "glscene.h"
+//#include "../utils/font_8x8.h"
 
 struct Structure {
 	Display 			*dpy;		// The display. In X Windows, a display considers everything. Monitor, Mouse, Keyboard.

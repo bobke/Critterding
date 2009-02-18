@@ -10,6 +10,8 @@ Evolution::Evolution()
 
 void Evolution::draw()
 {
+	Timer::Instance()->mark();
+
 	if ( pause )
 	{
 		usleep(10000);
@@ -20,8 +22,6 @@ void Evolution::draw()
 	glShadeModel(GL_FLAT);
 
 	glEnable(GL_DEPTH_TEST);
-
-//	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 	glHint(GL_FOG_HINT, GL_FASTEST);
@@ -67,27 +67,43 @@ void Evolution::draw()
 // 		world.drawWithGrid();
 // 	}
 
-	Timer::Instance()->mark();
+	// 2D
+
+	glPushMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, *Settings::Instance()->winWidth, *Settings::Instance()->winHeight, 0, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+	glHint(GL_FOG_HINT, GL_FASTEST);
+	glDisable(GL_COLOR_MATERIAL);
+	glDisable(GL_DITHER);
+	glDisable(GL_POLYGON_SMOOTH);
+	glDisable(GL_DEPTH_TEST);
+	glDisable (GL_LIGHTING);
+
+		infobar.critters = world.critters.size();
+		infobar.food = world.food.size();
+		infobar.corpses = world.corpses.size();
+		infobar.bullets = world.bullets.size();
+		infobar.draw();
+
+		helpinfo.draw();
+
+		Textmessage::Instance()->draw();
+	glPopMatrix();
 
 	if ( settings->exit_if_empty && world.critters.size() == 0 )
 	{
 		cerr << "world is empty, exiting..." << endl;
 		exit(0);
 	}
-
-	infobar.critters = world.critters.size();
-	infobar.food = world.food.size();
-	infobar.corpses = world.corpses.size();
-	infobar.draw();
-
-	helpinfo.draw();
-
-//	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void Evolution::handlekey(const KeySym& key)
 {
-
 	if ( pause && key != XK_p )
 	{
 		usleep(10000);
@@ -106,77 +122,115 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_F3:
+		{
 			if ( settings->mincritters > 0 ) settings->mincritters--;
-			cerr << "min c: " << settings->mincritters << endl;
+			stringstream buf;
+			buf << "min c: " << settings->mincritters;
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 		case XK_F4:
+		{
 			settings->mincritters++;
-			cerr << "min c: " << settings->mincritters << endl;
+			stringstream buf;
+			buf << "min c: " << settings->mincritters;
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 
 		case XK_F5:
+		{
 			if ( (settings->freeEnergyInfo-(settings->food_maxenergy*25.0f)) / settings->food_maxenergy >= 0.0f )
 			{
 				settings->freeEnergyInfo -= settings->food_maxenergy * 25.0f;
 				world.freeEnergy -= settings->food_maxenergy * 25.0f;
-				cerr << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << endl;
+
 			}
+			stringstream buf;
+			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 		case XK_F6:
+		{
 			settings->freeEnergyInfo += settings->food_maxenergy * 25.0f;
 			world.freeEnergy += settings->food_maxenergy * 25.0f;
-			cerr << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << endl;
+			stringstream buf;
+			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 
 		case XK_KP_Subtract:
+		{
 			if ( (settings->freeEnergyInfo-settings->food_maxenergy) / settings->food_maxenergy >= 0.0f )
 			{
 				settings->freeEnergyInfo -= settings->food_maxenergy;
 				world.freeEnergy -= settings->food_maxenergy;
-				cerr << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << endl;
 			}
+			stringstream buf;
+			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 
 		case XK_KP_Add:
+		{
 			settings->freeEnergyInfo += settings->food_maxenergy;
 			world.freeEnergy += settings->food_maxenergy;
-			cerr << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy) << endl;
+			stringstream buf;
+			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 
 		case XK_F7:
 			world.insertCritter();
 		break;
 		case XK_F8:
+		{
 			world.toggleTimedInserts();
-			cerr << "timed food inserts: "<< world.doTimedInserts << endl;
+			stringstream buf;
+			buf << "timed food inserts: "<< world.doTimedInserts;
+			Textmessage::Instance()->add(buf);
+
+		}
 		break;
 		case XK_F9:
+		{
 			if ( settings->critter_maxmutations >= 2 )
-			{
 				settings->critter_maxmutations -= 1;
-				cerr << "Max Mutations: "<< settings->critter_maxmutations << endl;
-			}
+			stringstream buf;
+			buf << "Max Mutations: "<< settings->critter_maxmutations;
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 		case XK_F10:
+		{
 			if ( settings->critter_maxmutations <= 999 )
-			{
 				settings->critter_maxmutations += 1;
-				cerr << "Max Mutations: "<< settings->critter_maxmutations << endl;
-			}
+			stringstream buf;
+			buf << "Max Mutations: "<< settings->critter_maxmutations;
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 		case XK_F11:
+		{
 			if ( settings->critter_mutationrate >= 1 )
-			{
 				settings->critter_mutationrate -= 1;
-				cerr << "Mutation Rate: "<< settings->critter_mutationrate << "%" << endl;
-			}
+			stringstream buf;
+			buf << "Mutation Rate: "<< settings->critter_mutationrate << "%";
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 		case XK_F12:
+		{
 			if ( settings->critter_mutationrate <= 99 )
-			{
 				settings->critter_mutationrate += 1;
-				cerr << "Mutation Rate: "<< settings->critter_mutationrate << "%" << endl;
-			}
+			stringstream buf;
+			buf << "Mutation Rate: "<< settings->critter_mutationrate << "%";
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 
 		case XK_Page_Up:
@@ -195,11 +249,15 @@ void Evolution::handlekey(const KeySym& key)
 			pause = !pause;
 		break;
 		case XK_v:
+		{
+			stringstream buf;
 			settings->noverbose = !settings->noverbose;
 			if ( settings->noverbose )
-				cerr << "verbose = off" << endl;
+				buf << "verbose = off";
 			else
-				cerr << "verbose = on" << endl;
+				buf << "verbose = on";
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 		case XK_f:
 			if ( world.isSelected )
@@ -230,15 +288,21 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_KP_Divide:
+		{
 			if ( camera.sensitivity > 1 )
-			{
 				camera.sensitivity--;
-				cerr << "Camera Sensitivity: "<< camera.sensitivity << endl;
-			}
+			stringstream buf;
+			buf << "Camera Sensitivity: "<< camera.sensitivity;
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 		case XK_KP_Multiply:
+		{
 			camera.sensitivity++;
-			cerr << "Camera Sensitivity: "<< camera.sensitivity << endl;
+			stringstream buf;
+			buf << "Camera Sensitivity: "<< camera.sensitivity;
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 
 		// Camera Moving
@@ -262,7 +326,10 @@ void Evolution::handlekey(const KeySym& key)
 			camera.moveRight(0.05f);
 		break;
 		case XK_BackSpace:
-			camera.position = Vector3f(-0.5f*world.size, -1.1f*world.size, -0.9f*world.size);
+//  camera rot: 75:0:0
+//  camera pos: -8:-17.6:-13.9
+
+			camera.position = Vector3f(-0.5f*world.size, -1.1f*world.size, -0.86875f*world.size);
 			camera.rotation = Vector3f( 75.0f,  0.0f, 0.0f);
 		break;
 

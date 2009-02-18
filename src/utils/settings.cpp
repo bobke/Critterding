@@ -237,7 +237,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --profile                 [none]  Load a settings profile" << endl << endl;
 
 	helpinfo << "  --worldsize                 [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
-	helpinfo << "  --energy                   [" << startenergy << "]  Energy in the system: " << startenergy << "*food_energy(" << food_maxenergy << ") = " << startenergy*food_maxenergy << "" << endl;
+	helpinfo << "  --energy                   [" << startenergy << "]  Energy in the system: " << startenergy << "*food_maxenergy(" << food_maxenergy << ") = " << startenergy*food_maxenergy << "" << endl;
 	helpinfo << "  --mincritters               [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
 	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;

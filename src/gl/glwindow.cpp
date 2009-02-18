@@ -74,42 +74,30 @@ void GLWindow::create(const char* title, int width, int height, int bpp)
 
 
 
-	// build font
-	XFontStruct *font;
-
-	Settings::Instance()->fontbase = glGenLists(96);      /* storage for 96 characters */
-	/* load a font with a specific name in "Host Portable Character Encoding" */
-
-// 	     font = XLoadQueryFont(GLWin.dpy,"-*-helvetica-medium-r-normal--12-*-*-*-p-*-iso8859-1");
-	//      font = XLoadQueryFont(GLWin.dpy,"-*-times-medium-r-normal--10-100-75-75-p-54-iso8859-1");
-	//      font = XLoadQueryFont(GLWin.dpy,"-*-times-medium-r-normal--24-240-75-75-p-124-iso8859-1");
-	//font = XLoadQueryFont(GLWin.dpy,"-*-misc-fixed-medium-r-normal--13-*-*-*-C-*-iso8859-1"); // best performance till now
-// 	font = XLoadQueryFont(GLWin.dpy,"-*-screen-fixed-medium-r-normal--16-*-*-*-C-*-iso8859-1");
-	font = XLoadQueryFont(GLWin.dpy,"-*-courier-medium-r-normal--14-*-*-*-p-*-iso8859-1");
-
-
-
-	if (font == NULL)
-	{
-		/* this really *should* be available on every X Window System...*/
-		font = XLoadQueryFont(GLWin.dpy, "fixed");
-		if (font == NULL)
-		{
-			printf("Problems loading fonts :-(\n");
-			exit(1);
-		}
-	}
-
-// 	for ( unsigned int i=0; i <= 96; i++ )
+// 	// build font
+// 	XFontStruct *font;
+// 	Settings::Instance()->fontbase = glGenLists(96);      /* storage for 96 characters */
+// // 	     font = XLoadQueryFont(GLWin.dpy,"-*-helvetica-medium-r-normal--12-*-*-*-p-*-iso8859-1");
+// 	//      font = XLoadQueryFont(GLWin.dpy,"-*-times-medium-r-normal--10-100-75-75-p-54-iso8859-1");
+// 	//      font = XLoadQueryFont(GLWin.dpy,"-*-times-medium-r-normal--24-240-75-75-p-124-iso8859-1");
+// 	//font = XLoadQueryFont(GLWin.dpy,"-*-misc-fixed-medium-r-normal--13-*-*-*-C-*-iso8859-1"); // best performance till now
+// // 	font = XLoadQueryFont(GLWin.dpy,"-*-screen-fixed-medium-r-normal--16-*-*-*-C-*-iso8859-1");
+// 	font = XLoadQueryFont(GLWin.dpy,"-*-courier-medium-r-normal--14-*-*-*-p-*-iso8859-1");
+// 	if (font == NULL)
 // 	{
-// 		cerr << "compiling" << i << endl;
-// 		glNewList(Settings::Instance()->fontbase+i, GL_COMPILE);
+// 		/* this really *should* be available on every X Window System...*/
+// 		font = XLoadQueryFont(GLWin.dpy, "fixed");
+// 		if (font == NULL)
+// 		{
+// 			printf("Problems loading fonts :-(\n");
+// 			exit(1);
+// 		}
 // 	}
+// 	/* build 96 display lists out of our font starting at char 32 */
+// 	glXUseXFont(font->fid, 32, 96, Settings::Instance()->fontbase);
+// 	/* free our XFontStruct since we have our display lists */
+// 	XFreeFont(GLWin.dpy, font);
 
-	/* build 96 display lists out of our font starting at char 32 */
-	glXUseXFont(font->fid, 32, 96, Settings::Instance()->fontbase);
-	/* free our XFontStruct since we have our display lists */
-	XFreeFont(GLWin.dpy, font);
 }
 
 void GLWindow::destroy()

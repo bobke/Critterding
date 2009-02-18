@@ -13,12 +13,13 @@ class Timer
 		static Timer* Instance();
 		float elapsed;
 		void mark();
+		struct timeval lasttime;
+		float timediff(struct timeval& now, struct timeval& lasttime);
 	protected:
 		Timer();
 	private:
 		static Timer* _instance;
 		struct timezone	timer_tz;
-		struct timeval	lasttime;
 };
 
 #endif
