@@ -8,8 +8,6 @@
 
 #define FTGL_TEXTURE 5
 
-//#include <FTGL/ftgl.h>
-
 #include "ftgl/FTGL/ftgl.h"
 
 using namespace std;
@@ -19,9 +17,9 @@ class Textprinter
 	public:
 		static Textprinter* Instance();
 		void printTextprinter();
-/*		void printGLf(const char *fmt, ...);*/
 		void print(float x, float y, const char *fmt, ...);
 		void print(float x, float y, string *str);
+		FTPoint getBBox(string* str);
 		void setUpFonts();
 	protected:
 		Textprinter();

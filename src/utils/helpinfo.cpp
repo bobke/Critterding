@@ -150,11 +150,6 @@ void Helpinfo::draw()
 
 void Helpinfo::printInfoLine(float heightpos, float widthpos1, float widthpos2, const char* key, const char* expl)
 {
-// 	glRasterPos2f(widthpos1, heightpos);
-// 	textprinter->printGLf(key);
-// 		glRasterPos2f(widthpos2, heightpos);
-// 		textprinter->printGLf(expl);
-
 	Textprinter::Instance()->print(widthpos1, heightpos, key);
 	Textprinter::Instance()->print(widthpos2, heightpos, expl);
 }
@@ -162,7 +157,6 @@ void Helpinfo::printInfoLine(float heightpos, float widthpos1, float widthpos2, 
 void Helpinfo::swap()
 {
 	active = !active;
-	//fps.swap();
 }
 
 Helpinfo::~Helpinfo()
