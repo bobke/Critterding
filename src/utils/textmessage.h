@@ -33,7 +33,7 @@ class Textmessage
 		static Textmessage* _instance;
 		vector<msg*>	messages;
 
-		unsigned int	longestLength;
+		float		longestLength;
 		void		getLongestMsg();
 
 		void		deleteExpiredMsg();

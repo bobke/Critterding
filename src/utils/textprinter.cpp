@@ -11,22 +11,6 @@ Textprinter::Textprinter()
 	setUpFonts();
 }
 
-// void Textprinter::printGLf(const char *fmt, ...)
-// {
-// 	va_list ap;     /* our argument pointer */
-// 	char text[256];
-// 	if (fmt == NULL)
-// 	return;
-// 	va_start(ap, fmt);  /* make ap point to first unnamed arg */
-// 	/* FIXME: we *should* do boundschecking or something to prevent buffer
-// 	* overflows/segmentations faults
-// 	*/
-// 	vsprintf(text, fmt, ap);
-// 	va_end(ap);
-// 	glListBase(Settings::Instance()->fontbase - 32);
-// 	glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);
-// }
-
 void Textprinter::print(float x, float y, const char *fmt, ...)
 {
 	glPushMatrix();
@@ -49,6 +33,22 @@ void Textprinter::print(float x, float y, const char *fmt, ...)
 	glPopMatrix();
 }
 
+FTPoint Textprinter::getBBox(string* str)
+{
+	const char *text = str->c_str();
+
+	FTBBox test = fonts[0]->BBox(text);
+// 	FTPoint upper = test.Upper();
+// 	cerr << endl << text << endl;
+// 	cerr << "Upper x: " << upper.X() << "    y: " << upper.Y() << endl;
+// 
+// 	FTPoint lower = test.Lower();
+// 	cerr << "Lower x: " << lower.X() << "    y: " << lower.Y() << endl;
+
+	return test.Upper();
+}
+
+
 void Textprinter::print(float x, float y, string* str)
 {
 	glPushMatrix();
@@ -57,6 +57,7 @@ void Textprinter::print(float x, float y, string* str)
 		glRotatef(180, 1.0f, 0.0f, 0.0f);
 
 		const char *text = str->c_str();
+		FTBBox test = fonts[0]->BBox(text);
 		fonts[0]->Render(text);
 
 	glPopMatrix();

@@ -9,11 +9,11 @@ Textmessage* Textmessage::Instance ()
 Textmessage::Textmessage()
 {
 	maxMessages = 5;
-	msgLifetime = 5.0f;
+	msgLifetime = 10.0f;
 	longestLength = 0;
 
-	vpadding = 5.0f;
-	hpadding = 5.0f;
+	vpadding = 10.0f;
+	hpadding = 10.0f;
 }
 
 void Textmessage::add(stringstream& streamptr)
@@ -24,8 +24,9 @@ void Textmessage::add(stringstream& streamptr)
 	messages.push_back(Msg);
 
 	//getLongestMsg();
-	if ( messages[messages.size()-1]->str.length() > longestLength )
-		longestLength = messages[messages.size()-1]->str.length();
+	FTPoint bbox = Textprinter::Instance()->getBBox(&messages[messages.size()-1]->str);
+	if ( bbox.X() > longestLength )
+		longestLength = bbox.X();
 
 	// to prevent overfilling:
 	deleteExpiredMsg();
@@ -35,8 +36,11 @@ void Textmessage::getLongestMsg()
 {
 	longestLength = 0;
 	for ( unsigned int i = 0; i < messages.size(); i++ )
-		if ( messages[i]->str.length() > longestLength )
-			longestLength = messages[i]->str.length();
+	{
+		FTPoint bbox = Textprinter::Instance()->getBBox(&messages[i]->str);
+		if ( bbox.X() > longestLength )
+			longestLength = bbox.X();
+	}
 }
 
 void Textmessage::deleteExpiredMsg()
@@ -48,13 +52,13 @@ void Textmessage::deleteExpiredMsg()
 			|| ( msgLifetime > 0.0f && Timer::Instance()->timediff( Timer::Instance()->lasttime, messages[0]->appeartime ) > msgLifetime )
 		)
 		{
-			// backup it's length
-			unsigned int length = messages[0]->str.length();
+// 			// backup it's length
+// 			unsigned int length = messages[0]->str.length();
 
 			delete messages[0];
 			messages.erase(messages.begin()+0);
 
-			if ( length == longestLength )
+//			if ( length == longestLength )
 				getLongestMsg();
 		}
 	}
@@ -66,11 +70,13 @@ void Textmessage::draw()
 
 	if ( !messages.empty() )
 	{
+		FTPoint bbox = Textprinter::Instance()->getBBox(&messages[0]->str);
+
 		float xstart = 5.0f;
-		float xstop = 5.0f + (2.0f*hpadding) + (7.0f * longestLength);
+		float xstop = 5.0f + longestLength + ( hpadding*2.0f );
 
 		float ystart = 50.0f;
-		float ystop = 50.0f + (2.0f*hpadding) + (15.0f * messages.size());
+		float ystop = 50.0f + (15.0f * (messages.size()-1)) + bbox.Y() + ( vpadding*2.0f );
 
 	// draw background box and border
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -102,10 +108,32 @@ void Textmessage::draw()
 	// render text
 		glEnable(GL_TEXTURE_2D);
 
-		glColor3f(1.0, 1.0, 1.0);
+		glColor3f(1.0f, 1.0f, 1.0f);
 		for ( unsigned int i = 0; i < messages.size(); i++ )
 		{
-			Textprinter::Instance()->print(7.0f + hpadding, 60.0f + vpadding + (i*15.0f), &messages[i]->str);
+// 			float xstart = 5.0f;
+// 			float xstop = 5.0f + bbox.X();
+// 
+// 			float ystart = 50.0f;
+// 			float ystop = 50.0f + (15.0f * (messages.size()-1)) + bbox.Y() ;
+
+// 				glColor3f(0.0f, 1.0f, 1.0f);
+// 				glBegin(GL_LINES);
+// 					glVertex2f(xstart, ystop);
+// 					glVertex2f(xstart, ystart);
+// 
+// 					glVertex2f(xstart, ystart);
+// 					glVertex2f(xstop, ystart);
+// 
+// 					glVertex2f(xstop, ystart);
+// 					glVertex2f(xstop, ystop);
+// 
+// 					glVertex2f(xstop, ystop);
+// 					glVertex2f(xstart, ystop);
+// 				glEnd();
+
+
+			Textprinter::Instance()->print(xstart + hpadding, ystart + bbox.Y() + (i*15.0f) + vpadding, &messages[i]->str);
 		}
 
 		glDisable(GL_TEXTURE_2D);
