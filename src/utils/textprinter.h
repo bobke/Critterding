@@ -18,8 +18,10 @@ class Textprinter
 		static Textprinter* Instance();
 		void printTextprinter();
 		void print(float x, float y, const char *fmt, ...);
-		void print(float x, float y, string *str);
-		FTPoint getBBox(string* str);
+		void print(float x, float y, string& str);
+		FTPoint getBBox(string& str);
+		FTPoint getBBox(const char *fmt, ...);
+		string getFormattedString(const char *fmt, ...);
 		void setUpFonts();
 	protected:
 		Textprinter();

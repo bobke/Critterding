@@ -18,8 +18,10 @@ class Settings
 		string profileName;
 
 		// info data
-		unsigned int totalNeurons;
-		unsigned int totalSynapses;
+		unsigned int info_totalNeurons;
+		unsigned int info_totalSynapses;
+
+
 
 		unsigned int *winWidth;
 		unsigned int *winHeight;

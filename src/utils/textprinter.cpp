@@ -33,30 +33,53 @@ void Textprinter::print(float x, float y, const char *fmt, ...)
 	glPopMatrix();
 }
 
-FTPoint Textprinter::getBBox(string* str)
+FTPoint Textprinter::getBBox(const char *fmt, ...)
 {
-	const char *text = str->c_str();
+		va_list ap;     /* our argument pointer */
+		char text[256];
+		va_start(ap, fmt);  /* make ap point to first unnamed arg */
+		/* FIXME: we *should* do boundschecking or something to prevent buffer
+		* overflows/segmentations faults
+		*/
+		vsprintf(text, fmt, ap);
+
+		FTBBox test = fonts[0]->BBox(text);
+		return test.Upper();
+}
+
+string Textprinter::getFormattedString(const char *fmt, ...)
+{
+
+	va_list ap;     /* our argument pointer */
+	char text[256];
+	va_start(ap, fmt);  /* make ap point to first unnamed arg */
+	/* FIXME: we *should* do boundschecking or something to prevent buffer
+	* overflows/segmentations faults
+	*/
+	vsprintf(text, fmt, ap);
+
+	string a(text);
+	return a;
+}
+
+
+FTPoint Textprinter::getBBox(string& str)
+{
+	const char *text = str.c_str();
 
 	FTBBox test = fonts[0]->BBox(text);
-// 	FTPoint upper = test.Upper();
-// 	cerr << endl << text << endl;
-// 	cerr << "Upper x: " << upper.X() << "    y: " << upper.Y() << endl;
-// 
-// 	FTPoint lower = test.Lower();
-// 	cerr << "Lower x: " << lower.X() << "    y: " << lower.Y() << endl;
-
 	return test.Upper();
 }
 
 
-void Textprinter::print(float x, float y, string* str)
+void Textprinter::print(float x, float y, string& str)
 {
 	glPushMatrix();
 
 		glTranslatef(x, y, 0);
 		glRotatef(180, 1.0f, 0.0f, 0.0f);
 
-		const char *text = str->c_str();
+		const char *text = str.c_str();
 		FTBBox test = fonts[0]->BBox(text);
 		fonts[0]->Render(text);
 
