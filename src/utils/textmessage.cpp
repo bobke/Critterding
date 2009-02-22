@@ -24,7 +24,7 @@ void Textmessage::add(stringstream& streamptr)
 	messages.push_back(Msg);
 
 	//getLongestMsg();
-	FTPoint bbox = Textprinter::Instance()->getBBox(&messages[messages.size()-1]->str);
+	FTPoint bbox = Textprinter::Instance()->getBBox(messages[messages.size()-1]->str);
 	if ( bbox.X() > longestLength )
 		longestLength = bbox.X();
 
@@ -37,7 +37,7 @@ void Textmessage::getLongestMsg()
 	longestLength = 0;
 	for ( unsigned int i = 0; i < messages.size(); i++ )
 	{
-		FTPoint bbox = Textprinter::Instance()->getBBox(&messages[i]->str);
+		FTPoint bbox = Textprinter::Instance()->getBBox(messages[i]->str);
 		if ( bbox.X() > longestLength )
 			longestLength = bbox.X();
 	}
@@ -70,10 +70,10 @@ void Textmessage::draw()
 
 	if ( !messages.empty() )
 	{
-		FTPoint bbox = Textprinter::Instance()->getBBox(&messages[0]->str);
+		FTPoint bbox = Textprinter::Instance()->getBBox(messages[0]->str);
 
-		float xstart = 5.0f;
-		float xstop = 5.0f + longestLength + ( hpadding*2.0f );
+		float xstart = 10.0f;
+		float xstop = 10.0f + longestLength + ( hpadding*2.0f );
 
 		float ystart = 50.0f;
 		float ystop = 50.0f + (15.0f * (messages.size()-1)) + bbox.Y() + ( vpadding*2.0f );
@@ -133,7 +133,7 @@ void Textmessage::draw()
 // 				glEnd();
 
 
-			Textprinter::Instance()->print(xstart + hpadding, ystart + bbox.Y() + (i*15.0f) + vpadding, &messages[i]->str);
+			Textprinter::Instance()->print(xstart + hpadding, ystart + bbox.Y() + (i*15.0f) + vpadding, messages[i]->str);
 		}
 
 		glDisable(GL_TEXTURE_2D);

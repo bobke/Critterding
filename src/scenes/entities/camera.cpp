@@ -57,8 +57,8 @@ void Camera::moveForwardXZ(const float& factor)
 	position.x += sin(reusedY) * factor * sensitivity;
 	position.z += cos(reusedY) * factor * sensitivity;
 
-	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
-	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
+// 	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
+// 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
 }
 
 void Camera::moveBackwardXZ(const float& factor)
