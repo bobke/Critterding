@@ -254,8 +254,13 @@ void WorldB::process()
 		// see if energy level isn't below 0 -> die, or die of old age
 		if ( critters[i]->energyLevel <= 0.0f )
 		{
-//			if (!settings->noverbose) cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " DIES: starvation" << endl;
-			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " starved" << endl;
+//			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " starved" << endl;
+			if (!settings->noverbose)
+			{
+				stringstream buf;
+				buf << setw(4) << critters[i]->critterID << " starved";
+				Textverbosemessage::Instance()->addDeath(buf);
+			}
 
 			removeCritter(i);
 			i--;
@@ -263,14 +268,26 @@ void WorldB::process()
 		// see if died from bullet
 		else if ( critters[i]->totalFrames > settings->critter_maxlifetime && critters[i]->wasShot )
 		{
-			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " killed" << endl;
+			//if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " killed" << endl;
+			if (!settings->noverbose)
+			{
+				stringstream buf;
+				buf << setw(4) << critters[i]->critterID << " killed";
+				Textverbosemessage::Instance()->addDeath(buf);
+			}
 			removeCritter(i);
 			i--;
 		}
 		// die of old age
 		else if ( critters[i]->totalFrames > settings->critter_maxlifetime )
 		{
-			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " old" << endl;
+//			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " old" << endl;
+			if (!settings->noverbose)
+			{
+				stringstream buf;
+				buf << setw(4) << critters[i]->critterID << " old";
+				Textverbosemessage::Instance()->addDeath(buf);
+			}
 			removeCritter(i);
 			i--;
 		}
@@ -583,14 +600,26 @@ void WorldB::process()
 
 						if (!settings->noverbose)
 						{
-//							cerr << setw(4) << i+1 << "/" << setw(4) << critters.size() << " PROC: (t: ";
-							cerr << "> " << setw(3) << critters.size()+1 << " | " << setw(4) << c->critterID << " procreates: " << setw(4) << nc->critterID << " (";
-							cerr << "ad: " << setw(4) << nc->adamdist;
-							cerr << ", N: " << setw(4) << nc->brain.totalNeurons << ", C: " << setw(5) << nc->brain.totalSynapses;
-							if ( nc->crittertype == 1 ) cerr << ", carnivore";
-							else cerr << ", herbivore";
-							if ( mutant ) cerr << ", mutant";
-							cerr << ")" << endl;
+// 							cerr << "> " << setw(3) << critters.size()+1 << " | " << setw(4) << c->critterID << " procreates: " << setw(4) << nc->critterID << " (";
+// 							cerr << "ad: " << setw(4) << nc->adamdist;
+// 							cerr << ", N: " << setw(4) << nc->brain.totalNeurons << ", C: " << setw(5) << nc->brain.totalSynapses;
+// 							if ( nc->crittertype == 1 ) cerr << ", carnivore";
+// 							else cerr << ", herbivore";
+// 							if ( mutant ) cerr << ", mutant";
+// 							cerr << ")" << endl;
+
+							stringstream buf;
+							buf << setw(4) << c->critterID << " procreates: " << setw(4) << nc->critterID << " (";
+							buf << "ad: " << setw(4) << nc->adamdist;
+							buf << ", N: " << setw(4) << nc->brain.totalNeurons << ", C: " << setw(5) << nc->brain.totalSynapses;
+							if ( nc->crittertype == 1 )
+								buf << ", carnivore";
+							else
+								buf << ", herbivore";
+							if ( mutant ) buf << ", mutant";
+							buf << ")";
+							Textverbosemessage::Instance()->addBirth(buf);
+
 						}
 
 						// split energies in half
@@ -791,6 +820,9 @@ void WorldB::removeCritter(unsigned int cid)
 void WorldB::createWall()
 {
 	destroyWall();
+
+	stringstream buf;
+	buf << "Wall type: " << settings->walltype;
 	if ( settings->walltype == 1 )
 	{
 		for ( unsigned int i=0; i < (unsigned int)(4.0f*size); i++ )
@@ -801,6 +833,7 @@ void WorldB::createWall()
 			walls[i]->position.x = 0.125 + ((float)i*0.25);
 			walls[i]->position.z = size/2.0f;
 		}
+		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 2 )
@@ -817,6 +850,8 @@ void WorldB::createWall()
 		walls[ (unsigned int)(size*2.0f)-1 ]->toggle();
 		walls[ (unsigned int)(size*2.0f)   ]->toggle();
 		walls[ (unsigned int)(size*2.0f)+1 ]->toggle();
+
+		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 3 )
@@ -840,6 +875,8 @@ void WorldB::createWall()
 			walls[wcount]->position.z = size/3.0f;
 			wcount++;
 		}
+
+		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 4 )
@@ -863,9 +900,9 @@ void WorldB::createWall()
 			walls[wcount]->position.z = 2*size/3.0f;
 			wcount++;
 		}
-	}
 
-	cerr << "Wall type: " << settings->walltype << endl;
+		Textmessage::Instance()->add(buf);
+	}
 }
 
 void WorldB::destroyWall()
@@ -1063,9 +1100,6 @@ void WorldB::loadAllCritters()
 	{
 		if ( parseH->Instance()->endMatches( ".cr", files[i] ) )
 		{
-			stringstream buf;
-			buf << "loading " << files[i];
-			Textmessage::Instance()->add(buf);
 
 			string content;
 			fileH.open( files[i], content );

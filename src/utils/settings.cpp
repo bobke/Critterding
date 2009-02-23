@@ -212,7 +212,7 @@ Settings::Settings()
 
 		brain_mutate_mutateeffects			= false;
 
-	brain_costhavingneuron				= 100;
+	brain_costhavingneuron				= 250;
 		brain_costhavingneuronMin			= 0;
 		brain_costhavingneuronMax			= 1000000;
 	brain_costfiringneuron				= 20;

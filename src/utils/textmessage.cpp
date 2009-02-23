@@ -9,7 +9,7 @@ Textmessage* Textmessage::Instance ()
 Textmessage::Textmessage()
 {
 	maxMessages = 5;
-	msgLifetime = 10.0f;
+	msgLifetime = 3.0f;
 	longestLength = 0;
 
 	vpadding = 10.0f;

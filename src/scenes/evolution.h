@@ -8,6 +8,7 @@
 #include "../utils/infobar.h"
 #include "../utils/helpinfo.h"
 #include "../utils/textmessage.h"
+#include "../utils/textverbosemessage.h"
 #include "entities/camera.h"
 #include "entities/worldb.h"
 

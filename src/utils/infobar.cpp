@@ -9,6 +9,9 @@ Infobar::Infobar()
 
 	barheight = 40.0f;
 
+	hsp = 20.0f;
+	vsp = 15.0f;
+
 	active = true;
 }
 
@@ -29,30 +32,38 @@ void Infobar::draw()
 		glEnd();
 		glDisable(GL_BLEND);
 
-		glColor3f(1.0, 1.0, 1.0);
+		glColor3f(1.0f, 1.0f, 1.0f);
 
-		glBegin(GL_LINES);
+		float col1 = (*Settings::Instance()->winWidth/4);
+		float col2 = col1 * 2.0f;
+		float col3 = col1 * 3.0f;
+		float col4 = col1 * 4.0f;
+
+		float linespacer = 0.0f;
+ 		glBegin(GL_LINES);
 			glVertex2f(0.0f, barheight);
 			glVertex2f(*Settings::Instance()->winWidth, barheight);
-		glEnd();
+
+ 			glVertex2f(col1, linespacer);
+ 			glVertex2f(col1, barheight - linespacer);
+ 			glVertex2f(col2, linespacer);
+ 			glVertex2f(col2, barheight - linespacer);
+ 			glVertex2f(col3, linespacer);
+ 			glVertex2f(col3, barheight - linespacer);
+ 		glEnd();
 
 
 		glEnable(GL_TEXTURE_2D);
 
-		FTPoint bbox;
+		printInfoLine(vsp,	hsp,		col1-hsp,	"fps:",		"%1.1f", fps.currentfps);
+		printInfoLine(vsp,	col1+hsp,	col2-hsp,	"critters:",	"%1u", critters);
+		printInfoLine(vsp,	col2+hsp,	col3-hsp,	"food:",	"%1u/%1u", food, (unsigned int)(Settings::Instance()->freeEnergyInfo/Settings::Instance()->food_maxenergy));
+		printInfoLine(vsp,	col3+hsp,	col4-hsp,	"corpses:",	"%1u", corpses);
 
-		float hsp = 20.0f;
-		float vsp = 15.0f;
-
-		printInfoLine(vsp,	hsp,						(*Settings::Instance()->winWidth/4)-hsp,	"fps:",		"%1.1f", fps.currentfps);
-		printInfoLine(vsp,	(*Settings::Instance()->winWidth/4)+hsp,	(*Settings::Instance()->winWidth/4)*2-hsp,	"critters:",	"%1u", critters);
-		printInfoLine(vsp,	(*Settings::Instance()->winWidth/4)*2+hsp,	(*Settings::Instance()->winWidth/4)*3-hsp,	"food:",	"%1u/%1u", food, (unsigned int)(Settings::Instance()->freeEnergyInfo/Settings::Instance()->food_maxenergy));
-		printInfoLine(vsp,	(*Settings::Instance()->winWidth/4)*3+hsp,	(*Settings::Instance()->winWidth/4)*4-hsp,	"corpses:",	"%1u", corpses);
-
-		printInfoLine(vsp*2,	hsp,						(*Settings::Instance()->winWidth/4)-hsp,	"n/c:",		"%1.2f", (float)Settings::Instance()->info_totalNeurons / critters);
-		printInfoLine(vsp*2,	(*Settings::Instance()->winWidth/4)+hsp,	(*Settings::Instance()->winWidth/4)*2-hsp,	"s/c:",		"%1.2f", (float)Settings::Instance()->info_totalSynapses / critters);
-		printInfoLine(vsp*2,	(*Settings::Instance()->winWidth/4)*2+hsp,	(*Settings::Instance()->winWidth/4)*3-hsp,	"s/n:",		"%1.2f", (float)Settings::Instance()->info_totalSynapses / Settings::Instance()->info_totalNeurons);
-		printInfoLine(vsp*2,	(*Settings::Instance()->winWidth/4)*3+hsp,	(*Settings::Instance()->winWidth/4)*4-hsp,	"bullets:",	"%1u", bullets);
+		printInfoLine(vsp*2,	hsp,		col1-hsp,	"neu/cri:",	"%1.2f", (float)Settings::Instance()->info_totalNeurons / critters);
+		printInfoLine(vsp*2,	col1+hsp,	col2-hsp,	"syn/cri:",	"%1.2f", (float)Settings::Instance()->info_totalSynapses / critters);
+		printInfoLine(vsp*2,	col2+hsp,	col3-hsp,	"syn/neu:",	"%1.2f", (float)Settings::Instance()->info_totalSynapses / Settings::Instance()->info_totalNeurons);
+		printInfoLine(vsp*2,	col3+hsp,	col4-hsp,	"bullets:",	"%1u", bullets);
 
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -99,6 +110,14 @@ void Infobar::printInfoLine(float heightpos, float widthpos1, float widthpos2, c
 void Infobar::swap()
 {
 	active = !active;
+}
+
+unsigned int Infobar::height()
+{
+	if ( active )
+		return barheight;
+	else
+		return 0;
 }
 
 Infobar::~Infobar()

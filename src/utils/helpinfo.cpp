@@ -9,8 +9,8 @@ void Helpinfo::draw()
 {
 	if (active)
 	{
-		float halfwidth = (*Settings::Instance()->winWidth/2.0f);
-		float halfheight = (*Settings::Instance()->winHeight/2.0f);
+		unsigned int halfwidth = (unsigned int)(*Settings::Instance()->winWidth/2.0f);
+		unsigned int halfheight = (unsigned int)(*Settings::Instance()->winHeight/2.0f);
 
 		float halfboxwidth = 230.0f;
 		float halfboxheight = 250.0f;

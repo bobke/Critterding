@@ -90,9 +90,13 @@ void Evolution::draw()
 		infobar.bullets = world.bullets.size();
 		infobar.draw();
 
+		if (!settings->noverbose)
+			Textverbosemessage::Instance()->draw(infobar.height());
+
 		helpinfo.draw();
 
 		Textmessage::Instance()->draw();
+
 	glPopMatrix();
 
 	if ( settings->exit_if_empty && world.critters.size() == 0 )
@@ -251,12 +255,13 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_v:
 		{
 			stringstream buf;
-			settings->noverbose = !settings->noverbose;
-			if ( settings->noverbose )
+ 			settings->noverbose = !settings->noverbose;
+			//Textverbosemessage::Instance()->swap();
+/*			if ( settings->noverbose )
 				buf << "verbose = off";
 			else
 				buf << "verbose = on";
-			Textmessage::Instance()->add(buf);
+			Textmessage::Instance()->add(buf);*/
 		}
 		break;
 		case XK_f:
