@@ -23,9 +23,14 @@ class Infobar
 // 		void printInfoLine(float heightpos, float widthpos1, float widthpos2, const char* key, string& str);
 		void printInfoLine(float heightpos, float widthpos1, float widthpos2, const char* key, const char *fmt, ...);
 		void swap();
+		unsigned int height();
 
 	private:
 		Fps fps;
+
+		// horizontal/vertical spacers (padding)
+		float hsp;
+		float vsp;
 
 		bool active;
 };

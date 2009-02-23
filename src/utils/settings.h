@@ -21,8 +21,6 @@ class Settings
 		unsigned int info_totalNeurons;
 		unsigned int info_totalSynapses;
 
-
-
 		unsigned int *winWidth;
 		unsigned int *winHeight;
 
