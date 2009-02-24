@@ -4,7 +4,7 @@ Infobar::Infobar()
 {
 	barheight = 40.0f;
 
-	hsp = 20.0f;
+	hsp = 10.0f;
 	vsp = 15.0f;
 
 	active = true;
@@ -50,60 +50,39 @@ void Infobar::draw()
 
 		glEnable(GL_TEXTURE_2D);
 
-		unsigned int totalneurons = Settings::Instance()->info_crittersH + Settings::Instance()->info_crittersC;
-		unsigned int totalsynapses = Settings::Instance()->info_totalSynapsesH+Settings::Instance()->info_totalSynapsesC;
+		unsigned int totalneurons = Settings::Instance()->info_totalNeuronsH + Settings::Instance()->info_totalNeuronsC;
+		unsigned int totalsynapses = Settings::Instance()->info_totalSynapsesH + Settings::Instance()->info_totalSynapsesC;
 
-		printInfoLine(vsp,	hsp,		col1-hsp,	"fps:",		"%1.1f",	fps.currentfps);
-		printInfoLine(vsp,	col1+hsp,	col2-hsp,	"critters:",	"%1u",		Settings::Instance()->info_critters);
-		printInfoLine(vsp,	col2+hsp,	col3-hsp,	"food:",	"%1u/%1u",	Settings::Instance()->info_food, (unsigned int)(Settings::Instance()->freeEnergyInfo/Settings::Instance()->food_maxenergy));
-		printInfoLine(vsp,	col3+hsp,	col4-hsp,	"corpses:",	"%1u",		Settings::Instance()->info_corpses);
+	// Row 1
+		Textprinter::Instance()->print(hsp,		vsp,	"fps:");
+		Textprinter::Instance()->printR(col1-hsp,	vsp,	"%1.1f",	fps.currentfps);
 
-		printInfoLine(vsp*2,	hsp,		col1-hsp,	"neu/cri:",	"%1.2f",	(float)totalneurons / Settings::Instance()->info_critters);
-		printInfoLine(vsp*2,	col1+hsp,	col2-hsp,	"syn/cri:",	"%1.2f",	(float)totalsynapses / Settings::Instance()->info_critters);
-		printInfoLine(vsp*2,	col2+hsp,	col3-hsp,	"syn/neu:",	"%1.2f",	(float)totalsynapses / totalneurons);
-		printInfoLine(vsp*2,	col3+hsp,	col4-hsp,	"bullets:",	"%1u",		Settings::Instance()->info_bullets);
+		Textprinter::Instance()->print(col1+hsp,	vsp,	"critters:");
+		Textprinter::Instance()->printR(col2-hsp,	vsp,	"%1u",		Settings::Instance()->info_critters);
+
+		Textprinter::Instance()->print(col2+hsp,	vsp,	"food:");
+		Textprinter::Instance()->printR(col3-hsp,	vsp,	"%1u/%1u",	Settings::Instance()->info_food, (unsigned int)(Settings::Instance()->freeEnergyInfo/Settings::Instance()->food_maxenergy));
+
+		Textprinter::Instance()->print(col3+hsp,	vsp,	"corpses:");
+		Textprinter::Instance()->printR(col4-hsp,	vsp,	"%1u",		Settings::Instance()->info_corpses);
+
+	// Row 2
+		Textprinter::Instance()->print(hsp,		vsp*2,	"neu/cri:");
+		Textprinter::Instance()->printR(col1-hsp,	vsp*2,	"%1.2f",	(float)totalneurons / Settings::Instance()->info_critters);
+
+		Textprinter::Instance()->print(col1+hsp,	vsp*2,	"syn/cri:");
+		Textprinter::Instance()->printR(col2-hsp,	vsp*2,	"%1.2f",	(float)totalsynapses / Settings::Instance()->info_critters);
+
+ 		Textprinter::Instance()->print(col2+hsp,	vsp*2,	"syn/neu:");
+ 		Textprinter::Instance()->printR(col3-hsp,	vsp*2,	"%1.2f",	(float)totalsynapses / totalneurons);
+
+		Textprinter::Instance()->print(col3+hsp,	vsp*2,	"bullets:");
+		Textprinter::Instance()->printR(col4-hsp,	vsp*2,	"%1u",		Settings::Instance()->info_bullets);
+
 
 		glDisable(GL_TEXTURE_2D);
 	}
 }
-
-void Infobar::printInfoLine(float heightpos, float widthpos1, float widthpos2, const char* key, const char *fmt, ...)
-{
-
-	va_list ap;     /* our argument pointer */
-	char text[256];
-	va_start(ap, fmt);  /* make ap point to first unnamed arg */
-	/* FIXME: we *should* do boundschecking or something to prevent buffer
-	* overflows/segmentations faults
-	*/
-	vsprintf(text, fmt, ap);
-
-	string str(text);
-
-	//string str = Textprinter::Instance()->getFormattedString(fmt);
-//	printInfoLine( heightpos, widthpos1, widthpos2, key, str );
-
-	FTPoint bbox = Textprinter::Instance()->getBBox(str);
-	Textprinter::Instance()->print(widthpos1, heightpos, key);
-	Textprinter::Instance()->print(widthpos2 - bbox.X(), heightpos, str);
-
-/*	glBegin(GL_LINES);
-		glVertex2f(widthpos2, heightpos);
-		glVertex2f(widthpos2 - bbox.X(), heightpos);
-	glEnd();*/
-}
-
-// void Infobar::printInfoLine(float heightpos, float widthpos1, float widthpos2, const char* key, string& str)
-// {
-// 	Textprinter::Instance()->print(widthpos1, heightpos, key);
-// 	FTPoint bbox = Textprinter::Instance()->getBBox(str);
-// 	Textprinter::Instance()->print(widthpos2 - bbox.X(), heightpos, str);
-// 
-// /*	glBegin(GL_LINES);
-// 		glVertex2f(widthpos2, heightpos);
-// 		glVertex2f(widthpos2 - bbox.X(), heightpos);
-// 	glEnd();*/
-// }
 
 void Infobar::swap()
 {

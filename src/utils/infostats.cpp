@@ -8,7 +8,7 @@ Infostats::Infostats()
 	hsp = 10.0f;
 	vsp = 15.0f;
 
-	active = true;
+	active = false;
 }
 
 void Infostats::draw()
@@ -107,7 +107,7 @@ void Infostats::draw()
 		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalSynapsesC / Settings::Instance()->info_totalNeuronsC);
 
 		rc++;
-		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg adamdist:");
+		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg adam dist:");
 		Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalad / Settings::Instance()->info_critters);
 		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalAdamDistanceH / Settings::Instance()->info_crittersH);
 		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalAdamDistanceC / Settings::Instance()->info_crittersC);
