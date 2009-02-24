@@ -17,11 +17,19 @@ class Textprinter
 	public:
 		static Textprinter* Instance();
 		void printTextprinter();
-		void print(float x, float y, const char *fmt, ...);
-		void print(float x, float y, string& str);
+
+		// get bounding boxes
 		FTPoint getBBox(string& str);
 		FTPoint getBBox(const char *fmt, ...);
+
 		string getFormattedString(const char *fmt, ...);
+
+		// print left aligned
+		void print(float x, float y, const char *fmt, ...);
+		void print(float x, float y, string& str);
+		// print right aligned
+		void printR(float x, float y, const char *fmt, ...);
+
 		void setUpFonts();
 	protected:
 		Textprinter();

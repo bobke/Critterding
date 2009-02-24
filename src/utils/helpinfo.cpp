@@ -3,6 +3,9 @@
 Helpinfo::Helpinfo()
 {
 	active = false;
+
+	halfboxwidth = 210.0f;
+	halfboxheight = 240.0f;
 }
 
 void Helpinfo::draw()
@@ -11,9 +14,6 @@ void Helpinfo::draw()
 	{
 		unsigned int halfwidth = (unsigned int)(*Settings::Instance()->winWidth/2.0f);
 		unsigned int halfheight = (unsigned int)(*Settings::Instance()->winHeight/2.0f);
-
-		float halfboxwidth = 230.0f;
-		float halfboxheight = 240.0f;
 
 	// draw background box and border
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);

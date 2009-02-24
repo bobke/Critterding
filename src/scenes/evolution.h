@@ -7,6 +7,7 @@
 #include "../utils/fps.h"
 #include "../utils/settings.h"
 #include "../utils/infobar.h"
+#include "../utils/infostats.h"
 #include "../utils/helpinfo.h"
 #include "../utils/textmessage.h"
 #include "../utils/textverbosemessage.h"
@@ -48,8 +49,8 @@ class Evolution : public GLScene {
 	private:
 		Settings *settings;
 		Sleeper sleeper;
-//		Fps fps;
 		Infobar infobar;
+		Infostats infostats;
 		Helpinfo helpinfo;
 
 		bool drawCVNeurons;

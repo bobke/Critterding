@@ -85,11 +85,8 @@ void Evolution::draw()
 	glDisable(GL_DEPTH_TEST);
 	glDisable (GL_LIGHTING);
 
-		infobar.critters = world.critters.size();
-		infobar.food = world.food.size();
-		infobar.corpses = world.corpses.size();
-		infobar.bullets = world.bullets.size();
 		infobar.draw();
+		infostats.draw();
 
 		//if (!settings->noverbose)
 			Textverbosemessage::Instance()->draw(infobar.height());
@@ -117,6 +114,10 @@ void Evolution::handlekey(const KeySym& key)
 
 	switch (key)
 	{
+		case XK_Tab:
+			infostats.swap();
+		break;
+
 		case XK_F1:
 //			settings->printSettings();
 			helpinfo.swap();

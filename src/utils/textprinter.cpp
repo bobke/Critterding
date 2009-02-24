@@ -80,10 +80,25 @@ void Textprinter::print(float x, float y, string& str)
 		glRotatef(180, 1.0f, 0.0f, 0.0f);
 
 		const char *text = str.c_str();
-		FTBBox test = fonts[0]->BBox(text);
 		fonts[0]->Render(text);
 
 	glPopMatrix();
+}
+
+void Textprinter::printR(float x, float y, const char *fmt, ...)
+{
+	va_list ap;     /* our argument pointer */
+	char text[256];
+	va_start(ap, fmt);  /* make ap point to first unnamed arg */
+	/* FIXME: we *should* do boundschecking or something to prevent buffer
+	* overflows/segmentations faults
+	*/
+	vsprintf(text, fmt, ap);
+
+	string str(text);
+
+	FTPoint bbox = getBBox(str);
+	print(x - bbox.X(), y, str);
 }
 
 void Textprinter::setUpFonts()
