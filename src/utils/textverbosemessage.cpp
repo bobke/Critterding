@@ -105,7 +105,7 @@ void Textverbosemessage::draw( unsigned int posY )
 
 			for ( unsigned int i = 0; i < births.size(); i++ )
 			{
-				Textprinter::Instance()->print(20.0f, ystart + (i*15.0f), births[i]->str);
+				Textprinter::Instance()->print(10.0f, ystart + (i*15.0f), births[i]->str);
 			}
 
 			glDisable(GL_TEXTURE_2D);
@@ -120,7 +120,7 @@ void Textverbosemessage::draw( unsigned int posY )
 
 			for ( unsigned int i = 0; i < deaths.size(); i++ )
 			{
-				Textprinter::Instance()->print((*Settings::Instance()->winWidth/4)*3 + 20, ystart + (i*15.0f), deaths[i]->str);
+				Textprinter::Instance()->print(((float)*Settings::Instance()->winWidth/4)*3 + 10, ystart + (i*15.0f), deaths[i]->str);
 			}
 
 			glDisable(GL_TEXTURE_2D);

@@ -5,7 +5,7 @@ Helpinfo::Helpinfo()
 	active = false;
 
 	halfboxwidth = 210.0f;
-	halfboxheight = 240.0f;
+	halfboxheight = 245.0f;
 }
 
 void Helpinfo::draw()
@@ -81,6 +81,9 @@ void Helpinfo::draw()
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "F11/F12", "adjust mutation rate (%)");
+
+		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "tab", "show/hide critter statistics");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "insert", "toggle hide critter retinas");
