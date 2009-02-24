@@ -13,7 +13,7 @@ void Helpinfo::draw()
 		unsigned int halfheight = (unsigned int)(*Settings::Instance()->winHeight/2.0f);
 
 		float halfboxwidth = 230.0f;
-		float halfboxheight = 250.0f;
+		float halfboxheight = 240.0f;
 
 	// draw background box and border
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -48,7 +48,7 @@ void Helpinfo::draw()
 		float widthpos1 = halfwidth-(halfboxwidth-20.0f);
 		float widthpos2 = halfwidth-(halfboxwidth-100.0f);
 		float heightpos = halfheight-(halfboxheight-25.0f);
-		float vspace = 14.0f;
+		float vspace = 13.0f;
 
 		printInfoLine(heightpos, widthpos1, widthpos2, "World / Engine operations", "");
 
@@ -86,6 +86,12 @@ void Helpinfo::draw()
 		printInfoLine(heightpos, widthpos1, widthpos2, "insert", "toggle hide critter retinas");
 
 		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "f", "toggle critterview");
+
+		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "l", "toggle fps limiter (30 fps)");
+
+		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "w", "activate/toggle wall types");
 
 		heightpos += vspace;
@@ -93,9 +99,6 @@ void Helpinfo::draw()
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "v", "toggle verbosity");
-
-		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "f", "toggle critterview");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "PgUp", "load all critters from \"~/.critterding/load\"");

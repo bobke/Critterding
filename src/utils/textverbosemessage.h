@@ -21,12 +21,11 @@ class Textverbosemessage
 
 		void		addBirth(stringstream& streamptr);
 		void		addDeath(stringstream& streamptr);
-		void		draw(unsigned int posX);
+		void		draw(unsigned int posY);
 		unsigned int	maxMessages;
 		float		msgLifetime;
 
-		float		vpadding;
-		float		hpadding;
+		void swap();
 
 	protected:
 		Textverbosemessage();
@@ -39,6 +38,8 @@ class Textverbosemessage
 		void		getLongestMsg();
 
 		void		deleteExpiredMsg();
+		bool		active;
+
 };
 
 #endif
