@@ -320,8 +320,14 @@ void WorldB::process()
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 	}
 
-	settings->info_totalNeurons = 0;
-	settings->info_totalSynapses = 0;
+	settings->info_crittersH = 0;
+	settings->info_totalNeuronsH = 0;
+	settings->info_totalSynapsesH = 0;
+	settings->info_totalAdamDistanceH = 0;
+	settings->info_crittersC = 0;
+	settings->info_totalNeuronsC = 0;
+	settings->info_totalSynapsesC = 0;
+	settings->info_totalAdamDistanceC = 0;
 
 	// process all critters
 	unsigned int lmax = critters.size();
@@ -632,18 +638,46 @@ void WorldB::process()
 						c->moveToNewPoss();
 						nc->moveToNewPoss();
 
-						settings->info_totalNeurons += nc->brain.totalNeurons;
-						settings->info_totalSynapses += nc->brain.totalSynapses;
+						if ( nc->crittertype == 0 )
+						{
+							settings->info_crittersH++;
+							settings->info_totalNeuronsH += nc->brain.totalNeurons;
+							settings->info_totalSynapsesH += nc->brain.totalSynapses;
+							settings->info_totalAdamDistanceH += nc->adamdist;
+						}
+						else
+						{
+							settings->info_crittersC++;
+							settings->info_totalNeuronsC += nc->brain.totalNeurons;
+							settings->info_totalSynapsesC += nc->brain.totalSynapses;
+							settings->info_totalAdamDistanceC += nc->adamdist;
+						}
 
 						critters.push_back( nc );
 					}
 				}
 			}
 
-		settings->info_totalNeurons += c->brain.totalNeurons;
-		settings->info_totalSynapses += c->brain.totalSynapses;
-
+		if ( c->crittertype == 0 )
+		{
+			settings->info_crittersH++;
+			settings->info_totalNeuronsH += c->brain.totalNeurons;
+			settings->info_totalSynapsesH += c->brain.totalSynapses;
+			settings->info_totalAdamDistanceH += c->adamdist;
+		}
+		else
+		{
+			settings->info_crittersC++;
+			settings->info_totalNeuronsC += c->brain.totalNeurons;
+			settings->info_totalSynapsesC += c->brain.totalSynapses;
+			settings->info_totalAdamDistanceC += c->adamdist;
+		}
 	}
+
+	settings->info_critters = critters.size();
+	settings->info_food = food.size();
+	settings->info_corpses = corpses.size();
+	settings->info_bullets = bullets.size();
 
 
 /*	cerr << "b: " << *critters[0]->Neurons[0]->inputs[0]->ref << endl;

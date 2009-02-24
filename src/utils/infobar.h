@@ -12,11 +12,6 @@ class Infobar
 		Infobar();
 		~Infobar();
 
-		unsigned int critters;
-		unsigned int food;
-		unsigned int corpses;
-		unsigned int bullets;
-
 		float barheight;
 
 		void draw();

@@ -2,11 +2,6 @@
 
 Infobar::Infobar()
 {
-	critters = 0;
-	food = 0;
-	corpses = 0;
-	bullets = 0;
-
 	barheight = 40.0f;
 
 	hsp = 20.0f;
@@ -55,15 +50,18 @@ void Infobar::draw()
 
 		glEnable(GL_TEXTURE_2D);
 
-		printInfoLine(vsp,	hsp,		col1-hsp,	"fps:",		"%1.1f", fps.currentfps);
-		printInfoLine(vsp,	col1+hsp,	col2-hsp,	"critters:",	"%1u", critters);
-		printInfoLine(vsp,	col2+hsp,	col3-hsp,	"food:",	"%1u/%1u", food, (unsigned int)(Settings::Instance()->freeEnergyInfo/Settings::Instance()->food_maxenergy));
-		printInfoLine(vsp,	col3+hsp,	col4-hsp,	"corpses:",	"%1u", corpses);
+		unsigned int totalneurons = Settings::Instance()->info_crittersH + Settings::Instance()->info_crittersC;
+		unsigned int totalsynapses = Settings::Instance()->info_totalSynapsesH+Settings::Instance()->info_totalSynapsesC;
 
-		printInfoLine(vsp*2,	hsp,		col1-hsp,	"neu/cri:",	"%1.2f", (float)Settings::Instance()->info_totalNeurons / critters);
-		printInfoLine(vsp*2,	col1+hsp,	col2-hsp,	"syn/cri:",	"%1.2f", (float)Settings::Instance()->info_totalSynapses / critters);
-		printInfoLine(vsp*2,	col2+hsp,	col3-hsp,	"syn/neu:",	"%1.2f", (float)Settings::Instance()->info_totalSynapses / Settings::Instance()->info_totalNeurons);
-		printInfoLine(vsp*2,	col3+hsp,	col4-hsp,	"bullets:",	"%1u", bullets);
+		printInfoLine(vsp,	hsp,		col1-hsp,	"fps:",		"%1.1f",	fps.currentfps);
+		printInfoLine(vsp,	col1+hsp,	col2-hsp,	"critters:",	"%1u",		Settings::Instance()->info_critters);
+		printInfoLine(vsp,	col2+hsp,	col3-hsp,	"food:",	"%1u/%1u",	Settings::Instance()->info_food, (unsigned int)(Settings::Instance()->freeEnergyInfo/Settings::Instance()->food_maxenergy));
+		printInfoLine(vsp,	col3+hsp,	col4-hsp,	"corpses:",	"%1u",		Settings::Instance()->info_corpses);
+
+		printInfoLine(vsp*2,	hsp,		col1-hsp,	"neu/cri:",	"%1.2f",	(float)totalneurons / Settings::Instance()->info_critters);
+		printInfoLine(vsp*2,	col1+hsp,	col2-hsp,	"syn/cri:",	"%1.2f",	(float)totalsynapses / Settings::Instance()->info_critters);
+		printInfoLine(vsp*2,	col2+hsp,	col3-hsp,	"syn/neu:",	"%1.2f",	(float)totalsynapses / totalneurons);
+		printInfoLine(vsp*2,	col3+hsp,	col4-hsp,	"bullets:",	"%1u",		Settings::Instance()->info_bullets);
 
 		glDisable(GL_TEXTURE_2D);
 	}
