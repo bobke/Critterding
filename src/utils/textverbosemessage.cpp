@@ -12,8 +12,7 @@ Textverbosemessage::Textverbosemessage()
 	msgLifetime = 0.0f;
 	longestLength = 0;
 
-	vpadding = 10.0f;
-	hpadding = 10.0f;
+	active = false;
 }
 
 void Textverbosemessage::addBirth(stringstream& streamptr)
@@ -64,66 +63,72 @@ void Textverbosemessage::deleteExpiredMsg()
 	}
 }
 
-void Textverbosemessage::draw( unsigned int posX )
+void Textverbosemessage::draw( unsigned int posY )
 {
-	deleteExpiredMsg();
-
-	FTPoint bbox = Textprinter::Instance()->getBBox("a");
-
-	float xstart = 0.0f;
-	float xstop = *Settings::Instance()->winWidth;
-
-	float ystart = posX;
-	float ystop = posX + (15.0f * (maxMessages-1)) + bbox.Y() + ( vpadding*2.0f );
-
-	// draw background box and border
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-	glColor4f(0.05f, 0.05f, 0.05f, 0.9f);
-	glBegin(GL_QUADS);
-		glVertex2f(xstart, ystop);
-		glVertex2f(xstart, ystart);
-		glVertex2f(xstop, ystart);
-		glVertex2f(xstop, ystop);
-	glEnd();
-	glDisable(GL_BLEND);
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glBegin(GL_LINES);
-		glVertex2f(xstop, ystop);
-		glVertex2f(xstart, ystop);
-
-		glVertex2f((*Settings::Instance()->winWidth/4)*3, ystart);
-		glVertex2f((*Settings::Instance()->winWidth/4)*3, ystop);
-	glEnd();
-
-	if ( !births.empty() )
+	if ( active )
 	{
-	// render text
-		glEnable(GL_TEXTURE_2D);
+		deleteExpiredMsg();
+
+		float xstart = 0.0f;
+		float xstop = *Settings::Instance()->winWidth;
+
+		float ystart = posY + 15.0f;
+		float ystop = posY + (15.0f * (maxMessages) + 10);
+
+		// draw background box and border
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glColor4f(0.05f, 0.05f, 0.05f, 0.9f);
+		glBegin(GL_QUADS);
+			glVertex2f(xstart, ystop);
+			glVertex2f(xstart, posY);
+			glVertex2f(xstop, posY);
+			glVertex2f(xstop, ystop);
+		glEnd();
+		glDisable(GL_BLEND);
 
 		glColor3f(1.0f, 1.0f, 1.0f);
+		glBegin(GL_LINES);
+			glVertex2f(xstop, ystop);
+			glVertex2f(xstart, ystop);
 
-		for ( unsigned int i = 0; i < births.size(); i++ )
+			glVertex2f((*Settings::Instance()->winWidth/4)*3, posY);
+			glVertex2f((*Settings::Instance()->winWidth/4)*3, ystop);
+		glEnd();
+
+		if ( !births.empty() )
 		{
-			Textprinter::Instance()->print(xstart + hpadding, ystart + bbox.Y() + (i*15.0f) + vpadding, births[i]->str);
+		// render text
+			glEnable(GL_TEXTURE_2D);
+
+			glColor3f(1.0f, 1.0f, 1.0f);
+
+			for ( unsigned int i = 0; i < births.size(); i++ )
+			{
+				Textprinter::Instance()->print(20.0f, ystart + (i*15.0f), births[i]->str);
+			}
+
+			glDisable(GL_TEXTURE_2D);
 		}
 
-		glDisable(GL_TEXTURE_2D);
-	}
-
-	if ( !deaths.empty() )
-	{
-	// render text
-		glEnable(GL_TEXTURE_2D);
-
-		glColor3f(1.0f, 1.0f, 1.0f);
-
-		for ( unsigned int i = 0; i < deaths.size(); i++ )
+		if ( !deaths.empty() )
 		{
-			Textprinter::Instance()->print((*Settings::Instance()->winWidth/4)*3 + 20, ystart + bbox.Y() + (i*15.0f) + vpadding, deaths[i]->str);
-		}
+		// render text
+			glEnable(GL_TEXTURE_2D);
 
-		glDisable(GL_TEXTURE_2D);
+			glColor3f(1.0f, 1.0f, 1.0f);
+
+			for ( unsigned int i = 0; i < deaths.size(); i++ )
+			{
+				Textprinter::Instance()->print((*Settings::Instance()->winWidth/4)*3 + 20, ystart + (i*15.0f), deaths[i]->str);
+			}
+
+			glDisable(GL_TEXTURE_2D);
+		}
 	}
+}
+
+void Textverbosemessage::swap()
+{
+	active = !active;
 }

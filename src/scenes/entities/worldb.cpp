@@ -255,12 +255,12 @@ void WorldB::process()
 		if ( critters[i]->energyLevel <= 0.0f )
 		{
 //			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " starved" << endl;
-			if (!settings->noverbose)
-			{
+/*			if (!settings->noverbose)
+			{*/
 				stringstream buf;
 				buf << setw(4) << critters[i]->critterID << " starved";
 				Textverbosemessage::Instance()->addDeath(buf);
-			}
+// 			}
 
 			removeCritter(i);
 			i--;
@@ -269,12 +269,12 @@ void WorldB::process()
 		else if ( critters[i]->totalFrames > settings->critter_maxlifetime && critters[i]->wasShot )
 		{
 			//if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " killed" << endl;
-			if (!settings->noverbose)
-			{
+/*			if (!settings->noverbose)
+			{*/
 				stringstream buf;
 				buf << setw(4) << critters[i]->critterID << " killed";
 				Textverbosemessage::Instance()->addDeath(buf);
-			}
+// 			}
 			removeCritter(i);
 			i--;
 		}
@@ -282,12 +282,12 @@ void WorldB::process()
 		else if ( critters[i]->totalFrames > settings->critter_maxlifetime )
 		{
 //			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " old" << endl;
-			if (!settings->noverbose)
-			{
+/*			if (!settings->noverbose)
+			{*/
 				stringstream buf;
 				buf << setw(4) << critters[i]->critterID << " old";
 				Textverbosemessage::Instance()->addDeath(buf);
-			}
+// 			}
 			removeCritter(i);
 			i--;
 		}
@@ -598,8 +598,8 @@ void WorldB::process()
 
 						nc->critterID = currentCritterID++;
 
-						if (!settings->noverbose)
-						{
+// 						if (!settings->noverbose)
+// 						{
 // 							cerr << "> " << setw(3) << critters.size()+1 << " | " << setw(4) << c->critterID << " procreates: " << setw(4) << nc->critterID << " (";
 // 							cerr << "ad: " << setw(4) << nc->adamdist;
 // 							cerr << ", N: " << setw(4) << nc->brain.totalNeurons << ", C: " << setw(5) << nc->brain.totalSynapses;
@@ -609,18 +609,16 @@ void WorldB::process()
 // 							cerr << ")" << endl;
 
 							stringstream buf;
-							buf << setw(4) << c->critterID << " procreates: " << setw(4) << nc->critterID << " (";
-							buf << "ad: " << setw(4) << nc->adamdist;
-							buf << ", N: " << setw(4) << nc->brain.totalNeurons << ", C: " << setw(5) << nc->brain.totalSynapses;
+							buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
+							buf << " ad: " << setw(4) << nc->adamdist;
+							buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
 							if ( nc->crittertype == 1 )
-								buf << ", carnivore";
+								buf << " carnivore";
 							else
-								buf << ", herbivore";
-							if ( mutant ) buf << ", mutant";
-							buf << ")";
+								buf << " herbivore";
+							if ( mutant ) buf << " mutant";
 							Textverbosemessage::Instance()->addBirth(buf);
-
-						}
+// 						}
 
 						// split energies in half
 						nc->energyLevel = c->energyLevel/2.0f;

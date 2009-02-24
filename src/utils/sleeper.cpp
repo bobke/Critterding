@@ -3,14 +3,14 @@
 Sleeper::Sleeper()
 {
  	active		= false;
-	optimal		= 10000;
-	stepsize	= 250;
+	optimal		= 30;
+	stepsize	= 500;
 	sleeptime	= 10000;
 	cps		= optimal;
 
-	dispcounter	= 0;
+/*	dispcounter	= 0;
 	dispevery	= 100;
-	dispsum		= 0.0f;
+	dispsum		= 0.0f;*/
 }
 
 void Sleeper::mark()
@@ -30,27 +30,12 @@ void Sleeper::mark()
 		}
 	
 		if (sleeptime > 0 ) usleep(sleeptime);
-
-		dispsum += cps;
-		dispcounter++;
-		if ( dispcounter == dispevery )
-		{
-			cerr << endl << "FPS: " << (dispsum/dispevery) << endl << endl;
-			dispcounter = 0;
-			dispsum = 0.0f;
-		}
 	}
 }
 
 void Sleeper::swap()
 {
-	if ( active )	active = false;
-	else
-	{
-		active = true;
-		dispcounter = 0;
-		dispsum = 0.0f;
-	}
+	active =! active;
 }
 
 Sleeper::~Sleeper()

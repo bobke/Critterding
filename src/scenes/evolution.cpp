@@ -11,6 +11,7 @@ Evolution::Evolution()
 void Evolution::draw()
 {
 	Timer::Instance()->mark();
+	sleeper.mark();
 
 	if ( pause )
 	{
@@ -90,7 +91,7 @@ void Evolution::draw()
 		infobar.bullets = world.bullets.size();
 		infobar.draw();
 
-		if (!settings->noverbose)
+		//if (!settings->noverbose)
 			Textverbosemessage::Instance()->draw(infobar.height());
 
 		helpinfo.draw();
@@ -252,11 +253,16 @@ void Evolution::handlekey(const KeySym& key)
 		case XK_p:
 			pause = !pause;
 		break;
+
+		case XK_l:
+			sleeper.swap();
+		break;
+
 		case XK_v:
 		{
 			stringstream buf;
  			settings->noverbose = !settings->noverbose;
-			//Textverbosemessage::Instance()->swap();
+			Textverbosemessage::Instance()->swap();
 /*			if ( settings->noverbose )
 				buf << "verbose = off";
 			else

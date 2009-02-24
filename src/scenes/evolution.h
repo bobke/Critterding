@@ -3,6 +3,7 @@
 
 #include "../gl/glscene.h"
 #include "../utils/timer.h"
+#include "../utils/sleeper.h"
 #include "../utils/fps.h"
 #include "../utils/settings.h"
 #include "../utils/infobar.h"
@@ -46,6 +47,7 @@ class Evolution : public GLScene {
 
 	private:
 		Settings *settings;
+		Sleeper sleeper;
 //		Fps fps;
 		Infobar infobar;
 		Helpinfo helpinfo;
