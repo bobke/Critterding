@@ -28,7 +28,7 @@ Settings::Settings()
 		camerasensitivityMax		= 1000;
 	walltype			= 0;
 		walltypeMin			= 0;
-		walltypeMax			= 4;
+		walltypeMax			= 8;
 	exit_if_empty			= false;
 	autoload			= false;
 	noverbose			= false;
