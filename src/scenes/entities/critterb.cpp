@@ -18,7 +18,7 @@ void CritterB::initConst()
 	sightrange = settings->critter_sightrange;
 
 	components		= 4;
-	colorTrim		= 0.375f; // (1/256) * 96
+	colorTrim		= 0.256f; // (1/256) * 96
 }
 
 CritterB::CritterB()
@@ -84,7 +84,11 @@ CritterB::CritterB()
 		brain.mutate_MutateEffects				= settings->brain_mutate_mutateeffects;
 
 	// give it a random color
-	color[0] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+// 	color[0] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+// 	color[1] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+// 	color[2] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+
+	color[0] = 0.0f;
 	color[1] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[2] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
@@ -430,24 +434,49 @@ void CritterB::mutate()
 	if ( randgen->Instance()->get(1,100) <= settings->critter_percentchangetype )
 	{
 		if ( crittertype == 0 )
+		{
 			crittertype = 1;
+			color[1] = 0.0f;
+		}
 		else
+		{
 			crittertype = 0;
+			color[0] = 0.0f;
+		}
 	}
 
 	// mutate color
 	unsigned int mode = randgen->Instance()->get(1,2);
-	unsigned int ncolor = randgen->Instance()->get(0,2);
+	unsigned int ncolor = randgen->Instance()->get(1,2);
 
-	if ( mode == 1 )
+	if ( crittertype == 0 )
 	{
-		color[ncolor] += (float)randgen->Instance()->get(1,10)/100.0f;
-		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
+		if ( mode == 1 )
+		{
+			color[ncolor] += (float)randgen->Instance()->get(1,10)/100.0f;
+			if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
+		}
+		else
+		{
+			color[ncolor] -= (float)randgen->Instance()->get(1,10)/100.0f;
+			if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
+		}
 	}
 	else
 	{
-		color[ncolor] -= (float)randgen->Instance()->get(1,10)/100.0f;
-		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
+		// nasty correction
+		if ( ncolor == 1 )
+			ncolor = 0;
+		if ( mode == 1 )
+		{
+			color[ncolor] += (float)randgen->Instance()->get(1,10)/100.0f;
+			if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
+		}
+		else
+		{
+			color[ncolor] -= (float)randgen->Instance()->get(1,10)/100.0f;
+			if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
+		}
 	}
 
 	unsigned int runs = randgen->Instance()->get(1, settings->critter_maxmutations);
