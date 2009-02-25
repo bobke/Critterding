@@ -2,13 +2,14 @@
 
 Floor::Floor()
 {
-	gridsize	= 20;
-	resize(gridsize);
+/*	gridsize	= 20;
+	resize(gridsize);*/
 }
 
-void Floor::resize(int newsize)
+void Floor::resize(unsigned int X, unsigned int Y)
 {
-	gridsize = newsize;
+	gridsizeX = X;
+	gridsizeY = Y;
 }
 
 Floor::~Floor()

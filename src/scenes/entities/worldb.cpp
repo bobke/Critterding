@@ -146,11 +146,13 @@ void WorldB::generateList()
 
 }
 
-void WorldB::resize(unsigned int newsize)
+void WorldB::resize(unsigned int X, unsigned int Y)
 {
-	size = newsize;
-	grid.resize(size);
-	floor.resize(size);
+//	size = X;
+	sizeX = X;
+	sizeY = Y;
+	grid.resize(X, Y);
+	floor.resize(X, Y);
 }
 
 void WorldB::startfoodamount(unsigned int amount)
@@ -857,31 +859,31 @@ void WorldB::createWall()
 	buf << "Wall type: " << settings->walltype;
 	if ( settings->walltype == 1 )
 	{
-		for ( unsigned int i=0; i < (unsigned int)(4.0f*size); i++ )
+		for ( unsigned int i=0; i < (unsigned int)(4.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
 			walls[i]->resize(0.25f);
 			walls[i]->position.x = 0.125 + ((float)i*0.25);
-			walls[i]->position.z = size/2.0f;
+			walls[i]->position.z = sizeY/2.0f;
 		}
 		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 2 )
 	{
-		for ( unsigned int i=0; i < (unsigned int)(4.0f*size); i++ )
+		for ( unsigned int i=0; i < (unsigned int)(4.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
 			walls[i]->resize(0.25f);
 			walls[i]->position.x = 0.125 + ((float)i*0.25);
-			walls[i]->position.z = size/2.0f;
+			walls[i]->position.z = sizeY/2.0f;
 		}
-		walls[ (unsigned int)(size*2.0f)-2 ]->toggle();
-		walls[ (unsigned int)(size*2.0f)-1 ]->toggle();
-		walls[ (unsigned int)(size*2.0f)   ]->toggle();
-		walls[ (unsigned int)(size*2.0f)+1 ]->toggle();
+		walls[ (unsigned int)(sizeX*2.0f)-2 ]->toggle();
+		walls[ (unsigned int)(sizeX*2.0f)-1 ]->toggle();
+		walls[ (unsigned int)(sizeX*2.0f)   ]->toggle();
+		walls[ (unsigned int)(sizeX*2.0f)+1 ]->toggle();
 
 		Textmessage::Instance()->add(buf);
 	}
@@ -889,22 +891,22 @@ void WorldB::createWall()
 	else if ( settings->walltype == 3 )
 	{
 		unsigned int wcount = 0;
-		for ( unsigned int i = 0; i < (unsigned int)(2.7f*size); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
 			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = 0.125 + ((float)i*0.25);
-			walls[wcount]->position.z = 2*size/3.0f;
+			walls[wcount]->position.x = 0.125f + ((float)i*0.25);
+			walls[wcount]->position.z = 2*sizeY/3.0f;
 			wcount++;
 		}
-		for ( unsigned int i = 0; i < (unsigned int)(2.7f*size); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
 			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = size - 0.125 - ((float)i*0.25);
-			walls[wcount]->position.z = size/3.0f;
+			walls[wcount]->position.x = sizeX - 0.125f - ((float)i*0.25);
+			walls[wcount]->position.z = sizeY/3.0f;
 			wcount++;
 		}
 
@@ -914,22 +916,22 @@ void WorldB::createWall()
 	else if ( settings->walltype == 4 )
 	{
 		unsigned int wcount = 0;
-		for ( unsigned int i = 0; i < (unsigned int)(2.7f*size); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(2.7f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
 			walls[wcount]->resize(0.25f);
 			walls[wcount]->position.x = 0.125 + ((float)i*0.25);
-			walls[wcount]->position.z = size/3.0f;
+			walls[wcount]->position.z = sizeY/3.0f;
 			wcount++;
 		}
-		for ( unsigned int i = 0; i < (unsigned int)(2.7f*size); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(2.7f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
 			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = size - 0.125 - ((float)i*0.25);
-			walls[wcount]->position.z = 2*size/3.0f;
+			walls[wcount]->position.x = sizeX - 0.125 - ((float)i*0.25);
+			walls[wcount]->position.z = 2*sizeY/3.0f;
 			wcount++;
 		}
 
@@ -955,7 +957,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 
 //	draw floor;
 	glPushMatrix();
-		glScalef( floor.gridsize, floor.gridsize, floor.gridsize );
+		glScalef( floor.gridsizeX, 0.0f, floor.gridsizeY );
 		glCallList(displayLists+3);
 	glPopMatrix();
 
@@ -1233,11 +1235,11 @@ bool WorldB::spotIsFree(Vector3f &position, float halfsize, unsigned int exclude
 	// left border
 	if ( position.x - halfsize <= 0 )		return false;
 	// right border
-	else if ( position.x + halfsize >= size )	return false;
+	else if ( position.x + halfsize >= sizeX )	return false;
 	// bottom border
 	if ( position.z - halfsize <= 0 )		return false;
 	// top border
-	else if ( position.z + halfsize >= size )	return false;
+	else if ( position.z + halfsize >= sizeY )	return false;
 
 // check for touch walls
 
@@ -1281,11 +1283,11 @@ bool WorldB::spotIsFree(Vector3f &position, float halfsize)
 	// left border
 	if ( position.x - halfsize <= 0 )		return false;
 	// right border
-	else if ( position.x + halfsize >= size )	return false;
+	else if ( position.x + halfsize >= sizeX )	return false;
 	// bottom border
 	if ( position.z - halfsize <= 0 )		return false;
 	// top border
-	else if ( position.z + halfsize >= size )	return false;
+	else if ( position.z + halfsize >= sizeY )	return false;
 
 // check if touching walls
 
@@ -1321,15 +1323,15 @@ bool WorldB::spotIsFree(Vector3f &position, float halfsize)
 Vector3f WorldB::findEmptySpace(float halfsize)
 {
 	Vector3f pos;
-	pos.x = (float)randgen->Instance()->get( 0, 100*size ) / 100;
+	pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
 	pos.y = halfsize;
-	pos.z = (float)randgen->Instance()->get( 0, 100*size ) / 100;
+	pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
 
 	while ( !spotIsFree(pos, halfsize) )
 	{
-		pos.x = (float)randgen->Instance()->get( 0, 100*size ) / 100;
+		pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
 		pos.y = halfsize;
-		pos.z = (float)randgen->Instance()->get( 0, 100*size ) / 100;
+		pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
 	}
 	return pos;
 }

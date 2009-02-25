@@ -9,8 +9,9 @@ class Floor
 		Floor();
 		~Floor();
 
-		unsigned int		gridsize;
-		void			resize(int newsize);
+		unsigned int		gridsizeX;
+		unsigned int		gridsizeY;
+		void			resize(unsigned int X, unsigned int Y);
 	private:
 };
 

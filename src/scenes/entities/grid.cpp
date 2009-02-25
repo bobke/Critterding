@@ -2,9 +2,11 @@
 
 Grid::Grid()
 {
-	gridsize	= 10;
+// 	gridsize	= 0;
+// 	gridsizeX	= 0;
+// 	gridsizeY	= 0;
 	resolution	= 1.0f;
-	resize(gridsize);
+//	resize(gridsize);
 
 	color[0]	= 0.0f;
 	color[1]	= 0.0f;
@@ -26,22 +28,35 @@ void Grid::draw()
 	glPopMatrix();
 }
 
-void Grid::resize(int newsize)
+void Grid::resize(unsigned int X, unsigned int Y)
 {
-	gridsize = newsize;
+	gridsizeX = X;
+	gridsizeY = Y;
 
-	int totalsteps	= int(gridsize / resolution);
+	int totalstepsX	= int(gridsizeX / resolution);
+	int totalstepsY	= int(gridsizeY / resolution);
 
 	vertices.clear();
-	for ( int i = 0; i <= totalsteps; i++ )
+	for ( int i = 0; i <= totalstepsX; i++ )
 	{
 		// horizontal lines
 			vertices.push_back( Vector3f( (float)(resolution * i), 0.0f, 0.0f ) );
-			vertices.push_back( Vector3f( (float)(resolution * i), 0.0f, gridsize ) );
+			vertices.push_back( Vector3f( (float)(resolution * i), 0.0f, gridsizeY ) );
+
+/*		// vertical lines
+			vertices.push_back( Vector3f(0.0f, 0.0f, resolution * i) );
+			vertices.push_back( Vector3f(gridsize, 0.0f, resolution * i) );*/
+	}
+
+	for ( int i = 0; i <= totalstepsY; i++ )
+	{
+// 		// horizontal lines
+// 			vertices.push_back( Vector3f( (float)(resolution * i), 0.0f, 0.0f ) );
+// 			vertices.push_back( Vector3f( (float)(resolution * i), 0.0f, gridsize ) );
 
 		// vertical lines
 			vertices.push_back( Vector3f(0.0f, 0.0f, resolution * i) );
-			vertices.push_back( Vector3f(gridsize, 0.0f, resolution * i) );
+			vertices.push_back( Vector3f(gridsizeX, 0.0f, resolution * i) );
 	}
 }
 
