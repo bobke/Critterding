@@ -10,7 +10,8 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsize			= 16;
+	worldsizeX			= 16;
+	worldsizeY			= 16;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
 	startenergy			= 250;
@@ -236,7 +237,8 @@ void Settings::createHelpInfo()
 
 	helpinfo << "  --profile                 [none]  Load a settings profile" << endl << endl;
 
-	helpinfo << "  --worldsize                 [" << worldsize << "]  Creates a " << worldsize << "x" << worldsize << " world" << endl;
+	helpinfo << "  --worldsizeX                [" << worldsizeX << "]  Width of the world (" << worldsizeX << ")" << endl;
+	helpinfo << "  --worldsizeY                [" << worldsizeY << "]  Depth of the world (" << worldsizeY << ")" << endl;
 	helpinfo << "  --energy                   [" << startenergy << "]  Energy in the system: " << startenergy << "*food_maxenergy(" << food_maxenergy << ") = " << startenergy*food_maxenergy << "" << endl;
 	helpinfo << "  --mincritters               [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
@@ -374,7 +376,8 @@ void Settings::loadProfile(char* filename)
 			if ( !line.empty() )
 			{
 
-			if ( checkConfigFileValue("worldsize ", worldsize, worldsizeMin, worldsizeMax, line) ) uselesscounter++;
+			if ( checkConfigFileValue("worldsizeX ", worldsizeX, worldsizeMin, worldsizeMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("worldsizeY ", worldsizeY, worldsizeMin, worldsizeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("energy ", startenergy, startenergyMin, startenergyMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("mincritters ", mincritters, mincrittersMin, mincrittersMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("retinasperrow ", retinasperrow, retinasperrowMin, retinasperrowMax, line) ) uselesscounter++;
@@ -511,7 +514,8 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 			}
 	        }
 
-		else if ( checkSwitch("--worldsize", worldsize, worldsizeMin, worldsizeMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--worldsizeX", worldsizeX, worldsizeMin, worldsizeMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--worldsizeY", worldsizeY, worldsizeMin, worldsizeMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--energy", startenergy, startenergyMin, startenergyMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--mincritters", mincritters, mincrittersMin, mincrittersMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--retinasperrow", retinasperrow, retinasperrowMin, retinasperrowMax, optind, argv) ) optind++;
@@ -734,7 +738,8 @@ void Settings::printSettings()
 {
 	cout << endl << "CURRENT SETTINGS" << endl << endl;
 	cerr << "profile " << profileName << endl;
-	cerr << "worldsize " << worldsize << endl;
+	cerr << "worldsizeX " << worldsizeX << endl;
+	cerr << "worldsizeY " << worldsizeY << endl;
 	cerr << "energy " << freeEnergyInfo/food_maxenergy << endl;
 	cerr << "mincritters " << mincritters << endl;
 	cerr << "retinasperrow " << retinasperrow << endl;

@@ -40,7 +40,8 @@ class WorldB
 
 		unsigned long		currentCritterID;
 
-		int			size;
+		unsigned int		sizeX;
+		unsigned int		sizeY;
 		float			freeEnergy;
 		//float			freeEnergyInfo;
 
@@ -54,7 +55,7 @@ class WorldB
 		void			drawWithGrid();
 		void			drawWithinCritterSight(unsigned int cid);
 
-		void			resize(unsigned int newsize);
+		void			resize(unsigned int X, unsigned int Y);
 		void			startfoodamount(unsigned int amount);
 
 		void			insertRandomFood(int amount, float energy);

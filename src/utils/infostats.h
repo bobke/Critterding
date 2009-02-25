@@ -11,7 +11,7 @@ class Infostats
 		Infostats();
 		~Infostats();
 
-		void draw();
+		void draw( unsigned int posY );
 		void swap();
 		unsigned int height();
 
@@ -19,6 +19,8 @@ class Infostats
 		// horizontal/vertical spacers (padding)
 		float hsp;
 		float vsp;
+
+		unsigned int barheight;
 
 		float halfboxwidth;
 		float halfboxheight;

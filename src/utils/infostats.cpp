@@ -2,27 +2,36 @@
 
 Infostats::Infostats()
 {
-	halfboxwidth = 230.0f;
-	halfboxheight = 140.0f;
+	halfboxwidth = 240.0f;
+	halfboxheight = 60.0f;
 
 	hsp = 10.0f;
 	vsp = 15.0f;
 
+	barheight = 105;
+
 	active = false;
 }
 
-void Infostats::draw()
+void Infostats::draw( unsigned int posY )
 {
 	if (active)
 	{
-		unsigned int halfwidth = (unsigned int)(*Settings::Instance()->winWidth/2.0f);
-		unsigned int halfheight = (unsigned int)(*Settings::Instance()->winHeight/2.0f);
+// 		unsigned int halfwidth = (unsigned int)(*Settings::Instance()->winWidth/2.0f);
+// 		unsigned int halfheight = (unsigned int)(*Settings::Instance()->winHeight/2.0f);
 
-		unsigned int xstart = halfwidth-halfboxwidth;
-		unsigned int xstop = halfwidth+halfboxwidth;
+// 		unsigned int xstart = halfwidth-halfboxwidth;
+// 		unsigned int xstop = halfwidth+halfboxwidth;
+// 
+// 		unsigned int ystart = halfheight-halfboxheight;
+// 		unsigned int ystop = halfheight+halfboxheight;
 
-		unsigned int ystart = halfheight-halfboxheight;
-		unsigned int ystop = halfheight+halfboxheight;
+		unsigned int xstart = 0;
+		unsigned int xstop = *Settings::Instance()->winWidth;
+
+		unsigned int ystart = posY;
+		unsigned int ystop = posY + barheight;
+
 
 	// draw background box and border
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -36,25 +45,25 @@ void Infostats::draw()
 		glEnd();
 		glDisable(GL_BLEND);
 
-		float colWidth = (2*halfboxwidth) / 4;
+		unsigned int colWidth = (xstop-xstart) / 4;
 
-		float col1 = xstart + colWidth;
-		float col2 = col1 + colWidth;
-		float col3 = col2 + colWidth;
-		float col4 = col3 + colWidth;
+		unsigned int col1 = xstart + colWidth;
+		unsigned int col2 = col1 + colWidth;
+		unsigned int col3 = col2 + colWidth;
+		unsigned int col4 = col3 + colWidth;
 
 		float linespacer = 0.0f;
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glBegin(GL_LINES);
-			glVertex2f(xstart, ystop);
-			glVertex2f(xstart, ystart);
+// 			glVertex2f(xstart, ystop);
+// 			glVertex2f(xstart, ystart);
 
-			glVertex2f(xstart, ystart);
-			glVertex2f(xstop, ystart);
+// 			glVertex2f(xstart, ystart);
+// 			glVertex2f(xstop, ystart);
 
-			glVertex2f(xstop, ystart);
-			glVertex2f(xstop, ystop);
+// 			glVertex2f(xstop, ystart);
+// 			glVertex2f(xstop, ystop);
 
 			glVertex2f(xstop, ystop);
 			glVertex2f(xstart, ystop);
@@ -82,10 +91,14 @@ void Infostats::draw()
 		Textprinter::Instance()->print(col2+hsp,	ystart+vsp*rc,	"herbivores");
 		Textprinter::Instance()->print(col3+hsp,	ystart+vsp*rc,	"carnivores");
 
-		rc = 3;
+		float percentH = ((float)Settings::Instance()->info_crittersH / Settings::Instance()->info_critters)*100.0f;
+
+		rc++;
 		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"critters:");
 		Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1u", Settings::Instance()->info_critters);
+		Textprinter::Instance()->print(col2+hsp,	ystart+vsp*rc,	"%1.1f%s", percentH, "%");
 		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1u", Settings::Instance()->info_crittersH);
+		Textprinter::Instance()->print(col3+hsp,	ystart+vsp*rc,	"%1.1f%s", 100.0f-percentH, "%");
 		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1u", Settings::Instance()->info_crittersC);
 
 		rc++;
@@ -127,9 +140,9 @@ void Infostats::swap()
 
 unsigned int Infostats::height()
 {
-/*	if ( active )
+	if ( active )
 		return barheight;
-	else*/
+	else
 		return 0;
 }
 

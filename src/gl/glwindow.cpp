@@ -29,7 +29,6 @@ void GLWindow::create(const char* title, int width, int height, int bpp)
 
 	GLWin.dpy = XOpenDisplay(0);
 	GLWin.screen = DefaultScreen(GLWin.dpy);
-	cerr << GLWin.dpy << endl;
 
 	GLWin.owidth=width; GLWin.oheight=height;
 

@@ -41,6 +41,7 @@ class Evolution : public GLScene {
 
 		// glwindow passes events to the scene
 		void handlekey(const KeySym& key);
+		void resetCamera();
 
 		Camera camera;
 

@@ -15,36 +15,35 @@ void Evolution::draw()
 
 	if ( pause )
 	{
-		usleep(10000);
+		usleep(20000);
 		return;
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glShadeModel(GL_FLAT);
-
-	glEnable(GL_DEPTH_TEST);
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 	glHint(GL_FOG_HINT, GL_FASTEST);
+	glShadeModel(GL_FLAT);
+	glEnable(GL_DEPTH_TEST);
+ 	glDisable (GL_LIGHTING);
 	glDisable(GL_COLOR_MATERIAL);
 	glDisable(GL_DITHER);
 	glDisable(GL_POLYGON_SMOOTH);
-
-//	glEnable(GL_CULL_FACE);
 
 	world.process();
 
 	if ( !drawCVNeurons || world.isSelected )
 	{
-		glDisable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
 
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-		glHint(GL_FOG_HINT, GL_FASTEST);
-		glDisable(GL_COLOR_MATERIAL);
-		glDisable(GL_DITHER);
-		glDisable(GL_POLYGON_SMOOTH);
+// 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+// 		glHint(GL_FOG_HINT, GL_FASTEST);
+// 		glShadeModel(GL_FLAT);
+// 		glEnable(GL_DEPTH_TEST);
+// 		glDisable (GL_LIGHTING);
+// 		glDisable(GL_COLOR_MATERIAL);
+// 		glDisable(GL_DITHER);
+// 		glDisable(GL_POLYGON_SMOOTH);
 	}
 
         if ( world.isSelected )
@@ -57,17 +56,6 @@ void Evolution::draw()
         }
         world.drawWithGrid();
 
-// 	if ( world.isSelected )
-// 	{
-// 		camera.follow(world.critters[world.selectedCritter]->cameraposition, world.critters[world.selectedCritter]->rotation);
-// 		world.drawWithinCritterSight(world.selectedCritter);
-// 	}
-// 	else
-// 	{
-// 		camera.place();
-// 		world.drawWithGrid();
-// 	}
-
 	// 2D
 
 	glPushMatrix();
@@ -77,19 +65,13 @@ void Evolution::draw()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-	glHint(GL_FOG_HINT, GL_FASTEST);
-	glDisable(GL_COLOR_MATERIAL);
-	glDisable(GL_DITHER);
-	glDisable(GL_POLYGON_SMOOTH);
 	glDisable(GL_DEPTH_TEST);
-	glDisable (GL_LIGHTING);
 
 		infobar.draw();
-		infostats.draw();
 
-		//if (!settings->noverbose)
-			Textverbosemessage::Instance()->draw(infobar.height());
+		infostats.draw(infobar.height());
+
+		Textverbosemessage::Instance()->draw(infobar.height()+infostats.height());
 
 		helpinfo.draw();
 
@@ -108,7 +90,7 @@ void Evolution::handlekey(const KeySym& key)
 {
 	if ( pause && key != XK_p )
 	{
-		usleep(10000);
+		//usleep(10000);
 		return;
 	}
 
@@ -338,11 +320,7 @@ void Evolution::handlekey(const KeySym& key)
 			camera.moveRight(0.05f);
 		break;
 		case XK_BackSpace:
-//  camera rot: 75:0:0
-//  camera pos: -8:-17.6:-13.9
-
-			camera.position = Vector3f(-0.5f*world.size, -1.1f*world.size, -0.86875f*world.size);
-			camera.rotation = Vector3f( 75.0f,  0.0f, 0.0f);
+			resetCamera();
 		break;
 
 		// Camera Looking
@@ -365,6 +343,16 @@ void Evolution::handlekey(const KeySym& key)
 			//camera.rollRight(1.0f);
 		break;*/
 	}
+}
+
+void Evolution::resetCamera()
+{
+	unsigned int biggest = world.sizeX;
+	if ( world.sizeY > biggest )
+		biggest = world.sizeY;
+
+	camera.position = Vector3f(-0.5f*world.sizeX, -1.1f*biggest, -0.89875f*world.sizeY);
+	camera.rotation = Vector3f( 75.0f,  0.0f, 0.0f);
 }
 
 Evolution::~Evolution()

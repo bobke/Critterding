@@ -15,12 +15,13 @@ class Grid
 		~Grid();
 
 		void			draw();
-		void			resize(int newsize);
+		void			resize(unsigned int X, unsigned int Y);
 
 		float			color[4];
 
 	private:
-		unsigned int		gridsize;
+		unsigned int		gridsizeX;
+		unsigned int		gridsizeY;
 		float			resolution;
 
  		vector<Vector3f>	vertices;

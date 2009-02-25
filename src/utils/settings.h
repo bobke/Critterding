@@ -37,7 +37,8 @@ class Settings
 		unsigned int *winWidth;
 		unsigned int *winHeight;
 
-		unsigned int worldsize;
+		unsigned int worldsizeX;
+		unsigned int worldsizeY;
 			unsigned int worldsizeMin;
 			unsigned int worldsizeMax;
 		unsigned int startenergy;
