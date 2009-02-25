@@ -177,16 +177,36 @@ void WorldB::process()
 	// Bullet movement
 	for( unsigned int i=0; i < bullets.size(); i++)
 	{
+		Bullet *b = bullets[i];
+
 		// forward it fires
-		bullets[i]->moveForward();
+		b->moveForward();
 
 		// die of age
-		if ( bullets[i]->totalSteps > 7 )
+		if ( b->totalSteps > 7 )
 		{
-			delete bullets[i];
+			delete b;
 			bullets.erase(bullets.begin()+i);
 			i--;
 		}
+		else
+		{
+		// bullet hit wall
+			bool hit = false;
+			for( unsigned int j=0; j < walls.size() && !hit; j++)
+			{
+				Wall *w = walls[j];
+				float avgSize = w->halfsize + b->halfsize;
+				if ( fabs(w->position.x - b->position.x) <= avgSize && fabs(w->position.z - b->position.z) <= avgSize )
+				{
+					delete b;
+					bullets.erase(bullets.begin()+i);
+					i--;
+					hit = true;
+				}
+			}
+		}
+
 	}
 
 	// Insert Food

@@ -2,13 +2,13 @@
 
 Infostats::Infostats()
 {
-	halfboxwidth = 240.0f;
-	halfboxheight = 60.0f;
+// 	halfboxwidth = 240.0f;
+// 	halfboxheight = 60.0f;
 
-	hsp = 10.0f;
-	vsp = 15.0f;
+	hsp = 10;
+	vsp = 13;
 
-	barheight = 105;
+	barheight = 86;
 
 	active = false;
 }

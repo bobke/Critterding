@@ -69,11 +69,11 @@ void Textverbosemessage::draw( unsigned int posY )
 	{
 		deleteExpiredMsg();
 
-		float xstart = 0.0f;
-		float xstop = *Settings::Instance()->winWidth;
+		unsigned int xstart = 0.0f;
+		unsigned int xstop = *Settings::Instance()->winWidth;
 
-		float ystart = posY + 15.0f;
-		float ystop = posY + (15.0f * (maxMessages) + 10);
+		unsigned int ystart = posY + 13;
+		unsigned int ystop = posY + (13 * (maxMessages) + 10);
 
 		// draw background box and border
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -105,7 +105,7 @@ void Textverbosemessage::draw( unsigned int posY )
 
 			for ( unsigned int i = 0; i < births.size(); i++ )
 			{
-				Textprinter::Instance()->print(10.0f, ystart + (i*15.0f), births[i]->str);
+				Textprinter::Instance()->print(10.0f, ystart + 1 + (i*13), births[i]->str);
 			}
 
 			glDisable(GL_TEXTURE_2D);
@@ -120,7 +120,7 @@ void Textverbosemessage::draw( unsigned int posY )
 
 			for ( unsigned int i = 0; i < deaths.size(); i++ )
 			{
-				Textprinter::Instance()->print(((float)*Settings::Instance()->winWidth/4)*3 + 10, ystart + (i*15.0f), deaths[i]->str);
+				Textprinter::Instance()->print(((float)*Settings::Instance()->winWidth/4)*3 + 10, ystart + 1 + (i*13), deaths[i]->str);
 			}
 
 			glDisable(GL_TEXTURE_2D);
