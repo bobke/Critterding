@@ -877,9 +877,41 @@ void WorldB::createWall()
 
 	stringstream buf;
 	buf << "Wall type: " << settings->walltype;
+
 	if ( settings->walltype == 1 )
 	{
-		for ( unsigned int i=0; i < (unsigned int)(4.0f*sizeX); i++ )
+		for ( unsigned int i=0; i < 4*sizeY; i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[i]->resize(0.25f);
+			walls[i]->position.x = sizeX/2.0f;
+			walls[i]->position.z = 0.125 + ((float)i*0.25);
+		}
+		Textmessage::Instance()->add(buf);
+	}
+
+	else if ( settings->walltype == 2 )
+	{
+		for ( unsigned int i=0; i < (4*sizeY); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[i]->resize(0.25f);
+			walls[i]->position.x = sizeX/2.0f;
+			walls[i]->position.z = 0.125 + ((float)i*0.25);
+		}
+		walls[ (unsigned int)(sizeY*2.0f)-2 ]->toggle();
+		walls[ (unsigned int)(sizeY*2.0f)-1 ]->toggle();
+		walls[ (unsigned int)(sizeY*2.0f)   ]->toggle();
+		walls[ (unsigned int)(sizeY*2.0f)+1 ]->toggle();
+
+		Textmessage::Instance()->add(buf);
+	}
+
+	else if ( settings->walltype == 3 )
+	{
+		for ( unsigned int i=0; i < 4*sizeX; i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -890,9 +922,9 @@ void WorldB::createWall()
 		Textmessage::Instance()->add(buf);
 	}
 
-	else if ( settings->walltype == 2 )
+	else if ( settings->walltype == 4 )
 	{
-		for ( unsigned int i=0; i < (unsigned int)(4.0f*sizeX); i++ )
+		for ( unsigned int i=0; i < 4*sizeX; i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -908,7 +940,57 @@ void WorldB::createWall()
 		Textmessage::Instance()->add(buf);
 	}
 
-	else if ( settings->walltype == 3 )
+	else if ( settings->walltype == 5 )
+	{
+		unsigned int wcount = 0;
+		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeY); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[wcount]->resize(0.25f);
+			walls[wcount]->position.x = 2*sizeX/3.0f;
+			walls[wcount]->position.z = 0.125f + ((float)i*0.25);
+			wcount++;
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeY); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[wcount]->resize(0.25f);
+			walls[wcount]->position.x = sizeX/3.0f;
+			walls[wcount]->position.z = sizeY - 0.125f - ((float)i*0.25);
+			wcount++;
+		}
+
+		Textmessage::Instance()->add(buf);
+	}
+
+	else if ( settings->walltype == 6 )
+	{
+		unsigned int wcount = 0;
+		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeY); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[wcount]->resize(0.25f);
+			walls[wcount]->position.x = sizeX/3.0f;
+			walls[wcount]->position.z = 0.125 + ((float)i*0.25);
+			wcount++;
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeY); i++ )
+		{
+			Wall *w = new Wall();
+			walls.push_back( w );
+			walls[wcount]->resize(0.25f);
+			walls[wcount]->position.x = 2*sizeX/3.0f;
+			walls[wcount]->position.z = sizeY - 0.125 - ((float)i*0.25);
+			wcount++;
+		}
+
+		Textmessage::Instance()->add(buf);
+	}
+
+	else if ( settings->walltype == 7 )
 	{
 		unsigned int wcount = 0;
 		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeX); i++ )
@@ -933,10 +1015,10 @@ void WorldB::createWall()
 		Textmessage::Instance()->add(buf);
 	}
 
-	else if ( settings->walltype == 4 )
+	else if ( settings->walltype == 8 )
 	{
 		unsigned int wcount = 0;
-		for ( unsigned int i = 0; i < (unsigned int)(2.7f*sizeX); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -945,7 +1027,7 @@ void WorldB::createWall()
 			walls[wcount]->position.z = sizeY/3.0f;
 			wcount++;
 		}
-		for ( unsigned int i = 0; i < (unsigned int)(2.7f*sizeX); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -957,6 +1039,7 @@ void WorldB::createWall()
 
 		Textmessage::Instance()->add(buf);
 	}
+
 }
 
 void WorldB::destroyWall()
