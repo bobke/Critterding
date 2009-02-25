@@ -11,7 +11,7 @@ Settings::Settings()
 	profileName			= "default";
 
 	worldsizeX			= 16;
-	worldsizeY			= 16;
+	worldsizeY			= 12;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
 	startenergy			= 250;
@@ -34,7 +34,7 @@ Settings::Settings()
 	noverbose			= false;
 
 
-	critter_maxlifetime		= 3000;
+	critter_maxlifetime		= 5000;
 		critter_maxlifetimeMin		= 1;
 		critter_maxlifetimeMax		= 1000000;
 	critter_maxenergy		= 5000;

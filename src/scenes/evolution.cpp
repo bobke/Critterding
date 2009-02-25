@@ -5,7 +5,7 @@ Evolution::Evolution()
 	settings = Settings::Instance();
 
 	pause = false;
-	drawCVNeurons = true;
+	drawCVNeurons = false;
 }
 
 void Evolution::draw()
