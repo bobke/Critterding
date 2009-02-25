@@ -12,7 +12,7 @@ class Infobar
 		Infobar();
 		~Infobar();
 
-		float barheight;
+		unsigned int barheight;
 
 		void draw();
 		void swap();
@@ -22,8 +22,8 @@ class Infobar
 		Fps fps;
 
 		// horizontal/vertical spacers (padding)
-		float hsp;
-		float vsp;
+		unsigned int hsp;
+		unsigned int vsp;
 
 		bool active;
 };

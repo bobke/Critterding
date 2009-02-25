@@ -2,10 +2,10 @@
 
 Infobar::Infobar()
 {
-	barheight = 40.0f;
+	barheight = 34;
 
-	hsp = 10.0f;
-	vsp = 15.0f;
+	hsp = 10;
+	vsp = 13;
 
 	active = true;
 }

@@ -17,13 +17,13 @@ class Infostats
 
 	private:
 		// horizontal/vertical spacers (padding)
-		float hsp;
-		float vsp;
+		unsigned int hsp;
+		unsigned int vsp;
 
 		unsigned int barheight;
 
-		float halfboxwidth;
-		float halfboxheight;
+// 		unsigned int halfboxwidth;
+// 		unsigned int halfboxheight;
 
 		bool active;
 };
