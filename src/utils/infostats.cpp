@@ -114,13 +114,13 @@ void Infostats::draw( unsigned int posY )
 		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalSynapsesC / Settings::Instance()->info_crittersC);
 
 		rc++;
-		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg syn/neu:");
+		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg synapses/neuron:");
 		Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalsynapses / totalneurons);
 		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalSynapsesH / Settings::Instance()->info_totalNeuronsH);
 		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalSynapsesC / Settings::Instance()->info_totalNeuronsC);
 
 		rc++;
-		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg adam dist:");
+		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg adam distance:");
 		Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalad / Settings::Instance()->info_critters);
 		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalAdamDistanceH / Settings::Instance()->info_crittersH);
 		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalAdamDistanceC / Settings::Instance()->info_crittersC);

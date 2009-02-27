@@ -10,11 +10,11 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsizeX			= 16;
-	worldsizeY			= 12;
+	worldsizeX			= 20;
+	worldsizeY			= 15;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
-	startenergy			= 250;
+	startenergy			= 200;
 		startenergyMin			= 0;
 		startenergyMax			= 1000000;
 	mincritters			= 10;
@@ -31,7 +31,7 @@ Settings::Settings()
 		walltypeMax			= 8;
 	exit_if_empty			= false;
 	autoload			= false;
-	noverbose			= false;
+//	noverbose			= false;
 
 
 	critter_maxlifetime		= 5000;
@@ -246,7 +246,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --walltype                  [" << walltype << "]  Walltype" << endl;
 	helpinfo << "  --exit-if-empty                   If set, the program will exit when no are left" << endl;
 	helpinfo << "  --autoload                        If set, critters from the load directory will be loaded at startup" << endl;
-	helpinfo << "  --noverbose                       If set, information about dying/procreating critters will not be shown" << endl;
+//	helpinfo << "  --noverbose                       If set, information about dying/procreating critters will not be shown" << endl;
 
 	helpinfo << endl;
 	helpinfo << "  Critter Settings" << endl;
@@ -385,7 +385,7 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("walltype", walltype, walltypeMin, walltypeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("exit-if-empty", exit_if_empty, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("autoload", autoload, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("noverbose", noverbose, line) ) uselesscounter++;
+//			else if ( checkConfigFileValue("noverbose", noverbose, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("critter_maxlifetime ", critter_maxlifetime, critter_maxlifetimeMin, critter_maxlifetimeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_maxenergy ", critter_maxenergy, critter_maxenergyMin, critter_maxenergyMax, line) ) uselesscounter++;
@@ -523,7 +523,7 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--walltype", walltype, walltypeMin, walltypeMax, optind, argv) ) optind++;
 		else if ( sw=="--exit-if-empty") exit_if_empty = true;
 		else if ( sw=="--autoload") autoload = true;
-		else if ( sw=="--noverbose") noverbose = true;
+//		else if ( sw=="--noverbose") noverbose = true;
 
 	// Critter Settings
 
@@ -747,7 +747,7 @@ void Settings::printSettings()
 	cerr << "walltype " << walltype << endl;
 	cerr << "exit-if-empty " << exit_if_empty << endl << endl;
 	cerr << "autoload " << autoload << endl << endl;
-	cerr << "verbose " << !noverbose << endl << endl;
+//	cerr << "verbose " << !noverbose << endl << endl;
 
 	cerr << "critter_maxlifetime " << critter_maxlifetime << endl;
 	cerr << "critter_maxenergy " << critter_maxenergy << endl;

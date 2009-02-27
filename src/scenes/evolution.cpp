@@ -96,10 +96,6 @@ void Evolution::handlekey(const KeySym& key)
 
 	switch (key)
 	{
-		case XK_Tab:
-			infostats.swap();
-		break;
-
 		case XK_F1:
 //			settings->printSettings();
 			helpinfo.swap();
@@ -111,13 +107,22 @@ void Evolution::handlekey(const KeySym& key)
 
 		case XK_F3:
 		{
+			infostats.swap();
+		}
+		break;
+		case XK_F4:
+			Textverbosemessage::Instance()->swap();
+		break;
+
+		case XK_F5:
+		{
 			if ( settings->mincritters > 0 ) settings->mincritters--;
 			stringstream buf;
 			buf << "min c: " << settings->mincritters;
 			Textmessage::Instance()->add(buf);
 		}
 		break;
-		case XK_F4:
+		case XK_F6:
 		{
 			settings->mincritters++;
 			stringstream buf;
@@ -126,28 +131,28 @@ void Evolution::handlekey(const KeySym& key)
 		}
 		break;
 
-		case XK_F5:
-		{
-			if ( (settings->freeEnergyInfo-(settings->food_maxenergy*25.0f)) / settings->food_maxenergy >= 0.0f )
-			{
-				settings->freeEnergyInfo -= settings->food_maxenergy * 25.0f;
-				world.freeEnergy -= settings->food_maxenergy * 25.0f;
-
-			}
-			stringstream buf;
-			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
-			Textmessage::Instance()->add(buf);
-		}
-		break;
-		case XK_F6:
-		{
-			settings->freeEnergyInfo += settings->food_maxenergy * 25.0f;
-			world.freeEnergy += settings->food_maxenergy * 25.0f;
-			stringstream buf;
-			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
-			Textmessage::Instance()->add(buf);
-		}
-		break;
+// 		case XK_F5:
+// 		{
+// 			if ( (settings->freeEnergyInfo-(settings->food_maxenergy*25.0f)) / settings->food_maxenergy >= 0.0f )
+// 			{
+// 				settings->freeEnergyInfo -= settings->food_maxenergy * 25.0f;
+// 				world.freeEnergy -= settings->food_maxenergy * 25.0f;
+// 
+// 			}
+// 			stringstream buf;
+// 			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
+// 			Textmessage::Instance()->add(buf);
+// 		}
+// 		break;
+// 		case XK_F6:
+// 		{
+// 			settings->freeEnergyInfo += settings->food_maxenergy * 25.0f;
+// 			world.freeEnergy += settings->food_maxenergy * 25.0f;
+// 			stringstream buf;
+// 			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
+// 			Textmessage::Instance()->add(buf);
+// 		}
+// 		break;
 
 		case XK_KP_Subtract:
 		{
@@ -241,17 +246,6 @@ void Evolution::handlekey(const KeySym& key)
 			sleeper.swap();
 		break;
 
-		case XK_v:
-		{
-			stringstream buf;
- 			settings->noverbose = !settings->noverbose;
-			Textverbosemessage::Instance()->swap();
-/*			if ( settings->noverbose )
-				buf << "verbose = off";
-			else
-				buf << "verbose = on";
-			Textmessage::Instance()->add(buf);*/
-		}
 		break;
 		case XK_f:
 			if ( world.isSelected )
