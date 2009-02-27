@@ -18,7 +18,7 @@ void CritterB::initConst()
 	sightrange = settings->critter_sightrange;
 
 	components		= 4;
-	colorTrim		= 0.256f; // (1/256) * 96
+	colorTrim		= 0.3f; // (1/256) * 96
 }
 
 CritterB::CritterB()

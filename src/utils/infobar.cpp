@@ -2,7 +2,7 @@
 
 Infobar::Infobar()
 {
-	barheight = 34;
+	barheight = 20;
 
 	hsp = 10;
 	vsp = 13;
@@ -50,8 +50,8 @@ void Infobar::draw()
 
 		glEnable(GL_TEXTURE_2D);
 
-		unsigned int totalneurons = Settings::Instance()->info_totalNeuronsH + Settings::Instance()->info_totalNeuronsC;
-		unsigned int totalsynapses = Settings::Instance()->info_totalSynapsesH + Settings::Instance()->info_totalSynapsesC;
+// 		unsigned int totalneurons = Settings::Instance()->info_totalNeuronsH + Settings::Instance()->info_totalNeuronsC;
+// 		unsigned int totalsynapses = Settings::Instance()->info_totalSynapsesH + Settings::Instance()->info_totalSynapsesC;
 
 	// Row 1
 		Textprinter::Instance()->print(hsp,		vsp,	"fps:");
@@ -67,17 +67,17 @@ void Infobar::draw()
 		Textprinter::Instance()->printR(col4-hsp,	vsp,	"%1u",		Settings::Instance()->info_corpses);
 
 	// Row 2
-		Textprinter::Instance()->print(hsp,		vsp*2,	"neu/cri:");
-		Textprinter::Instance()->printR(col1-hsp,	vsp*2,	"%1.2f",	(float)totalneurons / Settings::Instance()->info_critters);
-
-		Textprinter::Instance()->print(col1+hsp,	vsp*2,	"syn/cri:");
-		Textprinter::Instance()->printR(col2-hsp,	vsp*2,	"%1.2f",	(float)totalsynapses / Settings::Instance()->info_critters);
-
- 		Textprinter::Instance()->print(col2+hsp,	vsp*2,	"syn/neu:");
- 		Textprinter::Instance()->printR(col3-hsp,	vsp*2,	"%1.2f",	(float)totalsynapses / totalneurons);
-
-		Textprinter::Instance()->print(col3+hsp,	vsp*2,	"bullets:");
-		Textprinter::Instance()->printR(col4-hsp,	vsp*2,	"%1u",		Settings::Instance()->info_bullets);
+// 		Textprinter::Instance()->print(hsp,		vsp*2,	"neu/cri:");
+// 		Textprinter::Instance()->printR(col1-hsp,	vsp*2,	"%1.2f",	(float)totalneurons / Settings::Instance()->info_critters);
+// 
+// 		Textprinter::Instance()->print(col1+hsp,	vsp*2,	"syn/cri:");
+// 		Textprinter::Instance()->printR(col2-hsp,	vsp*2,	"%1.2f",	(float)totalsynapses / Settings::Instance()->info_critters);
+// 
+//  		Textprinter::Instance()->print(col2+hsp,	vsp*2,	"syn/neu:");
+//  		Textprinter::Instance()->printR(col3-hsp,	vsp*2,	"%1.2f",	(float)totalsynapses / totalneurons);
+// 
+// 		Textprinter::Instance()->print(col3+hsp,	vsp*2,	"bullets:");
+// 		Textprinter::Instance()->printR(col4-hsp,	vsp*2,	"%1u",		Settings::Instance()->info_bullets);
 
 
 		glDisable(GL_TEXTURE_2D);

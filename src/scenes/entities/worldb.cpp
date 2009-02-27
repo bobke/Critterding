@@ -183,7 +183,7 @@ void WorldB::process()
 		b->moveForward();
 
 		// die of age
-		if ( b->totalSteps > 7 )
+		if ( b->totalSteps > 5 )
 		{
 			delete b;
 			bullets.erase(bullets.begin()+i);
@@ -279,9 +279,6 @@ void WorldB::process()
 //			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " starved" << endl;
 /*			if (!settings->noverbose)
 			{*/
-				stringstream buf;
-				buf << setw(4) << critters[i]->critterID << " starved";
-				Textverbosemessage::Instance()->addDeath(buf);
 // 			}
 
 			removeCritter(i);
@@ -711,14 +708,14 @@ void WorldB::process()
 
 		if ( timedInsertsCounter == 3*settings->critter_maxlifetime )
 		{
-			if (!settings->noverbose) cerr << "inserting 100 food" << endl;
+//			if (!settings->noverbose) cerr << "inserting 100 food" << endl;
 
 			settings->freeEnergyInfo += settings->food_maxenergy * 100.0f;
 			freeEnergy += settings->food_maxenergy * 100.0f;
 		}
 		else if ( timedInsertsCounter == (3*settings->critter_maxlifetime)+1 )
 		{
-			if (!settings->noverbose) cerr << "removing 100 food" << endl;
+//			if (!settings->noverbose) cerr << "removing 100 food" << endl;
 
 			settings->freeEnergyInfo -= settings->food_maxenergy * 100.0f;
 			freeEnergy -= settings->food_maxenergy * 100.0f;
@@ -943,7 +940,7 @@ void WorldB::createWall()
 	else if ( settings->walltype == 5 )
 	{
 		unsigned int wcount = 0;
-		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeY); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -952,7 +949,7 @@ void WorldB::createWall()
 			walls[wcount]->position.z = 0.125f + ((float)i*0.25);
 			wcount++;
 		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeY); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -968,7 +965,7 @@ void WorldB::createWall()
 	else if ( settings->walltype == 6 )
 	{
 		unsigned int wcount = 0;
-		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeY); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -977,7 +974,7 @@ void WorldB::createWall()
 			walls[wcount]->position.z = 0.125 + ((float)i*0.25);
 			wcount++;
 		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeY); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -993,7 +990,7 @@ void WorldB::createWall()
 	else if ( settings->walltype == 7 )
 	{
 		unsigned int wcount = 0;
-		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeX); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -1002,7 +999,7 @@ void WorldB::createWall()
 			walls[wcount]->position.z = 2*sizeY/3.0f;
 			wcount++;
 		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeX); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -1018,7 +1015,7 @@ void WorldB::createWall()
 	else if ( settings->walltype == 8 )
 	{
 		unsigned int wcount = 0;
-		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeX); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -1027,7 +1024,7 @@ void WorldB::createWall()
 			walls[wcount]->position.z = sizeY/3.0f;
 			wcount++;
 		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.5f*sizeX); i++ )
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
 			walls.push_back( w );
@@ -1237,6 +1234,9 @@ void WorldB::loadAllCritters()
 	{
 		if ( parseH->Instance()->endMatches( ".cr", files[i] ) )
 		{
+			stringstream buf;
+			buf << "loading " << files[i];
+			Textmessage::Instance()->add(buf);
 
 			string content;
 			fileH.open( files[i], content );

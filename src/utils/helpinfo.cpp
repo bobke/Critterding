@@ -62,13 +62,16 @@ void Helpinfo::draw()
 		printInfoLine(heightpos, widthpos1, widthpos2, "F2", "show/hide information bar");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F3/F4", "decrease/increase minimum critters");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F3", "show/hide critter statistics");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F5/F6", "adjust energy in the system (by 25 units)");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F4", "show/hide birth and death events");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "keypad +/-", "adjust energy in the system (by 1 unit)");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F5/F6", "decrease/increase minimum critters");
+
+//		heightpos += vspace;
+//		printInfoLine(heightpos, widthpos1, widthpos2, "F5/F6", "adjust energy in the system (by 25 units)");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "F7", "insert new critter (adam)");
@@ -82,17 +85,23 @@ void Helpinfo::draw()
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "F11/F12", "adjust mutation rate (%)");
 
-		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "tab", "show/hide critter statistics");
+// 		heightpos += vspace;
+// 		printInfoLine(heightpos, widthpos1, widthpos2, "tab", "show/hide critter statistics");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "insert", "toggle hide critter retinas");
+
+		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "keypad +/-", "adjust energy in the system");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "f", "toggle critterview");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "l", "toggle fps limiter (30 fps)");
+
+		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "p", "pause");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "w", "activate/toggle wall types");
@@ -108,9 +117,6 @@ void Helpinfo::draw()
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "PgDn", "save all critters into \"~/.critterding/save/(timestamp)\"");
-
-		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "p", "pause");
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
