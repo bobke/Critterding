@@ -7,62 +7,64 @@ TERMINOLOGY
       : generations with mutations since adam
 
 
-STARTUP OPTIONS                                                                                                                                         
+STARTUP OPTIONS                                                                                                                                            
 
   option           [default value]
 
   Global Settings
   --profile                 [none]  Load a settings profile
 
-  --worldsize                 [25]  Creates a 25x25 world
-  --energy                   [500]  Energy in the system: 500*food_energy(2000) = 1000000
-  --mincritters               [10]  If less than 10 critters are present, insert an adam 
-  --retinasperrow             [20]  Place 20 retinas on a row (bottom left of window)    
-  --camerasensitivity         [10]  Camera sensitivity                                   
-  --exit-if-empty                   If set, the program will exit when no are left       
+  --worldsizeX                [16]  Width of the world (16)
+  --worldsizeY                [12]  Depth of the world (12)
+  --energy                   [200]  Energy in the system: 200*food_maxenergy(2000) = 400000
+  --mincritters               [10]  If less than 10 critters are present, insert an adam   
+  --retinasperrow             [30]  Place 30 retinas on a row (bottom left of window)      
+  --camerasensitivity         [10]  Camera sensitivity                                     
+  --walltype                   [0]  Walltype                                               
+  --exit-if-empty                   If set, the program will exit when no are left         
   --autoload                        If set, critters from the load directory will be loaded at startup
 
   Critter Settings
-  --critter_maxlifetime     [2000]  Max amount of frames a critter can live
+  --critter_maxlifetime     [5000]  Max amount of frames a critter can live
   --critter_maxenergy       [5000]  Max amount of energy in a critter      
   --critter_startenergy     [2500]  Starting amount of energy for a new critter
   --critter_procinterval      [20]  Time (in frames) between procreations      
   --critter_fireinterval      [10]  Time (in frames) between bullets being fired
   --critter_minenergyproc   [3000]  Min amount of energy required for procreation
-  --critter_minenergyfire      [1]  Min amount of energy required for firing a bullet
+  --critter_minenergyfire     [10]  Min amount of energy required for firing a bullet
+  --critter_firecost          [10]  Amount of energy it costs to fire a bullet       
   --critter_size              [10]  Size of a critter                                
   --critter_speed             [50]  Critter speed
-  --critter_sightrange        [40]  Distance a critter can see (400 = 40 floor squares)
-  --critter_retinasize         [7]  Resolution of critter's retina: 7x7
-  --critter_colorneurons       [3]  Earch color of every pixel (RGBA) will get [3] neurons (only for new adams)
-  --critter_mutationrate      [10]  When a critter procreates there is a 10% chance it will mutate
-  --critter_maxmutations       [5]  When a critter mutates, it can do 5 mutations at maximum
-  --critter_percentchangetype  [0]  When a critter mutates, percent chance it changes type
+  --critter_sightrange        [35]  Distance a critter can see (350 = 35 floor squares)
+  --critter_retinasize        [16]  Resolution of critter's retina: 16x16
+  --critter_mutationrate       [7]  When a critter procreates there is a 7% chance it will mutate
+  --critter_maxmutations       [3]  When a critter mutates, it can do 3 mutations at maximum
+  --critter_percentchangetype  [1]  When a critter mutates, percent chance it changes type
   --critter_flipnewborns            If set, newborns will be flipped 180 degrees
   --critter_randomrotatenewborns    If set, newborns will be rotated randomly
   --critter_enablecarrying          If set, critters will be able to carry food and corpses
   --critter_autosaveinterval   [0]  Save all critters every N seconds (0=disabled)
 
   Food Settings
-  --food_maxlifetime         [500]  Maximum amount of frames food exists
+  --food_maxlifetime        [1000]  Maximum amount of frames food exists
   --food_maxenergy          [2000]  Maximum amount of energy in a food unit
   --food_size                 [15]  Size of a food unit
 
   Corpse Settings
-  --corpse_enable                   Enable corpses (act as poison)
-  --corpse_maxlifetime      [1000]  Maximum amount of frames a corpse exists
-  --corpse_maxenergy        [2500]  Maximum amount of energy in a corpse unit
+  --corpse_maxlifetime      [2000]  Maximum amount of frames a corpse exists
+  --corpse_maxenergy        [3000]  Maximum amount of energy in a corpse unit
   --corpse_size               [15]  Size of a corpse unit
+  --corpse_disable                  Disable corpses
 
   Brain Settings
   --brain_maxneurons                           [1000]  Max neurons per critter
   --brain_minsynapses                             [1]  Min synapses per neuron
   --brain_maxsynapses                           [100]  Max synapses per neuron
-  --brain_minneuronsatbuildtime                  [20]  Min neurons for a new critter
-  --brain_maxneuronsatbuildtime                  [30]  Max neurons for a new critter
+  --brain_minneuronsatbuildtime                  [40]  Min neurons for a new critter
+  --brain_maxneuronsatbuildtime                 [100]  Max neurons for a new critter
   --brain_minsynapsesatbuildtime                  [1]  Min synapses when creating new neuron
     --brain_mutate_minsynapsesatbuildtime              If set, the value above will mutate
-  --brain_maxsynapsesatbuildtime                 [60]  Max synapses when creating new neuron
+  --brain_maxsynapsesatbuildtime                 [30]  Max synapses when creating new neuron
     --brain_mutate_maxsynapsesatbuildtime              If set, the value above will mutate
   --brain_percentchanceinhibitoryneuron          [50]  % chance neuron is inhibitory (vs exhibitory)
     --brain_mutate_percentchanceinhibitoryneuron       If set, the value above will mutate
@@ -95,52 +97,12 @@ STARTUP OPTIONS
   --brain_percentmutateeffectalterneuron         [20]  % chance of altering a neuron for a mutationrun
   --brain_percentmutateeffectaddsynapse          [29]  % chance of adding a synapse for a mutationrun
   --brain_percentmutateeffectremovesynapse       [29]  % chance of removing a synapse for a mutationrun
+  --brain_percentMutateEffectAlterMutable         [1]  % chance of altering a mutable
     --brain_mutate_mutateeffects                       If set, all values above will mutate
-
-
-BUTTONS
-
-Engine / World Operations
-  F1            : print settings
-  F2            : show fps (100 frames average)
-
-  F3/F4         : adjust minimum critters
-  F5/F6         : adjust energy in the system (by 25 units)
-  keypad -/+    : adjust energy in the system (by 1 unit)
-  F7            : insert new critter (adam)
-
-  F8            : toggle Timed Food Inserts
-                  inserts 100 food every 3 generations, driving the population up and down.
-
-  F9/F10        : adjust max mutations per mutant
-  F11/F12       : adjust mutation rate (%)
-  Insert        : toggle hide critter retinas.
-
-  p             : pause
-  w             : create a horizontal wall
-  x             : destroy the wall
-  c             : toggle gate in wall center
-  v             : half the active wall
-
-  f             : toggle follow the youngest critter untill it dies.
-
-  Page Up       : load all critters from "~/.critterding/load" directory
-  Page Down     : save all critters into "~/.critterding/save/(timestamp)" directory
-
-Camera Operations
-  Backspace     : reset camera
-  Arrow Up      : move forward
-  Arrow Down    : move backward
-  Arrow Left    : strafe left
-  Arrow Right   : strafe right
-  Home          : move up
-  End           : move down
-  NumKey 2      : look up
-  NumKey 8      : look down
-  NumKey 4      : look left
-  NumKey 6      : look right
-  keypad /      : decrease camera sensitivity
-  keypad *      : increase camera sensitivity
+  --brain_costhavingneuron                      [250]  Energycost per frame for having a neuron
+  --brain_costfiringneuron                       [20]  Energycost per frame for firing a neuron
+  --brain_costfiringmotorneuron                 [500]  Energycost per frame for firing a motorneuron
+  --brain_costhavingsynapse                      [10]  Energycost per frame for having a synapse
 
 
 OTHER THINGS
