@@ -10,8 +10,8 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsizeX			= 16;
-	worldsizeY			= 12;
+	worldsizeX			= 20;
+	worldsizeY			= 15;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
 	startenergy			= 200;
@@ -243,7 +243,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --mincritters               [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
 	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;
-	helpinfo << "  --walltype                   [" << walltype << "]  Walltype" << endl;
+	helpinfo << "  --walltype                  [" << walltype << "]  Walltype" << endl;
 	helpinfo << "  --exit-if-empty                   If set, the program will exit when no are left" << endl;
 	helpinfo << "  --autoload                        If set, critters from the load directory will be loaded at startup" << endl;
 //	helpinfo << "  --noverbose                       If set, information about dying/procreating critters will not be shown" << endl;
@@ -256,14 +256,14 @@ void Settings::createHelpInfo()
 	helpinfo << "  --critter_procinterval      [" << critter_procinterval << "]  Time (in frames) between procreations" << endl;
 	helpinfo << "  --critter_fireinterval      [" << critter_fireinterval << "]  Time (in frames) between bullets being fired" << endl;
 	helpinfo << "  --critter_minenergyproc   [" << critter_minenergyproc << "]  Min amount of energy required for procreation" << endl;
-	helpinfo << "  --critter_minenergyfire     [" << critter_minenergyfire << "]  Min amount of energy required for firing a bullet" << endl;
-	helpinfo << "  --critter_firecost          [" << critter_firecost << "]  Amount of energy it costs to fire a bullet" << endl;
+	helpinfo << "  --critter_minenergyfire      [" << critter_minenergyfire << "]  Min amount of energy required for firing a bullet" << endl;
+	helpinfo << "  --critter_firecost           [" << critter_firecost << "]  Amount of energy it costs to fire a bullet" << endl;
 
 	helpinfo << "  --critter_size              [" << critter_sizeI << "]  Size of a critter" << endl;
 	helpinfo << "  --critter_speed             [" << critter_speedI << "]  Critter speed" << endl;
 	helpinfo << "  --critter_sightrange        [" << critter_sightrangeI << "]  Distance a critter can see (" << critter_sightrangeI*10.0f << " = " << critter_sightrangeI << " floor squares)" << endl;
-	helpinfo << "  --critter_retinasize        [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
-	helpinfo << "  --critter_mutationrate       [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
+	helpinfo << "  --critter_retinasize         [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
+	helpinfo << "  --critter_mutationrate      [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
 	helpinfo << "  --critter_maxmutations       [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
 	helpinfo << "  --critter_percentchangetype  [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
 	helpinfo << "  --critter_flipnewborns            If set, newborns will be flipped 180 degrees" << endl;
@@ -272,7 +272,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --critter_autosaveinterval   [" << critter_autosaveinterval << "]  Save all critters every N seconds (0=disabled)" << endl;
 	helpinfo << endl;
 	helpinfo << "  Food Settings" << endl;
-	helpinfo << "  --food_maxlifetime        [" << food_maxlifetime << "]  Maximum amount of frames food exists" << endl;
+	helpinfo << "  --food_maxlifetime         [" << food_maxlifetime << "]  Maximum amount of frames food exists" << endl;
 	helpinfo << "  --food_maxenergy          [" << food_maxenergy << "]  Maximum amount of energy in a food unit" << endl;
 	helpinfo << "  --food_size                 [" << food_sizeI << "]  Size of a food unit" << endl;
 	helpinfo << endl;
@@ -287,7 +287,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --brain_minsynapses                             [" << brain_minsynapses << "]  Min synapses per neuron" << endl;
 	helpinfo << "  --brain_maxsynapses                           [" << brain_maxsynapses << "]  Max synapses per neuron" << endl;
 	helpinfo << "  --brain_minneuronsatbuildtime                  [" << brain_minneuronsatbuildtime << "]  Min neurons for a new critter" << endl;
-	helpinfo << "  --brain_maxneuronsatbuildtime                 [" << brain_maxneuronsatbuildtime << "]  Max neurons for a new critter" << endl;
+	helpinfo << "  --brain_maxneuronsatbuildtime                  [" << brain_maxneuronsatbuildtime << "]  Max neurons for a new critter" << endl;
 	helpinfo << "  --brain_minsynapsesatbuildtime                  [" << brain_minsynapsesatbuildtime << "]  Min synapses when creating new neuron" << endl;
 	helpinfo << "    --brain_mutate_minsynapsesatbuildtime              If set, the value above will mutate" << endl;
 	helpinfo << "  --brain_maxsynapsesatbuildtime                 [" << brain_maxsynapsesatbuildtime << "]  Max synapses when creating new neuron" << endl;
@@ -328,7 +328,7 @@ void Settings::createHelpInfo()
 	helpinfo << "    --brain_mutate_mutateeffects                       If set, all values above will mutate" << endl;
 
 	helpinfo << "  --brain_costhavingneuron                      [" << brain_costhavingneuron << "]  Energycost per frame for having a neuron" << endl;
-	helpinfo << "  --brain_costfiringneuron                       [" << brain_costfiringneuron << "]  Energycost per frame for firing a neuron" << endl;
+	helpinfo << "  --brain_costfiringneuron                      [" << brain_costfiringneuron << "]  Energycost per frame for firing a neuron" << endl;
 	helpinfo << "  --brain_costfiringmotorneuron                 [" << brain_costfiringmotorneuron << "]  Energycost per frame for firing a motorneuron" << endl;
 	helpinfo << "  --brain_costhavingsynapse                      [" << brain_costhavingsynapse << "]  Energycost per frame for having a synapse" << endl;
 

@@ -1,3 +1,17 @@
+1.0-beta9
+---------
+dedicated skincolors for herbivores(Red/Blue) / carnivores(Green/Blue)
+bullets no longer shoot through walls
+world is no longer fixed to a square
+fps limiter
+introduced text rendering with fglx
+improved synaptic plasticity
+slightly improved wall system
+--autoload option
+cleaned up critter files
+color inputneurons get less discrete input
+many fixes and cleanups
+
 1.0-beta8
 ---------
 new: custom settings profiles, critter autosaving, exit-if-empty
