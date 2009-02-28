@@ -34,7 +34,7 @@ Settings::Settings()
 //	noverbose			= false;
 
 
-	critter_maxlifetime		= 5000;
+	critter_maxlifetime		= 4000;
 		critter_maxlifetimeMin		= 1;
 		critter_maxlifetimeMax		= 1000000;
 	critter_maxenergy		= 5000;
