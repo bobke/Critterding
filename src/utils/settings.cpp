@@ -14,7 +14,7 @@ Settings::Settings()
 	worldsizeY			= 15;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
-	startenergy			= 200;
+	startenergy			= 250;
 		startenergyMin			= 0;
 		startenergyMax			= 1000000;
 	mincritters			= 10;
@@ -216,13 +216,13 @@ Settings::Settings()
 	brain_costhavingneuron				= 250;
 		brain_costhavingneuronMin			= 0;
 		brain_costhavingneuronMax			= 1000000;
-	brain_costfiringneuron				= 20;
+	brain_costfiringneuron				= 100;
 		brain_costfiringneuronMin			= 0;
 		brain_costfiringneuronMax			= 1000000;
 	brain_costfiringmotorneuron			= 500;
 		brain_costfiringmotorneuronMin			= 0;
 		brain_costfiringmotorneuronMax			= 1000000;
-	brain_costhavingsynapse				= 10;
+	brain_costhavingsynapse				= 20;
 		brain_costhavingsynapseMin			= 0;
 		brain_costhavingsynapseMax			= 1000000;
 
