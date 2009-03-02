@@ -16,6 +16,7 @@ class Wall
 
 		float			size;
 		float			halfsize;
+		float			straal;
 		float			energy;
 
 		bool			disabled;

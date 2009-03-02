@@ -361,7 +361,7 @@ void WorldB::process()
 				Food *fo = food[f];
 				if ( !fo->isCarried )
 				{
-					float avgSize = c->halfsize + fo->halfsize;
+					float avgSize = c->straal + fo->straal;
 					if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
 					{
 						c->touchingFood = true;
@@ -377,7 +377,7 @@ void WorldB::process()
 				Corpse *fo = corpses[f];
 				if ( !fo->isCarried )
 				{
-					float avgSize = c->halfsize + fo->halfsize;
+					float avgSize = c->straal + fo->straal;
 					if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
 					{
 						c->touchingCorpse = true;
@@ -395,7 +395,7 @@ void WorldB::process()
 		// move
 			if (c->moved)
 			{
-				if (spotIsFree(c->newposition, c->halfsize, i))
+				if (spotIsFree(c->newposition, c->straal, i))
 				{
 					c->moveToNewPoss();
 				}
@@ -579,14 +579,14 @@ void WorldB::process()
 				c->newposition.x -= c->reuseRotSinY * c->halfsize;
 				c->newposition.z -= c->reuseRotCosY * c->halfsize;
 	
-				if (spotIsFree(c->newposition, c->halfsize, i))
+				if (spotIsFree(c->newposition, c->straal, i))
 				{
 					// move new critter to the right by sum of halfsizes
 					Vector3f newpos = c->position;
 					newpos.x += c->reuseRotSinY * (2.0f*c->halfsize + 0.01);
 					newpos.z += c->reuseRotCosY * (2.0f*c->halfsize + 0.01);
 
-					if (spotIsFree(newpos, c->halfsize, i))
+					if (spotIsFree(newpos, c->straal, i))
 					{
 
 						CritterB *nc = new CritterB(*c);
@@ -742,7 +742,7 @@ void WorldB::insertRandomFood(int amount, float energy)
 		Food *f = new Food;
 		f->energy = energy;
 		f->resize();
-		f->position = findEmptySpace(f->halfsize);
+		f->position = findEmptySpace(f->straal);
 		food.push_back( f );
 	}
 }
@@ -768,7 +768,7 @@ void WorldB::insertCritter()
 
 void WorldB::positionCritterB(unsigned int cid)
 {
-	critters[cid]->newposition = findEmptySpace(critters[cid]->halfsize);
+	critters[cid]->newposition = findEmptySpace(critters[cid]->straal);
 	critters[cid]->newposition.y = critters[cid]->halfsize;
 	critters[cid]->moveToNewPoss();
 
@@ -880,10 +880,9 @@ void WorldB::createWall()
 		for ( unsigned int i=0; i < 4*sizeY; i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = sizeX/2.0f;
+			w->position.z = 0.125f + ((float)i*0.25);
 			walls.push_back( w );
-			walls[i]->resize(0.25f);
-			walls[i]->position.x = sizeX/2.0f;
-			walls[i]->position.z = 0.125 + ((float)i*0.25);
 		}
 		Textmessage::Instance()->add(buf);
 	}
@@ -893,10 +892,9 @@ void WorldB::createWall()
 		for ( unsigned int i=0; i < (4*sizeY); i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = sizeX/2.0f;
+			w->position.z = 0.125f + ((float)i*0.25);
 			walls.push_back( w );
-			walls[i]->resize(0.25f);
-			walls[i]->position.x = sizeX/2.0f;
-			walls[i]->position.z = 0.125 + ((float)i*0.25);
 		}
 		walls[ (unsigned int)(sizeY*2.0f)-2 ]->toggle();
 		walls[ (unsigned int)(sizeY*2.0f)-1 ]->toggle();
@@ -911,10 +909,9 @@ void WorldB::createWall()
 		for ( unsigned int i=0; i < 4*sizeX; i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = 0.125f + ((float)i*0.25);
+			w->position.z = sizeY/2.0f;
 			walls.push_back( w );
-			walls[i]->resize(0.25f);
-			walls[i]->position.x = 0.125 + ((float)i*0.25);
-			walls[i]->position.z = sizeY/2.0f;
 		}
 		Textmessage::Instance()->add(buf);
 	}
@@ -924,10 +921,9 @@ void WorldB::createWall()
 		for ( unsigned int i=0; i < 4*sizeX; i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = 0.125f + ((float)i*0.25);
+			w->position.z = sizeY/2.0f;
 			walls.push_back( w );
-			walls[i]->resize(0.25f);
-			walls[i]->position.x = 0.125 + ((float)i*0.25);
-			walls[i]->position.z = sizeY/2.0f;
 		}
 		walls[ (unsigned int)(sizeX*2.0f)-2 ]->toggle();
 		walls[ (unsigned int)(sizeX*2.0f)-1 ]->toggle();
@@ -939,99 +935,277 @@ void WorldB::createWall()
 
 	else if ( settings->walltype == 5 )
 	{
-		unsigned int wcount = 0;
 		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = 2.0f*sizeX/3.0f;
+			w->position.z = 0.125f + ((float)i*0.25);
 			walls.push_back( w );
-			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = 2*sizeX/3.0f;
-			walls[wcount]->position.z = 0.125f + ((float)i*0.25);
-			wcount++;
 		}
 		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = sizeX/3.0f;
+			w->position.z = sizeY - 0.125f - ((float)i*0.25);
 			walls.push_back( w );
-			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = sizeX/3.0f;
-			walls[wcount]->position.z = sizeY - 0.125f - ((float)i*0.25);
-			wcount++;
 		}
-
 		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 6 )
 	{
-		unsigned int wcount = 0;
 		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = sizeX/3.0f;
+			w->position.z = 0.125f + ((float)i*0.25);
 			walls.push_back( w );
-			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = sizeX/3.0f;
-			walls[wcount]->position.z = 0.125 + ((float)i*0.25);
-			wcount++;
 		}
 		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = 2.0f*sizeX/3.0f;
+			w->position.z = sizeY - 0.125f - ((float)i*0.25);
 			walls.push_back( w );
-			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = 2*sizeX/3.0f;
-			walls[wcount]->position.z = sizeY - 0.125 - ((float)i*0.25);
-			wcount++;
 		}
-
 		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 7 )
 	{
-		unsigned int wcount = 0;
 		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = 0.125f + ((float)i*0.25);
+			w->position.z = 2.0f*sizeY/3.0f;
 			walls.push_back( w );
-			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = 0.125f + ((float)i*0.25);
-			walls[wcount]->position.z = 2*sizeY/3.0f;
-			wcount++;
 		}
 		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = sizeX - 0.125f - ((float)i*0.25);
+			w->position.z = sizeY/3.0f;
 			walls.push_back( w );
-			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = sizeX - 0.125f - ((float)i*0.25);
-			walls[wcount]->position.z = sizeY/3.0f;
-			wcount++;
 		}
-
 		Textmessage::Instance()->add(buf);
 	}
-
 	else if ( settings->walltype == 8 )
 	{
-		unsigned int wcount = 0;
 		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = 0.125f + ((float)i*0.25);
+			w->position.z = sizeY/3.0f;
 			walls.push_back( w );
-			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = 0.125 + ((float)i*0.25);
-			walls[wcount]->position.z = sizeY/3.0f;
-			wcount++;
 		}
 		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
 		{
 			Wall *w = new Wall();
+			w->position.x = sizeX - 0.125f - ((float)i*0.25);
+			w->position.z = 2.0f*sizeY/3.0f;
 			walls.push_back( w );
-			walls[wcount]->resize(0.25f);
-			walls[wcount]->position.x = sizeX - 0.125 - ((float)i*0.25);
-			walls[wcount]->position.z = 2*sizeY/3.0f;
-			wcount++;
+		}
+		Textmessage::Instance()->add(buf);
+	}
+	else if ( settings->walltype == 9 )
+	{
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
+		{
+			Wall *w = new Wall();
+			w->position.x = 2.0f*sizeX/5.0f;
+			w->position.z = 0.125f + ((float)i*0.25);
+			walls.push_back( w );
+
+			w = new Wall();
+			w->position.x = 4.0f*sizeX/5.0f;
+			w->position.z = 0.125f + ((float)i*0.25);
+			walls.push_back( w );
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
+		{
+			Wall *w = new Wall();
+			w->position.x = (float)sizeX/5.0f;
+			w->position.z = (float)sizeY - 0.125f - ((float)i*0.25);
+			walls.push_back( w );
+			w = new Wall();
+
+			w->position.x = 3.0f*sizeX/5.0f;
+			w->position.z = (float)sizeY - 0.125f - ((float)i*0.25);
+			walls.push_back( w );
+		}
+		Textmessage::Instance()->add(buf);
+	}
+	else if ( settings->walltype == 10 )
+	{
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
+		{
+			Wall *w = new Wall();
+			w->position.x = sizeX/5.0f;
+			w->position.z = 0.125f + ((float)i*0.25);
+			walls.push_back( w );
+
+			w = new Wall();
+			w->position.x = 3.0f*sizeX/5.0f;
+			w->position.z = 0.125f + ((float)i*0.25);
+			walls.push_back( w );
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
+		{
+			Wall *w = new Wall();
+			w->position.x = 2.0f*sizeX/5.0f;
+			w->position.z = sizeY - 0.125f - ((float)i*0.25);
+			walls.push_back( w );
+
+			w = new Wall();
+			w->position.x = 4.0f*sizeX/5.0f;
+			w->position.z = sizeY - 0.125f - ((float)i*0.25);
+			walls.push_back( w );
+		}
+		Textmessage::Instance()->add(buf);
+	}
+	else if ( settings->walltype == 11 )
+	{
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
+		{
+			Wall *w = new Wall();
+			w->position.x = 0.125f + ((float)i*0.25);
+			w->position.z = 2.0f*sizeY/5.0f;
+			walls.push_back( w );
+
+			w = new Wall();
+			w->position.x = 0.125f + ((float)i*0.25);
+			w->position.z = 4.0f*sizeY/5.0f;
+			walls.push_back( w );
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
+		{
+			Wall *w = new Wall();
+			w->position.x = sizeX - 0.125f - ((float)i*0.25);
+			w->position.z = sizeY/5.0f;
+			walls.push_back( w );
+
+			w = new Wall();
+			w->position.x = sizeX - 0.125f - ((float)i*0.25);
+			w->position.z = 3.0f*sizeY/5.0f;
+			walls.push_back( w );
+		}
+		Textmessage::Instance()->add(buf);
+	}
+	else if ( settings->walltype == 12 )
+	{
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
+		{
+			Wall *w = new Wall();
+			w->position.x = 0.125f + ((float)i*0.25);
+			w->position.z = sizeY/5.0f;
+			walls.push_back( w );
+
+			w = new Wall();
+			w->position.x = 0.125f + ((float)i*0.25);
+			w->position.z = 3.0f*sizeY/5.0f;
+			walls.push_back( w );
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
+		{
+			Wall *w = new Wall();
+			w->position.x = sizeX - 0.125f - ((float)i*0.25);
+			w->position.z = 2.0f*sizeY/5.0f;
+			walls.push_back( w );
+
+			w = new Wall();
+			w->position.x = sizeX - 0.125f - ((float)i*0.25);
+			w->position.z = 4.0f*sizeY/5.0f;
+			walls.push_back( w );
+		}
+		Textmessage::Instance()->add(buf);
+	}
+	else if ( settings->walltype == 13 || settings->walltype == 14 )
+	{
+		unsigned int gap = 3;
+		for ( unsigned int i = 0; i < (unsigned int)(2.0f*sizeX); i++ )
+		{
+			if ( i >= gap && i < (unsigned int)(2.0f*sizeX)-gap )
+			{
+				Wall *w = new Wall();
+				w->position.x = sizeX/4.0f + 0.125f + ((float)i*0.25);
+				w->position.z = sizeY/4.0f;
+				walls.push_back( w );
+
+				w = new Wall();
+				w->position.x = sizeX/4.0f + 0.125f + ((float)i*0.25);
+				w->position.z = 3.0f*sizeY/4.0f;
+				walls.push_back( w );
+			}
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(2.0f*sizeY); i++ )
+		{
+			if ( i >= gap && i < (unsigned int)(2.0f*sizeY)-gap )
+			{
+				Wall *w = new Wall();
+				w->position.x = sizeX/4.0f;
+				w->position.z = sizeY/4.0f + 0.125f + ((float)i*0.25);
+				walls.push_back( w );
+
+				w = new Wall();
+				w->position.x = 3.0f*sizeX/4.0f;
+				w->position.z = sizeY/4.0f + 0.125f + ((float)i*0.25);
+				walls.push_back( w );
+			}
+		}
+
+		if ( settings->walltype == 14 )
+		{
+			for ( unsigned int i = 0; i < (unsigned int)sizeX; i++ )
+			{
+				if ( i >= gap && i < (unsigned int)sizeX-gap )
+				{
+					Wall *w = new Wall();
+					w->position.x = 0.125f + ((float)i*0.25);
+					w->position.z = sizeY/4.0f;
+					walls.push_back( w );
+
+					w = new Wall();
+					w->position.x = 3.0f*sizeX/4.0f + 0.125f + ((float)i*0.25);
+					w->position.z = sizeY/4.0f;
+					walls.push_back( w );
+
+					w = new Wall();
+					w->position.x = 3.0f*sizeX/4.0f + 0.125f + ((float)i*0.25);
+					w->position.z = 3.0f*sizeY/4.0f;
+					walls.push_back( w );
+
+					w = new Wall();
+					w->position.x = 0.125f + ((float)i*0.25);
+					w->position.z = 3.0f*sizeY/4.0f;
+					walls.push_back( w );
+				}
+			}
+			for ( unsigned int i = 0; i < (unsigned int)sizeY; i++ )
+			{
+				if ( i >= gap && i < (unsigned int)sizeY-gap )
+				{
+					Wall *w = new Wall();
+					w->position.x = sizeX/4.0f;
+					w->position.z = 0.125f + ((float)i*0.25);
+					walls.push_back( w );
+
+					w = new Wall();
+					w->position.x = sizeX/4.0f;
+					w->position.z = 3.0f*sizeY/4.0f + 0.125f + ((float)i*0.25);
+					walls.push_back( w );
+
+					w = new Wall();
+					w->position.x = 3.0f*sizeX/4.0f;
+					w->position.z = 3.0f*sizeY/4.0f + 0.125f + ((float)i*0.25);
+					walls.push_back( w );
+
+					w = new Wall();
+					w->position.x = 3.0f*sizeX/4.0f;
+					w->position.z = 0.125f + ((float)i*0.25);
+					walls.push_back( w );
+				}
+			}
+			Textmessage::Instance()->add(buf);
 		}
 
 		Textmessage::Instance()->add(buf);
@@ -1352,7 +1526,7 @@ bool WorldB::spotIsFree(Vector3f &position, float halfsize, unsigned int exclude
 
 		if ( !w->disabled )
 		{
-			float avgSize = halfsize + w->halfsize;
+			float avgSize = halfsize + w->straal;
 			if ( fabs( position.x - w->position.x ) <= avgSize && fabs( position.z - w->position.z ) <= avgSize )
 			{
 				return false;
@@ -1367,7 +1541,7 @@ bool WorldB::spotIsFree(Vector3f &position, float halfsize, unsigned int exclude
 		if ( j != exclude )
 		{
 			CritterB *cj = critters[j];
-			float avgSize = halfsize + cj->halfsize;
+			float avgSize = halfsize + cj->straal;
 			if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
 			{
 				return false;
@@ -1400,7 +1574,7 @@ bool WorldB::spotIsFree(Vector3f &position, float halfsize)
 
 		if ( !w->disabled )
 		{
-			float avgSize = halfsize + w->halfsize;
+			float avgSize = halfsize + w->straal;
 			if ( fabs( position.x - w->position.x ) <= avgSize &&  fabs( position.z - w->position.z ) <= avgSize )
 			{
 				return false;
@@ -1413,7 +1587,7 @@ bool WorldB::spotIsFree(Vector3f &position, float halfsize)
 	for ( unsigned int j=0; j < critters.size(); j++ )
 	{
 		CritterB *cj = critters[j];
-		float avgSize = halfsize + cj->halfsize;
+		float avgSize = halfsize + cj->straal;
 		if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
 		{
 			return false;
@@ -1426,16 +1600,44 @@ bool WorldB::spotIsFree(Vector3f &position, float halfsize)
 Vector3f WorldB::findEmptySpace(float halfsize)
 {
 	Vector3f pos;
-	pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
-	pos.y = halfsize;
-	pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+	bool placed = false;
 
-	while ( !spotIsFree(pos, halfsize) )
+	if ( !placed )
+	{
+		if ( randgen->Instance()->get( 0, 1 ) == 1 )
+		{
+			placed=true;
+
+			float qwidth = sizeX / 4.0f;
+			float qheight = sizeY / 4.0f;
+
+			pos.x = (float)randgen->Instance()->get( 100*qwidth, 300*qwidth ) / 100;
+			pos.y = halfsize;
+			pos.z = (float)randgen->Instance()->get( 100*qheight, 300*qheight ) / 100;
+
+			while ( !spotIsFree(pos, halfsize) )
+			{
+				pos.x = (float)randgen->Instance()->get( 100*qwidth, 300*qwidth ) / 100;
+				pos.y = halfsize;
+				pos.z = (float)randgen->Instance()->get( 100*qheight, 300*qheight ) / 100;
+			}
+		}
+	}
+
+	if ( !placed )
 	{
 		pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
 		pos.y = halfsize;
 		pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+
+		while ( !spotIsFree(pos, halfsize) )
+		{
+			pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
+			pos.y = halfsize;
+			pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+		}
 	}
+
 	return pos;
 }
 

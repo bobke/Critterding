@@ -17,6 +17,8 @@ class Corpse
 
 		float			size;
 		float			halfsize;
+		float			straal;
+
 		float			energy;
 
 		Vector3f		position;
