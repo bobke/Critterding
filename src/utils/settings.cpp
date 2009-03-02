@@ -10,8 +10,8 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsizeX			= 20;
-	worldsizeY			= 15;
+	worldsizeX			= 24;
+	worldsizeY			= 18;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
 	startenergy			= 250;
@@ -29,6 +29,9 @@ Settings::Settings()
 	walltype			= 0;
 		walltypeMin			= 0;
 		walltypeMax			= 14;
+	spreadertype			= 0;
+		spreadertypeMin			= 0;
+		spreadertypeMax			= 3;
 	exit_if_empty			= false;
 	autoload			= false;
 
@@ -242,6 +245,7 @@ void Settings::createHelpInfo()
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
 	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;
 	helpinfo << "  --walltype                  [" << walltype << "]  Walltype" << endl;
+	helpinfo << "  --spreadertype              [" << spreadertype << "]  Manner in which newly inserted food/critters will be inserted the world" << endl;
 	helpinfo << "  --exit-if-empty                   If set, the program will exit when no are left" << endl;
 	helpinfo << "  --autoload                        If set, critters from the load directory will be loaded at startup" << endl;
 
@@ -380,6 +384,7 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("retinasperrow ", retinasperrow, retinasperrowMin, retinasperrowMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("camerasensitivity ", camerasensitivity, camerasensitivityMin, camerasensitivityMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("walltype", walltype, walltypeMin, walltypeMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("spreadertype", spreadertype, spreadertypeMin, spreadertypeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("exit-if-empty", exit_if_empty, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("autoload", autoload, line) ) uselesscounter++;
 
@@ -517,6 +522,7 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--retinasperrow", retinasperrow, retinasperrowMin, retinasperrowMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--camerasensitivity", camerasensitivity, camerasensitivityMin, camerasensitivityMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--walltype", walltype, walltypeMin, walltypeMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--spreadertype", spreadertype, spreadertypeMin, spreadertypeMax, optind, argv) ) optind++;
 		else if ( sw=="--exit-if-empty") exit_if_empty = true;
 		else if ( sw=="--autoload") autoload = true;
 
@@ -740,6 +746,7 @@ void Settings::printSettings()
 	cerr << "retinasperrow " << retinasperrow << endl;
 	cerr << "camerasensitivity " << camerasensitivity << endl;
 	cerr << "walltype " << walltype << endl;
+	cerr << "spreadertype " << spreadertype << endl;
 	cerr << "exit-if-empty " << exit_if_empty << endl << endl;
 	cerr << "autoload " << autoload << endl << endl;
 

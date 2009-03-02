@@ -259,10 +259,26 @@ void Evolution::handlekey(const KeySym& key)
 				world.isSelected = true;
 			}
 		break;
+		case XK_s:
+		{
+			settings->spreadertype++;
+			if ( settings->spreadertype > settings->spreadertypeMax )
+				settings->spreadertype = settings->spreadertypeMin;
+			stringstream buf;
+			buf << "Spreader type: "<< settings->spreadertype;
+			Textmessage::Instance()->add(buf);
+		}
+		break;
 		case XK_w:
+		{
 			settings->walltype++;
-			if ( settings->walltype > settings->walltypeMax ) settings->walltype = settings->walltypeMin;
+			if ( settings->walltype > settings->walltypeMax )
+				settings->walltype = settings->walltypeMin;
 			world.createWall();
+			stringstream buf;
+			buf << "Wall type: " << settings->walltype;
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 		case XK_x:
 			settings->walltype = 0;
