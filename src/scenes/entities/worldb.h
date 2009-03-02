@@ -40,8 +40,8 @@ class WorldB
 
 		unsigned long		currentCritterID;
 
-		unsigned int		sizeX;
-		unsigned int		sizeY;
+		float			sizeX;
+		float			sizeY;
 		float			freeEnergy;
 		//float			freeEnergyInfo;
 

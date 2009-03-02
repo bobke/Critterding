@@ -534,6 +534,7 @@ void CritterB::resize(float newsize)
 {
 	size		= newsize;
 	halfsize	= newsize / 2.0f;
+	straal		= (newsize * 1.4142136f)/2.0f;
 
 	calcCamPos();
 }

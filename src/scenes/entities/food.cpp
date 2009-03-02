@@ -15,7 +15,8 @@ void Food::resize()
 
 	size = settings->food_lifeenergyratio * energy;
 
-	halfsize = size / 2.0f;
+	halfsize	= size / 2.0f;
+	straal		= (size * 1.4142136f)/2.0f;
 
 	// change position according to height
 	position.y = halfsize;

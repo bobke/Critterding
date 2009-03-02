@@ -37,6 +37,7 @@ class CritterB
 
 		float			size;
 		float			halfsize;
+		float			straal;
 		float			speedfactor;
 		Vector3f		position;
 		Vector3f		newposition;
