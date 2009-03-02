@@ -872,9 +872,6 @@ void WorldB::createWall()
 {
 	destroyWall();
 
-	stringstream buf;
-	buf << "Wall type: " << settings->walltype;
-
 	if ( settings->walltype == 1 )
 	{
 		for ( unsigned int i=0; i < 4*sizeY; i++ )
@@ -884,7 +881,6 @@ void WorldB::createWall()
 			w->position.z = 0.125f + ((float)i*0.25);
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 2 )
@@ -900,8 +896,6 @@ void WorldB::createWall()
 		walls[ (unsigned int)(sizeY*2.0f)-1 ]->toggle();
 		walls[ (unsigned int)(sizeY*2.0f)   ]->toggle();
 		walls[ (unsigned int)(sizeY*2.0f)+1 ]->toggle();
-
-		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 3 )
@@ -913,7 +907,6 @@ void WorldB::createWall()
 			w->position.z = sizeY/2.0f;
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 4 )
@@ -929,8 +922,6 @@ void WorldB::createWall()
 		walls[ (unsigned int)(sizeX*2.0f)-1 ]->toggle();
 		walls[ (unsigned int)(sizeX*2.0f)   ]->toggle();
 		walls[ (unsigned int)(sizeX*2.0f)+1 ]->toggle();
-
-		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 5 )
@@ -949,7 +940,6 @@ void WorldB::createWall()
 			w->position.z = sizeY - 0.125f - ((float)i*0.25);
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 6 )
@@ -968,7 +958,6 @@ void WorldB::createWall()
 			w->position.z = sizeY - 0.125f - ((float)i*0.25);
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 
 	else if ( settings->walltype == 7 )
@@ -987,7 +976,6 @@ void WorldB::createWall()
 			w->position.z = sizeY/3.0f;
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 	else if ( settings->walltype == 8 )
 	{
@@ -1005,7 +993,6 @@ void WorldB::createWall()
 			w->position.z = 2.0f*sizeY/3.0f;
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 	else if ( settings->walltype == 9 )
 	{
@@ -1033,7 +1020,6 @@ void WorldB::createWall()
 			w->position.z = (float)sizeY - 0.125f - ((float)i*0.25);
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 	else if ( settings->walltype == 10 )
 	{
@@ -1061,7 +1047,6 @@ void WorldB::createWall()
 			w->position.z = sizeY - 0.125f - ((float)i*0.25);
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 	else if ( settings->walltype == 11 )
 	{
@@ -1089,7 +1074,6 @@ void WorldB::createWall()
 			w->position.z = 3.0f*sizeY/5.0f;
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 	else if ( settings->walltype == 12 )
 	{
@@ -1117,7 +1101,6 @@ void WorldB::createWall()
 			w->position.z = 4.0f*sizeY/5.0f;
 			walls.push_back( w );
 		}
-		Textmessage::Instance()->add(buf);
 	}
 	else if ( settings->walltype == 13 || settings->walltype == 14 )
 	{
@@ -1205,10 +1188,7 @@ void WorldB::createWall()
 					walls.push_back( w );
 				}
 			}
-			Textmessage::Instance()->add(buf);
 		}
-
-		Textmessage::Instance()->add(buf);
 	}
 
 }
@@ -1602,14 +1582,15 @@ Vector3f WorldB::findEmptySpace(float halfsize)
 	Vector3f pos;
 	bool placed = false;
 
-	if ( !placed )
+	float qwidth = sizeX / 4.0f;
+	float qheight = sizeY / 4.0f;
+
+	// inside square
+	if ( settings->spreadertype == 1 )
 	{
-		if ( randgen->Instance()->get( 0, 1 ) == 1 )
+		if ( randgen->Instance()->get( 1, 2 ) == 1 )
 		{
 			placed=true;
-
-			float qwidth = sizeX / 4.0f;
-			float qheight = sizeY / 4.0f;
 
 			pos.x = (float)randgen->Instance()->get( 100*qwidth, 300*qwidth ) / 100;
 			pos.y = halfsize;
@@ -1618,7 +1599,90 @@ Vector3f WorldB::findEmptySpace(float halfsize)
 			while ( !spotIsFree(pos, halfsize) )
 			{
 				pos.x = (float)randgen->Instance()->get( 100*qwidth, 300*qwidth ) / 100;
-				pos.y = halfsize;
+				pos.z = (float)randgen->Instance()->get( 100*qheight, 300*qheight ) / 100;
+			}
+		}
+	}
+
+	// outer ring
+	else if ( settings->spreadertype == 2 )
+	{
+		if ( randgen->Instance()->get( 1, 2 ) == 1 )
+		{
+			placed=true;
+
+			unsigned int mode = randgen->Instance()->get( 1, 2 );
+			// left/right
+			if ( mode == 1 )
+			{
+				pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+				unsigned int mode2 = randgen->Instance()->get( 1, 2 );
+				if ( mode2 == 1 )
+					pos.x = (float)randgen->Instance()->get( 300*qwidth, 100*sizeX ) / 100;
+				else
+					pos.x = (float)randgen->Instance()->get( 0, 100*qwidth ) / 100;
+			}
+			// top/bottom
+			else
+			{
+				pos.x = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+				unsigned int mode2 = randgen->Instance()->get( 1, 2 );
+				if ( mode2 == 1 )
+					pos.z = (float)randgen->Instance()->get( 300*qheight, 100*sizeY ) / 100;
+				else
+					pos.z = (float)randgen->Instance()->get( 0, 100*qheight ) / 100;
+			}
+			pos.y = halfsize;
+
+			while ( !spotIsFree(pos, halfsize) )
+			{
+				unsigned int mode = randgen->Instance()->get( 1, 2 );
+				// left/right
+				if ( mode == 1 )
+				{
+					pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+					unsigned int mode2 = randgen->Instance()->get( 1, 2 );
+					if ( mode2 == 1 )
+						pos.x = (float)randgen->Instance()->get( 300*qwidth, 100*sizeX ) / 100;
+					else
+						pos.x = (float)randgen->Instance()->get( 0, 100*qwidth ) / 100;
+				}
+				// top/bottom
+				else
+				{
+					pos.x = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+					unsigned int mode2 = randgen->Instance()->get( 1, 2 );
+					if ( mode2 == 1 )
+						pos.z = (float)randgen->Instance()->get( 300*qheight, 100*sizeY ) / 100;
+					else
+						pos.z = (float)randgen->Instance()->get( 0, 100*qheight ) / 100;
+				}
+			}
+		}
+	}
+
+	// the 4 courners
+	else if ( settings->spreadertype == 3 )
+	{
+		if ( randgen->Instance()->get( 1, 3 ) < 3 )
+		{
+			placed=true;
+
+			pos.y = halfsize;
+
+			if ( randgen->Instance()->get( 0, 1 ) == 1 )
+				pos.x = (float)randgen->Instance()->get( 0, 100*qwidth ) / 100;
+			else
+				pos.x = (float)randgen->Instance()->get( 300*qwidth, 400*qwidth ) / 100;
+
+			if ( randgen->Instance()->get( 0, 1 ) == 1 )
+				pos.z = (float)randgen->Instance()->get( 0, 100*qheight ) / 100;
+			else
+				pos.z = (float)randgen->Instance()->get( 300*qheight, 400*qheight ) / 100;
+
+			while ( !spotIsFree(pos, halfsize) )
+			{
+				pos.x = (float)randgen->Instance()->get( 100*qwidth, 300*qwidth ) / 100;
 				pos.z = (float)randgen->Instance()->get( 100*qheight, 300*qheight ) / 100;
 			}
 		}
@@ -1633,7 +1697,6 @@ Vector3f WorldB::findEmptySpace(float halfsize)
 		while ( !spotIsFree(pos, halfsize) )
 		{
 			pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
-			pos.y = halfsize;
 			pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
 		}
 	}

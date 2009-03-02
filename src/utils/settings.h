@@ -56,6 +56,9 @@ class Settings
 		unsigned int walltype;
 			unsigned int walltypeMin;
 			unsigned int walltypeMax;
+		unsigned int spreadertype;
+			unsigned int spreadertypeMin;
+			unsigned int spreadertypeMax;
 		bool exit_if_empty;
 		bool autoload;
 //		bool noverbose;
