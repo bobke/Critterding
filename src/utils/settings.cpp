@@ -10,11 +10,11 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsizeX			= 24;
-	worldsizeY			= 18;
+	worldsizeX			= 32;
+	worldsizeY			= 24;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
-	startenergy			= 250;
+	startenergy			= 200;
 		startenergyMin			= 0;
 		startenergyMax			= 1000000;
 	mincritters			= 10;
@@ -28,10 +28,10 @@ Settings::Settings()
 		camerasensitivityMax		= 1000;
 	walltype			= 0;
 		walltypeMin			= 0;
-		walltypeMax			= 14;
+		walltypeMax			= 15;
 	spreadertype			= 0;
 		spreadertypeMin			= 0;
-		spreadertypeMax			= 3;
+		spreadertypeMax			= 4;
 	exit_if_empty			= false;
 	autoload			= false;
 
@@ -47,7 +47,7 @@ Settings::Settings()
 	critter_procinterval		= 20;
 		critter_procintervalMin		= 1;
 		critter_procintervalMax		= 1000000;
-	critter_fireinterval		= 10;
+	critter_fireinterval		= 20;
 		critter_fireintervalMin		= 0;
 		critter_fireintervalMax		= 1000000;
 	critter_minenergyproc		= 3000;
@@ -56,7 +56,7 @@ Settings::Settings()
 	critter_minenergyfire		= 10;
 		critter_minenergyfireMin	= 0;
 		critter_minenergyfireMax	= 1000000;
-	critter_firecost		= 10;
+	critter_firecost		= 50;
 		critter_firecostMin		= 0;
 		critter_firecostMax		= 1000000;
 	critter_sizeI			= 10;
@@ -98,10 +98,10 @@ Settings::Settings()
 		food_sizeIMax			= 100;
 
 	corpse_disable			= false;
-	corpse_maxlifetime		= 2000;
+	corpse_maxlifetime		= 1000;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
-	corpse_maxenergy		= 3000;
+	corpse_maxenergy		= 2000;
 		corpse_maxenergyMin		= 1;
 		corpse_maxenergyMax		= 1000000;
 	corpse_sizeI			= 15;
@@ -134,7 +134,7 @@ Settings::Settings()
 		brain_maxsynapsesatbuildtimeMax			= 1000000;
 		brain_mutate_maxsynapsesatbuildtime		= false;
 
-	brain_percentchanceinhibitoryneuron		= 50;
+	brain_percentchanceinhibitoryneuron		= 40;
 		brain_percentchanceinhibitoryneuronMin		= 0;
 		brain_percentchanceinhibitoryneuronMax		= 100;
 		brain_mutate_percentchanceinhibitoryneuron	= false;

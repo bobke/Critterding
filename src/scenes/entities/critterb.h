@@ -3,6 +3,7 @@
 
 #include "../../utils/parser.h"
 #include "../../utils/randgen.h"
+#include "../../brainz/brain.h"
 #include "../../brainz/brainz.h"
 #include "../../utils/settings.h"
 #include "vector3f.h"

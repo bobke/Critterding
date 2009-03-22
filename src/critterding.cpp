@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	settings->doCommandLineOptions(argc,argv);
 
 	GLWindow glwindow;
-	glwindow.create("Critterding beta9", 640, 640, 24);
+	glwindow.create("Critterding 1.0-beta10", 640, 640, 24);
 
 		Evolution mainscene;
 

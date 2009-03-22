@@ -242,22 +242,22 @@ void CritterB::procInputNeurons()
 	// vision
 
 // see what it sees
-// 		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
-// 		{
-// 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=4 )
-// 			{
-// 				if ( (int)retina[w] ) cerr << "\033[1;31mR\033[0m";
-// 				else cerr << ".";
-// 				if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
-// 				else cerr << ".";
-// 				if ( (int)retina[w+2] ) cerr << "\033[1;34mB\033[0m";
-// 				else cerr << ".";
-// 				if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
-// 				else cerr << ".";
-// 			}
-// 			cerr << "" << endl;
-// 		}
-// 		cerr << "" << endl;
+/*		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
+		{
+			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=4 )
+			{
+				if ( (int)retina[w] ) cerr << "\033[1;31mR\033[0m";
+				else cerr << ".";
+				if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
+				else cerr << ".";
+				if ( (int)retina[w+2] ) cerr << "\033[1;34mB\033[0m";
+				else cerr << ".";
+				if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
+				else cerr << ".";
+			}
+			cerr << "" << endl;
+		}
+		cerr << "" << endl;*/
 // 		usleep (10000);
 
 		unsigned int i=0;
@@ -339,8 +339,92 @@ void CritterB::procOutputNeurons()
 {
 	motorneuronsfired = 0;
 
-	// there are 10 motor neurons
+	// there are 13 motor neurons
 
+
+// 	if ( brain.runlayers[1][0].output > 0 )
+// 	{
+// 		moveForward();
+// 		motorneuronsfired++;
+// 		movementsmade++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][1].output > 0 )
+// 	{
+// 		moveBackward();
+// 		motorneuronsfired++;
+// 		movementsmade++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][2].output > 0 )
+// 	{
+// 		moveLeft();
+// 		motorneuronsfired++;
+// 		movementsmade++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][3].output > 0 )
+// 	{
+// 		moveRight();
+// 		motorneuronsfired++;
+// 		movementsmade++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][4].output > 0 )
+// 	{
+// 		rotateLeft();
+// 		motorneuronsfired++;
+// 		movementsmade++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][5].output > 0 )
+// 	{
+// 		rotateRight();
+// 		motorneuronsfired++;
+// 		movementsmade++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][6].output > 0 )
+// 	{
+// 		eat = true;
+// 		motorneuronsfired++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][7].output > 0 )
+// 	{
+// 		fire = true;
+// 		motorneuronsfired++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][8].output > 0 )
+// 	{
+// 		procreate = true;
+// 		motorneuronsfired++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][9].output > 0 )
+// 	{
+// 		carrydrop = true;
+// 		motorneuronsfired++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][10].output > 0 )
+// 	{
+// 		nosecolor[0] = 1.0f;
+// 		motorneuronsfired++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][11].output > 0 )
+// 	{
+// 		nosecolor[1] = 1.0f;
+// 		motorneuronsfired++;
+// 	}
+// 
+// 	if ( brain.runlayers[1][12].output > 0 )
+// 	{
+// 		nosecolor[2] = 1.0f;
+// 		motorneuronsfired++;
+// 	}
 	if ( brain.Outputs[0].output > 0 )
 	{
 		moveForward();
