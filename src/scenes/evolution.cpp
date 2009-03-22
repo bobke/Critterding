@@ -361,7 +361,7 @@ void Evolution::resetCamera()
 	if ( world.sizeY > biggest )
 		biggest = 1.4f*world.sizeY;
 
-	camera.position = Vector3f(-0.5f*world.sizeX, -1.1f*biggest, -1.05875f*world.sizeY);
+	camera.position = Vector3f(-0.5f*world.sizeX, -1.1f*biggest, -0.87*world.sizeY);
 	camera.rotation = Vector3f( 70.0f,  0.0f, 0.0f);
 }
 

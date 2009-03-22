@@ -1,5 +1,7 @@
 #include "worldb.h"
 
+// FIXME PUT C/H IN CRITTER FILENAME
+
 WorldB::WorldB()
 {
 	settings = Settings::Instance();
@@ -336,6 +338,8 @@ void WorldB::process()
 			picheight += settings->critter_retinasize;
 			rows -= settings->retinasperrow;
 		}
+ 		glReadBuffer(GL_BACK);
+ 		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 	}
 
@@ -787,12 +791,14 @@ void WorldB::removeCritter(unsigned int cid)
 		c->position = critters[cid]->position;
 
 		// put max energy allowed in corpse
-		if ( critters[cid]->energyLevel > settings->corpse_maxenergy )
-			c->energy = settings->corpse_maxenergy;
-		else
-			c->energy = critters[cid]->energyLevel;
+// 		if ( critters[cid]->energyLevel > settings->corpse_maxenergy )
+// 			c->energy = settings->corpse_maxenergy;
+// 		else
+// 			c->energy = critters[cid]->energyLevel;
 
-		// put rest back in space
+		c->energy = settings->corpse_maxenergy;
+
+// 		// put rest back in space
 		freeEnergy += critters[cid]->energyLevel;
 		freeEnergy -= c->energy;
 
@@ -1104,10 +1110,11 @@ void WorldB::createWall()
 	}
 	else if ( settings->walltype == 13 || settings->walltype == 14 )
 	{
-		unsigned int gap = 3;
+		unsigned int gapX = sizeX/4.0f;
+		unsigned int gapY = sizeY/4.0f;
 		for ( unsigned int i = 0; i < (unsigned int)(2.0f*sizeX); i++ )
 		{
-			if ( i >= gap && i < (unsigned int)(2.0f*sizeX)-gap )
+			if ( i >= gapX && i < (unsigned int)(2.0f*sizeX)-gapX )
 			{
 				Wall *w = new Wall();
 				w->position.x = sizeX/4.0f + 0.125f + ((float)i*0.25);
@@ -1122,7 +1129,7 @@ void WorldB::createWall()
 		}
 		for ( unsigned int i = 0; i < (unsigned int)(2.0f*sizeY); i++ )
 		{
-			if ( i >= gap && i < (unsigned int)(2.0f*sizeY)-gap )
+			if ( i >= gapY && i < (unsigned int)(2.0f*sizeY)-gapY )
 			{
 				Wall *w = new Wall();
 				w->position.x = sizeX/4.0f;
@@ -1140,7 +1147,7 @@ void WorldB::createWall()
 		{
 			for ( unsigned int i = 0; i < (unsigned int)sizeX; i++ )
 			{
-				if ( i >= gap && i < (unsigned int)sizeX-gap )
+				if ( i >= gapX && i < (unsigned int)sizeX-gapX )
 				{
 					Wall *w = new Wall();
 					w->position.x = 0.125f + ((float)i*0.25);
@@ -1165,7 +1172,7 @@ void WorldB::createWall()
 			}
 			for ( unsigned int i = 0; i < (unsigned int)sizeY; i++ )
 			{
-				if ( i >= gap && i < (unsigned int)sizeY-gap )
+				if ( i >= gapY && i < (unsigned int)sizeY-gapY )
 				{
 					Wall *w = new Wall();
 					w->position.x = sizeX/4.0f;
@@ -1189,6 +1196,76 @@ void WorldB::createWall()
 				}
 			}
 		}
+	}
+	else if ( settings->walltype == 15 )
+	{
+		unsigned int gapX = sizeX/4.0f;
+		unsigned int gapY = sizeY/4.0f;
+		for ( unsigned int i = 0; i < (unsigned int)(8.0f*sizeX/6.0f); i++ )
+		{
+			if ( i >= gapX && i < (unsigned int)(8.0f*sizeX/6.0f)-gapX )
+			{
+				Wall *w = new Wall();
+				w->position.x = sizeX/6.0f*2.0f + 0.125f + ((float)i*0.25);
+				w->position.z = sizeY/6.0f*2.0f;
+				walls.push_back( w );
+
+				w = new Wall();
+				w->position.x = sizeX/6.0f*2.0f + 0.125f + ((float)i*0.25);
+				w->position.z = 4.0f*sizeY/6.0f;
+				walls.push_back( w );
+			}
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(8.0f*sizeY/6.0f); i++ )
+		{
+			if ( i >= gapY && i < (unsigned int)(8.0f*sizeY/6.0f)-gapY )
+			{
+				Wall *w = new Wall();
+				w->position.x = sizeX/6.0f*2.0f;
+				w->position.z = sizeY/6.0f*2.0f + 0.125f + ((float)i*0.25);
+				walls.push_back( w );
+
+				w = new Wall();
+				w->position.x = 4.0f*sizeX/6.0f;
+				w->position.z = sizeY/6.0f*2.0f + 0.125f + ((float)i*0.25);
+				walls.push_back( w );
+			}
+		}
+
+		gapX = sizeX/3.0f;
+		gapY = sizeY/3.0f;
+		for ( unsigned int i = 0; i < (unsigned int)(8.0f*sizeX/3.0f); i++ )
+		{
+			if ( i >= gapX && i < (unsigned int)(8.0f*sizeX/3.0f)-gapX )
+			{
+				Wall *w = new Wall();
+				w->position.x = sizeX/6.0f + 0.125f + ((float)i*0.25);
+				w->position.z = sizeY/6.0f;
+				walls.push_back( w );
+
+				w = new Wall();
+				w->position.x = sizeX/6.0f + 0.125f + ((float)i*0.25);
+				w->position.z = 5.0f*sizeY/6.0f;
+				walls.push_back( w );
+			}
+		}
+		for ( unsigned int i = 0; i < (unsigned int)(8.0f*sizeY/3.0f); i++ )
+		{
+			if ( i >= gapY && i < (unsigned int)(8.0f*sizeY/3.0f)-gapY )
+			{
+				Wall *w = new Wall();
+				w->position.x = sizeX/6.0f;
+				w->position.z = sizeY/6.0f + 0.125f + ((float)i*0.25);
+				walls.push_back( w );
+
+				w = new Wall();
+				w->position.x = 5.0f*sizeX/6.0f;
+				w->position.z = sizeY/6.0f + 0.125f + ((float)i*0.25);
+				walls.push_back( w );
+			}
+		}
+
+
 	}
 
 }
@@ -1585,10 +1662,16 @@ Vector3f WorldB::findEmptySpace(float halfsize)
 	float qwidth = sizeX / 4.0f;
 	float qheight = sizeY / 4.0f;
 
+// 	float fwidth = sizeX / 5.0f;
+// 	float fheight = sizeY / 5.0f;
+
+	float swidth = sizeX / 6.0f;
+	float sheight = sizeY / 6.0f;
+
 	// inside square
 	if ( settings->spreadertype == 1 )
 	{
-		if ( randgen->Instance()->get( 1, 2 ) == 1 )
+		if ( randgen->Instance()->get( 1, 3 ) < 3 )
 		{
 			placed=true;
 
@@ -1607,7 +1690,7 @@ Vector3f WorldB::findEmptySpace(float halfsize)
 	// outer ring
 	else if ( settings->spreadertype == 2 )
 	{
-		if ( randgen->Instance()->get( 1, 2 ) == 1 )
+		if ( randgen->Instance()->get( 1, 3 ) < 3 )
 		{
 			placed=true;
 
@@ -1684,6 +1767,41 @@ Vector3f WorldB::findEmptySpace(float halfsize)
 			{
 				pos.x = (float)randgen->Instance()->get( 100*qwidth, 300*qwidth ) / 100;
 				pos.z = (float)randgen->Instance()->get( 100*qheight, 300*qheight ) / 100;
+			}
+		}
+	}
+
+	// 2 squares in fifths
+	else if ( settings->spreadertype == 4 )
+	{
+		// inside square
+		if ( randgen->Instance()->get( 1, 10 ) > 6 )
+		{
+			placed=true;
+
+			pos.x = (float)randgen->Instance()->get( 200*swidth, 400*swidth ) / 100;
+			pos.y = halfsize;
+			pos.z = (float)randgen->Instance()->get( 200*sheight, 400*sheight ) / 100;
+
+			while ( !spotIsFree(pos, halfsize) )
+			{
+				pos.x = (float)randgen->Instance()->get( 200*swidth, 400*swidth ) / 100;
+				pos.z = (float)randgen->Instance()->get( 200*sheight, 400*sheight ) / 100;
+			}
+		}
+		// outside square
+		else if ( randgen->Instance()->get( 1, 10 ) > 3 )
+		{
+			placed=true;
+
+			pos.x = (float)randgen->Instance()->get( 100*swidth, 500*swidth ) / 100;
+			pos.y = halfsize;
+			pos.z = (float)randgen->Instance()->get( 100*sheight, 500*sheight ) / 100;
+
+			while ( !spotIsFree(pos, halfsize) )
+			{
+				pos.x = (float)randgen->Instance()->get( 100*swidth, 500*swidth ) / 100;
+				pos.z = (float)randgen->Instance()->get( 100*sheight, 500*sheight ) / 100;
 			}
 		}
 	}

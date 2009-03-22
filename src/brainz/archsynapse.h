@@ -12,6 +12,7 @@ class ArchSynapse
 	
 		// id of neuron which axon connects to this synapse
 			unsigned int	neuronID;
+			unsigned int	neurontargetlayer;
 	
 		// dendridic weight according
 			unsigned int	dendriteBranch;
