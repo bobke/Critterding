@@ -18,7 +18,7 @@ void CritterB::initConst()
 	sightrange = settings->critter_sightrange;
 
 	components		= 4;
-	colorTrim		= 0.3f; // (1/256) * 96
+	colorTrim		= 0.15f;
 }
 
 CritterB::CritterB()
@@ -28,6 +28,7 @@ CritterB::CritterB()
 	crittertype		= 0;
 	adamdist		= 0;
 
+	lifetime						= settings->critter_maxlifetime;
 	retinasize						= settings->critter_retinasize;
 
 	brain.maxNeurons					= settings->brain_maxneurons;
@@ -92,6 +93,10 @@ CritterB::CritterB()
 	color[1] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[2] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
+	speciescolor[0] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[1] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[2] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+
 	items = retinasize * retinasize * components;
 	//brain.numberOfInputs = items+26; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron + 3 my color neurons
 	brain.numberOfInputs = items+29; // 1 over food + 1 over corpse + 1 can fire bullet + 1 can procreate + 10 energy neurons + 10 age neurons + 1 carrying food neuron + 1 carrying corpse neuron + 3 my color neurons
@@ -106,6 +111,10 @@ CritterB::CritterB(string &critterstring)
 
 	loadCritterB(critterstring);
 
+	speciescolor[0] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[1] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[2] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+
 	items = retinasize * retinasize * components;
 }
 
@@ -117,9 +126,14 @@ CritterB::CritterB(CritterB &other)
 	color[1]					= other.color[1];
 	color[2]					= other.color[2];
 
+	speciescolor[0]					= other.speciescolor[0];
+	speciescolor[1]					= other.speciescolor[1];
+	speciescolor[2]					= other.speciescolor[2];
+
 	crittertype					= other.crittertype;
 	adamdist					= other.adamdist;
 	retinasize					= other.retinasize;
+	lifetime					= other.lifetime;
 
 	brain.copyFrom(other.brain);
 
@@ -529,6 +543,21 @@ void CritterB::mutate()
 		}
 	}
 
+	// mutate lifetime
+	if ( randgen->Instance()->get(1,10) <= 5 )
+	{
+		if ( randgen->Instance()->get(1,2) == 1 )
+		{
+			lifetime -= lifetime/20;
+		}
+		else
+		{
+			lifetime += lifetime/20;
+			if ( lifetime > settings->critter_maxlifetime )
+				lifetime = settings->critter_maxlifetime;
+		}
+	}
+
 	// mutate color
 	unsigned int mode = randgen->Instance()->get(1,2);
 	unsigned int ncolor = randgen->Instance()->get(1,2);
@@ -562,6 +591,12 @@ void CritterB::mutate()
 			if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
 		}
 	}
+
+	// a new speciescolor
+	speciescolor[0] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[1] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[2] = (float)randgen->Instance()->get( 10*colorTrim,100 ) / 100.0f;
+
 
 	unsigned int runs = randgen->Instance()->get(1, settings->critter_maxmutations);
 	brain.mutate( runs ); // 0 for random
@@ -798,13 +833,21 @@ void CritterB::resize(float newsize)
 					//cerr << "AD: " << AD << endl;
 					if(EOF == sscanf(AD.c_str(), "%d", &adamdist)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
-	
+
 			// retinasize=9;
 				else if ( parseH->Instance()->beginMatchesStrip( "retinasize=", line ) )
 				{
 					string RES = parseH->Instance()->returnUntillStrip( ";", line );
 					//cerr << "RES: " << RES << endl;
 					if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
+				}
+
+			// lifetime=2000;
+				else if ( parseH->Instance()->beginMatchesStrip( "lifetime=", line ) )
+				{
+					string LIF = parseH->Instance()->returnUntillStrip( ";", line );
+					//cerr << "RES: " << RES << endl;
+					if(EOF == sscanf(LIF.c_str(), "%d", &lifetime)) cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 
 			// the rest goes to the brain
@@ -829,6 +872,7 @@ void CritterB::resize(float newsize)
 		buf << "type=" << crittertype << ";\n";
 		buf << "adamdist=" << adamdist << ";\n";
 		buf << "retinasize=" << retinasize << ";\n";
+		buf << "lifetime=" << lifetime << ";\n";
 
 		string* arch = brain.getArch();
 		buf << *arch;

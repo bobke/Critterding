@@ -14,6 +14,8 @@ WorldB::WorldB()
 	doTimedInserts		= false;
 	timedInsertsCounter	= 0;
 
+	insertCritterCounter	= 0;
+
 	autosaveCounter		= 0.0f;
 
 	// home & program directory
@@ -220,8 +222,24 @@ void WorldB::process()
 	}
 
 	// insert critter if < minimum
-	if ( critters.size() < settings->mincritters ) insertCritter();
+	if ( critters.size() < settings->mincritters )
+		insertCritter();
 
+	// insert critter if insertcritterevery is reached
+	if ( settings->insertcritterevery > 0 )
+	{
+		if ( insertCritterCounter >= settings->insertcritterevery )
+		{
+			insertCritter();
+			insertCritterCounter = 0;
+		}
+		else
+		{
+			insertCritterCounter++;
+		}
+	}
+
+	
 	// Remove food
 	for( unsigned int i=0; i < food.size(); i++)
 	{
@@ -278,10 +296,9 @@ void WorldB::process()
 		// see if energy level isn't below 0 -> die, or die of old age
 		if ( critters[i]->energyLevel <= 0.0f )
 		{
-//			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " starved" << endl;
-/*			if (!settings->noverbose)
-			{*/
-// 			}
+			stringstream buf;
+			buf << setw(4) << critters[i]->critterID << " starved";
+			Textverbosemessage::Instance()->addDeath(buf);
 
 			removeCritter(i);
 			i--;
@@ -289,18 +306,15 @@ void WorldB::process()
 		// see if died from bullet
 		else if ( critters[i]->totalFrames > settings->critter_maxlifetime && critters[i]->wasShot )
 		{
-			//if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " killed" << endl;
-/*			if (!settings->noverbose)
-			{*/
-				stringstream buf;
-				buf << setw(4) << critters[i]->critterID << " killed";
-				Textverbosemessage::Instance()->addDeath(buf);
-// 			}
+			stringstream buf;
+			buf << setw(4) << critters[i]->critterID << " killed";
+			Textverbosemessage::Instance()->addDeath(buf);
+
 			removeCritter(i);
 			i--;
 		}
 		// die of old age
-		else if ( critters[i]->totalFrames > settings->critter_maxlifetime )
+		else if ( critters[i]->totalFrames > critters[i]->lifetime )
 		{
 //			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " old" << endl;
 /*			if (!settings->noverbose)
@@ -1379,7 +1393,9 @@ void WorldB::drawWithGrid()
 	// draw floor
 	grid.draw();
 
-	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
+	float dimmer = 0.3f;
+	
+	glColor4f( 0.0f, dimmer, 0.0f, 1.0f );
 	for( unsigned int i=0; i < food.size(); i++)
 	{
 		Food *f = food[i];
@@ -1390,7 +1406,7 @@ void WorldB::drawWithGrid()
 		glPopMatrix();
 	}
 
-	glColor4f( 0.5f, 0.0f, 0.0f, 0.5f );
+	glColor4f( dimmer, 0.0f, 0.0f, 0.5f );
 	for( unsigned int i=0; i < corpses.size(); i++)
 	{
 		Corpse *f = corpses[i];
@@ -1401,7 +1417,7 @@ void WorldB::drawWithGrid()
 		glPopMatrix();
 	}
 
-	glColor4f( 0.5f, 0.5f, 0.0f, 0.0f );
+	glColor4f( dimmer, dimmer, 0.0f, 0.0f );
 	for( unsigned int i=0; i < walls.size(); i++)
 	{
 		Wall *f = walls[i];
@@ -1435,7 +1451,7 @@ void WorldB::drawWithGrid()
 			glScalef( f->halfsize, f->halfsize, f->halfsize );
 
 				// body
-				glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
+				glColor4f( f->speciescolor[0], f->speciescolor[1], f->speciescolor[2], 0.0f );
 				glCallList(displayLists+1);
 
 				// nose
@@ -1747,7 +1763,7 @@ Vector3f WorldB::findEmptySpace(float halfsize)
 	// the 4 courners
 	else if ( settings->spreadertype == 3 )
 	{
-		if ( randgen->Instance()->get( 1, 3 ) < 3 )
+		if ( randgen->Instance()->get( 1, 4 ) < 3 )
 		{
 			placed=true;
 
@@ -1769,49 +1785,75 @@ Vector3f WorldB::findEmptySpace(float halfsize)
 				pos.z = (float)randgen->Instance()->get( 100*qheight, 300*qheight ) / 100;
 			}
 		}
+		else
+		{
+			pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
+			pos.y = halfsize;
+			pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+			while ( !spotIsFree(pos, halfsize) )
+			{
+				pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
+				pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+			}
+		}
 	}
 
 	// 2 squares in fifths
 	else if ( settings->spreadertype == 4 )
 	{
-		// inside square
-		if ( randgen->Instance()->get( 1, 10 ) > 6 )
+		while ( !placed )
 		{
-			placed=true;
-
-			pos.x = (float)randgen->Instance()->get( 200*swidth, 400*swidth ) / 100;
-			pos.y = halfsize;
-			pos.z = (float)randgen->Instance()->get( 200*sheight, 400*sheight ) / 100;
-
-			while ( !spotIsFree(pos, halfsize) )
+			// inside square
+			if ( randgen->Instance()->get( 1, 10 ) > 6 )
 			{
+				placed=true;
+
 				pos.x = (float)randgen->Instance()->get( 200*swidth, 400*swidth ) / 100;
+				pos.y = halfsize;
 				pos.z = (float)randgen->Instance()->get( 200*sheight, 400*sheight ) / 100;
+
+				while ( !spotIsFree(pos, halfsize) )
+				{
+					pos.x = (float)randgen->Instance()->get( 200*swidth, 400*swidth ) / 100;
+					pos.z = (float)randgen->Instance()->get( 200*sheight, 400*sheight ) / 100;
+				}
 			}
-		}
-		// outside square
-		else if ( randgen->Instance()->get( 1, 10 ) > 3 )
-		{
-			placed=true;
-
-			pos.x = (float)randgen->Instance()->get( 100*swidth, 500*swidth ) / 100;
-			pos.y = halfsize;
-			pos.z = (float)randgen->Instance()->get( 100*sheight, 500*sheight ) / 100;
-
-			while ( !spotIsFree(pos, halfsize) )
+			// outside square
+			else
 			{
-				pos.x = (float)randgen->Instance()->get( 100*swidth, 500*swidth ) / 100;
-				pos.z = (float)randgen->Instance()->get( 100*sheight, 500*sheight ) / 100;
+				if ( randgen->Instance()->get( 1, 10 ) > 3 )
+				{
+					placed=true;
+
+					pos.x = (float)randgen->Instance()->get( 100*swidth, 500*swidth ) / 100;
+					pos.y = halfsize;
+					pos.z = (float)randgen->Instance()->get( 100*sheight, 500*sheight ) / 100;
+
+					while ( !spotIsFree(pos, halfsize) )
+					{
+						pos.x = (float)randgen->Instance()->get( 100*swidth, 500*swidth ) / 100;
+						pos.z = (float)randgen->Instance()->get( 100*sheight, 500*sheight ) / 100;
+					}
+				}
+				else
+				{
+					pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
+					pos.y = halfsize;
+					pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+					while ( !spotIsFree(pos, halfsize) )
+					{
+						pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
+						pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
+					}
+				}
 			}
 		}
 	}
-
-	if ( !placed )
+	else
 	{
 		pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
 		pos.y = halfsize;
 		pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-
 		while ( !spotIsFree(pos, halfsize) )
 		{
 			pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;

@@ -47,6 +47,10 @@ class Settings
 		unsigned int mincritters;
 			unsigned int mincrittersMin;
 			unsigned int mincrittersMax;
+		unsigned int insertcritterevery;
+			unsigned int insertcrittereveryMin;
+			unsigned int insertcrittereveryMax;
+
 		unsigned int retinasperrow;
 			unsigned int retinasperrowMin;
 			unsigned int retinasperrowMax;

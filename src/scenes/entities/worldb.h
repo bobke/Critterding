@@ -81,6 +81,7 @@ class WorldB
 		File			fileH;
 
 		unsigned int		timedInsertsCounter;
+		unsigned int		insertCritterCounter;
 
 		unsigned char		*retina;
 		unsigned int		items;

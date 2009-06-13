@@ -17,7 +17,7 @@ unsigned int RandGen::get(unsigned int minimum, unsigned int maximum)
 {
 	if ( maximum > minimum )
 	{
-		if (++count > 5000)
+		if (++count > 100)
 		{
 			gettimeofday(&now, &timer_tz);
 			srand(now.tv_usec);

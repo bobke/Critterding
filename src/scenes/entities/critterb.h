@@ -45,8 +45,10 @@ class CritterB
 
 		float			color[3];
 		float			nosecolor[3];
+		float			speciescolor[3];
 		float			colorTrim;
 
+		unsigned int		lifetime;
 		float			energyLevel;
 		float			energyUsed;
 		unsigned int		totalFrames;
