@@ -116,17 +116,25 @@ void Evolution::handlekey(const KeySym& key)
 
 		case XK_F5:
 		{
-			if ( settings->mincritters > 0 ) settings->mincritters--;
+/*			if ( settings->mincritters > 0 ) settings->mincritters--;
 			stringstream buf;
 			buf << "min c: " << settings->mincritters;
+			Textmessage::Instance()->add(buf);*/
+			if ( settings->insertcritterevery > 0 ) settings->insertcritterevery-=100;
+			stringstream buf;
+			buf << "insert critter every : " << settings->insertcritterevery << " frames";
 			Textmessage::Instance()->add(buf);
 		}
 		break;
 		case XK_F6:
 		{
-			settings->mincritters++;
+/*			settings->mincritters++;
 			stringstream buf;
 			buf << "min c: " << settings->mincritters;
+			Textmessage::Instance()->add(buf);*/
+			settings->insertcritterevery += 100;
+			stringstream buf;
+			buf << "insert critter every : " << settings->insertcritterevery << " frames";
 			Textmessage::Instance()->add(buf);
 		}
 		break;

@@ -10,17 +10,20 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	worldsizeX			= 32;
-	worldsizeY			= 24;
+	worldsizeX			= 16;
+	worldsizeY			= 12;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
-	startenergy			= 200;
+	startenergy			= 400;
 		startenergyMin			= 0;
 		startenergyMax			= 1000000;
-	mincritters			= 10;
+	mincritters			= 0;
 		mincrittersMin			= 0;
 		mincrittersMax			= 1000;
-	retinasperrow			= 30;
+	insertcritterevery		= 1000;
+		insertcrittereveryMin		= 0;
+		insertcrittereveryMax		= 1000;
+	retinasperrow			= 20;
 		retinasperrowMin		= 1;
 		retinasperrowMax		= 1000;
 	camerasensitivity		= 10;
@@ -35,7 +38,7 @@ Settings::Settings()
 	exit_if_empty			= false;
 	autoload			= false;
 
-	critter_maxlifetime		= 4000;
+	critter_maxlifetime		= 10000;
 		critter_maxlifetimeMin		= 1;
 		critter_maxlifetimeMax		= 1000000;
 	critter_maxenergy		= 5000;
@@ -65,16 +68,16 @@ Settings::Settings()
 	critter_speedI			= 50;
 		critter_speedIMin		= 1;
 		critter_speedIMax		= 1000;
-	critter_sightrangeI		= 35;
+	critter_sightrangeI		= 50;
 		critter_sightrangeIMin		= 1;
 		critter_sightrangeIMax		= 1000;
-	critter_retinasize		= 16;
+	critter_retinasize		= 24;
 		critter_retinasizeMin		= 1;
 		critter_retinasizeMax		= 1000;
-	critter_mutationrate		= 7;
+	critter_mutationrate		= 10;
 		critter_mutationrateMin		= 0;
 		critter_mutationrateMax		= 100;
-	critter_maxmutations		= 3;
+	critter_maxmutations		= 10;
 		critter_maxmutationsMin		= 1;
 		critter_maxmutationsMax		= 100;
 	critter_percentchangetype	= 1;
@@ -87,10 +90,10 @@ Settings::Settings()
 		critter_autosaveintervalMin	= 0;
 		critter_autosaveintervalMax	= 1000000;
 
-	food_maxlifetime		= 1000;
+	food_maxlifetime		= 4000;
 		food_maxlifetimeMin		= 1;
 		food_maxlifetimeMax		= 1000000;
-	food_maxenergy			= 2000;
+	food_maxenergy			= 1000;
 		food_maxenergyMin		= 1;
 		food_maxenergyMax		= 1000000;
 	food_sizeI			= 15;
@@ -98,7 +101,7 @@ Settings::Settings()
 		food_sizeIMax			= 100;
 
 	corpse_disable			= false;
-	corpse_maxlifetime		= 1000;
+	corpse_maxlifetime		= 4000;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
 	corpse_maxenergy		= 2000;
@@ -214,16 +217,16 @@ Settings::Settings()
 
 		brain_mutate_mutateeffects			= false;
 
-	brain_costhavingneuron				= 250;
+	brain_costhavingneuron				= 100;
 		brain_costhavingneuronMin			= 0;
 		brain_costhavingneuronMax			= 1000000;
-	brain_costfiringneuron				= 100;
+	brain_costfiringneuron				= 50;
 		brain_costfiringneuronMin			= 0;
 		brain_costfiringneuronMax			= 1000000;
-	brain_costfiringmotorneuron			= 500;
+	brain_costfiringmotorneuron			= 5000;
 		brain_costfiringmotorneuronMin			= 0;
 		brain_costfiringmotorneuronMax			= 1000000;
-	brain_costhavingsynapse				= 20;
+	brain_costhavingsynapse				= 10;
 		brain_costhavingsynapseMin			= 0;
 		brain_costhavingsynapseMax			= 1000000;
 
