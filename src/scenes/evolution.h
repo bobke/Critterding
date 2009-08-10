@@ -54,7 +54,7 @@ class Evolution : public GLScene {
 		Infostats infostats;
 		Helpinfo helpinfo;
 
-		bool drawCVNeurons;
+// 		bool drawCVNeurons;
 
 		
 };

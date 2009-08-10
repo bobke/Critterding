@@ -10,7 +10,7 @@ Infostats::Infostats()
 
 	barheight = 86;
 
-	active = true;
+	active = false;
 }
 
 void Infostats::draw( unsigned int posY )
@@ -79,51 +79,63 @@ void Infostats::draw( unsigned int posY )
 
 		glEnable(GL_TEXTURE_2D);
 
-		unsigned int totalneurons = Settings::Instance()->info_totalNeuronsH + Settings::Instance()->info_totalNeuronsC;
-		unsigned int totalsynapses = Settings::Instance()->info_totalSynapsesH + Settings::Instance()->info_totalSynapsesC;
-		unsigned int totalad = Settings::Instance()->info_totalAdamDistanceH + Settings::Instance()->info_totalAdamDistanceC;
+		unsigned int totalneurons = Settings::Instance()->info_totalNeurons;
+		unsigned int totalsynapses = Settings::Instance()->info_totalSynapses;
+		unsigned int totalad = Settings::Instance()->info_totalAdamDistance;
 
 		// row counter
 		unsigned int rc=1;
 
 		// HEADING
 		Textprinter::Instance()->print(col1+hsp,	ystart+vsp*rc,	"all critters");
-		Textprinter::Instance()->print(col2+hsp,	ystart+vsp*rc,	"herbivores");
-		Textprinter::Instance()->print(col3+hsp,	ystart+vsp*rc,	"carnivores");
+		Textprinter::Instance()->print(col2+hsp,	ystart+vsp*rc,	"");
+		Textprinter::Instance()->print(col3+hsp,	ystart+vsp*rc,	"");
 
-		float percentH = ((float)Settings::Instance()->info_crittersH / Settings::Instance()->info_critters)*100.0f;
+// 		float percentH = ((float)Settings::Instance()->info_crittersH / Settings::Instance()->info_critters)*100.0f;
 
 		rc++;
 		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"critters:");
 		Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1u", Settings::Instance()->info_critters);
-		Textprinter::Instance()->print(col2+hsp,	ystart+vsp*rc,	"%1.1f%s", percentH, "%");
-		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1u", Settings::Instance()->info_crittersH);
-		Textprinter::Instance()->print(col3+hsp,	ystart+vsp*rc,	"%1.1f%s", 100.0f-percentH, "%");
-		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1u", Settings::Instance()->info_crittersC);
+		Textprinter::Instance()->print(col2+hsp,	ystart+vsp*rc,	"%1.1f%s", 0, "%");
+		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1u", 0);
+		Textprinter::Instance()->print(col3+hsp,	ystart+vsp*rc,	"%1.1f%s", 0, "%");
+		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1u", 0);
 
 		rc++;
 		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg neurons:");
-		Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalneurons / Settings::Instance()->info_critters);
-		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalNeuronsH / Settings::Instance()->info_crittersH);
-		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalNeuronsC / Settings::Instance()->info_crittersC);
+		if ( Settings::Instance()->info_critters > 0 )
+			Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalneurons / Settings::Instance()->info_critters);
+		else
+			Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", 0);
+		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", 0.0f);
+		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg synapses:");
-		Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalsynapses / Settings::Instance()->info_critters);
-		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalSynapsesH / Settings::Instance()->info_crittersH);
-		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalSynapsesC / Settings::Instance()->info_crittersC);
+		if ( Settings::Instance()->info_critters > 0 )
+			Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalsynapses / Settings::Instance()->info_critters);
+		else
+			Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", 0);
+		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", 0.0f);
+		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg synapses/neuron:");
-		Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalsynapses / totalneurons);
-		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalSynapsesH / Settings::Instance()->info_totalNeuronsH);
-		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalSynapsesC / Settings::Instance()->info_totalNeuronsC);
+		if ( totalneurons > 0 )
+			Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalsynapses / totalneurons);
+		else
+			Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", 0);
+		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", 0.0f);
+		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"avg adam distance:");
-		Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalad / Settings::Instance()->info_critters);
-		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalAdamDistanceH / Settings::Instance()->info_crittersH);
-		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)Settings::Instance()->info_totalAdamDistanceC / Settings::Instance()->info_crittersC);
+		if ( Settings::Instance()->info_critters > 0 )
+			Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", (float)totalad / Settings::Instance()->info_critters);
+		else
+			Textprinter::Instance()->printR(col2-hsp,	ystart+vsp*rc,	"%1.2f", 0);
+		Textprinter::Instance()->printR(col3-hsp,	ystart+vsp*rc,	"%1.2f", 0.0f);
+		Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", 0.0f);
 
 
 // 		printInfoLine(ystart+vsp*2,	col2+hsp,	col3-hsp,	"syn/neu:",	"%1.2f", (float)Settings::Instance()->info_totalSynapses / Settings::Instance()->info_totalNeurons);

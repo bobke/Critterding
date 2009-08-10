@@ -11,15 +11,17 @@ class Sleeper
 
 		void mark();
 		void swap();
+		bool isRenderTime();
 
 	private:
-
+		Timer *t;
 		bool		active;
 		unsigned int	optimal;
 		unsigned int	stepsize;
 		unsigned int	sleeptime;
 		float		cps;
 
+		float timeSinceLastRender;
 };
 
 #endif

@@ -95,6 +95,9 @@ void GLWindow::runGLScene(GLScene &glscene)
 	Settings::Instance()->winWidth = &GLWin.width;
 	Settings::Instance()->winHeight = &GLWin.height;
 
+	Settings::Instance()->dpy = GLWin.dpy;
+	Settings::Instance()->win = GLWin.win;
+
 	while(running)
 	{
 		while(XPending(GLWin.dpy) > 0)
@@ -139,7 +142,7 @@ void GLWindow::runGLScene(GLScene &glscene)
 		}
 
 		glscene.draw();
-		glXSwapBuffers(GLWin.dpy, GLWin.win);
+// 		glXSwapBuffers(GLWin.dpy, GLWin.win);
 	}
 }
 

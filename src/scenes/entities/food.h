@@ -1,11 +1,13 @@
 #ifndef FOOD_H
 #define FOOD_H
 
+#include "btBulletDynamicsCommon.h"
 #include "GL/gl.h"
-#include "vector3f.h"
+
 #include "../../utils/settings.h"
-#include <vector>
-#include <iostream>
+#include "../../utils/displaylists.h"
+#include "vector3f.h"
+#include "body.h"
 
 using namespace std;
 
@@ -15,19 +17,20 @@ class Food
 		Food();
 		~Food();
 
-		float			size;
-		float			halfsize;
-		float			straal;
+		Body			body;
+		void			createBody(btDynamicsWorld* m_dynamicsWorld, btVector3 startOffset);
+		unsigned int		type;
 
-		float			energy;
+		void			draw();
+		
+		btScalar		position[16];
 
-		Vector3f		position;
+		float			color[3];
 
+		unsigned int		lifetime;
+		float			energyLevel;
 		unsigned int		totalFrames;
 
-		bool			isCarried;
-
-		void			resize();
 	private:
 		Settings		*settings;
 };

@@ -1,254 +1,157 @@
+#include <BulletCollision/NarrowPhaseCollision/btConvexCast.h>
 #include "worldb.h"
-
+/*extern int gNumClampedCcdMotions;*/
 // FIXME PUT C/H IN CRITTER FILENAME
-
 WorldB::WorldB()
 {
 	settings = Settings::Instance();
 
+	freeEnergy = settings->food_maxenergy * settings->startenergy;
+	settings->freeEnergyInfo = freeEnergy;
+		
 	currentCritterID	= 0;
-
-	selectedCritter		= 0;
-	isSelected		= false;
-
-	doTimedInserts		= false;
-	timedInsertsCounter	= 0;
-
 	insertCritterCounter	= 0;
-
 	autosaveCounter		= 0.0f;
-
-	// home & program directory
-	createDirs();
 
 	// vision retina allocation
 	items = 4 * 800 * 600;
 	retina = (unsigned char*)malloc(items);
 	memset(retina, 0, items);
 
-	generateList();
-}
+	// home & program directory
+	createDirs();
 
-void WorldB::generateList()
-{
-	displayLists = glGenLists(4);
+	m_collisionConfiguration = new btDefaultCollisionConfiguration();
 
-	// 1 = food, corpse, bullet : normal cube
-	glNewList(displayLists,GL_COMPILE);
+	
+	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
+	//m_dispatcher = new SpuGatheringCollisionDispatcher(m_collisionConfiguration);
 
-		glBegin(GL_QUADS);
-		//Quad 1
-		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
-		glVertex3f( 1.0f,-1.0f, 1.0f);   //V1
-		glVertex3f( 1.0f,-1.0f,-1.0f);   //V3
-		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
-		//Quad 2
-		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
-		glVertex3f( 1.0f,-1.0f,-1.0f);   //V3
-		glVertex3f(-1.0f,-1.0f,-1.0f);   //V5
-		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
-		//Quad 3
-		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
-		glVertex3f(-1.0f,-1.0f,-1.0f);   //V5
-		glVertex3f(-1.0f,-1.0f, 1.0f);   //V7
-		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
-		//Quad 4
-		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
-		glVertex3f(-1.0f,-1.0f, 1.0f);   //V7
-		glVertex3f( 1.0f,-1.0f, 1.0f);   //V1
-		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
-		//Quad 5
-		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
-		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
-		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
-		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
-		glEnd();
+	btVector3 worldAabbMin(-10000,-10000,-10000);
+	btVector3 worldAabbMax(10000,10000,10000);
+	m_broadphase = new btAxisSweep3 (worldAabbMin, worldAabbMax);
+	m_broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+	m_solver = new btSequentialImpulseConstraintSolver;
 
-	glEndList();
+	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 
-	// 2 = critter
-	glNewList(displayLists+1,GL_COMPILE);
-		glBegin(GL_QUADS);
-		//Quad 1
-		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
-		glVertex3f( 1.0f,-1.0f, 1.0f);   //V1
-		glVertex3f( 1.0f,-1.0f,-1.0f);   //V3
-		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
-		//Quad 2
-		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
-		glVertex3f( 1.0f,-1.0f,-1.0f);   //V3
-		glVertex3f(-1.0f,-1.0f,-1.0f);   //V5
-		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
-		//Quad 3
-		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
-		glVertex3f(-1.0f,-1.0f,-1.0f);   //V5
-		glVertex3f(-1.0f,-1.0f, 1.0f);   //V7
-		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
-		//Quad 4
-		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
-		glVertex3f(-1.0f,-1.0f, 1.0f);   //V7
-		glVertex3f( 1.0f,-1.0f, 1.0f);   //V1
-		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
-		//Quad 5
-		glVertex3f(-1.0f, 1.0f,-1.0f);   //V6
-		glVertex3f(-1.0f, 1.0f, 1.0f);   //V8
-		glVertex3f( 1.0f, 1.0f, 1.0f);   //V2
-		glVertex3f( 1.0f, 1.0f,-1.0f);   //V4
-		glEnd();
+	// Wall Constants
+		float WallWidth = 0.5f;
+		float WallHalfWidth = WallWidth/2.0f;
+		float WallHeight = 2.0f;
+		float WallHalfHeight = WallHeight/2.0f;
+	
+	// Ground Floor
+		btVector3 position( settings->worldsizeX/2.0f, -WallHalfWidth, settings->worldsizeY/2.0f );
+		Wall* w = new Wall( settings->worldsizeX, WallWidth, settings->worldsizeY, position, m_dynamicsWorld );
+		w->color[0] = 0.30f; w->color[1] = 0.20f; w->color[2] = 0.10f;
+		walls.push_back(w);
 
-	glEndList();
+	// Left Wall
+		position = btVector3 ( 0.0f-WallHalfWidth, WallHalfHeight-WallWidth, settings->worldsizeY/2.0f );
+		w = new Wall( WallWidth, WallHeight, settings->worldsizeY, position, m_dynamicsWorld );
+		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+		walls.push_back(w);
 
-	// 3 = critter nose
-	glNewList(displayLists+2,GL_COMPILE);
+	// Right Wall
+		position = btVector3 ( settings->worldsizeX+WallHalfWidth, WallHalfHeight-WallWidth, settings->worldsizeY/2.0f );
+		w = new Wall( WallWidth, WallHeight, settings->worldsizeY, position, m_dynamicsWorld );
+		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+		walls.push_back(w);
 
-// 		glColor4f( 1.0f, 1.0f, 1.0f, 0.0f );
+	// Top Wall
+		position = btVector3 ( settings->worldsizeX/2.0f, WallHalfHeight-WallWidth, 0.0f-WallHalfWidth );
+		w = new Wall( settings->worldsizeX+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
+		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+		walls.push_back(w);
 
-		glBegin(GL_TRIANGLES);
-		// standard nose
-// 		glVertex3f( -1.0f,  1.0f,  -1.0f );
-// 		glVertex3f(  1.0f,  1.0f,  -1.0f );
-// 		glVertex3f(  0.0f,  0.5f,  -1.3f );
+	// Bottom Wall
+		position = btVector3 ( settings->worldsizeX/2.0f, WallHalfHeight-WallWidth, settings->worldsizeY+WallHalfWidth );
+		w = new Wall( settings->worldsizeX+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
+		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+		walls.push_back(w);
 
-		// owl nose
-// 		glVertex3f( -1.0f,  0.3f,  -1.0f );
-// 		glVertex3f(  1.0f,  0.3f,  -1.0f );
-// 		glVertex3f(  0.0f,  0.3f,  -1.3f );
-// 
-// 		glVertex3f( -1.0f,  0.3f,  -1.0f );
-// 		glVertex3f(  0.0f,  1.0f,  -1.0f );
-// 		glVertex3f(  0.0f,  0.3f,  -1.3f );
-// 
-// 		glVertex3f(  0.0f,  1.0f,  -1.0f );
-// 		glVertex3f(  1.0f,  0.3f,  -1.0f );
-// 		glVertex3f(  0.0f,  0.3f,  -1.3f );
+/*	// clientResetScene
+	gNumClampedCcdMotions = 0;
+	int numObjects = 0;
+	int i;
 
-		// big nose
-		glVertex3f(  0.0f,  1.0f,  -1.0f );
-		glVertex3f(  1.0f,  0.0f,  -1.0f );
-		glVertex3f(  0.0f,  0.0f,  -1.5f );
-
-		glVertex3f(  0.0f,  1.0f,  -1.0f );
-		glVertex3f(  0.0f,  0.0f,  -1.5f );
-		glVertex3f( -1.0f,  0.0f,  -1.0f );
-
-		glEnd();
-
-	glEndList();
-
-	// 4 = floor
-	glNewList(displayLists+3,GL_COMPILE);
-
-		glColor4f( 0.0f, 0.0f, 1.0f, 0.0f );
-		glBegin(GL_QUADS);
-		glVertex3f( 0.0f, 0.0f, 0.0f);
-		glVertex3f( 0.0f, 0.0f, 1.0f);
-		glVertex3f( 1.0f, 0.0f, 1.0f);
-		glVertex3f( 1.0f, 0.0f, 0.0f);
-		glEnd();
-
-	glEndList();
-
-}
-
-void WorldB::resize(unsigned int X, unsigned int Y)
-{
-//	size = X;
-	sizeX = X;
-	sizeY = Y;
-	grid.resize(X, Y);
-	floor.resize(X, Y);
-}
-
-void WorldB::startfoodamount(unsigned int amount)
-{
-	freeEnergy = settings->food_maxenergy * amount;
-		settings->freeEnergyInfo = freeEnergy;
-}
-
-void WorldB::process()
-{
-	// Autosave Critters?
-	if ( settings->critter_autosaveinterval > 0 )
+	if (m_dynamicsWorld)
 	{
-		autosaveCounter += Timer::Instance()->elapsed;
-		if ( autosaveCounter > settings->critter_autosaveinterval )
-		{
-			autosaveCounter = 0.0f;
-			saveAllCritters();
-		}
+		numObjects = m_dynamicsWorld->getNumCollisionObjects();
 	}
 
-	// Bullet movement
-	for( unsigned int i=0; i < bullets.size(); i++)
+	///create a copy of the array, not a reference!
+	btCollisionObjectArray copyArray = m_dynamicsWorld->getCollisionObjectArray();
+
+	for (i=0;i<copyArray.size();i++)
 	{
-		Bullet *b = bullets[i];
+		btRigidBody* body = btRigidBody::upcast(copyArray[i]);
+		if (body)
+			m_dynamicsWorld->removeRigidBody(body);
+	}
 
-		// forward it fires
-		b->moveForward();
 
-		// die of age
-		if ( b->totalSteps > 5 )
+
+	for (i=0;i<numObjects;i++)
+	{
+		btCollisionObject* colObj = copyArray[i];
+		btRigidBody* body = btRigidBody::upcast(colObj);
+		if (body)
 		{
-			delete b;
-			bullets.erase(bullets.begin()+i);
-			i--;
-		}
-		else
-		{
-		// bullet hit wall
-			bool hit = false;
-			for( unsigned int j=0; j < walls.size() && !hit; j++)
+			if (body->getMotionState())
 			{
-				Wall *w = walls[j];
-				float avgSize = w->halfsize + b->halfsize;
-				if ( fabs(w->position.x - b->position.x) <= avgSize && fabs(w->position.z - b->position.z) <= avgSize )
-				{
-					delete b;
-					bullets.erase(bullets.begin()+i);
-					i--;
-					hit = true;
-				}
+				btDefaultMotionState* myMotionState = (btDefaultMotionState*)body->getMotionState();
+				myMotionState->m_graphicsWorldTrans = myMotionState->m_startWorldTrans;
+				body->setCenterOfMassTransform( myMotionState->m_graphicsWorldTrans );
+				colObj->setInterpolationWorldTransform( myMotionState->m_startWorldTrans );
+				colObj->forceActivationState(ACTIVE_TAG);
+				colObj->activate();
+				colObj->setDeactivationTime(0);
+				//colObj->setActivationState(WANTS_DEACTIVATION);
+			}
+			//removed cached contact points (this is not necessary if all objects have been removed from the dynamics world)
+			m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(colObj->getBroadphaseHandle(),m_dynamicsWorld->getDispatcher());
+
+			btRigidBody* body = btRigidBody::upcast(colObj);
+			if (body && !body->isStaticObject())
+			{
+				btRigidBody::upcast(colObj)->setLinearVelocity(btVector3(0,0,0));
+				btRigidBody::upcast(colObj)->setAngularVelocity(btVector3(0,0,0));
 			}
 		}
 
 	}
 
-	// Insert Food
-	while ( freeEnergy >= settings->food_maxenergy )
-	{
-		insertRandomFood(1, settings->food_maxenergy);
-		freeEnergy -= settings->food_maxenergy;
-		//cerr << "food: " << food.size() << endl;
-	}
-
-	// insert critter if < minimum
-	if ( critters.size() < settings->mincritters )
-		insertCritter();
-
-	// insert critter if insertcritterevery is reached
-	if ( settings->insertcritterevery > 0 )
-	{
-		if ( insertCritterCounter >= settings->insertcritterevery )
-		{
-			insertCritter();
-			insertCritterCounter = 0;
-		}
-		else
-		{
-			insertCritterCounter++;
-		}
-	}
-
+	///reset some internal cached data in the broadphase
+	m_dynamicsWorld->getBroadphase()->resetPool(m_dynamicsWorld->getDispatcher());
+	m_dynamicsWorld->getConstraintSolver()->reset();
 	
-	// Remove food
-	for( unsigned int i=0; i < food.size(); i++)
+	for ( i=0;i<copyArray.size();i++)
 	{
-		if ( !food[i]->isCarried )
+		btRigidBody* body = btRigidBody::upcast(copyArray[i]);
+		if (body)
+			m_dynamicsWorld->addRigidBody(btRigidBody::upcast(copyArray[i]));
+	}*/
+	
+}
+
+// void WorldB::resize(unsigned int X, unsigned int Y)
+// {
+// 	sizeX = X;
+// 	sizeY = Y;
+// // 	grid.resize(X, Y, m_dynamicsWorld);
+// }
+
+void WorldB::process()
+{
+	// Remove food
+		for( unsigned int i=0; i < food.size(); i++)
 		{
 			// food was eaten
-			if ( food[i]->energy <= 0 )
+			if ( food[i]->energyLevel <= 0 )
 			{
-				freeEnergy += food[i]->energy;
+				freeEnergy += food[i]->energyLevel;
 				delete food[i];
 				food.erase(food.begin()+i);
 				i--;
@@ -257,81 +160,112 @@ void WorldB::process()
 			// old food, this should remove stuff from corners
 			else if ( ++food[i]->totalFrames >= settings->food_maxlifetime )
 			{
-				freeEnergy += food[i]->energy;
+				freeEnergy += food[i]->energyLevel;
 				delete food[i];
 				food.erase(food.begin()+i);
 				i--;
 			}
 		}
-	}
-
-	// Remove corpses
-	for( unsigned int i=0; i < corpses.size(); i++)
-	{
-		if ( !corpses[i]->isCarried )
-		{
-			// corpse was eaten
-			if ( corpses[i]->energy <= 0 )
-			{
-				freeEnergy += corpses[i]->energy;
-				delete corpses[i];
-				corpses.erase(corpses.begin()+i);
-				i--;
-			}
-
-			// old corpse
-			else if ( ++corpses[i]->totalFrames >= settings->corpse_maxlifetime )
-			{
-				freeEnergy += corpses[i]->energy;
-				delete corpses[i];
-				corpses.erase(corpses.begin()+i);
-				i--;
-			}
-		}
-	}
 
 	// remove all dead critters
-	for( unsigned int i=0; i < critters.size(); i++)
-	{
-		// see if energy level isn't below 0 -> die, or die of old age
-		if ( critters[i]->energyLevel <= 0.0f )
+		for( unsigned int i=0; i < critters.size(); i++)
 		{
-			stringstream buf;
-			buf << setw(4) << critters[i]->critterID << " starved";
-			Textverbosemessage::Instance()->addDeath(buf);
+			// see if energy level isn't below 0 -> die, or die of old age
+			if ( critters[i]->energyLevel <= 0.0f )
+			{
+				stringstream buf;
+				buf << setw(4) << critters[i]->critterID << " starved";
+				Textverbosemessage::Instance()->addDeath(buf);
 
-			removeCritter(i);
-			i--;
-		}
-		// see if died from bullet
-		else if ( critters[i]->totalFrames > settings->critter_maxlifetime && critters[i]->wasShot )
-		{
-			stringstream buf;
-			buf << setw(4) << critters[i]->critterID << " killed";
-			Textverbosemessage::Instance()->addDeath(buf);
-
-			removeCritter(i);
-			i--;
-		}
-		// die of old age
-		else if ( critters[i]->totalFrames > critters[i]->lifetime )
-		{
-//			if (!settings->noverbose) cerr << "< " << setw(3) << critters.size()-1 << " | " << setw(4) << critters[i]->critterID << " old" << endl;
-/*			if (!settings->noverbose)
-			{*/
+				removeCritter(i);
+				i--;
+			}
+			// die of old age
+			else if ( critters[i]->totalFrames > settings->critter_maxlifetime )
+			{
 				stringstream buf;
 				buf << setw(4) << critters[i]->critterID << " old";
 				Textverbosemessage::Instance()->addDeath(buf);
-// 			}
-			removeCritter(i);
-			i--;
+
+				removeCritter(i);
+				i--;
+			}
 		}
-	}
 
-	// as approximation we take every c's halfsize*2: critter_size
-	//float realSightRange = critter_sightrange + critter_size;
+		btCollisionObjectArray copyArray = m_dynamicsWorld->getCollisionObjectArray();
+		int numObjects = m_dynamicsWorld->getNumCollisionObjects();
+		for (int i=0; i < numObjects; i++)
+		{
+			btCollisionObject* colObj = copyArray[i];
+			btRigidBody* body = btRigidBody::upcast(colObj);
+			if (body)
+			{
+/*				if (body->getMotionState())
+				{
+					btDefaultMotionState* myMotionState = (btDefaultMotionState*)body->getMotionState();
+					myMotionState->m_graphicsWorldTrans = myMotionState->m_startWorldTrans;
+					body->setCenterOfMassTransform( myMotionState->m_graphicsWorldTrans );
+					colObj->setInterpolationWorldTransform( myMotionState->m_startWorldTrans );
+					colObj->forceActivationState(ACTIVE_TAG);
+					colObj->activate();
+					colObj->setDeactivationTime(0);
+					//colObj->setActivationState(WANTS_DEACTIVATION);
+				}*/
+				//removed cached contact points (this is not necessary if all objects have been removed from the dynamics world)
+				m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(colObj->getBroadphaseHandle(),m_dynamicsWorld->getDispatcher());
 
-	// for all critters do
+/*				btRigidBody* body = btRigidBody::upcast(colObj);
+				if (body && !body->isStaticObject())
+				{
+					btRigidBody::upcast(colObj)->setLinearVelocity(btVector3(0,0,0));
+					btRigidBody::upcast(colObj)->setAngularVelocity(btVector3(0,0,0));
+				}*/
+			}
+		}
+
+
+	// do a bullet step
+		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
+
+	// Autoinsert Food
+		while ( freeEnergy >= settings->food_maxenergy )
+		{
+			insertRandomFood(1, settings->food_maxenergy);
+			freeEnergy -= settings->food_maxenergy;
+			//cerr << "food: " << food.size() << endl;
+		}
+
+	// Autosave Critters?
+		if ( settings->critter_autosaveinterval > 0 )
+		{
+			autosaveCounter += Timer::Instance()->elapsed;
+			if ( autosaveCounter > settings->critter_autosaveinterval )
+			{
+				autosaveCounter = 0.0f;
+				saveAllCritters();
+			}
+		}
+
+	// Autoinsert Critters?
+		// insert critter if < minimum
+		if ( critters.size() < settings->mincritters )
+			insertCritter();
+
+		// insert critter if insertcritterevery is reached
+		if ( settings->insertcritterevery > 0 )
+		{
+			if ( insertCritterCounter >= settings->insertcritterevery )
+			{
+				insertCritter();
+				insertCritterCounter = 0;
+			}
+			else
+			{
+				insertCritterCounter++;
+			}
+		}
+
+	// render critter vision
 	for( unsigned int i=0; i < critters.size(); i++)
 	{
 		critters[i]->place();
@@ -357,14 +291,10 @@ void WorldB::process()
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 	}
 
-	settings->info_crittersH = 0;
-	settings->info_totalNeuronsH = 0;
-	settings->info_totalSynapsesH = 0;
-	settings->info_totalAdamDistanceH = 0;
-	settings->info_crittersC = 0;
-	settings->info_totalNeuronsC = 0;
-	settings->info_totalSynapsesC = 0;
-	settings->info_totalAdamDistanceC = 0;
+// 	settings->info_crittersC = 0;
+	settings->info_totalNeurons = 0;
+	settings->info_totalSynapses = 0;
+	settings->info_totalAdamDistance = 0;
 
 	// process all critters
 	unsigned int lmax = critters.size();
@@ -372,385 +302,229 @@ void WorldB::process()
 	{
 		CritterB *c = critters[i];
 
-		// over food input neuron
+		// getAngle test
+/* 		if ( i == 0 )
+ 		{
+			float percentAngle = critters[0]->body->constraints[0]->getAngle();
+			cerr << percentAngle << endl;
+		}*/
+		// RayCast Test
+// 		if ( 0 == 0 )
+// 		{
+// 			unsigned int totalp = walls.size()+food.size();
+// 			for( unsigned int j=0; j < lmax; j++)
+// 			{
+// 				for( unsigned int k=0; k < critters[j]->body->bodyparts.size(); k++)
+// 				{
+// 					totalp++;
+// 				}
+// 			}
+// 
+// 			btConvexCast::CastResult rayResult;
+// 			btSphereShape pointShape(0.0f);
+// 			btTransform rayFromTrans; rayFromTrans.setIdentity();
+// 			btTransform rayToTrans; rayToTrans.setIdentity();
+// 
+// 			btScalar position[16];
+// 			btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body->mouths[0]->body->getMotionState();
+// 			myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
+// 
+// 			rayFromTrans.setFromOpenGLMatrix(position);
+// 			rayToTrans = rayToTrans*rayToTrans;
+// 
+// 			btVector3 rayFrom = myMotionState->m_graphicsWorldTrans.getOrigin();
+// 			btVector3 rayTo = rayToTrans.getOrigin();
+// 
+// 			btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);
+// 			m_dynamicsWorld->rayTest(rayFrom,rayTo,resultCallback);
+// 
+// 			if (resultCallback.hasHit())
+// 			{
+// 
+// 				btRigidBody* body = btRigidBody::upcast(resultCallback.m_collisionObject);
+// 				if (body)
+// 				{
+// 					Food* f = static_cast<Food*>(body->getUserPointer());
+// 					if ( f )
+// 					{
+// 						if ( f->type == 1 )
+// 						{
+// 							c->touchingFood = true;
+// 							c->touchedFoodID = f;
+// 
+// 							cerr << ".";
+// //							cerr << c << " collides with food: " << Collidingobject << endl;
+// 							f->color[0] = 1.0f;
+// 						}
+// 					}
+// 				}
+// 			}
+// 
+// 		}
+		
+		// set inputs to false and recheck
 			c->touchingFood = false;
-			for( unsigned int f=0; f < food.size() && !c->touchingFood; f++)
+
+		// TOUCH inputs and references -> find overlappings
+			if ( c->body.mouths.size() > 0 )
 			{
-				Food *fo = food[f];
-				if ( !fo->isCarried )
+				btManifoldArray   manifoldArray;
+				btBroadphasePairArray& pairArray = c->body.mouths[0]->ghostObject->getOverlappingPairCache()->getOverlappingPairArray();
+				int numPairs = pairArray.size();
+
+				for ( int i=0; i < numPairs; i++ )
 				{
-					float avgSize = c->straal + fo->straal;
-					if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
+					manifoldArray.clear();
+
+					const btBroadphasePair& pair = pairArray[i];
+
+					//unless we manually perform collision detection on this pair, the contacts are in the dynamics world paircache:
+					btBroadphasePair* collisionPair = m_dynamicsWorld->getPairCache()->findPair(pair.m_pProxy0,pair.m_pProxy1);
+					if (!collisionPair)
+						continue;
+
+					if (collisionPair->m_algorithm)
+						collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
+
+					bool stop = false;
+					for ( int j = 0; j < manifoldArray.size() && !stop; j++ )
 					{
-						c->touchingFood = true;
-						c->touchedFoodID = f;
+						btPersistentManifold* manifold = manifoldArray[j];
+						
+						btCollisionObject* object1 = static_cast<btCollisionObject*>(manifold->getBody0());
+						btCollisionObject* object2 = static_cast<btCollisionObject*>(manifold->getBody1());
+
+						if ( object1->getUserPointer() == c && object2->getUserPointer() == c )
+							continue;
+
+						for ( int p = 0; p < manifold->getNumContacts(); p++ )
+						{
+							const btManifoldPoint &pt = manifold->getContactPoint(p);
+							if ( pt.getDistance() < 0.f )
+							{
+								void* Collidingobject;
+								if ( object1->getUserPointer() != c && object1->getUserPointer() != 0 )
+									Collidingobject = object1->getUserPointer();
+								else
+									Collidingobject = object2->getUserPointer();
+
+								// Touching Food
+									Food* f = static_cast<Food*>(Collidingobject);
+									if ( f )
+									{
+										if ( f->type == 1 )
+										{
+											c->touchingFood = true;
+											stop = true;
+											c->touchedFoodID = f;
+
+		// 									cerr << ".";
+		// 									cerr << c << " collides with food: " << Collidingobject << endl;
+											//f->color[0] = 1.0f;
+										}
+									}
+							}
+						}
 					}
 				}
 			}
 
-		// over corpse input neuron
-			c->touchingCorpse = false;
-			for( unsigned int f=0; f < corpses.size() && !c->touchingCorpse; f++)
-			{
-				Corpse *fo = corpses[f];
-				if ( !fo->isCarried )
-				{
-					float avgSize = c->straal + fo->straal;
-					if ( fabs(c->position.x - fo->position.x) <= avgSize && fabs(c->position.z - fo->position.z) <= avgSize )
-					{
-						c->touchingCorpse = true;
-						c->touchedCorpseID = f;
-					}
-				}
-			}
-	
 		// process
 			c->process();
 
 		// record critter used energy
 			freeEnergy += c->energyUsed;
-	
-		// move
-			if (c->moved)
-			{
-				if (spotIsFree(c->newposition, c->straal, i))
-				{
-					c->moveToNewPoss();
-				}
-			}
 
-		// eat
+		// process Output Neurons
 			if ( c->eat )
 			{
-				// herbivore
-				if ( c->crittertype == 0 )
-				{
-					// is food
-					if ( c->touchingFood )
-					{
-						float eaten = settings->critter_maxenergy / 50.0f;
-						if ( c->energyLevel + eaten > settings->critter_maxenergy ) eaten -= (c->energyLevel + eaten) - settings->critter_maxenergy;
-						if ( food[c->touchedFoodID]->energy - eaten < 0 ) eaten = food[c->touchedFoodID]->energy;
-			
-						c->energyLevel += eaten;
-						food[c->touchedFoodID]->energy -= eaten;
-						food[c->touchedFoodID]->resize();
-					}
-					// is poison
-					if ( c->touchingCorpse )
-					{
-						float eaten = settings->critter_maxenergy / 50.0f;
-						if ( c->energyLevel - eaten < 0.0f ) eaten = c->energyLevel;
-						if ( corpses[c->touchedCorpseID]->energy - eaten < 0.0f ) eaten = corpses[c->touchedCorpseID]->energy;
-			
-						c->energyLevel -= eaten;
-						corpses[c->touchedCorpseID]->energy -= eaten;
-						corpses[c->touchedCorpseID]->resize();
-
-						// free the energy
-						freeEnergy += 2.0f*eaten;
-					}
-				}
-
-				// carnivore
-				else
-				{
-					// is food
-					if ( c->touchingCorpse )
-					{
-						float eaten = settings->critter_maxenergy / 50.0f;
-						if ( c->energyLevel + eaten > settings->critter_maxenergy ) eaten -= (c->energyLevel + eaten) - settings->critter_maxenergy;
-						if ( corpses[c->touchedCorpseID]->energy - eaten < 0.0f ) eaten = corpses[c->touchedCorpseID]->energy;
-			
-						c->energyLevel += eaten;
-						corpses[c->touchedCorpseID]->energy -= eaten;
-						corpses[c->touchedCorpseID]->resize();
-					}
-					// is poison
-					if ( c->touchingFood )
-					{
-						float eaten = settings->critter_maxenergy / 50.0f;
-						if ( c->energyLevel - eaten < 0.0f ) eaten = c->energyLevel;
-						if ( food[c->touchedFoodID]->energy - eaten < 0.0f ) eaten = food[c->touchedFoodID]->energy;
-			
-						c->energyLevel -= eaten;
-						food[c->touchedFoodID]->energy -= eaten;
-						food[c->touchedFoodID]->resize();
-
-						// free the energy
-						freeEnergy += 2.0f*eaten;
-					}
-				}
-			}
-
-		// carry / drop
-			if ( settings->critter_enablecarrying && c->carrydrop )
-			{
-				// food
 				if ( c->touchingFood )
 				{
-					if ( !c->carriesCorpse && !c->carriesFood )
-					{
-						if ( !food[c->touchedFoodID]->isCarried && !c->carriesCorpse )
-						{
-							c->foodBeingCarried = food[c->touchedFoodID];
-							c->carriesFood = true;
+					Food* f = c->touchedFoodID;
+					float eaten = settings->critter_maxenergy / 50.0f;
+					if ( c->energyLevel + eaten > settings->critter_maxenergy )
+						eaten -= (c->energyLevel + eaten) - settings->critter_maxenergy;
+					if ( f->energyLevel - eaten < 0 )
+						eaten = f->energyLevel;
 
-							// calculate a new speedfactor depending on food energy
-							float halfcrspeed = (settings->critter_speed / 2.0f);
-							c->speedfactor = halfcrspeed + (halfcrspeed - ((c->foodBeingCarried->energy/settings->food_maxenergy)*halfcrspeed) );
-
-							c->foodBeingCarried->isCarried = true;
-							c->foodBeingCarried->position.x = c->position.x;
-							c->foodBeingCarried->position.y += c->size;
-							c->foodBeingCarried->position.z = c->position.z;
-							//cerr << "LIFTING" << endl;
-						}
-					}
-/*					else // we must do an exchange here
-					{
-					}*/
-				}
-				else if ( c->carriesFood ) // ! else
-				{
-					c->carriesFood = false;
-					c->speedfactor = settings->critter_speed;
-					c->foodBeingCarried->isCarried = false;
-					c->foodBeingCarried->position.y -= c->size;
-					//cerr << "DROPPING" << endl;
-				}
-
-				// corpse
-				if ( c->touchingCorpse )
-				{
-					if ( !c->carriesCorpse && !c->carriesFood )
-					{
-						if ( !corpses[c->touchedCorpseID]->isCarried )
-						{
-							c->corpseBeingCarried = corpses[c->touchedCorpseID];
-							c->carriesCorpse = true;
-
-							// calculate a new speedfactor depending on corpse energy
-							float halfcrspeed = (settings->critter_speed / 2.0f);
-							c->speedfactor = halfcrspeed + (halfcrspeed - ((c->corpseBeingCarried->energy/settings->corpse_maxenergy)*halfcrspeed) );
-
-							c->corpseBeingCarried->isCarried = true;
-							c->corpseBeingCarried->position.x = c->position.x;
-							c->corpseBeingCarried->position.y += c->size;
-							c->corpseBeingCarried->position.z = c->position.z;
-							//cerr << "LIFTING" << endl;
-						}
-					}
-/*					else // we must do an exchange here FIXME
-					{
-					}*/
-				}
-				else if ( c->carriesCorpse ) // ! else
-				{
-					c->carriesCorpse = false;
-					c->speedfactor = settings->critter_speed;
-					c->corpseBeingCarried->isCarried = false;
-					c->corpseBeingCarried->position.y -= c->size;
-					//cerr << "DROPPING" << endl;
+/*					cerr << "PRE energies:" << endl;
+					cerr << "c: " << c->energyLevel << endl;
+					cerr << "f: " << f->energyLevel << endl;*/
+					c->energyLevel += eaten;
+					f->energyLevel -= eaten;
+/*					cerr << "POST energies:" << endl;
+					cerr << "c: " << c->energyLevel << endl;
+					cerr << "f: " << f->energyLevel << endl << endl;*/
+					//c->touchedFoodID->resize();
 				}
 			}
 
-		// fire
-			if ( c->fire && c->canFire )
-			{
-				//cerr << "critter " << i << "(ad:" << c->adamdist << ") FIRES\n";
-				c->fireTimeCount = 0;
-				//float used = settings->critter_maxenergy * 0.01f;
-				c->energyLevel -= settings->critter_firecost;
-				freeEnergy += settings->critter_firecost;
-	
-				Bullet *b = new Bullet;
-	
-				b->calcDirection(c->rotation);
-				float reused = c->rotation * 0.0174532925f;
-				b->position.x = c->position.x - sin(reused) * (c->halfsize + b->size+0.1);
-				b->position.z = c->position.z - cos(reused) * (c->halfsize + b->size+0.1);
-	
-				bullets.push_back( b );
-			}
-	
-		// hit by bullet?
-			for( unsigned int f=0; f < bullets.size() && !c->wasShot; f++)
-			{
-				Bullet *b = bullets[f];
-				float avgSize = c->halfsize + b->halfsize;
-				if ( fabs(c->position.x - b->position.x) <= avgSize && fabs(c->position.z - b->position.z) <= avgSize )
-				{
-					c->totalFrames += (settings->critter_maxlifetime/2) ;
-					c->wasShot = true;
-					delete b;
-					bullets.erase(bullets.begin()+f);
-				}
-			}
-
-		// procreate
-			//procreation if procreation energy trigger is hit
+		// procreation if procreation energy trigger is hit
 			if ( c->procreate && c->canProcreate )
 			{
-				// move critter it's half size to the left
-				c->prepNewPoss();
-				c->newposition.x -= c->reuseRotSinY * c->halfsize;
-				c->newposition.z -= c->reuseRotCosY * c->halfsize;
-	
-				if (spotIsFree(c->newposition, c->straal, i))
-				{
-					// move new critter to the right by sum of halfsizes
-					Vector3f newpos = c->position;
-					newpos.x += c->reuseRotSinY * (2.0f*c->halfsize + 0.01);
-					newpos.z += c->reuseRotCosY * (2.0f*c->halfsize + 0.01);
 
-					if (spotIsFree(newpos, c->straal, i))
-					{
+				bool mutant = false;
+				if ( randgen->Instance()->get(1,100) <= settings->critter_mutationrate )
+					mutant = true;
 
-						CritterB *nc = new CritterB(*c);
+				btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.bodyparts[0]->body->getMotionState();
+				btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
+				np.setY(1.0f);
+				CritterB *nc = new CritterB(*c, currentCritterID++, np, mutant);
+				//CritterB *nc = new CritterB(*c, currentCritterID++, findPosition(), mutant);
 
-						// mutate or not
-						bool mutant = false;
-						if ( randgen->Instance()->get(1,100) <= settings->critter_mutationrate )
-						{
-							mutant = true;
-							nc->mutate();
-						}
+				// display message of birth
+					stringstream buf;
+					buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
+					buf << " ad: " << setw(4) << nc->adamdist;
+					buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
+// 							if ( nc->crittertype == 1 )
+// 								buf << " carnivore";
+// 							else
+// 								buf << " herbivore";
+					if ( mutant ) buf << " mutant";
+					Textverbosemessage::Instance()->addBirth(buf);
 
-						// same positions / rotation
-						nc->position = newpos;
+				// split energies in half
+					nc->energyLevel = c->energyLevel/2.0f;
+					c->energyLevel = nc->energyLevel;
 
-						// optional rotate 180 of new borne
-						if ( settings->critter_flipnewborns )
-						{
-							nc->setRotation(c->rotation + 180.0f);
-						}
-						else if ( settings->critter_randomrotatenewborns )
-						{
-							nc->setRotation( randgen->Instance()->get(0,360) );
-						}
-						else
-						{
-							nc->setRotation(c->rotation);
-						}
+				// reset procreation energy count
+					c->procreateTimeCount = 0;
 
-						nc->prepNewPoss();
+					settings->info_critters++;
+					settings->info_totalNeurons += nc->brain.totalNeurons;
+					settings->info_totalSynapses += nc->brain.totalSynapses;
+					settings->info_totalAdamDistance += nc->adamdist;
 
-						nc->brain.wireArch();
-						nc->retina = retina;
-
-						nc->critterID = currentCritterID++;
-
-// 						if (!settings->noverbose)
-// 						{
-// 							cerr << "> " << setw(3) << critters.size()+1 << " | " << setw(4) << c->critterID << " procreates: " << setw(4) << nc->critterID << " (";
-// 							cerr << "ad: " << setw(4) << nc->adamdist;
-// 							cerr << ", N: " << setw(4) << nc->brain.totalNeurons << ", C: " << setw(5) << nc->brain.totalSynapses;
-// 							if ( nc->crittertype == 1 ) cerr << ", carnivore";
-// 							else cerr << ", herbivore";
-// 							if ( mutant ) cerr << ", mutant";
-// 							cerr << ")" << endl;
-
-							stringstream buf;
-							buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
-							buf << " ad: " << setw(4) << nc->adamdist;
-							buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
-							if ( nc->crittertype == 1 )
-								buf << " carnivore";
-							else
-								buf << " herbivore";
-							if ( mutant ) buf << " mutant";
-							Textverbosemessage::Instance()->addBirth(buf);
-// 						}
-
-						// split energies in half
-						nc->energyLevel = c->energyLevel/2.0f;
-						c->energyLevel = nc->energyLevel;
-
-						// reset procreation energy count
-						c->procreateTimeCount = 0;
-	
-						nc->calcFramePos(critters.size());
-
-						c->moveToNewPoss();
-						nc->moveToNewPoss();
-
-						if ( nc->crittertype == 0 )
-						{
-							settings->info_crittersH++;
-							settings->info_totalNeuronsH += nc->brain.totalNeurons;
-							settings->info_totalSynapsesH += nc->brain.totalSynapses;
-							settings->info_totalAdamDistanceH += nc->adamdist;
-						}
-						else
-						{
-							settings->info_crittersC++;
-							settings->info_totalNeuronsC += nc->brain.totalNeurons;
-							settings->info_totalSynapsesC += nc->brain.totalSynapses;
-							settings->info_totalAdamDistanceC += nc->adamdist;
-						}
-
-						critters.push_back( nc );
-					}
-				}
+					critters.push_back( nc );
+					
+					nc->calcFramePos(critters.size()-1);
 			}
 
-		if ( c->crittertype == 0 )
+		// move
+			c->move();
+
+		// count totals of neurons, synapses and adamdistances
+			settings->info_totalNeurons		+= c->brain.totalNeurons;
+			settings->info_totalSynapses		+= c->brain.totalSynapses;
+			settings->info_totalAdamDistance	+= c->adamdist;
+
+
+		
+		// TEST: update ghost positions  ->  naisuwa :)
+		// HACK
+		
+		if ( c->body.mouths.size() > 0 )
 		{
-			settings->info_crittersH++;
-			settings->info_totalNeuronsH += c->brain.totalNeurons;
-			settings->info_totalSynapsesH += c->brain.totalSynapses;
-			settings->info_totalAdamDistanceH += c->adamdist;
-		}
-		else
-		{
-			settings->info_crittersC++;
-			settings->info_totalNeuronsC += c->brain.totalNeurons;
-			settings->info_totalSynapsesC += c->brain.totalSynapses;
-			settings->info_totalAdamDistanceC += c->adamdist;
+			btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.mouths[0]->body->getMotionState();
+			c->body.mouths[0]->ghostObject->setWorldTransform(myMotionState->m_graphicsWorldTrans);
 		}
 	}
 
 	settings->info_critters = critters.size();
 	settings->info_food = food.size();
-	settings->info_corpses = corpses.size();
-	settings->info_bullets = bullets.size();
 
-
-/*	cerr << "b: " << *critters[0]->Neurons[0]->inputs[0]->ref << endl;
-	usleep (1000000);*/
-
-	if ( doTimedInserts )
-	{
-		timedInsertsCounter++;
-
-		if ( timedInsertsCounter == 3*settings->critter_maxlifetime )
-		{
-//			if (!settings->noverbose) cerr << "inserting 100 food" << endl;
-
-			settings->freeEnergyInfo += settings->food_maxenergy * 100.0f;
-			freeEnergy += settings->food_maxenergy * 100.0f;
-		}
-		else if ( timedInsertsCounter == (3*settings->critter_maxlifetime)+1 )
-		{
-//			if (!settings->noverbose) cerr << "removing 100 food" << endl;
-
-			settings->freeEnergyInfo -= settings->food_maxenergy * 100.0f;
-			freeEnergy -= settings->food_maxenergy * 100.0f;
-
-			timedInsertsCounter = 0;
-		}
-	}
-}
-
-void WorldB::toggleTimedInserts()
-{
-	 if ( doTimedInserts ) doTimedInserts = false;
-	 else
-	 {
-		 doTimedInserts = true;
-		 timedInsertsCounter = 0;
-	 }
 }
 
 void WorldB::insertRandomFood(int amount, float energy)
@@ -758,717 +532,148 @@ void WorldB::insertRandomFood(int amount, float energy)
 	for ( int i=0; i < amount; i++ )
 	{
 		Food *f = new Food;
-		f->energy = energy;
-		f->resize();
-		f->position = findEmptySpace(f->straal);
+		f->energyLevel = energy;
+		//f->resize();
+		f->createBody( m_dynamicsWorld, findPosition() );
+		
 		food.push_back( f );
 	}
 }
 
 void WorldB::insertCritter()
 {
-	CritterB *c = new CritterB;
-
+	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, findPosition(), retina);
 	critters.push_back( c );
 
-	c->critterID = currentCritterID++;
+	c->calcFramePos(critters.size()-1);
 
 	// start energy
 	c->energyLevel = settings->critter_startenergy;
 	freeEnergy -= c->energyLevel;
-
-	positionCritterB(critters.size()-1);
-	c->setRotation( randgen->Instance()->get(0,360) );
-
-	c->brain.wireArch();
-	c->retina = retina;
 }
 
-void WorldB::positionCritterB(unsigned int cid)
+btVector3 WorldB::findPosition()
 {
-	critters[cid]->newposition = findEmptySpace(critters[cid]->straal);
-	critters[cid]->newposition.y = critters[cid]->halfsize;
-	critters[cid]->moveToNewPoss();
+	btVector3 pos( (float)randgen->Instance()->get( 0, 100*settings->worldsizeX ) / 100, 1.0f, (float)randgen->Instance()->get( 0, 100*settings->worldsizeY ) / 100 );
+// 	pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
+// 	pos.y = 1.0;
+// 	pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
 
-	critters[cid]->calcFramePos(cid);
-	critters[cid]->calcCamPos();
+	return pos;
 }
 
 void WorldB::removeCritter(unsigned int cid)
 {
-	bool hasCorpse = false;
-	if ( critters[cid]->energyLevel > 0.0f && !settings->corpse_disable && critters[cid]->crittertype==0 )
-	{
-		hasCorpse = true;
-
-		Corpse *c = new Corpse;
-		c->position = critters[cid]->position;
-
-		// put max energy allowed in corpse
-// 		if ( critters[cid]->energyLevel > settings->corpse_maxenergy )
-// 			c->energy = settings->corpse_maxenergy;
-// 		else
-// 			c->energy = critters[cid]->energyLevel;
-
-		c->energy = settings->corpse_maxenergy;
-
-// 		// put rest back in space
-		freeEnergy += critters[cid]->energyLevel;
-		freeEnergy -= c->energy;
-
-		c->resize();
-		corpses.push_back( c );
-	}
-	else freeEnergy += critters[cid]->energyLevel;
-
-// 	if ( critters[cid]->energyLevel > 0.0f )
-// 	{
-// 		Food *f = new Food;
-// 		f->maxenergy = settings->food_maxenergy;
-// 		f->maxsize = settings->food_size;
-// 		f->maxtotalFrames = settings->food_maxlifetime;
-// 		f->position = critters[cid]->position;
-// 
-// 		if ( critters[cid]->energyLevel > settings->food_maxenergy )
-// 		{
-// 			f->energy = settings->food_maxenergy;
-// 		}
-// 		else
-// 		{
-// 			f->energy = critters[cid]->energyLevel;
-// 		}
-// 
-// 
-// 		freeEnergy += critters[cid]->energyLevel;
-// 		freeEnergy -= f->energy;
-// 
-// 		// put 50% of energy in food, rest back in space
-// 
-// 		//f->resize(settings->food_size);
-// 		f->resize();
-// 		food.push_back( f );
-// 	}
-// 	else freeEnergy += critters[cid]->energyLevel;
-
-	// adapt selection
-	if ( isSelected )
-	{
-		if ( selectedCritter == cid )
-		{
-			selectedCritter = critters.size()-1;
-		}
-		else if ( selectedCritter > cid )
-		{
-			selectedCritter--;
-		}
-	}
-
-	if ( critters[cid]->carriesFood )
-	{
-		critters[cid]->foodBeingCarried->isCarried = false;
-
-		// drop the food back down
-		critters[cid]->foodBeingCarried->position.y -= critters[cid]->size;
-	}
-
-	if ( critters[cid]->carriesCorpse )
-	{
-		critters[cid]->corpseBeingCarried->isCarried = false;
-
-		// drop the food back down
-		critters[cid]->corpseBeingCarried->position.y -= critters[cid]->size;
-	}
+	freeEnergy += critters[cid]->energyLevel;
 
 	delete critters[cid];
 	critters.erase(critters.begin()+cid);
 
+	// update higher retina frame positions
 	for ( unsigned int c = cid; c < critters.size(); c++ )
-	{
 		critters[c]->calcFramePos(c);
-	}
 }
 
-void WorldB::createWall()
+void WorldB::killHalfOfCritters()
 {
-	destroyWall();
-
-	if ( settings->walltype == 1 )
+	for ( unsigned int c = 0; c < critters.size(); c++ )
 	{
-		for ( unsigned int i=0; i < 4*sizeY; i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = sizeX/2.0f;
-			w->position.z = 0.125f + ((float)i*0.25);
-			walls.push_back( w );
-		}
+		freeEnergy += critters[c]->energyLevel;
+
+		delete critters[c];
+		critters.erase(critters.begin()+c);
 	}
 
-	else if ( settings->walltype == 2 )
-	{
-		for ( unsigned int i=0; i < (4*sizeY); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = sizeX/2.0f;
-			w->position.z = 0.125f + ((float)i*0.25);
-			walls.push_back( w );
-		}
-		walls[ (unsigned int)(sizeY*2.0f)-2 ]->toggle();
-		walls[ (unsigned int)(sizeY*2.0f)-1 ]->toggle();
-		walls[ (unsigned int)(sizeY*2.0f)   ]->toggle();
-		walls[ (unsigned int)(sizeY*2.0f)+1 ]->toggle();
-	}
-
-	else if ( settings->walltype == 3 )
-	{
-		for ( unsigned int i=0; i < 4*sizeX; i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 0.125f + ((float)i*0.25);
-			w->position.z = sizeY/2.0f;
-			walls.push_back( w );
-		}
-	}
-
-	else if ( settings->walltype == 4 )
-	{
-		for ( unsigned int i=0; i < 4*sizeX; i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 0.125f + ((float)i*0.25);
-			w->position.z = sizeY/2.0f;
-			walls.push_back( w );
-		}
-		walls[ (unsigned int)(sizeX*2.0f)-2 ]->toggle();
-		walls[ (unsigned int)(sizeX*2.0f)-1 ]->toggle();
-		walls[ (unsigned int)(sizeX*2.0f)   ]->toggle();
-		walls[ (unsigned int)(sizeX*2.0f)+1 ]->toggle();
-	}
-
-	else if ( settings->walltype == 5 )
-	{
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 2.0f*sizeX/3.0f;
-			w->position.z = 0.125f + ((float)i*0.25);
-			walls.push_back( w );
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = sizeX/3.0f;
-			w->position.z = sizeY - 0.125f - ((float)i*0.25);
-			walls.push_back( w );
-		}
-	}
-
-	else if ( settings->walltype == 6 )
-	{
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = sizeX/3.0f;
-			w->position.z = 0.125f + ((float)i*0.25);
-			walls.push_back( w );
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 2.0f*sizeX/3.0f;
-			w->position.z = sizeY - 0.125f - ((float)i*0.25);
-			walls.push_back( w );
-		}
-	}
-
-	else if ( settings->walltype == 7 )
-	{
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 0.125f + ((float)i*0.25);
-			w->position.z = 2.0f*sizeY/3.0f;
-			walls.push_back( w );
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = sizeX - 0.125f - ((float)i*0.25);
-			w->position.z = sizeY/3.0f;
-			walls.push_back( w );
-		}
-	}
-	else if ( settings->walltype == 8 )
-	{
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 0.125f + ((float)i*0.25);
-			w->position.z = sizeY/3.0f;
-			walls.push_back( w );
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = sizeX - 0.125f - ((float)i*0.25);
-			w->position.z = 2.0f*sizeY/3.0f;
-			walls.push_back( w );
-		}
-	}
-	else if ( settings->walltype == 9 )
-	{
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 2.0f*sizeX/5.0f;
-			w->position.z = 0.125f + ((float)i*0.25);
-			walls.push_back( w );
-
-			w = new Wall();
-			w->position.x = 4.0f*sizeX/5.0f;
-			w->position.z = 0.125f + ((float)i*0.25);
-			walls.push_back( w );
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = (float)sizeX/5.0f;
-			w->position.z = (float)sizeY - 0.125f - ((float)i*0.25);
-			walls.push_back( w );
-			w = new Wall();
-
-			w->position.x = 3.0f*sizeX/5.0f;
-			w->position.z = (float)sizeY - 0.125f - ((float)i*0.25);
-			walls.push_back( w );
-		}
-	}
-	else if ( settings->walltype == 10 )
-	{
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = sizeX/5.0f;
-			w->position.z = 0.125f + ((float)i*0.25);
-			walls.push_back( w );
-
-			w = new Wall();
-			w->position.x = 3.0f*sizeX/5.0f;
-			w->position.z = 0.125f + ((float)i*0.25);
-			walls.push_back( w );
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeY); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 2.0f*sizeX/5.0f;
-			w->position.z = sizeY - 0.125f - ((float)i*0.25);
-			walls.push_back( w );
-
-			w = new Wall();
-			w->position.x = 4.0f*sizeX/5.0f;
-			w->position.z = sizeY - 0.125f - ((float)i*0.25);
-			walls.push_back( w );
-		}
-	}
-	else if ( settings->walltype == 11 )
-	{
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 0.125f + ((float)i*0.25);
-			w->position.z = 2.0f*sizeY/5.0f;
-			walls.push_back( w );
-
-			w = new Wall();
-			w->position.x = 0.125f + ((float)i*0.25);
-			w->position.z = 4.0f*sizeY/5.0f;
-			walls.push_back( w );
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = sizeX - 0.125f - ((float)i*0.25);
-			w->position.z = sizeY/5.0f;
-			walls.push_back( w );
-
-			w = new Wall();
-			w->position.x = sizeX - 0.125f - ((float)i*0.25);
-			w->position.z = 3.0f*sizeY/5.0f;
-			walls.push_back( w );
-		}
-	}
-	else if ( settings->walltype == 12 )
-	{
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = 0.125f + ((float)i*0.25);
-			w->position.z = sizeY/5.0f;
-			walls.push_back( w );
-
-			w = new Wall();
-			w->position.x = 0.125f + ((float)i*0.25);
-			w->position.z = 3.0f*sizeY/5.0f;
-			walls.push_back( w );
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(3.0f*sizeX); i++ )
-		{
-			Wall *w = new Wall();
-			w->position.x = sizeX - 0.125f - ((float)i*0.25);
-			w->position.z = 2.0f*sizeY/5.0f;
-			walls.push_back( w );
-
-			w = new Wall();
-			w->position.x = sizeX - 0.125f - ((float)i*0.25);
-			w->position.z = 4.0f*sizeY/5.0f;
-			walls.push_back( w );
-		}
-	}
-	else if ( settings->walltype == 13 || settings->walltype == 14 )
-	{
-		unsigned int gapX = sizeX/4.0f;
-		unsigned int gapY = sizeY/4.0f;
-		for ( unsigned int i = 0; i < (unsigned int)(2.0f*sizeX); i++ )
-		{
-			if ( i >= gapX && i < (unsigned int)(2.0f*sizeX)-gapX )
-			{
-				Wall *w = new Wall();
-				w->position.x = sizeX/4.0f + 0.125f + ((float)i*0.25);
-				w->position.z = sizeY/4.0f;
-				walls.push_back( w );
-
-				w = new Wall();
-				w->position.x = sizeX/4.0f + 0.125f + ((float)i*0.25);
-				w->position.z = 3.0f*sizeY/4.0f;
-				walls.push_back( w );
-			}
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(2.0f*sizeY); i++ )
-		{
-			if ( i >= gapY && i < (unsigned int)(2.0f*sizeY)-gapY )
-			{
-				Wall *w = new Wall();
-				w->position.x = sizeX/4.0f;
-				w->position.z = sizeY/4.0f + 0.125f + ((float)i*0.25);
-				walls.push_back( w );
-
-				w = new Wall();
-				w->position.x = 3.0f*sizeX/4.0f;
-				w->position.z = sizeY/4.0f + 0.125f + ((float)i*0.25);
-				walls.push_back( w );
-			}
-		}
-
-		if ( settings->walltype == 14 )
-		{
-			for ( unsigned int i = 0; i < (unsigned int)sizeX; i++ )
-			{
-				if ( i >= gapX && i < (unsigned int)sizeX-gapX )
-				{
-					Wall *w = new Wall();
-					w->position.x = 0.125f + ((float)i*0.25);
-					w->position.z = sizeY/4.0f;
-					walls.push_back( w );
-
-					w = new Wall();
-					w->position.x = 3.0f*sizeX/4.0f + 0.125f + ((float)i*0.25);
-					w->position.z = sizeY/4.0f;
-					walls.push_back( w );
-
-					w = new Wall();
-					w->position.x = 3.0f*sizeX/4.0f + 0.125f + ((float)i*0.25);
-					w->position.z = 3.0f*sizeY/4.0f;
-					walls.push_back( w );
-
-					w = new Wall();
-					w->position.x = 0.125f + ((float)i*0.25);
-					w->position.z = 3.0f*sizeY/4.0f;
-					walls.push_back( w );
-				}
-			}
-			for ( unsigned int i = 0; i < (unsigned int)sizeY; i++ )
-			{
-				if ( i >= gapY && i < (unsigned int)sizeY-gapY )
-				{
-					Wall *w = new Wall();
-					w->position.x = sizeX/4.0f;
-					w->position.z = 0.125f + ((float)i*0.25);
-					walls.push_back( w );
-
-					w = new Wall();
-					w->position.x = sizeX/4.0f;
-					w->position.z = 3.0f*sizeY/4.0f + 0.125f + ((float)i*0.25);
-					walls.push_back( w );
-
-					w = new Wall();
-					w->position.x = 3.0f*sizeX/4.0f;
-					w->position.z = 3.0f*sizeY/4.0f + 0.125f + ((float)i*0.25);
-					walls.push_back( w );
-
-					w = new Wall();
-					w->position.x = 3.0f*sizeX/4.0f;
-					w->position.z = 0.125f + ((float)i*0.25);
-					walls.push_back( w );
-				}
-			}
-		}
-	}
-	else if ( settings->walltype == 15 )
-	{
-		unsigned int gapX = sizeX/4.0f;
-		unsigned int gapY = sizeY/4.0f;
-		for ( unsigned int i = 0; i < (unsigned int)(8.0f*sizeX/6.0f); i++ )
-		{
-			if ( i >= gapX && i < (unsigned int)(8.0f*sizeX/6.0f)-gapX )
-			{
-				Wall *w = new Wall();
-				w->position.x = sizeX/6.0f*2.0f + 0.125f + ((float)i*0.25);
-				w->position.z = sizeY/6.0f*2.0f;
-				walls.push_back( w );
-
-				w = new Wall();
-				w->position.x = sizeX/6.0f*2.0f + 0.125f + ((float)i*0.25);
-				w->position.z = 4.0f*sizeY/6.0f;
-				walls.push_back( w );
-			}
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(8.0f*sizeY/6.0f); i++ )
-		{
-			if ( i >= gapY && i < (unsigned int)(8.0f*sizeY/6.0f)-gapY )
-			{
-				Wall *w = new Wall();
-				w->position.x = sizeX/6.0f*2.0f;
-				w->position.z = sizeY/6.0f*2.0f + 0.125f + ((float)i*0.25);
-				walls.push_back( w );
-
-				w = new Wall();
-				w->position.x = 4.0f*sizeX/6.0f;
-				w->position.z = sizeY/6.0f*2.0f + 0.125f + ((float)i*0.25);
-				walls.push_back( w );
-			}
-		}
-
-		gapX = sizeX/3.0f;
-		gapY = sizeY/3.0f;
-		for ( unsigned int i = 0; i < (unsigned int)(8.0f*sizeX/3.0f); i++ )
-		{
-			if ( i >= gapX && i < (unsigned int)(8.0f*sizeX/3.0f)-gapX )
-			{
-				Wall *w = new Wall();
-				w->position.x = sizeX/6.0f + 0.125f + ((float)i*0.25);
-				w->position.z = sizeY/6.0f;
-				walls.push_back( w );
-
-				w = new Wall();
-				w->position.x = sizeX/6.0f + 0.125f + ((float)i*0.25);
-				w->position.z = 5.0f*sizeY/6.0f;
-				walls.push_back( w );
-			}
-		}
-		for ( unsigned int i = 0; i < (unsigned int)(8.0f*sizeY/3.0f); i++ )
-		{
-			if ( i >= gapY && i < (unsigned int)(8.0f*sizeY/3.0f)-gapY )
-			{
-				Wall *w = new Wall();
-				w->position.x = sizeX/6.0f;
-				w->position.z = sizeY/6.0f + 0.125f + ((float)i*0.25);
-				walls.push_back( w );
-
-				w = new Wall();
-				w->position.x = 5.0f*sizeX/6.0f;
-				w->position.z = sizeY/6.0f + 0.125f + ((float)i*0.25);
-				walls.push_back( w );
-			}
-		}
-
-
-	}
-
+	// update higher retina frame positions
+	for ( unsigned int c = 0; c < critters.size(); c++ )
+		critters[c]->calcFramePos(c);
 }
 
-void WorldB::destroyWall()
+void WorldB::drawWithGrid()
 {
-	while ( !walls.empty() )
-	{
-		delete walls[0];
-		walls.erase( walls.begin() );
-	}
+	for( unsigned int i=0; i < critters.size(); i++)
+		critters[i]->draw(true);
+
+	for( unsigned int i=0; i < food.size(); i++)
+		food[i]->draw();
+
+	for( unsigned int i=0; i < walls.size(); i++)
+		walls[i]->draw();
+
+	// draw floor
+// 	grid.draw();
+}
+
+void WorldB::drawWithoutFaces()
+{
+	for( unsigned int i=0; i < critters.size(); i++)
+		critters[i]->draw(false);
+
+	for( unsigned int i=0; i < food.size(); i++)
+		food[i]->draw();
+
+	for( unsigned int i=0; i < walls.size(); i++)
+		walls[i]->draw();
+
+	// draw floor
+// 	grid.draw();
 }
 
 void WorldB::drawWithinCritterSight(unsigned int cid)
 {
 	CritterB *c = critters[cid];
-	//c->place();
 
-	// draw everything in it's sight
-
-//	draw floor;
-	glPushMatrix();
-		glScalef( floor.gridsizeX, 0.0f, floor.gridsizeY );
-		glCallList(displayLists+3);
-	glPopMatrix();
-
-	for( unsigned int j=0; j < critters.size(); j++)
+	if ( c->body.mouths.size() > 0 )
 	{
-		if ( cid != j )
+		btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)c->body.mouths[0]->body->getMotionState();
+		btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
+
+		// draw everything in it's sight
+
+		btScalar position[16];
+
+		for( unsigned int i=0; i < walls.size(); i++)
 		{
-			CritterB *f = critters[j];
-			if ( c->isWithinSight(f->position) )
+			walls[i]->draw();
+		}
+
+		for( unsigned int i=0; i < food.size(); i++)
+		{
+			Food *f = food[i];
+			btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)f->body.bodyparts[0]->body->getMotionState();
+			btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
+			if ( cposi.distance(fposi) < settings->critter_sightrange )
+				f->draw();
+		}
+
+		for( unsigned int j=0; j < critters.size(); j++)
+		{
+			if ( cid != j )
 			{
-				glPushMatrix();
-					glTranslatef( f->position.x, f->position.y, f->position.z );
-					glRotatef( f->rotation, 0.0f, 1.0f, 0.0f );
-					glScalef( f->halfsize, f->halfsize, f->halfsize );
+				CritterB *f = critters[j];
+				for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
+				{
+					btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)f->body.bodyparts[b]->body->getMotionState();
+					btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
+					if ( cposi.distance(fposi) < settings->critter_sightrange )
+					{
+						fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
+						glPushMatrix(); 
+						glMultMatrixf(position);
 
-					// body
-					glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
-					glCallList(displayLists+1);
+								glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
 
-					// nose
-					glColor4f( f->nosecolor[0], f->nosecolor[1], f->nosecolor[2], 0.0f );
-					glCallList(displayLists+2);
+								const btBoxShape* boxShape = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape);
+								btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
+								glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
 
-				glPopMatrix();
+								Displaylists::Instance()->call(0);
+
+						glPopMatrix();
+					}
+				}
 			}
 		}
-	}
-
-	glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
-	for( unsigned int j=0; j < food.size(); j++)
-	{
-		Food *f = food[j];
-		if ( c->isWithinSight(f->position) )
-		{
-			glPushMatrix();
-				glTranslatef( f->position.x, f->position.y, f->position.z );
-				glScalef( f->halfsize, f->halfsize, f->halfsize );
-				glCallList(displayLists);
-			glPopMatrix();
-		}
-	}
-
-	glColor4f( 0.5f, 0.0f, 0.0f, 0.5f );
-	for( unsigned int j=0; j < corpses.size(); j++)
-	{
-		Corpse *f = corpses[j];
-		if ( c->isWithinSight(f->position) )
-		{
-			glPushMatrix();
-				glTranslatef( f->position.x, f->position.y, f->position.z );
-				glScalef( f->halfsize, f->halfsize, f->halfsize );
-				glCallList(displayLists);
-			glPopMatrix();
-		}
-	}
-
-	glColor4f( 0.5f, 0.5f, 0.0f, 0.0f );
-	for( unsigned int j=0; j < walls.size(); j++)
-	{
-		Wall *f = walls[j];
-		if ( !f->disabled && c->isWithinSight(f->position) )
-		{
-			glPushMatrix();
-				glTranslatef( f->position.x, f->position.y, f->position.z );
-				glScalef( f->halfsize, f->halfsize, f->halfsize );
-				glCallList(displayLists);
-			glPopMatrix();
-		}
-	}
-
-	glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
-	for( unsigned int j=0; j < bullets.size(); j++)
-	{
-		Bullet *f = bullets[j];
-		if ( c->isWithinSight(f->position) )
-		{
-			glPushMatrix();
-				glTranslatef( f->position.x, f->position.y, f->position.z );
-				glScalef( f->halfsize, f->halfsize, f->halfsize );
-				glCallList(displayLists);
-			glPopMatrix();
-		}
-	}
-}
-
-void WorldB::drawWithGrid()
-{
-	// draw floor
-	grid.draw();
-
-	float dimmer = 0.3f;
-	
-	glColor4f( 0.0f, dimmer, 0.0f, 1.0f );
-	for( unsigned int i=0; i < food.size(); i++)
-	{
-		Food *f = food[i];
-		glPushMatrix();
-			glTranslatef( f->position.x, f->position.y, f->position.z );
-			glScalef( f->halfsize, f->halfsize, f->halfsize );
-			glCallList(displayLists);
-		glPopMatrix();
-	}
-
-	glColor4f( dimmer, 0.0f, 0.0f, 0.5f );
-	for( unsigned int i=0; i < corpses.size(); i++)
-	{
-		Corpse *f = corpses[i];
-		glPushMatrix();
-			glTranslatef( f->position.x, f->position.y, f->position.z );
-			glScalef( f->halfsize, f->halfsize, f->halfsize );
-			glCallList(displayLists);
-		glPopMatrix();
-	}
-
-	glColor4f( dimmer, dimmer, 0.0f, 0.0f );
-	for( unsigned int i=0; i < walls.size(); i++)
-	{
-		Wall *f = walls[i];
-		if ( !f->disabled )
-		{
-			glPushMatrix();
-				glTranslatef( f->position.x, f->position.y, f->position.z );
-				glScalef( f->halfsize, f->halfsize, f->halfsize );
-				glCallList(displayLists);
-			glPopMatrix();
-		}
-	}
-
-	glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
-	for( unsigned int i=0; i < bullets.size(); i++)
-	{
-		Bullet *f = bullets[i];
-		glPushMatrix();
-			glTranslatef( f->position.x, f->position.y, f->position.z );
-			glScalef( f->halfsize, f->halfsize, f->halfsize );
-			glCallList(displayLists);
-		glPopMatrix();
-	}
-
-	for( unsigned int i=0; i < critters.size(); i++)
-	{
-		CritterB *f = critters[i];
-		glPushMatrix();
-			glTranslatef( f->position.x, f->position.y, f->position.z );
-			glRotatef( f->rotation, 0.0f, 1.0f, 0.0f );
-			glScalef( f->halfsize, f->halfsize, f->halfsize );
-
-				// body
-				glColor4f( f->speciescolor[0], f->speciescolor[1], f->speciescolor[2], 0.0f );
-				glCallList(displayLists+1);
-
-				// nose
-				glColor4f( f->nosecolor[0], f->nosecolor[1], f->nosecolor[2], 0.0f );
-				glCallList(displayLists+2);
-
-		glPopMatrix();
-
-// 		// draw visual field
-// 		glPushMatrix();
-// 			glBegin(GL_TRIANGLES);
-// 				glVertex3f(f->frustCullTriangle1.x, f->frustCullTriangle1.y, f->frustCullTriangle1.z);
-// 				glVertex3f(f->frustCullTriangle2.x, f->frustCullTriangle2.y, f->frustCullTriangle2.z);
-// 				glVertex3f(f->frustCullTriangle3.x, f->frustCullTriangle3.y, f->frustCullTriangle3.z);
-// 			glEnd();
-// 		glPopMatrix();
-
 	}
 }
 
@@ -1486,12 +691,11 @@ void WorldB::loadAllCritters()
 			Textmessage::Instance()->add(buf);
 
 			string content;
-			fileH.open( files[i], content );
+			fileH.open( files[i], content ); 
 
-			CritterB *c = new CritterB(content);
+			CritterB *c = new CritterB(content, m_dynamicsWorld, findPosition(), retina);
 
 			unsigned int error = 0;
-
 			if ( c->retinasize != settings->critter_retinasize ) error = 1;
 
 			if ( !error)
@@ -1499,24 +703,23 @@ void WorldB::loadAllCritters()
 				critters.push_back( c );
 
 				c->critterID = currentCritterID++;
+				c->calcFramePos(critters.size()-1);
 
 				// start energy
 				c->energyLevel = settings->critter_startenergy;
 				freeEnergy -= c->energyLevel;
-
-				positionCritterB(critters.size()-1);
-				c->setRotation( randgen->Instance()->get(0,360) );
-
-				c->brain.wireArch();
-				c->retina = retina;
 			}
-			else if ( error == 1 )
+			else
 			{
-				stringstream buf;
-				buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << files[i];
-				Textmessage::Instance()->add(buf);
+				delete c;
+				if ( error == 1 )
+				{
+					stringstream buf;
+					buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << files[i];
+					Textmessage::Instance()->add(buf);
 
-//				cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << endl;
+					cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << endl;
+				}
 			}
 		}
 	}
@@ -1577,299 +780,19 @@ void WorldB::createDirs()
 	if ( !dirH.exists(loaddir) ) dirH.make(loaddir);
 }
 
-bool WorldB::spotIsFree(Vector3f &position, float halfsize, unsigned int exclude)
-{
-
-// within world borders?
-
-	// left border
-	if ( position.x - halfsize <= 0 )		return false;
-	// right border
-	else if ( position.x + halfsize >= sizeX )	return false;
-	// bottom border
-	if ( position.z - halfsize <= 0 )		return false;
-	// top border
-	else if ( position.z + halfsize >= sizeY )	return false;
-
-// check for touch walls
-
-	for ( unsigned int j=0; j < walls.size(); j++ )
-	{
-		Wall *w = walls[j];
-
-		if ( !w->disabled )
-		{
-			float avgSize = halfsize + w->straal;
-			if ( fabs( position.x - w->position.x ) <= avgSize && fabs( position.z - w->position.z ) <= avgSize )
-			{
-				return false;
-			}
-		}
-	}
-
-// check for touch other creatures
-
-	for ( unsigned int j=0; j < critters.size(); j++ )
-	{
-		if ( j != exclude )
-		{
-			CritterB *cj = critters[j];
-			float avgSize = halfsize + cj->straal;
-			if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
-			{
-				return false;
-			}
-		}
-	}
-
-	return true;
-}
-
-bool WorldB::spotIsFree(Vector3f &position, float halfsize)
-{
-
-// within world borders?
-
-	// left border
-	if ( position.x - halfsize <= 0 )		return false;
-	// right border
-	else if ( position.x + halfsize >= sizeX )	return false;
-	// bottom border
-	if ( position.z - halfsize <= 0 )		return false;
-	// top border
-	else if ( position.z + halfsize >= sizeY )	return false;
-
-// check if touching walls
-
-	for ( unsigned int j=0; j < walls.size(); j++ )
-	{
-		Wall *w = walls[j];
-
-		if ( !w->disabled )
-		{
-			float avgSize = halfsize + w->straal;
-			if ( fabs( position.x - w->position.x ) <= avgSize &&  fabs( position.z - w->position.z ) <= avgSize )
-			{
-				return false;
-			}
-		}
-	}
-
-// check if touching other creatures
-
-	for ( unsigned int j=0; j < critters.size(); j++ )
-	{
-		CritterB *cj = critters[j];
-		float avgSize = halfsize + cj->straal;
-		if ( fabs( position.x - cj->position.x ) <= avgSize &&  fabs( position.z - cj->position.z ) <= avgSize )
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
-Vector3f WorldB::findEmptySpace(float halfsize)
-{
-	Vector3f pos;
-	bool placed = false;
-
-	float qwidth = sizeX / 4.0f;
-	float qheight = sizeY / 4.0f;
-
-// 	float fwidth = sizeX / 5.0f;
-// 	float fheight = sizeY / 5.0f;
-
-	float swidth = sizeX / 6.0f;
-	float sheight = sizeY / 6.0f;
-
-	// inside square
-	if ( settings->spreadertype == 1 )
-	{
-		if ( randgen->Instance()->get( 1, 3 ) < 3 )
-		{
-			placed=true;
-
-			pos.x = (float)randgen->Instance()->get( 100*qwidth, 300*qwidth ) / 100;
-			pos.y = halfsize;
-			pos.z = (float)randgen->Instance()->get( 100*qheight, 300*qheight ) / 100;
-
-			while ( !spotIsFree(pos, halfsize) )
-			{
-				pos.x = (float)randgen->Instance()->get( 100*qwidth, 300*qwidth ) / 100;
-				pos.z = (float)randgen->Instance()->get( 100*qheight, 300*qheight ) / 100;
-			}
-		}
-	}
-
-	// outer ring
-	else if ( settings->spreadertype == 2 )
-	{
-		if ( randgen->Instance()->get( 1, 3 ) < 3 )
-		{
-			placed=true;
-
-			unsigned int mode = randgen->Instance()->get( 1, 2 );
-			// left/right
-			if ( mode == 1 )
-			{
-				pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-				unsigned int mode2 = randgen->Instance()->get( 1, 2 );
-				if ( mode2 == 1 )
-					pos.x = (float)randgen->Instance()->get( 300*qwidth, 100*sizeX ) / 100;
-				else
-					pos.x = (float)randgen->Instance()->get( 0, 100*qwidth ) / 100;
-			}
-			// top/bottom
-			else
-			{
-				pos.x = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-				unsigned int mode2 = randgen->Instance()->get( 1, 2 );
-				if ( mode2 == 1 )
-					pos.z = (float)randgen->Instance()->get( 300*qheight, 100*sizeY ) / 100;
-				else
-					pos.z = (float)randgen->Instance()->get( 0, 100*qheight ) / 100;
-			}
-			pos.y = halfsize;
-
-			while ( !spotIsFree(pos, halfsize) )
-			{
-				unsigned int mode = randgen->Instance()->get( 1, 2 );
-				// left/right
-				if ( mode == 1 )
-				{
-					pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-					unsigned int mode2 = randgen->Instance()->get( 1, 2 );
-					if ( mode2 == 1 )
-						pos.x = (float)randgen->Instance()->get( 300*qwidth, 100*sizeX ) / 100;
-					else
-						pos.x = (float)randgen->Instance()->get( 0, 100*qwidth ) / 100;
-				}
-				// top/bottom
-				else
-				{
-					pos.x = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-					unsigned int mode2 = randgen->Instance()->get( 1, 2 );
-					if ( mode2 == 1 )
-						pos.z = (float)randgen->Instance()->get( 300*qheight, 100*sizeY ) / 100;
-					else
-						pos.z = (float)randgen->Instance()->get( 0, 100*qheight ) / 100;
-				}
-			}
-		}
-	}
-
-	// the 4 courners
-	else if ( settings->spreadertype == 3 )
-	{
-		if ( randgen->Instance()->get( 1, 4 ) < 3 )
-		{
-			placed=true;
-
-			pos.y = halfsize;
-
-			if ( randgen->Instance()->get( 0, 1 ) == 1 )
-				pos.x = (float)randgen->Instance()->get( 0, 100*qwidth ) / 100;
-			else
-				pos.x = (float)randgen->Instance()->get( 300*qwidth, 400*qwidth ) / 100;
-
-			if ( randgen->Instance()->get( 0, 1 ) == 1 )
-				pos.z = (float)randgen->Instance()->get( 0, 100*qheight ) / 100;
-			else
-				pos.z = (float)randgen->Instance()->get( 300*qheight, 400*qheight ) / 100;
-
-			while ( !spotIsFree(pos, halfsize) )
-			{
-				pos.x = (float)randgen->Instance()->get( 100*qwidth, 300*qwidth ) / 100;
-				pos.z = (float)randgen->Instance()->get( 100*qheight, 300*qheight ) / 100;
-			}
-		}
-		else
-		{
-			pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
-			pos.y = halfsize;
-			pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-			while ( !spotIsFree(pos, halfsize) )
-			{
-				pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
-				pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-			}
-		}
-	}
-
-	// 2 squares in fifths
-	else if ( settings->spreadertype == 4 )
-	{
-		while ( !placed )
-		{
-			// inside square
-			if ( randgen->Instance()->get( 1, 10 ) > 6 )
-			{
-				placed=true;
-
-				pos.x = (float)randgen->Instance()->get( 200*swidth, 400*swidth ) / 100;
-				pos.y = halfsize;
-				pos.z = (float)randgen->Instance()->get( 200*sheight, 400*sheight ) / 100;
-
-				while ( !spotIsFree(pos, halfsize) )
-				{
-					pos.x = (float)randgen->Instance()->get( 200*swidth, 400*swidth ) / 100;
-					pos.z = (float)randgen->Instance()->get( 200*sheight, 400*sheight ) / 100;
-				}
-			}
-			// outside square
-			else
-			{
-				if ( randgen->Instance()->get( 1, 10 ) > 3 )
-				{
-					placed=true;
-
-					pos.x = (float)randgen->Instance()->get( 100*swidth, 500*swidth ) / 100;
-					pos.y = halfsize;
-					pos.z = (float)randgen->Instance()->get( 100*sheight, 500*sheight ) / 100;
-
-					while ( !spotIsFree(pos, halfsize) )
-					{
-						pos.x = (float)randgen->Instance()->get( 100*swidth, 500*swidth ) / 100;
-						pos.z = (float)randgen->Instance()->get( 100*sheight, 500*sheight ) / 100;
-					}
-				}
-				else
-				{
-					pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
-					pos.y = halfsize;
-					pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-					while ( !spotIsFree(pos, halfsize) )
-					{
-						pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
-						pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-					}
-				}
-			}
-		}
-	}
-	else
-	{
-		pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
-		pos.y = halfsize;
-		pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-		while ( !spotIsFree(pos, halfsize) )
-		{
-			pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
-			pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-		}
-	}
-
-	return pos;
-}
-
 WorldB::~WorldB()
 {
 	for ( unsigned int i=0; i < food.size(); i++ )		delete food[i];
-	for ( unsigned int i=0; i < corpses.size(); i++ )	delete corpses[i];
-	for ( unsigned int i=0; i < bullets.size(); i++ )	delete bullets[i];
+// 	for ( unsigned int i=0; i < corpses.size(); i++ )	delete corpses[i];
+// 	for ( unsigned int i=0; i < bullets.size(); i++ )	delete bullets[i];
 	for ( unsigned int i=0; i < critters.size(); i++ )	delete critters[i];
-	free(retina);
-}
+	for ( unsigned int i=0; i < walls.size(); i++ )		delete walls[i];
 
+	free(retina);
+
+	delete m_collisionConfiguration;
+	delete m_dispatcher;
+	delete m_broadphase;
+	delete m_solver;
+	delete m_dynamicsWorld;
+}

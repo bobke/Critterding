@@ -6,7 +6,7 @@
 	#include "../utils/parser.h"
 
 	#include "archneuronz.h"
-	#include "neuronsensorz.h"
+//	#include "neuronsensorz.h"
 	#include "neuroninterz.h"
 
 // external includes
@@ -15,6 +15,18 @@
 	#include <iostream>
 	using namespace std;
 
+struct motorNeuron
+{
+	bool*		output;
+	unsigned int	id;
+};
+
+struct sensorNeuron
+{
+	float		output;
+	unsigned int	id;
+};
+
 class Brainz
 {
 	public:
@@ -22,8 +34,8 @@ class Brainz
 		~Brainz();
 
 		// input / output accessor/mutators
-			vector<NeuronSensorz>	Inputs;
-			vector<NeuronSensorz>	Outputs;
+			vector<sensorNeuron>	Inputs;
+			vector<motorNeuron>	Outputs;
 
 	// BUILD TIME
 
@@ -113,16 +125,19 @@ class Brainz
 
 		// after every time instance, this will contain how many neurons where fired in that instant (energy usage help)
 			unsigned int		neuronsFired;
+			unsigned int 		motorneuronsFired;
 
 	// build commands
 
 		// functions
 			void			copyFrom(Brainz& otherBrain);
 			void			mergeFrom(Brainz& otherBrain1, Brainz& otherBrain2);
+			void			registerOutput(bool* var, unsigned int id);
+			void			registerInput(unsigned int id);
+			void			removeObsoleteMotorsAndSensors();
 			void			buildArch();
 			void			mutate(unsigned int runs);
 			void			wireArch();
-
 		// load save architecture (serialize)
 			void			setArch(string* content);
 			string*			getArch();
@@ -136,9 +151,7 @@ class Brainz
 
 	private:
 		// utilities
-			//Parser			parseH;
 			Parser			*parseH;
-			//RandGen		randgen;
 			RandGen			*randgen;
 
 		// vectors
@@ -147,6 +160,9 @@ class Brainz
 
 		// a buffer for reading architecture
 			string			archBuffer;
+
+			int			findMotorNeuron( unsigned int id );
+			int			findSensorNeuron( unsigned int id );
 
 		// build time functions
 			void			addRandomArchNeuron();

@@ -9,7 +9,7 @@ ArchNeuronz::ArchNeuronz()
 	dendridicBranches	= 10;
 
 	isMotor			= false;
-	motorFunc		= 0;
+	motorID			= 0;
 
 	isPlastic		= false;
 	plasticityStrengthen	= 1;

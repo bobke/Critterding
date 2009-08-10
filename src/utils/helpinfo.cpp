@@ -5,7 +5,7 @@ Helpinfo::Helpinfo()
 	active = false;
 
 	halfboxwidth = 210.0f;
-	halfboxheight = 245.0f;
+	halfboxheight = 250.0f;
 }
 
 void Helpinfo::draw()
@@ -111,6 +111,9 @@ void Helpinfo::draw()
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "v", "toggle verbosity");
+
+		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "c", "switch critter color mode");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "PgUp", "load all critters from \"~/.critterding/load\"");

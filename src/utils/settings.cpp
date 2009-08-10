@@ -14,13 +14,13 @@ Settings::Settings()
 	worldsizeY			= 12;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
-	startenergy			= 400;
+	startenergy			= 500;
 		startenergyMin			= 0;
 		startenergyMax			= 1000000;
-	mincritters			= 0;
+	mincritters			= 10;
 		mincrittersMin			= 0;
 		mincrittersMax			= 1000;
-	insertcritterevery		= 1000;
+	insertcritterevery		= 0;
 		insertcrittereveryMin		= 0;
 		insertcrittereveryMax		= 1000;
 	retinasperrow			= 20;
@@ -34,7 +34,11 @@ Settings::Settings()
 		walltypeMax			= 15;
 	spreadertype			= 0;
 		spreadertypeMin			= 0;
-		spreadertypeMax			= 4;
+		spreadertypeMax			= 5;
+	colormode			= 0;
+		colormodeMin			= 0;
+		colormodeMax			= 1;
+
 	exit_if_empty			= false;
 	autoload			= false;
 
@@ -65,16 +69,16 @@ Settings::Settings()
 	critter_sizeI			= 10;
 		critter_sizeIMin		= 1;
 		critter_sizeIMax		= 100;
-	critter_speedI			= 50;
+	critter_speedI			= 70;
 		critter_speedIMin		= 1;
 		critter_speedIMax		= 1000;
 	critter_sightrangeI		= 50;
 		critter_sightrangeIMin		= 1;
 		critter_sightrangeIMax		= 1000;
-	critter_retinasize		= 24;
+	critter_retinasize		= 6;
 		critter_retinasizeMin		= 1;
 		critter_retinasizeMax		= 1000;
-	critter_mutationrate		= 10;
+	critter_mutationrate		= 50;
 		critter_mutationrateMin		= 0;
 		critter_mutationrateMax		= 100;
 	critter_maxmutations		= 10;
@@ -90,7 +94,7 @@ Settings::Settings()
 		critter_autosaveintervalMin	= 0;
 		critter_autosaveintervalMax	= 1000000;
 
-	food_maxlifetime		= 4000;
+	food_maxlifetime		= 2000;
 		food_maxlifetimeMin		= 1;
 		food_maxlifetimeMax		= 1000000;
 	food_maxenergy			= 1000;
@@ -101,7 +105,7 @@ Settings::Settings()
 		food_sizeIMax			= 100;
 
 	corpse_disable			= false;
-	corpse_maxlifetime		= 4000;
+	corpse_maxlifetime		= 10000;
 		corpse_maxlifetimeMin		= 1;
 		corpse_maxlifetimeMax		= 1000000;
 	corpse_maxenergy		= 2000;
@@ -132,12 +136,12 @@ Settings::Settings()
 		brain_minsynapsesatbuildtimeMax			= 1000000;
 		brain_mutate_minsynapsesatbuildtime		= false;
 
-	brain_maxsynapsesatbuildtime			= 25;
+	brain_maxsynapsesatbuildtime			= 50;
 		brain_maxsynapsesatbuildtimeMin			= 1;
 		brain_maxsynapsesatbuildtimeMax			= 1000000;
 		brain_mutate_maxsynapsesatbuildtime		= false;
 
-	brain_percentchanceinhibitoryneuron		= 40;
+	brain_percentchanceinhibitoryneuron		= 50;
 		brain_percentchanceinhibitoryneuronMin		= 0;
 		brain_percentchanceinhibitoryneuronMax		= 100;
 		brain_mutate_percentchanceinhibitoryneuron	= false;
@@ -181,7 +185,7 @@ Settings::Settings()
 		brain_maxdendridicbranchesMax			= 1000;
 		brain_mutate_maxdendridicbranches		= false;
 
-	brain_percentchanceconsistentsynapses		= 50;
+	brain_percentchanceconsistentsynapses		= 0;
 		brain_percentchanceconsistentsynapsesMin	= 0;
 		brain_percentchanceconsistentsynapsesMax	= 100;
 		brain_mutate_percentchanceconsistentsynapses	= false;
@@ -217,19 +221,28 @@ Settings::Settings()
 
 		brain_mutate_mutateeffects			= false;
 
-	brain_costhavingneuron				= 100;
+	brain_costhavingneuron				= 50;
 		brain_costhavingneuronMin			= 0;
 		brain_costhavingneuronMax			= 1000000;
-	brain_costfiringneuron				= 50;
+	brain_costfiringneuron				= 10;
 		brain_costfiringneuronMin			= 0;
 		brain_costfiringneuronMax			= 1000000;
-	brain_costfiringmotorneuron			= 5000;
+	brain_costfiringmotorneuron			= 1000;
 		brain_costfiringmotorneuronMin			= 0;
 		brain_costfiringmotorneuronMax			= 1000000;
-	brain_costhavingsynapse				= 10;
+	brain_costhavingsynapse				= 1;
 		brain_costhavingsynapseMin			= 0;
 		brain_costhavingsynapseMax			= 1000000;
 
+	info_critters = 0;
+	info_food = 0;
+	info_corpses = 0;
+	info_bullets = 0;
+
+	info_totalNeurons = 0;
+	info_totalSynapses = 0;
+	info_totalAdamDistance = 0;
+	
 	createHelpInfo();
 }
 

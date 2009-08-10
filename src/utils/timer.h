@@ -15,6 +15,9 @@ class Timer
 		void mark();
 		struct timeval lasttime;
 		float timediff(struct timeval& now, struct timeval& lasttime);
+		
+		float bullet_ms;
+		float bullet_m_Time;
 	protected:
 		Timer();
 	private:

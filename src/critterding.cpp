@@ -12,20 +12,17 @@ int main(int argc, char *argv[])
 	settings->doCommandLineOptions(argc,argv);
 
 	GLWindow glwindow;
-	glwindow.create("Critterding 1.0-beta10", 640, 640, 24);
+	glwindow.create("Critterding 2.01 alpha", 640, 640, 24);
 
 		Evolution mainscene;
 
 		// global
-		mainscene.world.resize(settings->worldsizeX, settings->worldsizeY);
-		mainscene.world.startfoodamount(settings->startenergy);
+// 		mainscene.world.resize(settings->worldsizeX, settings->worldsizeY);
 
-		//settings->printSettings();
+// 		settings->printSettings();
 
 		if (settings->autoload)
 			mainscene.world.loadAllCritters();
-
-		mainscene.world.createWall();
 
 		mainscene.resetCamera();
 		mainscene.camera.sensitivity = settings->camerasensitivity;

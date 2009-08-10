@@ -112,12 +112,6 @@ void Textprinter::setUpFonts()
 
 	fonts[0] = new FTTextureFont(fontFilePath);
 
-	if(fonts[0]->Error())
-	{
-		cerr << "Failed to open font %s\n" << endl;;
-		exit(1);
-	}
-
 	if(!fonts[0]->FaceSize(11))
 	{
 		cerr << "Failed to set size" << endl;

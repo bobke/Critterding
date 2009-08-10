@@ -1,4 +1,5 @@
 #include "brainz.h"
+#include <cstdio>
 
 Brainz::Brainz()
 {
@@ -14,8 +15,8 @@ Brainz::Brainz()
 		totalNeurons					= 0;
 		totalSynapses					= 0;
 
-		numberOfInputs					= 1;
-		numberOfOutputs					= 1;
+		numberOfInputs					= 0;
+		numberOfOutputs					= 0;
 
 		minNeuronsAtBuildtime				= 10;
 		maxNeuronsAtBuildtime				= 150;
@@ -71,12 +72,58 @@ Brainz::Brainz()
 		percentMutateEffectRemoveSynapse		= 40;
 		percentMutateEffectAlterMutable			= 5;
 			mutate_MutateEffects			= false;
-
-		// archBuffer
-		archBuffer					= "";
 }
 
 // BUILD TIME
+
+	void Brainz::registerInput(unsigned int id)
+	{
+		Inputs.push_back( sensorNeuron() );
+		Inputs[numberOfInputs].id = id;
+		numberOfInputs++;
+	}
+
+	void Brainz::registerOutput(bool* var, unsigned int id)
+	{
+		Outputs.push_back( motorNeuron() );
+		Outputs[numberOfOutputs].output = var;
+		Outputs[numberOfOutputs].id = id;
+// 		Outputs.push_back( var );
+		numberOfOutputs++;
+	}
+
+	void Brainz::removeObsoleteMotorsAndSensors()
+	{
+// 		cerr << endl << "removing obsolete brainstuff" << endl;
+		for ( int i = 0; i < (int)ArchNeurons.size(); i++ )
+		{
+			ArchNeuronz* an = &ArchNeurons[i];
+			// disable motor neurons
+			if ( an->isMotor )
+			{
+				if ( findMotorNeuron( an->motorID ) == -1 )
+				{
+					an->isMotor = false;
+				}
+			}
+
+			// disable sensor inputs
+			for ( int j = 0; j < (int)an->ArchSynapses.size(); j++ )
+			{
+				ArchSynapse* as = &an->ArchSynapses[j];
+				if ( as->isSensorNeuron )
+				{
+					if ( findSensorNeuron( as->neuronID ) == -1 )
+					{
+						an->ArchSynapses.erase( an->ArchSynapses.begin()+j );
+						j--;
+					}
+				}
+			}
+		}
+// 		cerr << "done removing obsolete brainstuff" << endl << endl;
+	}
+
 
 	void Brainz::buildArch()
 	{
@@ -87,18 +134,18 @@ Brainz::Brainz()
 			unsigned int NeuronAmount = randgen->Instance()->get( minNeuronsAtBuildtime, maxNeuronsAtBuildtime );
 	
 		// create the architectural neurons
-			for ( unsigned i = 0; i < NeuronAmount; i++ ) addRandomArchNeuron();
+			for ( unsigned i = 0; i < NeuronAmount; i++ )
+				addRandomArchNeuron();
 	
 		// create architectural synapses
-		for ( unsigned neuronID = 0; neuronID < NeuronAmount; neuronID++ )
-		{
-			// determine amount of synapses this neuron will start with
-				unsigned int SynapseAmount = randgen->Instance()->get( minSynapsesAtBuildtime, maxSynapsesAtBuildtime );
+			for ( unsigned neuronID = 0; neuronID < NeuronAmount; neuronID++ )
+			{
+				// determine amount of synapses this neuron will start with
+					unsigned int SynapseAmount = randgen->Instance()->get( minSynapsesAtBuildtime, maxSynapsesAtBuildtime );
 
-			// create the architectural neurons
-				for ( unsigned j = 0; j < SynapseAmount; j++ ) addRandomArchSynapse(neuronID);
-		}
-
+				// create the architectural neurons
+					for ( unsigned j = 0; j < SynapseAmount; j++ ) addRandomArchSynapse(neuronID);
+			}
 	}
 
 	void Brainz::addRandomArchNeuron()
@@ -113,17 +160,18 @@ Brainz::Brainz()
 		// if not, is it motor ?
 			else if ( randgen->Instance()->get(1,100) <= percentChanceMotorNeuron )
 			{
-				unsigned int motorFunc = randgen->Instance()->get( 0, numberOfOutputs-1 );
+				unsigned int motorID = Outputs[ randgen->Instance()->get( 0, numberOfOutputs-1 ) ].id;
 
 				// check if motor already used
 				bool proceed = true;
-				for ( unsigned int i=0; i < ArchNeurons.size(); i++ )
-					if ( ArchNeurons[i].isMotor && ArchNeurons[i].motorFunc == motorFunc ) proceed = false;
+				for ( unsigned int i=0; i < ArchNeurons.size() && proceed; i++ )
+					if ( ArchNeurons[i].isMotor && ArchNeurons[i].motorID == motorID )
+						proceed = false;
 
 				if ( proceed )
 				{
 					an.isMotor = true;
-					an.motorFunc = motorFunc;
+					an.motorID = motorID;
 				}
 			}
 
@@ -170,7 +218,7 @@ Brainz::Brainz()
 				as.isSensorNeuron = true;
 
 				// sensor neuron id synapse is connected to
-				as.neuronID = randgen->Instance()->get( 0, numberOfInputs-1 );
+				as.neuronID = Inputs[ randgen->Instance()->get( 0, numberOfInputs-1 ) ].id;
 
 			}
 		// if not determine inter neuron id
@@ -218,19 +266,19 @@ Brainz::Brainz()
 			totalNeurons = ArchNeurons.size();
 			totalSynapses = 0;
 
-		// init inputs
-			for ( unsigned int i=0; i < numberOfInputs; i++ )
-			{
-				NeuronSensorz ns;
-				Inputs.push_back( ns );
-			}
+// 		// init inputs
+// 			for ( unsigned int i=0; i < numberOfInputs; i++ )
+// 			{
+// 				//NeuronSensorz ns;
+// 				Inputs.push_back( sensorNeuron() );
+// 			}
 
-		// init outputs
-			for ( unsigned int i=0; i < numberOfOutputs; i++ )
-			{
-				NeuronSensorz ns;
-				Outputs.push_back( ns );
-			}
+// 		// init outputs
+// 			for ( unsigned int i=0; i < numberOfOutputs; i++ )
+// 			{
+// 				NeuronSensorz ns;
+// 				Outputs.push_back( ns );
+// 			}
 
 		// create all runtime neurons
 			for ( unsigned int i=0; i < totalNeurons; i++ )
@@ -245,7 +293,8 @@ Brainz::Brainz()
 				ni.dendridicBranches	= ArchNeurons[i].dendridicBranches;
 
 				ni.isMotor		= ArchNeurons[i].isMotor;
-				ni.motorFunc		= ArchNeurons[i].motorFunc;
+				if (ni.isMotor)
+					ni.motorFunc		= findMotorNeuron(ArchNeurons[i].motorID);
 
 				ni.isPlastic		= ArchNeurons[i].isPlastic;
 				ni.plasticityStrengthen	= 1.0f+(1.0f/ArchNeurons[i].plasticityStrengthen);
@@ -262,7 +311,9 @@ Brainz::Brainz()
 				for ( unsigned int j=0; j < ArchNeurons[i].ArchSynapses.size(); j++ )
 				{
 					if ( ArchNeurons[i].ArchSynapses[j].isSensorNeuron )
-						Neurons[i].connec( &Inputs[ ArchNeurons[i].ArchSynapses[j].neuronID ].output, ArchNeurons[i].ArchSynapses[j].dendriteBranch, ArchNeurons[i].ArchSynapses[j].weight );
+					{
+						Neurons[i].connec( &Inputs[ findSensorNeuron(ArchNeurons[i].ArchSynapses[j].neuronID) ].output, ArchNeurons[i].ArchSynapses[j].dendriteBranch, ArchNeurons[i].ArchSynapses[j].weight );
+					}
 					else
 						Neurons[i].connec( &Neurons[ ArchNeurons[i].ArchSynapses[j].neuronID ].output, ArchNeurons[i].ArchSynapses[j].dendriteBranch, ArchNeurons[i].ArchSynapses[j].weight );
 				}
@@ -271,9 +322,29 @@ Brainz::Brainz()
 
 	}
 
+	int Brainz::findSensorNeuron( unsigned int id )
+	{
+		for ( unsigned int i=0; i < numberOfInputs; i++ )
+			if ( Inputs[i].id == id )
+				return i;
+
+// 		cerr << "brain findSensorNeuron error for id: " << id << endl;
+		return -1;
+	}
+
+	int Brainz::findMotorNeuron( unsigned int id )
+	{
+		for ( unsigned int i=0; i < numberOfOutputs; i++ )
+			if ( Outputs[i].id == id )
+				return i;
+
+// 		cerr << "brain findMotorNeuron error for id: " << id << endl;
+		return -1;
+	}
+
 	void Brainz::mutate(unsigned int runs)
 	{
-		// have to do count cuz setupArch not done yet
+		// have to do count cuz wireArch not done yet
 		totalNeurons		= ArchNeurons.size();
 		totalSynapses		= 0;
 		for ( unsigned int i = 0; i < totalNeurons; i++ ) totalSynapses += ArchNeurons[i].ArchSynapses.size();
@@ -285,7 +356,6 @@ Brainz::Brainz()
 
 		for ( unsigned int i=0; i < runs; i++ )
 		{
-
 			unsigned int mode = randgen->Instance()->get(1,100);
 
 		// add a new neuron
@@ -380,29 +450,32 @@ Brainz::Brainz()
 						{
 							// backup old
 							bool old = ArchNeurons[nid].isMotor;
-							unsigned int oldfunc = ArchNeurons[nid].motorFunc;
+							unsigned int oldfunc = ArchNeurons[nid].motorID;
 
 							// reset
 							ArchNeurons[nid].isMotor = false;
-							ArchNeurons[nid].motorFunc = 0;
+							ArchNeurons[nid].motorID = 0;
 
 							// redetermine
 							if ( !ArchNeurons[nid].isInhibitory && randgen->Instance()->get(1,100) <= percentChanceMotorNeuron )
 							{
-								unsigned int motorFunc = randgen->Instance()->get( 0, numberOfOutputs-1 );
+								unsigned int motorID = Outputs[ randgen->Instance()->get( 0, numberOfOutputs-1 ) ].id;
+
 								bool proceed = true;
-								for ( unsigned int i=0; i < ArchNeurons.size(); i++ )
-									if ( ArchNeurons[i].isMotor && ArchNeurons[i].motorFunc == motorFunc ) proceed = false;
+								for ( unsigned int i=0; i < ArchNeurons.size() && proceed; i++ )
+									if ( ArchNeurons[i].isMotor && ArchNeurons[i].motorID == motorID )
+										proceed = false;
 				
 								if ( proceed )
 								{
 									ArchNeurons[nid].isMotor = true;
-									ArchNeurons[nid].motorFunc = motorFunc;
+									ArchNeurons[nid].motorID = motorID;
 								}
 							}
 
 							// make sure we mutate
-							if ( old == ArchNeurons[nid].isMotor && oldfunc == ArchNeurons[nid].motorFunc ) runs++;
+							if ( old == ArchNeurons[nid].isMotor && oldfunc == ArchNeurons[nid].motorID )
+								runs++;
 						}
 					// synaptic plasticity
 						else if ( jmode == 3 )
@@ -708,11 +781,11 @@ Brainz::Brainz()
 	{
 		// reset fired neurons counter
 		neuronsFired = 0;
-	
+		motorneuronsFired = 0;
 		// clear Motor Outputs
 		for ( unsigned int i=0; i < numberOfOutputs; i++ )
 		{
-			Outputs[i].output = 0;
+			*Outputs[i].output = false;
 		}
 	
 		for ( unsigned int i=0; i < totalNeurons; i++ )
@@ -730,7 +803,8 @@ Brainz::Brainz()
 				// motor neuron check & exec
 				if ( n->isMotor )
 				{
-					Outputs[n->motorFunc].output++;
+					motorneuronsFired++;
+					*Outputs[n->motorFunc].output = true;
 					//cerr << "neuron " << i << " fired, motor is " << Neurons[i]->MotorFunc << " total now " << Outputs[Neurons[i]->MotorFunc]->output << endl;
 				}
 			}
@@ -745,7 +819,8 @@ Brainz::Brainz()
 //		neuronsFired = 0;
 	
 		// clear Motor Outputs
-		for ( unsigned int i=0; i < numberOfOutputs; i++ ) Outputs[i].output = 0;
+		for ( unsigned int i=0; i < numberOfOutputs; i++ )
+			Outputs[i].output = false;
 	
 		// clear Neurons
 		for ( unsigned int i=0; i < totalNeurons; i++ )
@@ -774,7 +849,7 @@ Brainz::Brainz()
 					if ( n->isMotor )
 					{
 						motorFired = true;
-						Outputs[n->motorFunc].output++;
+						*Outputs[n->motorFunc].output = true;
 						//cerr << "neuron " << i << " fired, motor is " << Neurons[i]->MotorFunc << " total now " << Outputs[Neurons[i]->MotorFunc]->output << endl;
 					}
 				}
@@ -788,8 +863,8 @@ Brainz::Brainz()
 
 	void Brainz::copyFrom(Brainz& otherBrain)
 	{
-		numberOfInputs				= otherBrain.numberOfInputs;
-		numberOfOutputs				= otherBrain.numberOfOutputs;
+// 		numberOfInputs				= otherBrain.numberOfInputs;
+// 		numberOfOutputs				= otherBrain.numberOfOutputs;
 		maxNeurons				= otherBrain.maxNeurons;
 		minSynapses				= otherBrain.minSynapses;
 		maxSynapses				= otherBrain.maxSynapses;
@@ -845,7 +920,7 @@ Brainz::Brainz()
 			an.dendridicBranches = oan->dendridicBranches;
 
 			an.isMotor = oan->isMotor;
-			an.motorFunc = oan->motorFunc;
+			an.motorID = oan->motorID;
 			an.isPlastic = oan->isPlastic;
 			an.isPlastic = oan->isPlastic;
 			an.plasticityStrengthen = oan->plasticityStrengthen;
@@ -869,8 +944,8 @@ Brainz::Brainz()
 
 	void Brainz::mergeFrom(Brainz& otherBrain1, Brainz& otherBrain2)
 	{
-		numberOfInputs				= otherBrain1.numberOfInputs;
-		numberOfOutputs				= otherBrain1.numberOfOutputs;
+// 		numberOfInputs				= otherBrain1.numberOfInputs;
+// 		numberOfOutputs				= otherBrain1.numberOfOutputs;
 		maxNeurons				= otherBrain1.maxNeurons;
 		minSynapses				= otherBrain1.minSynapses;
 		maxSynapses				= otherBrain1.maxSynapses;
@@ -939,7 +1014,7 @@ Brainz::Brainz()
 			an.dendridicBranches = oan->dendridicBranches;
 
 			an.isMotor = oan->isMotor;
-			an.motorFunc = oan->motorFunc;
+			an.motorID = oan->motorID;
 			an.isPlastic = oan->isPlastic;
 			an.isPlastic = oan->isPlastic;
 			an.plasticityStrengthen = oan->plasticityStrengthen;
@@ -1021,7 +1096,7 @@ Brainz::Brainz()
 				{
 					string MTR = parseH->Instance()->returnUntillStrip( "|", line );
 					//cerr << "MTR: " << MTR  << endl;
-					if(EOF == sscanf(MTR.c_str(), "%d", &an.motorFunc))			cerr << "ERROR INSERTING CRITTER" << endl;
+					if(EOF == sscanf(MTR.c_str(), "%d", &an.motorID))			cerr << "ERROR INSERTING CRITTER" << endl;
 					an.isMotor = true;
 				}
 
@@ -1057,17 +1132,17 @@ Brainz::Brainz()
 				ArchNeurons.push_back( an );
 			}
 
-			else if ( parseH->Instance()->beginMatchesStrip( "numberOfInputs=", line ) )
-			{
-				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-				if(EOF == sscanf(Holder.c_str(), "%d", &numberOfInputs))				cerr << "ERROR INSERTING CRITTER" << endl;
-			}
+// 			else if ( parseH->Instance()->beginMatchesStrip( "numberOfInputs=", line ) )
+// 			{
+// 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 				if(EOF == sscanf(Holder.c_str(), "%d", &numberOfInputs))				cerr << "ERROR INSERTING CRITTER" << endl;
+// 			}
 
-			else if ( parseH->Instance()->beginMatchesStrip( "numberOfOutputs=", line ) )
-			{
-				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-				if(EOF == sscanf(Holder.c_str(), "%d", &numberOfOutputs))				cerr << "ERROR INSERTING CRITTER" << endl;
-			}
+// 			else if ( parseH->Instance()->beginMatchesStrip( "numberOfOutputs=", line ) )
+// 			{
+// 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 				if(EOF == sscanf(Holder.c_str(), "%d", &numberOfOutputs))				cerr << "ERROR INSERTING CRITTER" << endl;
+// 			}
 
 			else if ( parseH->Instance()->beginMatchesStrip( "maxNeurons=", line ) )
 			{
@@ -1339,8 +1414,8 @@ Brainz::Brainz()
 	{
 			stringstream buf;
 	
-			buf << "numberOfInputs="			<< numberOfInputs << ";" << endl;
-			buf << "numberOfOutputs="			<< numberOfOutputs << ";" << endl;
+//			buf << "numberOfInputs="			<< numberOfInputs << ";" << endl;
+//			buf << "numberOfOutputs="			<< numberOfOutputs << ";" << endl;
 	
 			buf << "maxNeurons="				<< maxNeurons << ";" << endl;
 			buf << "minSynapses="				<< minSynapses << ";" << endl;
@@ -1414,7 +1489,7 @@ Brainz::Brainz()
 	
 				buf << "f=" << ArchNeurons[i].firingThreshold << "|";
 				buf << "d=" << ArchNeurons[i].dendridicBranches << "|";
-				if ( ArchNeurons[i].isMotor ) buf << "m=" << ArchNeurons[i].motorFunc << "|";
+				if ( ArchNeurons[i].isMotor ) buf << "m=" << ArchNeurons[i].motorID << "|";
 				if ( ArchNeurons[i].isPlastic ) buf << "p=" << ArchNeurons[i].plasticityStrengthen << "," << ArchNeurons[i].plasticityWeaken << "|";
 		
 				// inputs
@@ -1433,8 +1508,8 @@ Brainz::Brainz()
 				}
 				buf << ");\n";
 			}
-			archBuffer = buf.str();
 
+		archBuffer = buf.str();
 		return &archBuffer;
 	}
 

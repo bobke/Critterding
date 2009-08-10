@@ -5,7 +5,7 @@ Evolution::Evolution()
 	settings = Settings::Instance();
 
 	pause = false;
-	drawCVNeurons = false;
+// 	drawCVNeurons = false;
 }
 
 void Evolution::draw()
@@ -19,65 +19,63 @@ void Evolution::draw()
 		return;
 	}
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if ( world.critters.size() > 100 )
+		world.killHalfOfCritters();
 
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-	glHint(GL_FOG_HINT, GL_FASTEST);
-	glShadeModel(GL_FLAT);
-	glEnable(GL_DEPTH_TEST);
- 	glDisable (GL_LIGHTING);
-	glDisable(GL_COLOR_MATERIAL);
-	glDisable(GL_DITHER);
-	glDisable(GL_POLYGON_SMOOTH);
-
-	world.process();
-
-	if ( !drawCVNeurons || world.isSelected )
-	{
+// 	if ( sleeper.isRenderTime() )
+// 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-// 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-// 		glHint(GL_FOG_HINT, GL_FASTEST);
-// 		glShadeModel(GL_FLAT);
-// 		glEnable(GL_DEPTH_TEST);
-// 		glDisable (GL_LIGHTING);
-// 		glDisable(GL_COLOR_MATERIAL);
-// 		glDisable(GL_DITHER);
-// 		glDisable(GL_POLYGON_SMOOTH);
-	}
+		// 3D
 
-        if ( world.isSelected )
-        {
-		camera.follow(world.critters[world.selectedCritter]->cameraposition, world.critters[world.selectedCritter]->rotation);
-        }
-        else
-        {
-                camera.place();
-        }
-        world.drawWithGrid();
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+//		glHint(GL_FOG_HINT, GL_FASTEST);
+		glShadeModel(GL_FLAT);
+		glEnable(GL_DEPTH_TEST);
+		glDisable (GL_LIGHTING);
+		glDisable(GL_COLOR_MATERIAL);
+		glDisable(GL_DITHER);
+		glDisable(GL_POLYGON_SMOOTH);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 
-	// 2D
+		world.process();
 
-	glPushMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, *Settings::Instance()->winWidth, *Settings::Instance()->winHeight, 0, -1, 1);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+// 		if (world.critters.size() >0 )
+// 		{
+// 			camera.follow( (btDefaultMotionState*)world.critters[0]->body->mouths[0]->body->getMotionState() );
+// 			world.drawWithoutFaces();
+// 		}
 
-	glDisable(GL_DEPTH_TEST);
+		camera.place();
+		world.drawWithGrid();
 
-		infobar.draw();
+		// 2D
+		glDisable(GL_CULL_FACE);
 
-		infostats.draw(infobar.height());
+		glPushMatrix();
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, *Settings::Instance()->winWidth, *Settings::Instance()->winHeight, 0, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
-		Textverbosemessage::Instance()->draw(infobar.height()+infostats.height());
+		glDisable(GL_DEPTH_TEST);
 
-		helpinfo.draw();
+			infobar.draw();
 
-		Textmessage::Instance()->draw();
+			infostats.draw(infobar.height());
 
-	glPopMatrix();
+			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height());
+
+			helpinfo.draw();
+
+			Textmessage::Instance()->draw();
+
+		glPopMatrix();
+		
+		glXSwapBuffers(settings->dpy, settings->win);
+// 	}
 
 	if ( settings->exit_if_empty && world.critters.size() == 0 )
 	{
@@ -116,51 +114,31 @@ void Evolution::handlekey(const KeySym& key)
 
 		case XK_F5:
 		{
-/*			if ( settings->mincritters > 0 ) settings->mincritters--;
+			if ( settings->mincritters > settings->mincrittersMin )
+				settings->mincritters--;
 			stringstream buf;
-			buf << "min c: " << settings->mincritters;
-			Textmessage::Instance()->add(buf);*/
-			if ( settings->insertcritterevery > 0 ) settings->insertcritterevery-=100;
+			buf << "mincritters: "<< settings->mincritters;
+			Textmessage::Instance()->add(buf);
+/*			if ( settings->insertcritterevery > 0 ) settings->insertcritterevery-=100;
 			stringstream buf;
 			buf << "insert critter every : " << settings->insertcritterevery << " frames";
-			Textmessage::Instance()->add(buf);
+			Textmessage::Instance()->add(buf);*/
 		}
 		break;
 		case XK_F6:
 		{
-/*			settings->mincritters++;
+			if ( settings->mincritters < settings->mincrittersMax )
+				settings->mincritters++;
 			stringstream buf;
-			buf << "min c: " << settings->mincritters;
-			Textmessage::Instance()->add(buf);*/
-			settings->insertcritterevery += 100;
+			buf << "mincritters: "<< settings->mincritters;
+			Textmessage::Instance()->add(buf);
+
+/*			settings->insertcritterevery += 100;
 			stringstream buf;
 			buf << "insert critter every : " << settings->insertcritterevery << " frames";
-			Textmessage::Instance()->add(buf);
+			Textmessage::Instance()->add(buf);*/
 		}
 		break;
-
-// 		case XK_F5:
-// 		{
-// 			if ( (settings->freeEnergyInfo-(settings->food_maxenergy*25.0f)) / settings->food_maxenergy >= 0.0f )
-// 			{
-// 				settings->freeEnergyInfo -= settings->food_maxenergy * 25.0f;
-// 				world.freeEnergy -= settings->food_maxenergy * 25.0f;
-// 
-// 			}
-// 			stringstream buf;
-// 			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
-// 			Textmessage::Instance()->add(buf);
-// 		}
-// 		break;
-// 		case XK_F6:
-// 		{
-// 			settings->freeEnergyInfo += settings->food_maxenergy * 25.0f;
-// 			world.freeEnergy += settings->food_maxenergy * 25.0f;
-// 			stringstream buf;
-// 			buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
-// 			Textmessage::Instance()->add(buf);
-// 		}
-// 		break;
 
 		case XK_KP_Subtract:
 		{
@@ -190,11 +168,7 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 		case XK_F8:
 		{
-			world.toggleTimedInserts();
-			stringstream buf;
-			buf << "timed food inserts: "<< world.doTimedInserts;
-			Textmessage::Instance()->add(buf);
-
+			world.killHalfOfCritters();
 		}
 		break;
 		case XK_F9:
@@ -255,18 +229,6 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		break;
-		case XK_f:
-			if ( world.isSelected )
-			{
-				world.selectedCritter = 0;
-				world.isSelected = false;
-			}
-			else if ( !world.critters.empty() )
-			{
-				world.selectedCritter = world.critters.size()-1;
-				world.isSelected = true;
-			}
-		break;
 		case XK_s:
 		{
 			settings->spreadertype++;
@@ -277,25 +239,17 @@ void Evolution::handlekey(const KeySym& key)
 			Textmessage::Instance()->add(buf);
 		}
 		break;
-		case XK_w:
+		case XK_c:
 		{
-			settings->walltype++;
-			if ( settings->walltype > settings->walltypeMax )
-				settings->walltype = settings->walltypeMin;
-			world.createWall();
+			settings->colormode++;
+			if ( settings->colormode > settings->colormodeMax )
+				settings->colormode = settings->colormodeMin;
 			stringstream buf;
-			buf << "Wall type: " << settings->walltype;
+			buf << "Colormode: "<< settings->colormode;
 			Textmessage::Instance()->add(buf);
 		}
 		break;
-		case XK_x:
-			settings->walltype = 0;
-			world.destroyWall();
-		break;
 
-		case XK_Insert:
-			drawCVNeurons = !drawCVNeurons;
-		break;
 		case XK_Delete:
 		break;
 
@@ -365,12 +319,15 @@ void Evolution::handlekey(const KeySym& key)
 
 void Evolution::resetCamera()
 {
-	unsigned int biggest = world.sizeX;
-	if ( world.sizeY > biggest )
-		biggest = 1.4f*world.sizeY;
+	unsigned int biggest = settings->worldsizeX;
+	if ( settings->worldsizeY > biggest )
+		biggest = 1.4f*settings->worldsizeY;
 
-	camera.position = Vector3f(-0.5f*world.sizeX, -1.1f*biggest, -0.87*world.sizeY);
-	camera.rotation = Vector3f( 70.0f,  0.0f, 0.0f);
+// 	camera.position = Vector3f(-0.5f*settings->worldsizeX, -1.1f*biggest, -0.87*settings->worldsizeY);
+// 	camera.rotation = Vector3f( 70.0f,  0.0f, 0.0f);
+
+	camera.position = Vector3f( -0.5f*settings->worldsizeX, -1.1f*biggest, -0.5f*settings->worldsizeY);
+	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
 }
 
 Evolution::~Evolution()
