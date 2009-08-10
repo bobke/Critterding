@@ -7,6 +7,7 @@
 #include "file.h"
 #include "parser.h"
 #include <GL/gl.h>
+#include <GL/glx.h>
 
 using namespace std;
 
@@ -19,23 +20,19 @@ class Settings
 
 		// info data
 		unsigned int info_critters;
-		unsigned int info_crittersH;
-		unsigned int info_crittersC;
 		unsigned int info_food;
 		unsigned int info_corpses;
 		unsigned int info_bullets;
 
-		unsigned int info_totalNeuronsH;
-		unsigned int info_totalSynapsesH;
-		unsigned int info_totalAdamDistanceH;
-
-		unsigned int info_totalNeuronsC;
-		unsigned int info_totalSynapsesC;
-		unsigned int info_totalAdamDistanceC;
+		unsigned int info_totalNeurons;
+		unsigned int info_totalSynapses;
+		unsigned int info_totalAdamDistance;
 
 
 		unsigned int *winWidth;
 		unsigned int *winHeight;
+		Display 			*dpy;
+		Window				win;
 
 		unsigned int worldsizeX;
 		unsigned int worldsizeY;
@@ -63,6 +60,9 @@ class Settings
 		unsigned int spreadertype;
 			unsigned int spreadertypeMin;
 			unsigned int spreadertypeMax;
+		unsigned int colormode;
+			unsigned int colormodeMin;
+			unsigned int colormodeMax;
 		bool exit_if_empty;
 		bool autoload;
 //		bool noverbose;

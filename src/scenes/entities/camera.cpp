@@ -2,7 +2,6 @@
 #include "camera.h"
 #include <cmath>
 
-
 using namespace std;
 
 Camera::Camera()
@@ -39,10 +38,58 @@ void Camera::follow(Vector3f &cameraposition, float &rotation)
 	glViewport(0,0,*Settings::Instance()->winWidth,*Settings::Instance()->winHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glFrustum( -0.05f, 0.05f,-nheight,nheight, 0.1f, Settings::Instance()->critter_sightrange);
+// 	glFrustum( -0.05f, 0.05f,-nheight,nheight, 0.1f, Settings::Instance()->critter_sightrange);
+	glFrustum( -0.05f, 0.05f,-nheight,nheight, 0.1f, 10000.0f);
 
+ 	glRotatef(4.0f, 1.0f, 0.0f, 0.0f);
 	glRotatef(rotation, 0.0f, -1.0f, 0.0f);
-	glTranslatef(-cameraposition.x, -cameraposition.y, -cameraposition.z);
+
+// 	glTranslatef(-cameraposition.x, -cameraposition.y, -cameraposition.z);
+
+	float reused = rotation * 0.0174532925f;
+	float x = cameraposition.x + (sin(reused) * 1.0f);
+ 	float z = cameraposition.z + (cos(reused) * 1.0f);
+  	float y = cameraposition.y + 0.35f;
+	glTranslatef(-x, -y, -z);
+
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void Camera::follow(btDefaultMotionState* myMotionState) const
+{
+	float nheight = 0.05f * ((float)(*Settings::Instance()->winHeight) / *Settings::Instance()->winWidth);
+	glViewport(
+		*Settings::Instance()->winWidth - *Settings::Instance()->winWidth/8,
+		0,
+		*Settings::Instance()->winWidth/8,
+		*Settings::Instance()->winHeight/8
+	);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glFrustum( -0.05f, 0.05f,-nheight,nheight, 0.1f, 10000.0f);
+
+	btScalar position[16];
+	btTransform tr = myMotionState->m_graphicsWorldTrans.inverse();
+	tr.getOpenGLMatrix(position);
+	glMultMatrixf(position);
+
+//  	myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
+// 	float revposition[16] = {0};
+//         revposition[0]  = position[0]; revposition[1] = position[4]; revposition[2]  = position[8];
+//         revposition[4]  = position[1]; revposition[5] = position[5]; revposition[6]  = position[9];
+//         revposition[8]  = position[2]; revposition[9] = position[6]; revposition[10] = position[10];
+//         revposition[3]  = 0.0f; revposition[7] = 0.0f; revposition[11] = 0.0f;
+//         revposition[15] = 1.0f;
+// 
+//         revposition[12] = -(position[12] * position[0]) - (position[13] * position[1]) - (position[14] * position[2]);
+//         revposition[13] = -(position[12] * position[4]) - (position[13] * position[5]) - (position[14] * position[6]);
+//         revposition[14] = -(position[12] * position[8]) - (position[13] * position[9]) - (position[14] * position[10]);
+//  	glMultMatrixf(revposition);
+
+// 	rayToTrans.setIdentity();
+// 	rayToTrans.setOrigin(rayTo);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

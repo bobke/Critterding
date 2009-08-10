@@ -2,11 +2,8 @@
 
 Grid::Grid()
 {
-// 	gridsize	= 0;
-// 	gridsizeX	= 0;
-// 	gridsizeY	= 0;
-	resolution	= 1.0f;
-//	resize(gridsize);
+ 	gridsizeX	= 0;
+ 	gridsizeY	= 0;
 
 	color[0]	= 0.0f;
 	color[1]	= 0.0f;
@@ -16,48 +13,36 @@ Grid::Grid()
 
 void Grid::draw()
 {
-	glColor4f( color[0], color[1], color[2], color[3] );
-	glPushMatrix();
-		glBegin(GL_LINES);
-			for( unsigned int i=0; i < vertices.size(); i++)
-			{
-				//cout << vertices[i].x() << " " << vertices[i].y() << " " << vertices[i].z() << endl;
-				glVertex3f(vertices[i].x, vertices[i].y, vertices[i].z);
-			}
-		glEnd();
-	glPopMatrix();
+	fixedGround->getWorldTransform().getOpenGLMatrix(m);
+	glPushMatrix(); 
+	glMultMatrixf(m);
+
+		glColor4f( color[0], color[1], color[2], color[3] );
+
+		const btBoxShape* boxShape = static_cast<const btBoxShape*>(groundShape);
+		btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
+		glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
+
+		Displaylists::Instance()->call(0);
+
+	glPopMatrix(); 
+
 }
 
-void Grid::resize(unsigned int X, unsigned int Y)
+void Grid::resize(unsigned int X, unsigned int Y, btDynamicsWorld* m_dynamicsWorld)
 {
 	gridsizeX = X;
 	gridsizeY = Y;
 
-	int totalstepsX	= int(gridsizeX / resolution);
-	int totalstepsY	= int(gridsizeY / resolution);
+	groundShape = new btBoxShape( btVector3( (float)X/2 ,0.1f,(float)Y/2 ) );
+	btTransform groundTransform;
+	groundTransform.setIdentity();
+	groundTransform.setOrigin(btVector3(((float)X/2),0,((float)Y/2)));
 
-	vertices.clear();
-	for ( int i = 0; i <= totalstepsX; i++ )
-	{
-		// horizontal lines
-			vertices.push_back( Vector3f( (float)(resolution * i), 0.0f, 0.0f ) );
-			vertices.push_back( Vector3f( (float)(resolution * i), 0.0f, gridsizeY ) );
-
-/*		// vertical lines
-			vertices.push_back( Vector3f(0.0f, 0.0f, resolution * i) );
-			vertices.push_back( Vector3f(gridsize, 0.0f, resolution * i) );*/
-	}
-
-	for ( int i = 0; i <= totalstepsY; i++ )
-	{
-// 		// horizontal lines
-// 			vertices.push_back( Vector3f( (float)(resolution * i), 0.0f, 0.0f ) );
-// 			vertices.push_back( Vector3f( (float)(resolution * i), 0.0f, gridsize ) );
-
-		// vertical lines
-			vertices.push_back( Vector3f(0.0f, 0.0f, resolution * i) );
-			vertices.push_back( Vector3f(gridsizeX, 0.0f, resolution * i) );
-	}
+	fixedGround = new btCollisionObject();
+	fixedGround->setCollisionShape(groundShape);
+	fixedGround->setWorldTransform(groundTransform);
+	m_dynamicsWorld->addCollisionObject(fixedGround);
 }
 
 Grid::~Grid()

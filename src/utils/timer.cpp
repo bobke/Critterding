@@ -8,8 +8,10 @@ Timer* Timer::Instance ()
 
 Timer::Timer()
 {
-	// calc lasttiem for first time
+	// calc lasttime for first time
 	gettimeofday(&lasttime, &timer_tz);
+
+	bullet_m_Time = 0.0f;
 }
 
 void Timer::mark()
@@ -21,7 +23,14 @@ void Timer::mark()
 	// calc diff between now and lasttime
 	elapsed = timediff(now, lasttime);
 	//cerr << elapsed << endl;
-	
+
+// 	bullet_ms = 1000000.f / (1/Timer::Instance()->elapsed);
+	bullet_ms = 1000000.f / Timer::Instance()->elapsed;
+// 	if (bullet_ms > 16666.6666f)
+// 		bullet_ms = 16666.6666f;
+
+	bullet_m_Time += bullet_ms;
+
 	lasttime = now;
 }
 

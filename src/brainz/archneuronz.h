@@ -33,7 +33,7 @@ class ArchNeuronz
 			// flag
 			bool				isMotor;
 			// function
-			unsigned int			motorFunc;
+			unsigned int			motorID;
 
 		// synaptic plasticity by flag
 			bool				isPlastic;

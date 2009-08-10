@@ -4,6 +4,7 @@
 #include "../../utils/settings.h"
 #include "GL/gl.h"
 #include "vector3f.h"
+#include "btBulletDynamicsCommon.h"
 
 class Camera{
 public:
@@ -21,6 +22,7 @@ public:
 
 	void place();
 	void follow(Vector3f &cameraposition, float &rotation);
+	void follow(btDefaultMotionState* myMotionState) const;
 
 	void lookRight(const float& factor);
 	void lookLeft(const float& factor);

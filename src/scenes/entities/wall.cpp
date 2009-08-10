@@ -1,30 +1,54 @@
 #include "wall.h"
 
-Wall::Wall()
+Wall::Wall(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dynamicsWorld)
 {
-	size		= 0.25f;
- 	energy		= 1000.0f;
-	resize(size);
+	m_ownerWorld = m_dynamicsWorld;
 
-	disabled	= false;
+	halfX		= X/2;
+	halfY		= Y/2;
+	halfZ		= Z/2;
+
+	color[0]	= 0.0f;
+	color[1]	= 0.0f;
+	color[2]	= 0.5f;
+	color[3]	= 0.0f;
+
+	groundShape = new btBoxShape( btVector3( halfX ,halfY, halfZ ) );
+	btTransform groundTransform;
+	groundTransform.setIdentity();
+	groundTransform.setOrigin( position );
+
+	fixedGround = new btCollisionObject();
+	fixedGround->setCollisionShape(groundShape);
+	fixedGround->setWorldTransform(groundTransform);
+	m_ownerWorld->addCollisionObject(fixedGround);
+
+	fixedGround->getWorldTransform().getOpenGLMatrix(m);
 }
-void Wall::resize(float newsize)
-{
-	size		= newsize;
-	halfsize	= newsize / 2.0f;
-	straal		= (newsize * 1.4142136f)/2.0f;
 
-	// change position according to height
-	position.y = halfsize;
-}
-
-void Wall::toggle()
+void Wall::draw()
 {
-	disabled = !disabled;
+// 	fixedGround->getWorldTransform().getOpenGLMatrix(m);
+	glPushMatrix(); 
+	glMultMatrixf(m);
+
+		glColor4f( color[0], color[1], color[2], color[3] );
+
+/*		const btBoxShape* boxShape = static_cast<const btBoxShape*>(groundShape);
+		btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();*/
+		glScaled(halfX, halfY, halfZ);
+
+		Displaylists::Instance()->call(0);
+
+	glPopMatrix(); 
+
 }
 
 Wall::~Wall()
 {
+	m_ownerWorld->removeCollisionObject(fixedGround);
+	delete groundShape;
+	delete fixedGround;
 }
 
 
