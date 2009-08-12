@@ -118,6 +118,9 @@ class Settings
 		unsigned int critter_autosaveinterval;
 			unsigned int critter_autosaveintervalMin;
 			unsigned int critter_autosaveintervalMax;
+		unsigned int critter_killhalfat;
+			unsigned int critter_killhalfatMin;
+			unsigned int critter_killhalfatMax;
 
 		unsigned int food_maxlifetime;
 			unsigned int food_maxlifetimeMin;

@@ -19,8 +19,8 @@ void Evolution::draw()
 		return;
 	}
 
-	if ( world.critters.size() > 100 )
-		world.killHalfOfCritters();
+// 	if ( world.critters.size() > 100 )
+// 		world.killHalfOfCritters();
 
 // 	if ( sleeper.isRenderTime() )
 // 	{
@@ -164,11 +164,21 @@ void Evolution::handlekey(const KeySym& key)
 		break;
 
 		case XK_F7:
-			world.insertCritter();
+		{
+			if ( --settings->critter_killhalfat < settings->critter_killhalfatMin )
+				settings->critter_killhalfat = settings->critter_killhalfatMin;
+			stringstream buf;
+ 			buf << "Kill half of vritters at: "<< settings->critter_killhalfat;
+			Textmessage::Instance()->add(buf);
+		}
 		break;
 		case XK_F8:
 		{
-			world.killHalfOfCritters();
+			if ( ++settings->critter_killhalfat > settings->critter_killhalfatMax )
+				settings->critter_killhalfat = settings->critter_killhalfatMax;
+			stringstream buf;
+ 			buf << "Kill half of vritters at: "<< settings->critter_killhalfat;
+			Textmessage::Instance()->add(buf);
 		}
 		break;
 		case XK_F9:
@@ -215,9 +225,12 @@ void Evolution::handlekey(const KeySym& key)
 			world.saveAllCritters();
 		break;
 
+		case XK_i:
+			world.insertCritter();
+		break;
 
-		// Critter controls
-		case XK_z:
+		case XK_k:
+			world.killHalfOfCritters();
 		break;
 
 		case XK_p:
