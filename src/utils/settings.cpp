@@ -93,6 +93,9 @@ Settings::Settings()
 	critter_autosaveinterval	= 0;
 		critter_autosaveintervalMin	= 0;
 		critter_autosaveintervalMax	= 1000000;
+	critter_killhalfat		= 1000;
+		critter_killhalfatMin		= 2;
+		critter_killhalfatMax		= 1000000;
 
 	food_maxlifetime		= 2000;
 		food_maxlifetimeMin		= 1;

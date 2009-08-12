@@ -145,6 +145,21 @@ WorldB::WorldB()
 
 void WorldB::process()
 {
+	// Autosave Critters?
+		if ( settings->critter_autosaveinterval > 0 )
+		{
+			autosaveCounter += Timer::Instance()->elapsed;
+			if ( autosaveCounter > settings->critter_autosaveinterval )
+			{
+				autosaveCounter = 0.0f;
+				saveAllCritters();
+			}
+		}
+
+	// kill half?
+		if ( critters.size() >= settings->critter_killhalfat )
+			killHalfOfCritters();
+
 	// Remove food
 		for( unsigned int i=0; i < food.size(); i++)
 		{
@@ -192,40 +207,36 @@ void WorldB::process()
 			}
 		}
 
-		btCollisionObjectArray copyArray = m_dynamicsWorld->getCollisionObjectArray();
-		int numObjects = m_dynamicsWorld->getNumCollisionObjects();
-		for (int i=0; i < numObjects; i++)
-		{
-			btCollisionObject* colObj = copyArray[i];
-			btRigidBody* body = btRigidBody::upcast(colObj);
-			if (body)
-			{
-/*				if (body->getMotionState())
-				{
-					btDefaultMotionState* myMotionState = (btDefaultMotionState*)body->getMotionState();
-					myMotionState->m_graphicsWorldTrans = myMotionState->m_startWorldTrans;
-					body->setCenterOfMassTransform( myMotionState->m_graphicsWorldTrans );
-					colObj->setInterpolationWorldTransform( myMotionState->m_startWorldTrans );
-					colObj->forceActivationState(ACTIVE_TAG);
-					colObj->activate();
-					colObj->setDeactivationTime(0);
-					//colObj->setActivationState(WANTS_DEACTIVATION);
-				}*/
-				//removed cached contact points (this is not necessary if all objects have been removed from the dynamics world)
-				m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(colObj->getBroadphaseHandle(),m_dynamicsWorld->getDispatcher());
-
-/*				btRigidBody* body = btRigidBody::upcast(colObj);
-				if (body && !body->isStaticObject())
-				{
-					btRigidBody::upcast(colObj)->setLinearVelocity(btVector3(0,0,0));
-					btRigidBody::upcast(colObj)->setAngularVelocity(btVector3(0,0,0));
-				}*/
-			}
-		}
-
-
-	// do a bullet step
-		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
+// 		btCollisionObjectArray copyArray = m_dynamicsWorld->getCollisionObjectArray();
+// 		int numObjects = m_dynamicsWorld->getNumCollisionObjects();
+// 		for (int i=0; i < numObjects; i++)
+// 		{
+// 			btCollisionObject* colObj = copyArray[i];
+// 			btRigidBody* body = btRigidBody::upcast(colObj);
+// 			if (body)
+// 			{
+// /*				if (body->getMotionState())
+// 				{
+// 					btDefaultMotionState* myMotionState = (btDefaultMotionState*)body->getMotionState();
+// 					myMotionState->m_graphicsWorldTrans = myMotionState->m_startWorldTrans;
+// 					body->setCenterOfMassTransform( myMotionState->m_graphicsWorldTrans );
+// 					colObj->setInterpolationWorldTransform( myMotionState->m_startWorldTrans );
+// 					colObj->forceActivationState(ACTIVE_TAG);
+// 					colObj->activate();
+// 					colObj->setDeactivationTime(0);
+// 					//colObj->setActivationState(WANTS_DEACTIVATION);
+// 				}*/
+// 				//removed cached contact points (this is not necessary if all objects have been removed from the dynamics world)
+// 				m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(colObj->getBroadphaseHandle(),m_dynamicsWorld->getDispatcher());
+// 
+// /*				btRigidBody* body = btRigidBody::upcast(colObj);
+// 				if (body && !body->isStaticObject())
+// 				{
+// 					btRigidBody::upcast(colObj)->setLinearVelocity(btVector3(0,0,0));
+// 					btRigidBody::upcast(colObj)->setAngularVelocity(btVector3(0,0,0));
+// 				}*/
+// 			}
+// 		}
 
 	// Autoinsert Food
 		while ( freeEnergy >= settings->food_maxenergy )
@@ -233,17 +244,6 @@ void WorldB::process()
 			insertRandomFood(1, settings->food_maxenergy);
 			freeEnergy -= settings->food_maxenergy;
 			//cerr << "food: " << food.size() << endl;
-		}
-
-	// Autosave Critters?
-		if ( settings->critter_autosaveinterval > 0 )
-		{
-			autosaveCounter += Timer::Instance()->elapsed;
-			if ( autosaveCounter > settings->critter_autosaveinterval )
-			{
-				autosaveCounter = 0.0f;
-				saveAllCritters();
-			}
 		}
 
 	// Autoinsert Critters?
@@ -264,6 +264,8 @@ void WorldB::process()
 				insertCritterCounter++;
 			}
 		}
+	// do a bullet step
+		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
 
 	// render critter vision
 	for( unsigned int i=0; i < critters.size(); i++)
@@ -510,15 +512,10 @@ void WorldB::process()
 			settings->info_totalSynapses		+= c->brain.totalSynapses;
 			settings->info_totalAdamDistance	+= c->adamdist;
 
-
-		
-		// TEST: update ghost positions  ->  naisuwa :)
-		// HACK
-		
-		if ( c->body.mouths.size() > 0 )
+		// move ghostobject to mouth object position
+		for ( unsigned int i=0; i < c->body.mouths.size(); i++ )
 		{
-			btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.mouths[0]->body->getMotionState();
-			c->body.mouths[0]->ghostObject->setWorldTransform(myMotionState->m_graphicsWorldTrans);
+			c->body.mouths[i]->updateGhostObjectPosition();
 		}
 	}
 
