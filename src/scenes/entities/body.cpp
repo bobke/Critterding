@@ -325,7 +325,7 @@ void Body::mutate(unsigned int runs)
 			}
 
 		// REMOVE BODYPART
-			if ( mode <= percentMutateEffectAddBodypart + percentMutateEffectRemoveBodypart )
+			else if ( mode <= percentMutateEffectAddBodypart + percentMutateEffectRemoveBodypart )
 			{
 				if ( archBodyparts.size() > 2 )
 				{

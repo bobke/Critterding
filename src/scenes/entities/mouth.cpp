@@ -16,8 +16,6 @@ Mouth::Mouth(btDynamicsWorld* ownerWorld, void* owner, const btVector3& dimensio
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(weight,myMotionState,shape,localInertia);
 		body = new btRigidBody(rbInfo);
 
-	// 	body->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
-
 		body->setUserPointer(owner);
 		body->setDamping(0.05, 0.85);
 		body->setDeactivationTime(0.001);
@@ -27,8 +25,7 @@ Mouth::Mouth(btDynamicsWorld* ownerWorld, void* owner, const btVector3& dimensio
 
 	// Mouth piece
 		ghostObject = new btPairCachingGhostObject();
-// 		ghostObject->setCollisionShape( new btBoxShape( btVector3( x+0.01f, y+0.01f, z+0.01f ) ) );
-		ghostObject->setCollisionShape( new btBoxShape( dimensions ) );
+		ghostObject->setCollisionShape( new btBoxShape( btVector3( dimensions.getX()+0.01f, dimensions.getY()+0.01f, dimensions.getZ()+0.01f ) ) );
 		ghostObject->setCollisionFlags( btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE );
 		ghostObject->setWorldTransform(offset*transform);
 
