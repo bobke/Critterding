@@ -402,8 +402,13 @@ void Body::mutate(unsigned int runs)
 				archConstraint* co = &archConstraints[cid];
 
 				int connID1 = findBodypart(co->id_1);
-				int connID2 = findBodypart(co->id_2);
-				
+				int connID2;
+
+				if ( co->isMouthConstraint )
+					connID2 = findMouth(co->id_2);
+				else
+					connID2 = findBodypart(co->id_2);
+
 				// pick one of 2 bodies to reconnect
 				unsigned int body = randgen->Instance()->get( 0, 1 );
 

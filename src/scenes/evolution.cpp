@@ -44,10 +44,11 @@ void Evolution::draw()
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 // 		glHint(GL_FOG_HINT, GL_FASTEST);
 		glShadeModel(GL_FLAT);
+// 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_DEPTH_TEST);
 // 		glDisable (GL_LIGHTING);
 // 		glDisable(GL_COLOR_MATERIAL);
-		glEnable(GL_DITHER);
+// 		glDisable(GL_DITHER);
 		glDisable(GL_POLYGON_SMOOTH);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
