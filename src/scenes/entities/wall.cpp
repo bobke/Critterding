@@ -38,7 +38,7 @@ void Wall::draw()
 		btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();*/
 		glScaled(halfX, halfY, halfZ);
 
-		Displaylists::Instance()->call(0);
+		Displaylists::Instance()->call(1);
 
 	glPopMatrix(); 
 

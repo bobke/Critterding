@@ -28,7 +28,7 @@ void Food::draw()
 				btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
 				glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
 
-				Displaylists::Instance()->call(0);
+				Displaylists::Instance()->call(1);
 
 		glPopMatrix();
 	}

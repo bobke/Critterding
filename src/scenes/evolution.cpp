@@ -28,13 +28,26 @@ void Evolution::draw()
 
 		// 3D
 
+		GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+		GLfloat lightColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+		GLfloat lightPos[] = { 0.5f*settings->worldsizeX, 20, 0.5f*settings->worldsizeY, 1.0f };
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
+		glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+
+// 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_COLOR_MATERIAL);
+    
+    
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-//		glHint(GL_FOG_HINT, GL_FASTEST);
+// 		glHint(GL_FOG_HINT, GL_FASTEST);
 		glShadeModel(GL_FLAT);
 		glEnable(GL_DEPTH_TEST);
-		glDisable (GL_LIGHTING);
-		glDisable(GL_COLOR_MATERIAL);
-		glDisable(GL_DITHER);
+// 		glDisable (GL_LIGHTING);
+// 		glDisable(GL_COLOR_MATERIAL);
+		glEnable(GL_DITHER);
 		glDisable(GL_POLYGON_SMOOTH);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
@@ -50,7 +63,10 @@ void Evolution::draw()
 		camera.place();
 		world.drawWithGrid();
 
+		glDisable (GL_LIGHTING);
+
 		// 2D
+		glDisable(GL_LIGHT0);
 		glDisable(GL_CULL_FACE);
 
 		glPushMatrix();
