@@ -103,7 +103,7 @@ void Displaylists::generateList()
 
 	glEndList();
 
-	// 1 = floor
+/*	// 1 = floor
 	glNewList(displayLists+2,GL_COMPILE);
 
 		glColor4f( 0.0f, 0.0f, 1.0f, 0.0f );
@@ -114,5 +114,5 @@ void Displaylists::generateList()
 			glVertex3f( 1.0f, 0.0f, 0.0f);
 		glEnd();
 
-	glEndList();
+	glEndList();*/
 }
