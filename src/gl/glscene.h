@@ -17,7 +17,8 @@ class GLScene {
 		// This is the drawing function. Whatever needs to be drawn, goes in this function
 		virtual void draw();
 		// glwindow passes events to the scene
-		virtual void handlekey(const KeySym& key);
+		virtual void handlekeyPressed(const KeySym& key);
+		virtual void handlekeyReleased(const KeySym& key);
 
 		virtual void clean();
 };
