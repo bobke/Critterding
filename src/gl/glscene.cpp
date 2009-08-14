@@ -29,12 +29,12 @@ void GLScene::draw()
 
 }
 
-void GLScene::handlekey(const KeySym& key)
+void GLScene::handlekeyPressed(const KeySym& key)
 {
+}
 
-	switch (key)
-	{
-	}	
+void GLScene::handlekeyReleased(const KeySym& key)
+{
 }
 
 void GLScene::clean()

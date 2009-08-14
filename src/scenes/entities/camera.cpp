@@ -15,6 +15,7 @@ Camera::Camera()
 void Camera::place()
 {
 	glViewport(0,0,*Settings::Instance()->winWidth,*Settings::Instance()->winHeight);
+// 	glViewport(0,0,800,600);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -214,8 +215,8 @@ void Camera::lookLeft(const float& factor)
 
 void Camera::lookUp(const float& factor)
 {
-        rotation.x += factor * sensitivity;
-	if ( rotation.x > 360.0f ) rotation.x -= 360.0f;
+        rotation.x -= factor * sensitivity;
+	if ( rotation.x < 0.0f ) rotation.x += 360.0f;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
@@ -223,8 +224,8 @@ void Camera::lookUp(const float& factor)
 
 void Camera::lookDown(const float& factor)
 {
-        rotation.x -= factor * sensitivity;
-	if ( rotation.x < 0.0f ) rotation.x += 360.0f;
+        rotation.x += factor * sensitivity;
+	if ( rotation.x > 360.0f ) rotation.x -= 360.0f;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/

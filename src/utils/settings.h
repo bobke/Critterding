@@ -7,7 +7,6 @@
 #include "file.h"
 #include "parser.h"
 #include <GL/gl.h>
-#include <GL/glx.h>
 
 using namespace std;
 
@@ -31,8 +30,8 @@ class Settings
 
 		unsigned int *winWidth;
 		unsigned int *winHeight;
-		Display 			*dpy;
-		Window				win;
+// 		Display 			*dpy;
+// 		Window				win;
 
 		unsigned int worldsizeX;
 		unsigned int worldsizeY;
