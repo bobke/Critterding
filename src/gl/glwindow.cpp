@@ -110,8 +110,9 @@ void GLWindow::runGLScene(GLScene &glscene)
 			else if(event.type == SDL_KEYUP)
 					glscene.handlekeyReleased( event.key.keysym.sym );
 
-/*				if(event.key.keysym.sym == SDLK_ESCAPE)
-					break;*/
+			else if(event.type == SDL_MOUSEMOTION)
+					glscene.handleMouseMotion( event.motion );
+			
 		}
 		glscene.draw();
 	}

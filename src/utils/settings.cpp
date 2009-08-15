@@ -14,7 +14,7 @@ Settings::Settings()
 	worldsizeY			= 12;
 		worldsizeMin			= 1;
 		worldsizeMax			= 5000;
-	startenergy			= 500;
+	startenergy			= 100;
 		startenergyMin			= 0;
 		startenergyMax			= 1000000;
 	mincritters			= 10;
@@ -26,7 +26,7 @@ Settings::Settings()
 	retinasperrow			= 20;
 		retinasperrowMin		= 1;
 		retinasperrowMax		= 1000;
-	camerasensitivity		= 15;
+	camerasensitivity		= 20;
 		camerasensitivityMin		= 1;
 		camerasensitivityMax		= 1000;
 	walltype			= 0;
