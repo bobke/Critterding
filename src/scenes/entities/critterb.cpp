@@ -582,29 +582,26 @@ string CritterB::saveCritterB()
 
 	}
 
-// 	void CritterB::printVision()
-// 	{
-// 		cerr << "hi" << endl;
-// 		int rowlength = retinasize * components;
-// 	
-// 		cerr << rowlength << " " << items << endl;
-// 		for ( int h=items-rowlength; h >= 0; h -= rowlength )
-// 		{
-// 			for ( int w=h; w < (int)(retinasize*components)+h; w += components )
-// 			{
-// 				if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
-// 				else cerr << ".";
-// 				if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
-// 				else cerr << ".";
-// 				if ( (int)retina[w] ) cerr << "\033[1;34mB\033[0m";
-// 				else cerr << ".";
-// 				if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
-// 				else cerr << ".";
-// 			}
-// 			cerr << "" << endl;
-// 		}
-// 		cerr << "" << endl;
-// 	}
+	void CritterB::printVision()
+	{
+		unsigned int clooper = 0;
+		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
+		{
+			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=components )
+			{
+				if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
+				else cerr << ".";
+				if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
+				else cerr << ".";
+				if ( (int)retina[w] ) cerr << "\033[1;34mB\033[0m";
+				else cerr << ".";
+				if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
+				else cerr << ".";
+			}
+			cerr << "" << endl;
+		}
+		cerr << "" << endl;
+	}
 
 CritterB::~CritterB()
 {

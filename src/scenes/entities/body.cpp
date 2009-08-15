@@ -119,9 +119,9 @@ void Body::buildArch()
 		bp->id		= 1000;
 		bp->type	= 0;
 		bp->materialID	= 0;
-		bp->x		= randgen->Instance()->get( 20, 500 );
-		bp->y		= randgen->Instance()->get( 20, 500 );
-		bp->z		= randgen->Instance()->get( 20, 500 );
+		bp->x		= randgen->Instance()->get( 20, 200 );
+		bp->y		= randgen->Instance()->get( 20, 200 );
+		bp->z		= randgen->Instance()->get( 20, 200 );
 
 		unsigned int runs = randgen->Instance()->get( 0, 5 );
 		for ( unsigned int i=0; i < runs; i++ )
@@ -308,7 +308,7 @@ void Body::mutate(unsigned int runs)
 	unsigned int percentMutateEffectChangeConstraintAngles		= pct;
 	unsigned int percentMutateEffectChangeConstraintPosition	= pct;
 	unsigned int percentMutateEffectRemoveAndAddMouth		= pct;
-	unsigned int maxBodyparts = 10;
+	unsigned int maxBodyparts = 50;
 
 	for ( unsigned int i=0; i < runs; i++ )
 	{

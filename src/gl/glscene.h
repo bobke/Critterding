@@ -21,7 +21,7 @@ class GLScene {
 		virtual void handlekeyPressed(const KeySym& key);
 		virtual void handlekeyReleased(const KeySym& key);
 
-		virtual void handleMouseMotion(SDL_MouseMotionEvent& key);
+		virtual void handleMouseMotion(int x, int y);
 
 		virtual void clean();
 };

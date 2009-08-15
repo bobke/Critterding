@@ -46,14 +46,14 @@ Evolution::Evolution()
 
 void Evolution::draw()
 {
-	Timer::Instance()->mark();
-	sleeper.mark();
-
 	if ( pause )
 	{
 		usleep(20000);
 		return;
 	}
+
+	Timer::Instance()->mark();
+	sleeper.mark();
 
 	handleEvents();
 
@@ -87,11 +87,12 @@ void Evolution::draw()
 
 		world.process();
 
-	// 		if (world.critters.size() >0 )
-	// 		{
-	// 			camera.follow( (btDefaultMotionState*)world.critters[0]->body.mouths[0]->body->getMotionState() );
-	// 			world.drawWithoutFaces();
-	// 		}
+// 			if (world.critters.size() >0 )
+// 			{
+// 				camera.follow( (btDefaultMotionState*)world.critters[0]->body.mouths[0]->body->getMotionState() );
+// 				world.drawWithoutFaces();
+// 				world.critters[0]->printVision();
+// 			}
 
 		camera.place();
 		world.drawWithGrid();
@@ -177,13 +178,22 @@ void Evolution::handlekeyPressed(const KeySym& key)
 		case SDLK_m:
 		{
 			mouselook = !mouselook;
-			mouse_x = *settings->winWidth /2;
-			mouse_y = *settings->winHeight /2;
-			SDL_WarpMouse( mouse_x, mouse_y );
 			if ( mouselook )
+			{
+// 				mouse_x = *settings->winWidth /2;
+// 				mouse_y = *settings->winHeight /2;
+// 				SDL_WarpMouse( mouse_x, mouse_y );
 				SDL_ShowCursor(0);
+				SDL_WM_GrabInput(SDL_GRAB_ON);
+				{ SDL_Event e; while (SDL_PollEvent(&e)) {} };
+// 				SDL_WarpMouse( mouse_x, mouse_y );
+// 				handleMouseMotion( *settings->winHeight /2, *settings->winHeight /2 );
+			}
 			else
+			{
 				SDL_ShowCursor(1);
+				SDL_WM_GrabInput(SDL_GRAB_OFF);
+			}
 		}
 			break;
 
@@ -221,23 +231,19 @@ void Evolution::handlekeyReleased(const KeySym& key)
 	events->deactivateEvent(key);
 }
 
-void Evolution::handleMouseMotion(SDL_MouseMotionEvent& newmotion)
+void Evolution::handleMouseMotion(int x, int y)
 {
 	if ( mouselook )
 	{
-		if ( newmotion.x > mouse_x )
-			camera.lookRight( ((float)newmotion.x-mouse_x)/500 * settings->camerasensitivity );
-		else
-			camera.lookLeft( ((float)mouse_x-newmotion.x)/500 * settings->camerasensitivity );
+		if ( x > 0 )
+			camera.lookRight( (float)x/2000 * settings->camerasensitivity );
+		else if ( x < 0 )
+			camera.lookLeft( (float)x/-2000 * settings->camerasensitivity );
 
-		if ( newmotion.y > mouse_y )
-			camera.lookDown( ((float)newmotion.y-mouse_y)/500 * settings->camerasensitivity );
-		else
-			camera.lookUp( ((float)mouse_y-newmotion.y)/500 * settings->camerasensitivity );
-
-		mouse_x = *settings->winWidth /2;
-		mouse_y = *settings->winHeight /2;
-		SDL_WarpMouse( mouse_x, mouse_y );
+		if ( y > 0 )
+			camera.lookDown( (float)y/2000 * settings->camerasensitivity );
+		else if ( y < 0 )
+			camera.lookUp( (float)y/-2000 * settings->camerasensitivity );
 	}
 }
 
@@ -372,16 +378,16 @@ void Evolution::handleEvents()
 		camera.moveRight(0.01f);
 
 	if ( events->isActive("camera_lookup") )
-		camera.lookUp(0.03f);
+		camera.lookUp(0.05f);
 
 	if ( events->isActive("camera_lookdown") )
-		camera.lookDown(0.03f);
+		camera.lookDown(0.05f);
 
 	if ( events->isActive("camera_lookleft") )
-		camera.lookLeft(0.03f);
+		camera.lookLeft(0.05f);
 
 	if ( events->isActive("camera_lookright") )
-		camera.lookRight(0.03f);
+		camera.lookRight(0.05f);
 }
 
 void Evolution::resetCamera()
