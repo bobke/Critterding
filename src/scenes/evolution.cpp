@@ -28,7 +28,7 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	0.2f,	0.01f, 	0.01f );
 	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	0.2f,	0.01f, 	0.01f );
 
-	sharedTimer* t = events->registerSharedtimer( 0.01f );
+	sharedTimer* t = events->registerSharedtimer( 0.02f );
 
 	events->registerEvent(SDLK_HOME,	"camera_moveup", 		t );
 	events->registerEvent(SDLK_END,		"camera_movedown", 		t );
@@ -338,16 +338,16 @@ void Evolution::handleEvents()
 		camera.moveRight(0.01f);
 
 	if ( events->isActive("camera_lookup") )
-		camera.lookUp(0.05f);
+		camera.lookUp(0.03f);
 
 	if ( events->isActive("camera_lookdown") )
-		camera.lookDown(0.05f);
+		camera.lookDown(0.03f);
 
 	if ( events->isActive("camera_lookleft") )
-		camera.lookLeft(0.05f);
+		camera.lookLeft(0.03f);
 
 	if ( events->isActive("camera_lookright") )
-		camera.lookRight(0.05f);
+		camera.lookRight(0.03f);
 }
 
 void Evolution::resetCamera()

@@ -301,7 +301,7 @@ void Body::addRandomConstraint(unsigned int connID1, unsigned int connID2, bool 
 
 void Body::mutate(unsigned int runs)
 {
-	unsigned int pct						= 5;
+	unsigned int pct						= 8;
 	unsigned int percentMutateEffectAddBodypart			= pct;
 	unsigned int percentMutateEffectRemoveBodypart			= pct;
 	unsigned int percentMutateEffectChangeConstraintLimits		= pct;

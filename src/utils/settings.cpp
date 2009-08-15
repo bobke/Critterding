@@ -26,7 +26,7 @@ Settings::Settings()
 	retinasperrow			= 20;
 		retinasperrowMin		= 1;
 		retinasperrowMax		= 1000;
-	camerasensitivity		= 10;
+	camerasensitivity		= 15;
 		camerasensitivityMin		= 1;
 		camerasensitivityMax		= 1000;
 	walltype			= 0;
