@@ -177,19 +177,13 @@ void Evolution::handlekeyPressed(const KeySym& key)
 		case SDLK_m:
 		{
 			mouselook = !mouselook;
+			mouse_x = *settings->winWidth /2;
+			mouse_y = *settings->winHeight /2;
+			SDL_WarpMouse( mouse_x, mouse_y );
 			if ( mouselook )
-			{
-				mouse_x = *settings->winWidth /2;
-				mouse_y = *settings->winHeight /2;
-				SDL_WarpMouse( mouse_x, mouse_y );
 				SDL_ShowCursor(0);
-				SDL_WM_GrabInput(SDL_GRAB_ON);
-			}
 			else
-			{
 				SDL_ShowCursor(1);
-				SDL_WM_GrabInput(SDL_GRAB_OFF);
-			}
 		}
 			break;
 
