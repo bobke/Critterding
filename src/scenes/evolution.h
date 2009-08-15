@@ -44,6 +44,7 @@ class Evolution : public GLScene {
 		// glwindow passes events to the scene
 		void handlekeyPressed(const KeySym& key);
 		void handlekeyReleased(const KeySym& key);
+		void handleMouseMotion(SDL_MouseMotionEvent& newmotion);
 		void resetCamera();
 
 		Camera camera;
@@ -58,30 +59,13 @@ class Evolution : public GLScene {
 		Infostats infostats;
 		Helpinfo helpinfo;
 
+		int mouse_x;
+		int mouse_y;
+		bool mouselook;
+		
 		// events
 // 		float		elapsed;
 		void		handleEvents();
-
-		bool		e_decKillhalf;
-		bool		e_incKillhalf;
-
-		bool		e_decMaxmutations;
-		bool		e_incMaxmutations;
-
-		bool		e_decMutationrate;
-		bool		e_incMutationrate;
-
-		bool		e_cameraMoveUp;
-		bool		e_cameraMoveDown;
-		bool		e_cameraMoveForward;
-		bool		e_cameraMoveBackward;
-		bool		e_cameraMoveLeft;
-		bool		e_cameraMoveRight;
-
-		bool		e_cameraLookUp;
-		bool		e_cameraLookDown;
-		bool		e_cameraLookLeft;
-		bool		e_cameraLookRight;
 };
 
 #endif

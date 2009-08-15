@@ -10,23 +10,23 @@ Evolution::Evolution()
 
 	// events
 
-	events->registerEvent(SDLK_F5,		"dec_critters", 		0.2f,	0.01f, 	0.01f );
-	events->registerEvent(SDLK_F6,		"inc_critters", 		0.2f,	0.01f, 	0.01f );
+	events->registerEvent(SDLK_F5,		"dec_critters", 		0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_F6,		"inc_critters", 		0.2f,	0.0f, 	0.01f );
 
-	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", 			0.2f,	0.01f, 	0.01f );
-	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", 			0.2f,	0.01f, 	0.01f );
+	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", 			0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", 			0.2f,	0.0f, 	0.01f );
 
-	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", 		0.2f,	0.01f, 	0.01f );
-	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", 		0.2f,	0.01f, 	0.01f );
+	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", 		0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", 		0.2f,	0.0f, 	0.01f );
 
-	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		0.2f,	0.01f, 	0.01f );
-	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		0.2f,	0.01f, 	0.01f );
+	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		0.2f,	0.0f, 	0.01f );
 
-	events->registerEvent(SDLK_F11,		"dec_mutationrate", 		0.2f,	0.01f, 	0.01f );
-	events->registerEvent(SDLK_F12,		"inc_mutationrate", 		0.2f,	0.01f, 	0.01f );
+	events->registerEvent(SDLK_F11,		"dec_mutationrate", 		0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_F12,		"inc_mutationrate", 		0.2f,	0.0f, 	0.01f );
 
-	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	0.2f,	0.01f, 	0.01f );
-	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	0.2f,	0.01f, 	0.01f );
+	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	0.2f,	0.0f, 	0.01f );
 
 	sharedTimer* t = events->registerSharedtimer( 0.02f );
 
@@ -40,7 +40,8 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP8,		"camera_lookdown", 		t );
 	events->registerEvent(SDLK_KP4,		"camera_lookleft",		t );
 	events->registerEvent(SDLK_KP6,		"camera_lookright",		t );
-
+	
+	mouselook = false;
 }
 
 void Evolution::draw()
@@ -173,6 +174,25 @@ void Evolution::handlekeyPressed(const KeySym& key)
 			world.killHalfOfCritters();
 			break;
 
+		case SDLK_m:
+		{
+			mouselook = !mouselook;
+			if ( mouselook )
+			{
+				mouse_x = *settings->winWidth /2;
+				mouse_y = *settings->winHeight /2;
+				SDL_WarpMouse( mouse_x, mouse_y );
+				SDL_ShowCursor(0);
+				SDL_WM_GrabInput(SDL_GRAB_ON);
+			}
+			else
+			{
+				SDL_ShowCursor(1);
+				SDL_WM_GrabInput(SDL_GRAB_OFF);
+			}
+		}
+			break;
+
 		case SDLK_p:
 			pause = !pause;
 			break;
@@ -205,6 +225,26 @@ void Evolution::handlekeyPressed(const KeySym& key)
 void Evolution::handlekeyReleased(const KeySym& key)
 {
 	events->deactivateEvent(key);
+}
+
+void Evolution::handleMouseMotion(SDL_MouseMotionEvent& newmotion)
+{
+	if ( mouselook )
+	{
+		if ( newmotion.x > mouse_x )
+			camera.lookRight( ((float)newmotion.x-mouse_x)/500 * settings->camerasensitivity );
+		else
+			camera.lookLeft( ((float)mouse_x-newmotion.x)/500 * settings->camerasensitivity );
+
+		if ( newmotion.y > mouse_y )
+			camera.lookDown( ((float)newmotion.y-mouse_y)/500 * settings->camerasensitivity );
+		else
+			camera.lookUp( ((float)mouse_y-newmotion.y)/500 * settings->camerasensitivity );
+
+		mouse_x = *settings->winWidth /2;
+		mouse_y = *settings->winHeight /2;
+		SDL_WarpMouse( mouse_x, mouse_y );
+	}
 }
 
 void Evolution::handleEvents()
