@@ -51,7 +51,7 @@ void GLWindow::runGLScene(GLScene &glscene)
 			}
 
 			else if(event.type == SDL_QUIT)
-				break;
+				stop = true;
 
 			else if(event.type == SDL_KEYDOWN)
 			{
