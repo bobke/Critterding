@@ -72,7 +72,7 @@ Settings::Settings()
 	critter_speedI			= 70;
 		critter_speedIMin		= 1;
 		critter_speedIMax		= 1000;
-	critter_sightrangeI		= 50;
+	critter_sightrangeI		= 70;
 		critter_sightrangeIMin		= 1;
 		critter_sightrangeIMax		= 1000;
 	critter_retinasize		= 6;

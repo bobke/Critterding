@@ -52,10 +52,10 @@ void Evolution::draw()
 		return;
 	}
 
+	handleEvents();
+
 	Timer::Instance()->mark();
 	sleeper.mark();
-
-	handleEvents();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -180,14 +180,10 @@ void Evolution::handlekeyPressed(const KeySym& key)
 			mouselook = !mouselook;
 			if ( mouselook )
 			{
-// 				mouse_x = *settings->winWidth /2;
-// 				mouse_y = *settings->winHeight /2;
-// 				SDL_WarpMouse( mouse_x, mouse_y );
-				SDL_ShowCursor(0);
 				SDL_WM_GrabInput(SDL_GRAB_ON);
+				SDL_ShowCursor(0);
+				// clear remaining poll events
 				{ SDL_Event e; while (SDL_PollEvent(&e)) {} };
-// 				SDL_WarpMouse( mouse_x, mouse_y );
-// 				handleMouseMotion( *settings->winHeight /2, *settings->winHeight /2 );
 			}
 			else
 			{
@@ -308,35 +304,35 @@ void Evolution::handleEvents()
 
 	if ( events->isActive("dec_mutationrate") )
 	{
-		if ( settings->critter_maxmutations >= 2 )
-			settings->critter_maxmutations -= 1;
-		stringstream buf;
-		buf << "Max Mutations: "<< settings->critter_maxmutations;
-		Textmessage::Instance()->add(buf);
-	}
-	if ( events->isActive("inc_mutationrate") )
-	{
-		if ( settings->critter_maxmutations <= 999 )
-			settings->critter_maxmutations += 1;
-		stringstream buf;
-		buf << "Max Mutations: "<< settings->critter_maxmutations;
-		Textmessage::Instance()->add(buf);
-	}
-
-	if ( events->isActive("dec_maxmutations") )
-	{
 		if ( settings->critter_mutationrate >= 1 )
 			settings->critter_mutationrate -= 1;
 		stringstream buf;
 		buf << "Mutation Rate: "<< settings->critter_mutationrate << "%";
 		Textmessage::Instance()->add(buf);
 	}
-	if ( events->isActive("inc_maxmutations") )
+	if ( events->isActive("inc_mutationrate") )
 	{
 		if ( settings->critter_mutationrate <= 99 )
 			settings->critter_mutationrate += 1;
 		stringstream buf;
 		buf << "Mutation Rate: "<< settings->critter_mutationrate << "%";
+		Textmessage::Instance()->add(buf);
+	}
+
+	if ( events->isActive("dec_maxmutations") )
+	{
+		if ( settings->critter_maxmutations >= 2 )
+			settings->critter_maxmutations -= 1;
+		stringstream buf;
+		buf << "Max Mutations: "<< settings->critter_maxmutations;
+		Textmessage::Instance()->add(buf);
+	}
+	if ( events->isActive("inc_maxmutations") )
+	{
+		if ( settings->critter_maxmutations <= 999 )
+			settings->critter_maxmutations += 1;
+		stringstream buf;
+		buf << "Max Mutations: "<< settings->critter_maxmutations;
 		Textmessage::Instance()->add(buf);
 	}
 
