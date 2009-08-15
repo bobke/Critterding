@@ -46,11 +46,10 @@ void Events::registerEvent(SDLKey key, const string& name, float responsetime, f
 	e->name = name;
 	e->bindkey = key;
 	e->responsetime = responsetime;
-	e->fresponsetime = responsetime;
+// 	e->fresponsetime = responsetime;
 	e->minfresponsetime = minfresponsetime;
 	e->fresponseinterval = fresponseinterval;
-	e->elapsed = responsetime;
-	
+// 	e->elapsed = responsetime;
 	e->timerisshared = false;
 }
 
@@ -61,11 +60,11 @@ void Events::activateEvent(const long unsigned int key)
 	{
 		if ( events[i].bindkey == key )
 		{
-// 			cerr << "activating " << events[i].name << endl;
 			events[i].active = true;
-			notfound = false;
 			events[i].elapsed = events[i].responsetime;
 			events[i].fresponsetime = events[i].responsetime;
+			notfound = false;
+// 			cerr << "activated " << events[i].name << " rt: " << events[i].elapsed << endl;
 		}
 	}
 }
@@ -110,7 +109,7 @@ bool Events::isActive(const string& name)
 			notfound = false;
 
 			event* e = &events[i];
-
+			
 			// event uses a shared timer
 				if ( e->timerisshared )
 				{
