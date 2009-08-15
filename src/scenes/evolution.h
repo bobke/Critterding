@@ -44,7 +44,7 @@ class Evolution : public GLScene {
 		// glwindow passes events to the scene
 		void handlekeyPressed(const KeySym& key);
 		void handlekeyReleased(const KeySym& key);
-		void handleMouseMotion(SDL_MouseMotionEvent& newmotion);
+		void handleMouseMotion(int x, int y);
 		void resetCamera();
 
 		Camera camera;

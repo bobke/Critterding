@@ -36,7 +36,7 @@ void GLScene::handlekeyPressed(const KeySym& key)
 void GLScene::handlekeyReleased(const KeySym& key)
 {
 }
-void GLScene::handleMouseMotion(SDL_MouseMotionEvent& key)
+void GLScene::handleMouseMotion(int x, int y)
 {
 }
 

@@ -13,7 +13,7 @@ void GLWindow::create(const char* title, int width, int height, int bpp)
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 4);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	SDL_WM_SetCaption(title, 0);
@@ -41,48 +41,7 @@ void GLWindow::runGLScene(GLScene &glscene)
 
 	while(!stop)
 	{
-// 		while(XPending(GLWin.dpy) > 0)
-// 		{
-// 			XNextEvent(GLWin.dpy, &event);
-// 			switch(event.type)
-// 			{
-// 				case Expose:
-// 					if (event.xexpose.count != 0)
-// 						break;
-// 					break;
-// 				case ConfigureNotify:
-// 					if ((event.xconfigure.width != (int)GLWin.width) || (event.xconfigure.height != (int)GLWin.height))
-// 					{
-// 						GLWin.width = event.xconfigure.width;
-// 						GLWin.height = event.xconfigure.height;
-// 						resize();
-// 					}
-// 					break;
-// 				case KeyPress:
-// 					switch(XLookupKeysym(&event.xkey,0))
-// 					{
-//  						case XK_Escape:			// Quit if windowed, windowed if fullscreen
-// 							running = 0;
-// 						break;
-//  						default:			// TODO ELSE pass event to the scene
-// 							glscene.handlekey(XLookupKeysym(&event.xkey,0));
-// 						break;
-// 					}
-// 					break;
-// 				case KeyRelease:
-// 					break;
-// 				case ClientMessage:
-// 					if (*XGetAtomName(GLWin.dpy, event.xclient.message_type) == *"WM_PROTOCOLS")
-// 					{
-// 						running = 0;
-// 					}
-// 					break;
-// 				default:
-// 					break;
-// 			}
-// 		}
-		/* Handle events with SDL. */
-		if(SDL_PollEvent(&event))
+		while(SDL_PollEvent(&event))
 		{
                         if(event.type == SDL_VIDEORESIZE)
 			{
@@ -101,7 +60,7 @@ void GLWindow::runGLScene(GLScene &glscene)
 					case SDLK_ESCAPE:
 						stop = true;
 					break;
-					default:			// TODO ELSE pass event to the scene
+					default:
 						glscene.handlekeyPressed( event.key.keysym.sym );
 					break;
 				}
@@ -111,8 +70,7 @@ void GLWindow::runGLScene(GLScene &glscene)
 					glscene.handlekeyReleased( event.key.keysym.sym );
 
 			else if(event.type == SDL_MOUSEMOTION)
-					glscene.handleMouseMotion( event.motion );
-			
+				glscene.handleMouseMotion( event.motion.xrel, event.motion.yrel );
 		}
 		glscene.draw();
 	}

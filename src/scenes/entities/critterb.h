@@ -78,7 +78,7 @@ class CritterB
 		void			place();
 		void			calcFramePos(unsigned int pos);
 		bool			isWithinSight(Vector3f& point);
-
+		void			printVision();
 	private:
 
 		Settings		*settings;
