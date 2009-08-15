@@ -28,23 +28,23 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	0.2f,	0.01f, 	0.01f );
 	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	0.2f,	0.01f, 	0.01f );
 
-	events->registerEvent(SDLK_HOME,	"camera_moveup", 		0.01f,	0.01f, 	0.0f );
-	events->registerEvent(SDLK_END,		"camera_movedown", 		0.01f,	0.01f, 	0.0f );
-	events->registerEvent(SDLK_UP,		"camera_moveforward", 		0.01f,	0.01f, 	0.0f );
-	events->registerEvent(SDLK_DOWN,	"camera_movebackward", 		0.01f,	0.01f, 	0.0f );
-	events->registerEvent(SDLK_LEFT,	"camera_moveleft", 		0.01f,	0.01f, 	0.0f );
-	events->registerEvent(SDLK_RIGHT,	"camera_moveright", 		0.01f,	0.01f, 	0.0f );
-	events->registerEvent(SDLK_KP2,		"camera_lookup", 		0.01f,	0.01f, 	0.0f );
-	events->registerEvent(SDLK_KP8,		"camera_lookdown", 		0.01f,	0.01f, 	0.0f );
-	events->registerEvent(SDLK_KP4,		"camera_lookleft",		0.01f,	0.01f, 	0.0f );
-	events->registerEvent(SDLK_KP6,		"camera_lookright",		0.01f,	0.01f, 	0.0f );
+	sharedTimer* t = events->registerSharedtimer( 0.01f );
+
+	events->registerEvent(SDLK_HOME,	"camera_moveup", 		t );
+	events->registerEvent(SDLK_END,		"camera_movedown", 		t );
+	events->registerEvent(SDLK_UP,		"camera_moveforward", 		t );
+	events->registerEvent(SDLK_DOWN,	"camera_movebackward", 		t );
+	events->registerEvent(SDLK_LEFT,	"camera_moveleft", 		t );
+	events->registerEvent(SDLK_RIGHT,	"camera_moveright", 		t );
+	events->registerEvent(SDLK_KP2,		"camera_lookup", 		t );
+	events->registerEvent(SDLK_KP8,		"camera_lookdown", 		t );
+	events->registerEvent(SDLK_KP4,		"camera_lookleft",		t );
+	events->registerEvent(SDLK_KP6,		"camera_lookright",		t );
 
 }
 
 void Evolution::draw()
 {
-	handleEvents();
-
 	Timer::Instance()->mark();
 	sleeper.mark();
 
@@ -54,15 +54,11 @@ void Evolution::draw()
 		return;
 	}
 
-// 	if ( world.critters.size() > 100 )
-// 		world.killHalfOfCritters();
+	handleEvents();
 
-// 	if ( sleeper.isRenderTime() )
-// 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// 3D
-
+	// 3D
 		GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 		GLfloat lightColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
@@ -70,37 +66,37 @@ void Evolution::draw()
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
 		glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
-// 		glEnable(GL_DEPTH_TEST);
+	// 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 		glEnable(GL_COLOR_MATERIAL);
-    
-    
+
+
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-// 		glHint(GL_FOG_HINT, GL_FASTEST);
+	// 		glHint(GL_FOG_HINT, GL_FASTEST);
 		glShadeModel(GL_FLAT);
-// 		glShadeModel(GL_SMOOTH);
+	// 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_DEPTH_TEST);
-// 		glDisable (GL_LIGHTING);
-// 		glDisable(GL_COLOR_MATERIAL);
-// 		glDisable(GL_DITHER);
+	// 		glDisable (GL_LIGHTING);
+	// 		glDisable(GL_COLOR_MATERIAL);
+	// 		glDisable(GL_DITHER);
 		glDisable(GL_POLYGON_SMOOTH);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
 		world.process();
 
-		if (world.critters.size() >0 )
-		{
-			camera.follow( (btDefaultMotionState*)world.critters[0]->body.mouths[0]->body->getMotionState() );
-			world.drawWithoutFaces();
-		}
+	// 		if (world.critters.size() >0 )
+	// 		{
+	// 			camera.follow( (btDefaultMotionState*)world.critters[0]->body.mouths[0]->body->getMotionState() );
+	// 			world.drawWithoutFaces();
+	// 		}
 
 		camera.place();
 		world.drawWithGrid();
 
 
-		// 2D
+	// 2D
 		glDisable (GL_LIGHTING);
 		glDisable(GL_LIGHT0);
 		glDisable(GL_CULL_FACE);
@@ -125,9 +121,9 @@ void Evolution::draw()
 			Textmessage::Instance()->draw();
 
 		glPopMatrix();
-		SDL_GL_SwapBuffers();		
-// 		glXSwapBuffers(settings->dpy, settings->win);
-// 	}
+		
+
+	SDL_GL_SwapBuffers();		
 
 	if ( settings->exit_if_empty && world.critters.size() == 0 )
 	{
@@ -214,6 +210,8 @@ void Evolution::handlekeyReleased(const KeySym& key)
 void Evolution::handleEvents()
 {
 
+	events->processSharedTimers();
+	
 	if ( events->isActive("dec_critters") )
 	{
 		if ( settings->mincritters > settings->mincrittersMin )
