@@ -123,7 +123,7 @@ void Body::buildArch()
 		bp->y		= randgen->Instance()->get( 20, 200 );
 		bp->z		= randgen->Instance()->get( 20, 200 );
 
-		unsigned int runs = randgen->Instance()->get( 0, 0 );
+		unsigned int runs = randgen->Instance()->get( 0, 10 );
 		for ( unsigned int i=0; i < runs; i++ )
 			addRandomBodypart();
 

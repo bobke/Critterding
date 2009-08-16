@@ -146,6 +146,10 @@ void Evolution::handlekeyPressed(const KeySym& key)
 
 	switch (key)
 	{
+		case SDL_BUTTON(SDL_BUTTON_LEFT):
+			helpinfo.swap();
+			break;
+
 		case SDLK_F1:
 			helpinfo.swap();
 			break;
@@ -229,18 +233,29 @@ void Evolution::handlekeyReleased(const KeySym& key)
 	events->deactivateEvent(key);
 }
 
+void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
+{
+	cerr << "button " << button << " clicked at " << x << "x" << y << endl;
+}
+
+void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
+{
+	cerr << "button " << button << " released at " << x << "x" << y << endl;
+}
+
+
 void Evolution::handleMouseMotion(int x, int y)
 {
 	if ( mouselook )
 	{
 		if ( x > 0 )
 			camera.lookRight( (float)x/2000 * settings->camerasensitivity );
-		else if ( x < 0 )
+		else if ( x != 0 )
 			camera.lookLeft( (float)x/-2000 * settings->camerasensitivity );
 
 		if ( y > 0 )
 			camera.lookDown( (float)y/2000 * settings->camerasensitivity );
-		else if ( y < 0 )
+		else if ( y != 0 )
 			camera.lookUp( (float)y/-2000 * settings->camerasensitivity );
 	}
 }
