@@ -102,18 +102,12 @@ class Settings
 		unsigned int critter_retinasize;
 			unsigned int critter_retinasizeMin;
 			unsigned int critter_retinasizeMax;
-		unsigned int critter_mutationrate;
-			unsigned int critter_mutationrateMin;
-			unsigned int critter_mutationrateMax;
-		unsigned int critter_maxmutations;
-			unsigned int critter_maxmutationsMin;
-			unsigned int critter_maxmutationsMax;
-		unsigned int critter_percentchangetype;
+/*		unsigned int critter_percentchangetype;
 			unsigned int critter_percentchangetypeMin;
-			unsigned int critter_percentchangetypeMax;
-		bool critter_flipnewborns;
-		bool critter_randomrotatenewborns;
-		bool critter_enablecarrying;
+			unsigned int critter_percentchangetypeMax;*/
+// 		bool critter_flipnewborns;
+// 		bool critter_randomrotatenewborns;
+// 		bool critter_enablecarrying;
 		unsigned int critter_autosaveinterval;
 			unsigned int critter_autosaveintervalMin;
 			unsigned int critter_autosaveintervalMax;
@@ -141,6 +135,21 @@ class Settings
 			unsigned int corpse_sizeIMin;
 			unsigned int corpse_sizeIMax;
 		bool corpse_disable;
+
+		unsigned int body_mutationrate;
+			unsigned int body_mutationrateMin;
+			unsigned int body_mutationrateMax;
+		unsigned int body_maxmutations;
+			unsigned int body_maxmutationsMin;
+			unsigned int body_maxmutationsMax;
+
+
+		unsigned int brain_mutationrate;
+			unsigned int brain_mutationrateMin;
+			unsigned int brain_mutationrateMax;
+		unsigned int brain_maxmutations;
+			unsigned int brain_maxmutationsMin;
+			unsigned int brain_maxmutationsMax;
 
 		unsigned int brain_maxneurons;
 			unsigned int brain_maxneuronsMin;

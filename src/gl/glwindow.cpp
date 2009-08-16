@@ -34,7 +34,7 @@ void GLWindow::resize()
 	SDL_SetVideoMode(w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
 }
 
-void GLWindow::runGLScene(GLScene &glscene)
+void GLWindow::runGLScene(GLScene* glscene)
 {
 	SDL_Event event;
 	bool stop = false;
@@ -61,19 +61,19 @@ void GLWindow::runGLScene(GLScene &glscene)
 						stop = true;
 					break;
 					default:
-						glscene.handlekeyPressed( event.key.keysym.sym );
+						glscene->handlekeyPressed( event.key.keysym.sym );
 					break;
 				}
 			}
 
 			else if(event.type == SDL_KEYUP)
-				glscene.handlekeyReleased( event.key.keysym.sym );
+				glscene->handlekeyReleased( event.key.keysym.sym );
 
 			else if(event.type == SDL_MOUSEMOTION)
-				glscene.handleMouseMotion( event.motion.xrel, event.motion.yrel );
+				glscene->handleMouseMotion( event.motion.xrel, event.motion.yrel );
 		}
 
-		glscene.draw();
+		glscene->draw();
 	}
         SDL_Quit();
 }

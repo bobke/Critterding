@@ -8,8 +8,10 @@ Evolution::Evolution()
 	pause = false;
 // 	drawCVNeurons = false;
 
-	// events
+	events->registerEvent(SDLK_LSHIFT,	"lshift", 			0.0f,	0.0f, 	0.0f );
+	events->registerEvent(SDLK_RSHIFT,	"rshift", 			0.0f,	0.0f, 	0.0f );
 
+	// events
 	events->registerEvent(SDLK_F5,		"dec_critters", 		0.2f,	0.0f, 	0.01f );
 	events->registerEvent(SDLK_F6,		"inc_critters", 		0.2f,	0.0f, 	0.01f );
 
@@ -302,38 +304,76 @@ void Evolution::handleEvents()
 		Textmessage::Instance()->add(buf);
 	}
 
-	if ( events->isActive("dec_mutationrate") )
+	// mutation settings
+	if ( events->isActive("lshift") || events->isActive("rshift") )
 	{
-		if ( settings->critter_mutationrate >= 1 )
-			settings->critter_mutationrate -= 1;
-		stringstream buf;
-		buf << "Mutation Rate: "<< settings->critter_mutationrate << "%";
-		Textmessage::Instance()->add(buf);
+		if ( events->isActive("dec_mutationrate") )
+		{
+			if ( settings->body_mutationrate >= 1 )
+				settings->body_mutationrate -= 1;
+			stringstream buf;
+			buf << "Body: Mutation Rate: "<< settings->body_mutationrate << "%";
+			Textmessage::Instance()->add(buf);
+		}
+		if ( events->isActive("inc_mutationrate") )
+		{
+			if ( settings->body_mutationrate <= 99 )
+				settings->body_mutationrate += 1;
+			stringstream buf;
+			buf << "Body: Mutation Rate: "<< settings->body_mutationrate << "%";
+			Textmessage::Instance()->add(buf);
+		}
+		if ( events->isActive("dec_maxmutations") )
+		{
+			if ( settings->body_maxmutations >= 2 )
+				settings->body_maxmutations -= 1;
+			stringstream buf;
+			buf << "Body: Max Mutations: "<< settings->body_maxmutations;
+			Textmessage::Instance()->add(buf);
+		}
+		if ( events->isActive("inc_maxmutations") )
+		{
+			if ( settings->body_maxmutations <= 999 )
+				settings->body_maxmutations += 1;
+			stringstream buf;
+			buf << "Body: Max Mutations: "<< settings->body_maxmutations;
+			Textmessage::Instance()->add(buf);
+		}
 	}
-	if ( events->isActive("inc_mutationrate") )
+	else	// BRAIN: without shift
 	{
-		if ( settings->critter_mutationrate <= 99 )
-			settings->critter_mutationrate += 1;
-		stringstream buf;
-		buf << "Mutation Rate: "<< settings->critter_mutationrate << "%";
-		Textmessage::Instance()->add(buf);
-	}
-
-	if ( events->isActive("dec_maxmutations") )
-	{
-		if ( settings->critter_maxmutations >= 2 )
-			settings->critter_maxmutations -= 1;
-		stringstream buf;
-		buf << "Max Mutations: "<< settings->critter_maxmutations;
-		Textmessage::Instance()->add(buf);
-	}
-	if ( events->isActive("inc_maxmutations") )
-	{
-		if ( settings->critter_maxmutations <= 999 )
-			settings->critter_maxmutations += 1;
-		stringstream buf;
-		buf << "Max Mutations: "<< settings->critter_maxmutations;
-		Textmessage::Instance()->add(buf);
+		if ( events->isActive("dec_mutationrate") )
+		{
+			if ( settings->brain_mutationrate >= 1 )
+				settings->brain_mutationrate -= 1;
+			stringstream buf;
+			buf << "Brain: Mutation Rate: "<< settings->brain_mutationrate << "%";
+			Textmessage::Instance()->add(buf);
+		}
+		if ( events->isActive("inc_mutationrate") )
+		{
+			if ( settings->brain_mutationrate <= 99 )
+				settings->brain_mutationrate += 1;
+			stringstream buf;
+			buf << "Brain: Mutation Rate: "<< settings->brain_mutationrate << "%";
+			Textmessage::Instance()->add(buf);
+		}
+		if ( events->isActive("dec_maxmutations") )
+		{
+			if ( settings->brain_maxmutations >= 2 )
+				settings->brain_maxmutations -= 1;
+			stringstream buf;
+			buf << "Brain: Max Mutations: "<< settings->brain_maxmutations;
+			Textmessage::Instance()->add(buf);
+		}
+		if ( events->isActive("inc_maxmutations") )
+		{
+			if ( settings->brain_maxmutations <= 999 )
+				settings->brain_maxmutations += 1;
+			stringstream buf;
+			buf << "Brain: Max Mutations: "<< settings->brain_maxmutations;
+			Textmessage::Instance()->add(buf);
+		}
 	}
 
 	// Camera sensitivity

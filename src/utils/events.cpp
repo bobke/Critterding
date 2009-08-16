@@ -110,6 +110,10 @@ bool Events::isActive(const string& name)
 
 			event* e = &events[i];
 			
+			// event does not use a timer
+				if ( e->responsetime == 0.0f )
+					return e->active;
+
 			// event uses a shared timer
 				if ( e->timerisshared )
 				{
@@ -117,29 +121,24 @@ bool Events::isActive(const string& name)
 						return e->active;
 					//return e->stimer->active;
 				}
-			// event has it's own timer
 				else
 				{
-					if ( e->responsetime > 0.0f )
+					// event has it's own timer
+					if ( e->active )
 					{
-						if ( e->active )
+						e->elapsed += Timer::Instance()->elapsed;
+						if ( e->elapsed >= e->fresponsetime )
 						{
-							e->elapsed += Timer::Instance()->elapsed;
-							if ( e->elapsed >= e->fresponsetime )
+							if ( e->responsetime > e->minfresponsetime )
 							{
-								if ( e->responsetime > e->minfresponsetime )
-								{
-									e->fresponsetime -= e->fresponseinterval;
-									if ( e->fresponsetime < e->minfresponsetime )
-										e->fresponsetime = e->minfresponsetime;
-								}
-								e->elapsed = 0.0f;
-								return true;
+								e->fresponsetime -= e->fresponseinterval;
+								if ( e->fresponsetime < e->minfresponsetime )
+									e->fresponsetime = e->minfresponsetime;
 							}
+							e->elapsed = 0.0f;
+							return true;
 						}
 					}
-					else
-						return e->active;
 				}
 		}
 	}
