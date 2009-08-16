@@ -41,6 +41,7 @@ void GLWindow::runGLScene(GLScene* glscene)
 
 	while(!stop)
 	{
+		int x, y;
 		while(SDL_PollEvent(&event))
 		{
                         if(event.type == SDL_VIDEORESIZE)
@@ -65,12 +66,22 @@ void GLWindow::runGLScene(GLScene* glscene)
 					break;
 				}
 			}
-
 			else if(event.type == SDL_KEYUP)
 				glscene->handlekeyReleased( event.key.keysym.sym );
 
+			else if (event.type == SDL_MOUSEBUTTONDOWN)
+			{
+				SDL_GetMouseState(&x, &y);
+				glscene->handlemousebuttonPressed( x, y, event.button.button );
+			}
+			else if (event.type == SDL_MOUSEBUTTONUP)
+			{
+				SDL_GetMouseState(&x, &y);
+				glscene->handlemousebuttonReleased( x, y, event.button.button );
+			}
+
 			else if(event.type == SDL_MOUSEMOTION)
-				glscene->handleMouseMotion( event.motion.xrel, event.motion.yrel );
+				glscene->handleMouseMotion( event.motion.x, event.motion.y );
 		}
 
 		glscene->draw();

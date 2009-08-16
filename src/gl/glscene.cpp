@@ -36,6 +36,15 @@ void GLScene::handlekeyPressed(const KeySym& key)
 void GLScene::handlekeyReleased(const KeySym& key)
 {
 }
+
+void GLScene::handlemousebuttonPressed(int x, int y, const int&)
+{
+}
+
+void GLScene::handlemousebuttonReleased(int x, int y, const int&)
+{
+}
+
 void GLScene::handleMouseMotion(int x, int y)
 {
 }
