@@ -35,6 +35,12 @@ WorldB::WorldB()
 
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 
+// 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawWireframe|btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
+// 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
+// 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints);
+// 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraintLimits);
+	m_dynamicsWorld->setDebugDrawer(&debugDrawer);
+
 	// Wall Constants
 		float WallWidth = 0.5f;
 		float WallHalfWidth = WallWidth/2.0f;
@@ -602,6 +608,8 @@ void WorldB::drawWithGrid()
 
 	for( unsigned int i=0; i < walls.size(); i++)
 		walls[i]->draw();
+
+	m_dynamicsWorld->debugDrawWorld();
 
 	// draw floor
 // 	grid.draw();

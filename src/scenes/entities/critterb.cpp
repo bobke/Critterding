@@ -125,22 +125,22 @@ CritterB::CritterB(CritterB &other, long unsigned int id, const btVector3& start
 // 	string* otherBodyArch = other.body.getArch();
 // 	body.setArch(otherBodyArch);
 	body.copyFrom(other.body);
-	if ( bodymutant )
-		mutateBody();
+	brain.copyFrom(other.brain);
 
+	if ( bodymutant )
+	{
+		mutateBody();
+		brain.removeObsoleteMotorsAndSensors();
+	}
 	body.wireArch( (void*)this, btDynWorld, startPos );
+
 	// LINK
 	registerBrainInputOutputs();
 
 	// BRAIN
-	brain.copyFrom(other.brain);
 	if ( brainmutant )
-	{
-		// disable motor neurons and input sensors in the brain
-		//if ( bodymutant )
-			brain.removeObsoleteMotorsAndSensors();
 		mutateBrain();
-	}
+
 	brain.wireArch();
 }
 
@@ -402,6 +402,16 @@ void CritterB::mutateBody()
 
 	unsigned int runs = RandGen::Instance()->get(1, settings->body_maxmutations);
 	body.mutate( runs ); // 0 for random
+
+	// a new color
+	color[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	color[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	color[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+
+	// a new speciescolor
+	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 }
 
 void CritterB::mutateBrain()

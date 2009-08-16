@@ -2,6 +2,8 @@
 #define WORLDB_H
 
 #include "btBulletDynamicsCommon.h"
+#include "LinearMath/btIDebugDraw.h"
+#include "../../gl/gldebugdrawer.h"
 // #include <sstream>
 #include <iomanip>
 // #include <vector>
@@ -77,6 +79,8 @@ class WorldB
 
 		unsigned int		insertCritterCounter;
 
+		GLDebugDrawer debugDrawer;
+
 // 		Grid			grid;
 		string			homedir;
 		string			progdir;
@@ -84,7 +88,6 @@ class WorldB
 		string			loaddir;
 
 		// methods
-
 		inline void		removeCritter(unsigned int cid);
 		inline void		createDirs();
 		inline btVector3	findPosition();
