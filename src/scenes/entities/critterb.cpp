@@ -128,14 +128,14 @@ CritterB::CritterB(CritterB &other, long unsigned int id, const btVector3& start
 	brain.copyFrom(other.brain);
 
 	if ( bodymutant )
-	{
 		mutateBody();
-		brain.removeObsoleteMotorsAndSensors();
-	}
+
 	body.wireArch( (void*)this, btDynWorld, startPos );
 
 	// LINK
 	registerBrainInputOutputs();
+	if ( bodymutant )
+		brain.removeObsoleteMotorsAndSensors();
 
 	// BRAIN
 	if ( brainmutant )
