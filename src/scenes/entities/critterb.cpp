@@ -100,7 +100,7 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 	brain.wireArch();
 }
 
-CritterB::CritterB(CritterB &other, long unsigned int id, const btVector3& startPos, bool mutant)
+CritterB::CritterB(CritterB &other, long unsigned int id, const btVector3& startPos, bool brainmutant, bool bodymutant)
 {
 	initConst();
 
@@ -125,7 +125,7 @@ CritterB::CritterB(CritterB &other, long unsigned int id, const btVector3& start
 // 	string* otherBodyArch = other.body.getArch();
 // 	body.setArch(otherBodyArch);
 	body.copyFrom(other.body);
-	if ( mutant )
+	if ( bodymutant )
 		mutateBody();
 
 	body.wireArch( (void*)this, btDynWorld, startPos );
@@ -134,9 +134,10 @@ CritterB::CritterB(CritterB &other, long unsigned int id, const btVector3& start
 
 	// BRAIN
 	brain.copyFrom(other.brain);
-	if ( mutant )
+	if ( brainmutant )
 	{
 		// disable motor neurons and input sensors in the brain
+		//if ( bodymutant )
 			brain.removeObsoleteMotorsAndSensors();
 		mutateBrain();
 	}
@@ -399,9 +400,8 @@ void CritterB::mutateBody()
 {
 	adamdist++;
 
-	unsigned int runs = RandGen::Instance()->get(1, settings->critter_maxmutations);
-	//body.mutate( runs ); // 0 for random
-	body.mutate( 1 ); // 0 for random
+	unsigned int runs = RandGen::Instance()->get(1, settings->body_maxmutations);
+	body.mutate( runs ); // 0 for random
 }
 
 void CritterB::mutateBrain()
@@ -447,7 +447,7 @@ void CritterB::mutateBrain()
 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
 
-	unsigned int runs = RandGen::Instance()->get(1, settings->critter_maxmutations);
+	unsigned int runs = RandGen::Instance()->get(1, settings->brain_maxmutations);
 	brain.mutate( runs ); // 0 for random
 }
 
@@ -584,7 +584,6 @@ string CritterB::saveCritterB()
 
 	void CritterB::printVision()
 	{
-		unsigned int clooper = 0;
 		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
 		{
 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=components )

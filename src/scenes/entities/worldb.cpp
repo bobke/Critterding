@@ -465,14 +465,19 @@ void WorldB::process()
 			if ( c->procreate && c->canProcreate )
 			{
 
-				bool mutant = false;
-				if ( randgen->Instance()->get(1,100) <= settings->critter_mutationrate )
-					mutant = true;
+				bool brainmutant = false;
+				bool bodymutant = false;
+
+				if ( randgen->Instance()->get(1,100) <= settings->brain_mutationrate )
+					brainmutant = true;
+
+				if ( randgen->Instance()->get(1,100) <= settings->body_mutationrate )
+					bodymutant = true;
 
 				btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.bodyparts[0]->body->getMotionState();
 				btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
 				np.setY(1.0f);
-				CritterB *nc = new CritterB(*c, currentCritterID++, np, mutant);
+				CritterB *nc = new CritterB(*c, currentCritterID++, np, brainmutant, bodymutant);
 				//CritterB *nc = new CritterB(*c, currentCritterID++, findPosition(), mutant);
 
 				// display message of birth
@@ -484,7 +489,8 @@ void WorldB::process()
 // 								buf << " carnivore";
 // 							else
 // 								buf << " herbivore";
-					if ( mutant ) buf << " mutant";
+					if ( brainmutant ) buf << " brain mutant";
+					if ( bodymutant ) buf << " body mutant";
 					Textverbosemessage::Instance()->addBirth(buf);
 
 				// split energies in half

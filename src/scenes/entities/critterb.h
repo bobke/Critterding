@@ -23,7 +23,7 @@ class CritterB
 {
 	public:
 		CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVector3& startPos, unsigned char* retinap);
-		CritterB(CritterB &other, long unsigned int id, const btVector3& startPos, bool mutant);
+		CritterB(CritterB &other, long unsigned int id, const btVector3& startPos, bool brainmutant, bool bodymutant);
 		CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVector3& startPos, unsigned char* retinap);
 		~CritterB();
 

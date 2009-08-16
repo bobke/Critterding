@@ -78,18 +78,6 @@ Settings::Settings()
 	critter_retinasize		= 6;
 		critter_retinasizeMin		= 1;
 		critter_retinasizeMax		= 1000;
-	critter_mutationrate		= 50;
-		critter_mutationrateMin		= 0;
-		critter_mutationrateMax		= 100;
-	critter_maxmutations		= 10;
-		critter_maxmutationsMin		= 1;
-		critter_maxmutationsMax		= 100;
-	critter_percentchangetype	= 1;
-		critter_percentchangetypeMin	= 0;
-		critter_percentchangetypeMax	= 100;
-	critter_flipnewborns		= false;
-	critter_randomrotatenewborns	= false;
-	critter_enablecarrying		= false;
 	critter_autosaveinterval	= 0;
 		critter_autosaveintervalMin	= 0;
 		critter_autosaveintervalMax	= 1000000;
@@ -117,6 +105,20 @@ Settings::Settings()
 	corpse_sizeI			= 15;
 		corpse_sizeIMin			= 1;
 		corpse_sizeIMax			= 100;
+
+	body_mutationrate		= 10;
+		body_mutationrateMin		= 0;
+		body_mutationrateMax		= 100;
+	body_maxmutations		= 10;
+		body_maxmutationsMin		= 1;
+		body_maxmutationsMax		= 100;
+
+	brain_mutationrate		= 10;
+		brain_mutationrateMin		= 0;
+		brain_mutationrateMax		= 100;
+	brain_maxmutations		= 10;
+		brain_maxmutationsMin		= 1;
+		brain_maxmutationsMax		= 100;
 
 	brain_maxneurons		= 1000;
 		brain_maxneuronsMin		= 1;
@@ -283,12 +285,10 @@ void Settings::createHelpInfo()
 	helpinfo << "  --critter_speed             [" << critter_speedI << "]  Critter speed" << endl;
 	helpinfo << "  --critter_sightrange        [" << critter_sightrangeI << "]  Distance a critter can see (" << critter_sightrangeI*10.0f << " = " << critter_sightrangeI << " floor squares)" << endl;
 	helpinfo << "  --critter_retinasize         [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
-	helpinfo << "  --critter_mutationrate      [" << critter_mutationrate << "]  When a critter procreates there is a " << critter_mutationrate << "% chance it will mutate" << endl;
-	helpinfo << "  --critter_maxmutations       [" << critter_maxmutations << "]  When a critter mutates, it can do " << critter_maxmutations << " mutations at maximum" << endl;
-	helpinfo << "  --critter_percentchangetype  [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
-	helpinfo << "  --critter_flipnewborns            If set, newborns will be flipped 180 degrees" << endl;
-	helpinfo << "  --critter_randomrotatenewborns    If set, newborns will be rotated randomly" << endl;
-	helpinfo << "  --critter_enablecarrying          If set, critters will be able to carry food and corpses" << endl;
+// 	helpinfo << "  --critter_percentchangetype  [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
+// 	helpinfo << "  --critter_flipnewborns            If set, newborns will be flipped 180 degrees" << endl;
+// 	helpinfo << "  --critter_randomrotatenewborns    If set, newborns will be rotated randomly" << endl;
+// 	helpinfo << "  --critter_enablecarrying          If set, critters will be able to carry food and corpses" << endl;
 	helpinfo << "  --critter_autosaveinterval   [" << critter_autosaveinterval << "]  Save all critters every N seconds (0=disabled)" << endl;
 	helpinfo << endl;
 	helpinfo << "  Food Settings" << endl;
@@ -302,7 +302,16 @@ void Settings::createHelpInfo()
 	helpinfo << "  --corpse_size               [" << corpse_sizeI << "]  Size of a corpse unit" << endl;
 	helpinfo << "  --corpse_disable                  Disable corpses" << endl;
 	helpinfo << endl;
+
+	helpinfo << "  Body Settings" << endl;
+	helpinfo << "  --body_mutationrate      [" << body_mutationrate << "]  When a critter procreates there is a " << body_mutationrate << "% chance its body will mutate" << endl;
+	helpinfo << "  --body_maxmutations       [" << body_maxmutations << "]  When a critters body mutates, it can do " << body_maxmutations << " mutations at maximum" << endl;
+
+	helpinfo << endl;
 	helpinfo << "  Brain Settings" << endl;
+	helpinfo << "  --brain_mutationrate      [" << brain_mutationrate << "]  When a critter procreates there is a " << brain_mutationrate << "% chance its brain will mutate" << endl;
+	helpinfo << "  --brain_maxmutations       [" << brain_maxmutations << "]  When a critters brain mutates, it can do " << brain_maxmutations << " mutations at maximum" << endl;
+
 	helpinfo << "  --brain_maxneurons                           [" << brain_maxneurons << "]  Max neurons per critter" << endl;
 	helpinfo << "  --brain_minsynapses                             [" << brain_minsynapses << "]  Min synapses per neuron" << endl;
 	helpinfo << "  --brain_maxsynapses                           [" << brain_maxsynapses << "]  Max synapses per neuron" << endl;
@@ -419,12 +428,10 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("critter_speed ", critter_speedI, critter_speedIMin, critter_speedIMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_sightrange ", critter_sightrangeI, critter_sightrangeIMin, critter_sightrangeIMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_retinasize ", critter_retinasize, critter_retinasizeMin, critter_retinasizeMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_mutationrate ", critter_mutationrate, critter_mutationrateMin, critter_mutationrateMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_maxmutations ", critter_maxmutations, critter_maxmutationsMin, critter_maxmutationsMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_percentchangetype ", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_flipnewborns", critter_flipnewborns, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_randomrotatenewborns", critter_randomrotatenewborns, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_enablecarrying", critter_enablecarrying, line) ) uselesscounter++;
+// 			else if ( checkConfigFileValue("critter_percentchangetype ", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, line) ) uselesscounter++;
+// 			else if ( checkConfigFileValue("critter_flipnewborns", critter_flipnewborns, line) ) uselesscounter++;
+// 			else if ( checkConfigFileValue("critter_randomrotatenewborns", critter_randomrotatenewborns, line) ) uselesscounter++;
+// 			else if ( checkConfigFileValue("critter_enablecarrying", critter_enablecarrying, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_autosaveinterval ", critter_autosaveinterval, critter_autosaveintervalMin, critter_autosaveintervalMax, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("food_maxlifetime ", food_maxlifetime, food_maxlifetimeMin, food_maxlifetimeMax, line) ) uselesscounter++;
@@ -435,6 +442,12 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("corpse_maxlifetime ", corpse_maxlifetime, corpse_maxlifetimeMin, corpse_maxlifetimeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("corpse_maxenergy ", corpse_maxenergy, corpse_maxenergyMin, corpse_maxenergyMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("corpse_size ", corpse_sizeI, corpse_sizeIMin, corpse_sizeIMax, line) ) uselesscounter++;
+
+			else if ( checkConfigFileValue("body_mutationrate ", body_mutationrate, body_mutationrateMin, body_mutationrateMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("body_maxmutations ", body_maxmutations, body_maxmutationsMin, body_maxmutationsMax, line) ) uselesscounter++;
+
+			else if ( checkConfigFileValue("brain_mutationrate ", brain_mutationrate, brain_mutationrateMin, brain_mutationrateMax, line) ) uselesscounter++;
+			else if ( checkConfigFileValue("brain_maxmutations ", brain_maxmutations, brain_maxmutationsMin, brain_maxmutationsMax, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("brain_maxneurons ", brain_maxneurons, brain_maxneuronsMin, brain_maxneuronsMax, line) ) uselesscounter++;
 
@@ -559,12 +572,10 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--critter_speed", critter_speedI, critter_speedIMin, critter_speedIMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_sightrange", critter_sightrangeI, critter_sightrangeIMin, critter_sightrangeIMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_retinasize", critter_retinasize, critter_retinasizeMin, critter_retinasizeMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--critter_mutationrate", critter_mutationrate, critter_mutationrateMin, critter_mutationrateMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--critter_maxmutations", critter_maxmutations, critter_maxmutationsMin, critter_maxmutationsMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--critter_percentchangetype", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, optind, argv) ) optind++;
-		else if (sw=="--critter_flipnewborns") critter_flipnewborns = true;
-		else if (sw=="--critter_randomrotatenewborns") critter_randomrotatenewborns = true;
-		else if (sw=="--critter_enablecarrying") critter_enablecarrying = true;
+// 		else if ( checkSwitch("--critter_percentchangetype", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, optind, argv) ) optind++;
+// 		else if (sw=="--critter_flipnewborns") critter_flipnewborns = true;
+// 		else if (sw=="--critter_randomrotatenewborns") critter_randomrotatenewborns = true;
+// 		else if (sw=="--critter_enablecarrying") critter_enablecarrying = true;
 		else if ( checkSwitch("--critter_autosaveinterval", critter_autosaveinterval, critter_autosaveintervalMin, critter_autosaveintervalMax, optind, argv) ) optind++;
 
 	// Food Settings
@@ -580,7 +591,15 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--corpse_size", corpse_sizeI, corpse_sizeIMin, corpse_sizeIMax, optind, argv) ) optind++;
 		else if (sw=="--corpse_disable") corpse_disable = true;
 
+	// Body Settings
+
+		else if ( checkSwitch("--body_mutationrate", body_mutationrate, body_mutationrateMin, body_mutationrateMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--body_maxmutations", body_maxmutations, body_maxmutationsMin, body_maxmutationsMax, optind, argv) ) optind++;
+
 	// Brain Settings
+
+		else if ( checkSwitch("--brain_mutationrate", brain_mutationrate, brain_mutationrateMin, brain_mutationrateMax, optind, argv) ) optind++;
+		else if ( checkSwitch("--brain_maxmutations", brain_maxmutations, brain_maxmutationsMin, brain_maxmutationsMax, optind, argv) ) optind++;
 
 		else if ( checkSwitch("--brain_maxneurons", brain_maxneurons, brain_maxneuronsMin, brain_maxneuronsMax, optind, argv) ) optind++;
 
@@ -781,12 +800,10 @@ void Settings::printSettings()
 	cerr << "critter_speed " << critter_speedI << endl;
 	cerr << "critter_sightrange " << critter_sightrangeI << endl;
 	cerr << "critter_retinasize " << critter_retinasize << endl;
-	cerr << "critter_mutationrate " << critter_mutationrate << endl;
-	cerr << "critter_maxmutations " << critter_maxmutations << endl;
-	cerr << "critter_percentchangetype " << critter_percentchangetype << endl;
-	cerr << "critter_flipnewborns " << critter_flipnewborns << endl;
-	cerr << "critter_randomrotatenewborns " << critter_randomrotatenewborns << endl;
-	cerr << "critter_enablecarrying " << critter_enablecarrying << endl;
+// 	cerr << "critter_percentchangetype " << critter_percentchangetype << endl;
+// 	cerr << "critter_flipnewborns " << critter_flipnewborns << endl;
+// 	cerr << "critter_randomrotatenewborns " << critter_randomrotatenewborns << endl;
+// 	cerr << "critter_enablecarrying " << critter_enablecarrying << endl;
 	cerr << "critter_autosaveinterval  " << critter_autosaveinterval << endl << endl;
 
 	cerr << "food_maxlifetime  " << food_maxlifetime << endl;
@@ -797,6 +814,12 @@ void Settings::printSettings()
 	cerr << "corpse_maxlifetime  " << corpse_maxlifetime << endl;
 	cerr << "corpse_maxenergy  " << corpse_maxenergy << endl;
 	cerr << "corpse_size  " << corpse_sizeI << endl << endl;
+
+	cerr << "body_mutationrate " << body_mutationrate << endl;
+	cerr << "body_maxmutations " << body_maxmutations << endl;
+
+	cerr << "brain_mutationrate " << brain_mutationrate << endl;
+	cerr << "brain_maxmutations " << brain_maxmutations << endl;
 
 	cerr << "brain_maxneurons  " << brain_maxneurons << endl;
 	cerr << "brain_minsynapses  " << brain_minsynapses << endl;

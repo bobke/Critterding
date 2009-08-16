@@ -123,7 +123,7 @@ void Body::buildArch()
 		bp->y		= randgen->Instance()->get( 20, 200 );
 		bp->z		= randgen->Instance()->get( 20, 200 );
 
-		unsigned int runs = randgen->Instance()->get( 0, 5 );
+		unsigned int runs = randgen->Instance()->get( 0, 50 );
 		for ( unsigned int i=0; i < runs; i++ )
 			addRandomBodypart();
 
@@ -336,33 +336,37 @@ void Body::mutate(unsigned int runs)
 
 					// if not main body, remove it
 					if ( archBodyparts[bid].id != 1000 )
+					{
 						removeBodypart(bid);
 
-					cerr << "removing obsolete constraints, expected errors:" << endl;
-					for ( int i = 0; i < (int)archConstraints.size(); i++ )
-					{
-						archConstraint* c = &archConstraints[i];
-						if ( findBodypart( c->id_1 ) == -1 )
+						cerr << "removing obsolete constraints, expected errors:" << endl;
+						for ( int i = 0; i < (int)archConstraints.size(); i++ )
 						{
-							archConstraints.erase(archConstraints.begin()+i);
-							i--;
+							archConstraint* c = &archConstraints[i];
+							if ( findBodypart( c->id_1 ) == -1 )
+							{
+								archConstraints.erase(archConstraints.begin()+i);
+								i--;
+							}
+							else if ( c->isMouthConstraint && findMouth( c->id_2 ) == -1 )
+							{
+								archConstraints.erase(archConstraints.begin()+i);
+								i--;
+							}
+							else if ( !c->isMouthConstraint && findBodypart( c->id_2 ) == -1 )
+							{
+								archConstraints.erase(archConstraints.begin()+i);
+								i--;
+							}
 						}
-						else if ( c->isMouthConstraint && findMouth( c->id_2 ) == -1 )
-						{
-							archConstraints.erase(archConstraints.begin()+i);
-							i--;
-						}
-						else if ( !c->isMouthConstraint && findBodypart( c->id_2 ) == -1 )
-						{
-							archConstraints.erase(archConstraints.begin()+i);
-							i--;
-						}
-					}
-					cerr << "done removing obsolete constraints" << endl << endl;
+						cerr << "done removing obsolete constraints" << endl << endl;
 
-					// re add mouth if needed
-					if ( archMouths.size() == 0 )
-						addRandomMouth();
+						// re add mouth if needed
+						if ( archMouths.size() == 0 )
+							addRandomMouth();
+					}
+					else
+						runs--;
 				}
 			}
 
@@ -426,7 +430,8 @@ void Body::mutate(unsigned int runs)
 				removeMouth(0);
 				addRandomMouth();
 			}
-
+			else
+				runs--;
 	}
 }
 

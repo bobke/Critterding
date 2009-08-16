@@ -19,7 +19,7 @@ class GLWindow {
 		//	Destroy window and OpenGL Context, close the Display
 		void destroy();
 		//	Main loop for the program.
-		void runGLScene(GLScene &glscene);
+		void runGLScene(GLScene* glscene);
 
 	private:
 		//	Resize Window
