@@ -25,6 +25,8 @@ Constraint::Constraint(btDynamicsWorld* ownerWorld, btRigidBody& bodyA, btRigidB
 		else fullRange += (limitA * -1.0f);
 		if ( limitB > 0.0f ) fullRange += limitB;
 		else fullRange += (limitB * -1.0f);
+
+	hinge->setDbgDrawSize(5.0f);
 }
 
 float Constraint::getAngle()

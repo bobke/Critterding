@@ -123,7 +123,7 @@ void Body::buildArch()
 		bp->y		= randgen->Instance()->get( 20, 200 );
 		bp->z		= randgen->Instance()->get( 20, 200 );
 
-		unsigned int runs = randgen->Instance()->get( 0, 50 );
+		unsigned int runs = randgen->Instance()->get( 0, 0 );
 		for ( unsigned int i=0; i < runs; i++ )
 			addRandomBodypart();
 
@@ -235,7 +235,7 @@ void Body::addRandomMouth()
 {
 	// Throw in a mouth
 		archMouths.push_back( archMouth() );
-		archMouth *mo = &archMouths[archMouths.size()-1];
+		archMouth* mo = &archMouths[archMouths.size()-1];
 		mo->id		= 1000;
 		mo->x		= randgen->Instance()->get( 40, 100 );
 		mo->y		= randgen->Instance()->get( 40, 100 );
@@ -254,6 +254,7 @@ void Body::addRandomBodypart()
 	// Throw in a bodypart
 		archBodyparts.push_back( archBodypart() );
 		archBodypart *bp = &archBodyparts[archBodyparts.size()-1];
+		bp->id		= 0;
 		bp->id		= getUniqueBodypartID();
 		bp->type	= 0;
 		bp->materialID	= 0;
@@ -277,6 +278,9 @@ void Body::addRandomConstraint(unsigned int connID1, unsigned int connID2, bool 
 		archConstraint *co = &archConstraints[archConstraints.size()-1];
 
 		co->isMouthConstraint	= isMouth;
+		// first initialize constraint id's
+		co->constraint_id1	= 0;
+		co->constraint_id2	= 0;
 		co->constraint_id1	= getUniqueConstraintID();
 		co->constraint_id2	= getUniqueConstraintID();
 		co->id_1		= archBodyparts[ connID1 ].id;
@@ -284,9 +288,10 @@ void Body::addRandomConstraint(unsigned int connID1, unsigned int connID2, bool 
 			co->id_2		= archMouths[ connID2 ].id;
 		else
 			co->id_2		= archBodyparts[ connID2 ].id;
+
 		co->rot_x_1		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
-		co->rot_z_1		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
 		co->rot_y_1		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
+		co->rot_z_1		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
 
 		co->rot_x_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
 		co->rot_y_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
@@ -297,6 +302,93 @@ void Body::addRandomConstraint(unsigned int connID1, unsigned int connID2, bool 
 
 		co->limit_1		= (float)randgen->Instance()->get( 0, 7853 ) / -10000;
 		co->limit_2		= -1.0f * co->limit_1;
+}
+
+void Body::randomConstraintPosition(archConstraint* co, unsigned int OneOrTwo, unsigned int connID)
+{
+	unsigned int pickXYZ = randgen->Instance()->get( 0, 2 );
+	int sign = randgen->Instance()->get( 0, 1 );
+	if ( sign == 0 ) sign = -1;
+
+	if ( OneOrTwo == 1 )
+	{
+	// now we know the plane to connect to, determine positions
+		if ( pickXYZ == 0 ) // X
+		{
+			co->pos_x_1 = ((archBodyparts[connID].x / 1000.0f) + 0.105f) * sign;
+			co->pos_y_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
+			co->pos_z_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
+// 			co->rot_x_1 = 0.0f;
+// 			co->rot_x_1 = 0.0f;
+// 			co->rot_y_1 = 0.0f;
+// 			co->rot_z_1 = 0.0f;
+		}
+		else if ( pickXYZ == 1 ) // Y
+		{
+			co->pos_x_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
+			co->pos_y_1 = ((archBodyparts[connID].y / 1000.0f) + 0.105f) * sign;
+			co->pos_z_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
+// 			co->rot_y_1 = 0.0f;
+		}
+		else // Z
+		{
+			co->pos_x_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
+			co->pos_y_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
+			co->pos_z_1 = ((archBodyparts[connID].z / 1000.0f) + 0.105f) * sign;
+// 			co->rot_z_1 = 0.0f;
+		}
+	}
+	else
+	{
+		if ( !co->isMouthConstraint )
+		{
+			if ( pickXYZ == 0 ) // X
+			{
+				co->pos_x_2 = ((archBodyparts[connID].x / 1000.0f) + 0.105f) * sign;
+				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
+				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
+// 				co->rot_x_2 = 0.0f;
+			}
+			else if ( pickXYZ == 1 ) // Y
+			{
+				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
+				co->pos_y_2 = ((archBodyparts[connID].y / 1000.0f) + 0.105f) * sign;
+				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
+// 				co->rot_y_2 = 0.0f;
+			}
+			else // Z
+			{
+				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
+				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
+				co->pos_z_2 = ((archBodyparts[connID].z / 1000.0f) + 0.105f) * sign;
+// 				co->rot_y_2 = 0.0f;
+			}
+		}
+		else
+		{
+			if ( pickXYZ == 0 ) // X
+			{
+				co->pos_x_2 = ((archMouths[connID].x / 1000.0f) + 0.105f) * sign;
+				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].y)*2) - archMouths[connID].y) / 1000;
+				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].z)*2) - archMouths[connID].z) / 1000;
+// 				co->rot_x_2 = 0.0f;
+			}
+			else if ( pickXYZ == 1 ) // Y
+			{
+				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].x)*2) - archMouths[connID].x) / 1000;
+				co->pos_y_2 = ((archMouths[connID].y / 1000.0f) + 0.105f) * sign;
+				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].z)*2) - archMouths[connID].z) / 1000;
+// 				co->rot_y_2 = 0.0f;
+			}
+			else // Z
+			{
+				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].x)*2) - archMouths[connID].x) / 1000;
+				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].y)*2) - archMouths[connID].y) / 1000;
+				co->pos_z_2 = ((archMouths[connID].z / 1000.0f) + 0.105f) * sign;
+// 				co->rot_y_2 = 0.0f;
+			}
+		}
+	}
 }
 
 void Body::mutate(unsigned int runs)
@@ -435,81 +527,6 @@ void Body::mutate(unsigned int runs)
 	}
 }
 
-void Body::randomConstraintPosition(archConstraint* co, unsigned int OneOrTwo, unsigned int connID)
-{
-	unsigned int pickXYZ = randgen->Instance()->get( 0, 2 );
-	int sign = randgen->Instance()->get( 0, 1 );
-	if ( sign == 0 ) sign = -1;
-
-	if ( OneOrTwo == 1 )
-	{
-	// now we know the plane to connect to, determine positions
-		if ( pickXYZ == 0 ) // X
-		{
-			co->pos_x_1 = ((archBodyparts[connID].x / 1000.0f) + 0.105f) * sign;
-			co->pos_y_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
-			co->pos_z_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
-		}
-		else if ( pickXYZ == 1 ) // Y
-		{
-			co->pos_x_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
-			co->pos_y_1 = ((archBodyparts[connID].y / 1000.0f) + 0.105f) * sign;
-			co->pos_z_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
-		}
-		else // Z
-		{
-			co->pos_x_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
-			co->pos_y_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
-			co->pos_z_1 = ((archBodyparts[connID].z / 1000.0f) + 0.105f) * sign;
-		}
-	}
-	else
-	{
-		if ( !co->isMouthConstraint )
-		{
-			if ( pickXYZ == 0 ) // X
-			{
-				co->pos_x_2 = ((archBodyparts[connID].x / 1000.0f) + 0.105f) * sign;
-				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
-				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
-			}
-			else if ( pickXYZ == 1 ) // Y
-			{
-				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
-				co->pos_y_2 = ((archBodyparts[connID].y / 1000.0f) + 0.105f) * sign;
-				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
-			}
-			else // Z
-			{
-				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
-				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
-				co->pos_z_2 = ((archBodyparts[connID].z / 1000.0f) + 0.105f) * sign;
-			}
-		}
-		else
-		{
-			if ( pickXYZ == 0 ) // X
-			{
-				co->pos_x_2 = ((archMouths[connID].x / 1000.0f) + 0.105f) * sign;
-				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].y)*2) - archMouths[connID].y) / 1000;
-				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].z)*2) - archMouths[connID].z) / 1000;
-			}
-			else if ( pickXYZ == 1 ) // Y
-			{
-				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].x)*2) - archMouths[connID].x) / 1000;
-				co->pos_y_2 = ((archMouths[connID].y / 1000.0f) + 0.105f) * sign;
-				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].z)*2) - archMouths[connID].z) / 1000;
-			}
-			else // Z
-			{
-				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].x)*2) - archMouths[connID].x) / 1000;
-				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].y)*2) - archMouths[connID].y) / 1000;
-				co->pos_z_2 = ((archMouths[connID].z / 1000.0f) + 0.105f) * sign;
-			}
-		}
-	}
-}
-
 int Body::findBodypart( unsigned int id )
 {
 	for ( unsigned int i=0; i < archBodyparts.size(); i++ )
@@ -562,11 +579,13 @@ unsigned int Body::getUniqueConstraintID()
 	{
 		found = false;
 		for ( unsigned int i = 0; i < archConstraints.size() && !found; i++ )
+		{
 			if ( archConstraints[i].constraint_id1 == id || archConstraints[i].constraint_id2 == id )
 			{
 				found = true;
 				id++;
 			}
+		}
 	}
 	return id;
 }
