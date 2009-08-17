@@ -17,12 +17,12 @@
 #include "../../utils/settings.h"
 #include "../../utils/textmessage.h"
 #include "../../utils/textverbosemessage.h"
-#include "grid.h"
+// #include "grid.h"
 // #include "floor.h"
 #include "food.h"
-#include "corpse.h"
+// #include "corpse.h"
 #include "wall.h"
-#include "bullet.h"
+// #include "bullet.h"
 #include "critterb.h"
 
 using namespace std;

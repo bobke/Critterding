@@ -20,8 +20,6 @@ class Settings
 		// info data
 		unsigned int info_critters;
 		unsigned int info_food;
-		unsigned int info_corpses;
-		unsigned int info_bullets;
 
 		unsigned int info_totalNeurons;
 		unsigned int info_totalSynapses;
@@ -30,8 +28,6 @@ class Settings
 
 		unsigned int *winWidth;
 		unsigned int *winHeight;
-// 		Display 			*dpy;
-// 		Window				win;
 
 		unsigned int worldsizeX;
 		unsigned int worldsizeY;
@@ -53,18 +49,11 @@ class Settings
 		unsigned int camerasensitivity;
 			unsigned int camerasensitivityMin;
 			unsigned int camerasensitivityMax;
-		unsigned int walltype;
-			unsigned int walltypeMin;
-			unsigned int walltypeMax;
-		unsigned int spreadertype;
-			unsigned int spreadertypeMin;
-			unsigned int spreadertypeMax;
 		unsigned int colormode;
 			unsigned int colormodeMin;
 			unsigned int colormodeMax;
 		bool exit_if_empty;
 		bool autoload;
-//		bool noverbose;
 
 		unsigned int critter_maxlifetime;
 			unsigned int critter_maxlifetimeMin;
@@ -78,36 +67,15 @@ class Settings
 		unsigned int critter_procinterval;
 			unsigned int critter_procintervalMin;
 			unsigned int critter_procintervalMax;
-		unsigned int critter_fireinterval;
-			unsigned int critter_fireintervalMin;
-			unsigned int critter_fireintervalMax;
 		unsigned int critter_minenergyproc;
 			unsigned int critter_minenergyprocMin;
 			unsigned int critter_minenergyprocMax;
-		unsigned int critter_minenergyfire;
-			unsigned int critter_minenergyfireMin;
-			unsigned int critter_minenergyfireMax;
-		unsigned int critter_firecost;
-			unsigned int critter_firecostMin;
-			unsigned int critter_firecostMax;
-		unsigned int critter_sizeI;
-			unsigned int critter_sizeIMin;
-			unsigned int critter_sizeIMax;
-		unsigned int critter_speedI;
-			unsigned int critter_speedIMin;
-			unsigned int critter_speedIMax;
 		unsigned int critter_sightrangeI;
 			unsigned int critter_sightrangeIMin;
 			unsigned int critter_sightrangeIMax;
 		unsigned int critter_retinasize;
 			unsigned int critter_retinasizeMin;
 			unsigned int critter_retinasizeMax;
-/*		unsigned int critter_percentchangetype;
-			unsigned int critter_percentchangetypeMin;
-			unsigned int critter_percentchangetypeMax;*/
-// 		bool critter_flipnewborns;
-// 		bool critter_randomrotatenewborns;
-// 		bool critter_enablecarrying;
 		unsigned int critter_autosaveinterval;
 			unsigned int critter_autosaveintervalMin;
 			unsigned int critter_autosaveintervalMax;
@@ -124,17 +92,6 @@ class Settings
 		unsigned int food_sizeI;
 			unsigned int food_sizeIMin;
 			unsigned int food_sizeIMax;
-
-		unsigned int corpse_maxlifetime;
-			unsigned int corpse_maxlifetimeMin;
-			unsigned int corpse_maxlifetimeMax;
-		unsigned int corpse_maxenergy;
-			unsigned int corpse_maxenergyMin;
-			unsigned int corpse_maxenergyMax;
-		unsigned int corpse_sizeI;
-			unsigned int corpse_sizeIMin;
-			unsigned int corpse_sizeIMax;
-		bool corpse_disable;
 
 		unsigned int body_mutationrate;
 			unsigned int body_mutationrateMin;
@@ -271,14 +228,8 @@ class Settings
 			unsigned int brain_costhavingsynapseMax;
 
 		// other vars
-		float critter_size;
-		float critter_speed;
 		float critter_sightrange;
 		float food_size;
-		float corpse_size;
-
-		float food_lifeenergyratio;
-		float corpse_lifeenergyratio;
 
 		float freeEnergyInfo;
 

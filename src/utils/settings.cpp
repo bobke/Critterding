@@ -29,12 +29,6 @@ Settings::Settings()
 	camerasensitivity		= 20;
 		camerasensitivityMin		= 1;
 		camerasensitivityMax		= 1000;
-	walltype			= 0;
-		walltypeMin			= 0;
-		walltypeMax			= 15;
-	spreadertype			= 0;
-		spreadertypeMin			= 0;
-		spreadertypeMax			= 5;
 	colormode			= 0;
 		colormodeMin			= 0;
 		colormodeMax			= 1;
@@ -54,24 +48,9 @@ Settings::Settings()
 	critter_procinterval		= 20;
 		critter_procintervalMin		= 1;
 		critter_procintervalMax		= 1000000;
-	critter_fireinterval		= 20;
-		critter_fireintervalMin		= 0;
-		critter_fireintervalMax		= 1000000;
 	critter_minenergyproc		= 3000;
 		critter_minenergyprocMin	= 0;
 		critter_minenergyprocMax	= 1000000;
-	critter_minenergyfire		= 10;
-		critter_minenergyfireMin	= 0;
-		critter_minenergyfireMax	= 1000000;
-	critter_firecost		= 50;
-		critter_firecostMin		= 0;
-		critter_firecostMax		= 1000000;
-	critter_sizeI			= 10;
-		critter_sizeIMin		= 1;
-		critter_sizeIMax		= 100;
-	critter_speedI			= 70;
-		critter_speedIMin		= 1;
-		critter_speedIMax		= 1000;
 	critter_sightrangeI		= 70;
 		critter_sightrangeIMin		= 1;
 		critter_sightrangeIMax		= 1000;
@@ -94,17 +73,6 @@ Settings::Settings()
 	food_sizeI			= 15;
 		food_sizeIMin			= 1;
 		food_sizeIMax			= 100;
-
-	corpse_disable			= false;
-	corpse_maxlifetime		= 10000;
-		corpse_maxlifetimeMin		= 1;
-		corpse_maxlifetimeMax		= 1000000;
-	corpse_maxenergy		= 2000;
-		corpse_maxenergyMin		= 1;
-		corpse_maxenergyMax		= 1000000;
-	corpse_sizeI			= 15;
-		corpse_sizeIMin			= 1;
-		corpse_sizeIMax			= 100;
 
 	body_mutationrate		= 10;
 		body_mutationrateMin		= 0;
@@ -241,8 +209,6 @@ Settings::Settings()
 
 	info_critters = 0;
 	info_food = 0;
-	info_corpses = 0;
-	info_bullets = 0;
 
 	info_totalNeurons = 0;
 	info_totalSynapses = 0;
@@ -265,8 +231,6 @@ void Settings::createHelpInfo()
 	helpinfo << "  --mincritters               [" << mincritters << "]  If less than " << mincritters << " critters are present, insert an adam" << endl;
 	helpinfo << "  --retinasperrow             [" << retinasperrow << "]  Place " << retinasperrow << " retinas on a row (bottom left of window)" << endl;
 	helpinfo << "  --camerasensitivity         [" << camerasensitivity << "]  Camera sensitivity" << endl;
-	helpinfo << "  --walltype                  [" << walltype << "]  Walltype" << endl;
-	helpinfo << "  --spreadertype              [" << spreadertype << "]  Manner in which newly inserted food/critters will be inserted the world" << endl;
 	helpinfo << "  --exit-if-empty                   If set, the program will exit when no are left" << endl;
 	helpinfo << "  --autoload                        If set, critters from the load directory will be loaded at startup" << endl;
 
@@ -276,31 +240,16 @@ void Settings::createHelpInfo()
 	helpinfo << "  --critter_maxenergy       [" << critter_maxenergy << "]  Max amount of energy in a critter" << endl;
 	helpinfo << "  --critter_startenergy     [" << critter_startenergy << "]  Starting amount of energy for a new critter" << endl;
 	helpinfo << "  --critter_procinterval      [" << critter_procinterval << "]  Time (in frames) between procreations" << endl;
-	helpinfo << "  --critter_fireinterval      [" << critter_fireinterval << "]  Time (in frames) between bullets being fired" << endl;
 	helpinfo << "  --critter_minenergyproc   [" << critter_minenergyproc << "]  Min amount of energy required for procreation" << endl;
-	helpinfo << "  --critter_minenergyfire      [" << critter_minenergyfire << "]  Min amount of energy required for firing a bullet" << endl;
-	helpinfo << "  --critter_firecost           [" << critter_firecost << "]  Amount of energy it costs to fire a bullet" << endl;
 
-	helpinfo << "  --critter_size              [" << critter_sizeI << "]  Size of a critter" << endl;
-	helpinfo << "  --critter_speed             [" << critter_speedI << "]  Critter speed" << endl;
 	helpinfo << "  --critter_sightrange        [" << critter_sightrangeI << "]  Distance a critter can see (" << critter_sightrangeI*10.0f << " = " << critter_sightrangeI << " floor squares)" << endl;
 	helpinfo << "  --critter_retinasize         [" << critter_retinasize << "]  Resolution of critter's retina: " << critter_retinasize << "x" << critter_retinasize << "" << endl;
-// 	helpinfo << "  --critter_percentchangetype  [" << critter_percentchangetype << "]  When a critter mutates, percent chance it changes type" << endl;
-// 	helpinfo << "  --critter_flipnewborns            If set, newborns will be flipped 180 degrees" << endl;
-// 	helpinfo << "  --critter_randomrotatenewborns    If set, newborns will be rotated randomly" << endl;
-// 	helpinfo << "  --critter_enablecarrying          If set, critters will be able to carry food and corpses" << endl;
 	helpinfo << "  --critter_autosaveinterval   [" << critter_autosaveinterval << "]  Save all critters every N seconds (0=disabled)" << endl;
 	helpinfo << endl;
 	helpinfo << "  Food Settings" << endl;
 	helpinfo << "  --food_maxlifetime         [" << food_maxlifetime << "]  Maximum amount of frames food exists" << endl;
 	helpinfo << "  --food_maxenergy          [" << food_maxenergy << "]  Maximum amount of energy in a food unit" << endl;
 	helpinfo << "  --food_size                 [" << food_sizeI << "]  Size of a food unit" << endl;
-	helpinfo << endl;
-	helpinfo << "  Corpse Settings" << endl;
-	helpinfo << "  --corpse_maxlifetime      [" << corpse_maxlifetime << "]  Maximum amount of frames a corpse exists" << endl;
-	helpinfo << "  --corpse_maxenergy        [" << corpse_maxenergy << "]  Maximum amount of energy in a corpse unit" << endl;
-	helpinfo << "  --corpse_size               [" << corpse_sizeI << "]  Size of a corpse unit" << endl;
-	helpinfo << "  --corpse_disable                  Disable corpses" << endl;
 	helpinfo << endl;
 
 	helpinfo << "  Body Settings" << endl;
@@ -411,37 +360,20 @@ void Settings::loadProfile(char* filename)
 			else if ( checkConfigFileValue("mincritters ", mincritters, mincrittersMin, mincrittersMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("retinasperrow ", retinasperrow, retinasperrowMin, retinasperrowMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("camerasensitivity ", camerasensitivity, camerasensitivityMin, camerasensitivityMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("walltype", walltype, walltypeMin, walltypeMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("spreadertype", spreadertype, spreadertypeMin, spreadertypeMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("exit-if-empty", exit_if_empty, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("autoload", autoload, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("critter_maxlifetime ", critter_maxlifetime, critter_maxlifetimeMin, critter_maxlifetimeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_maxenergy ", critter_maxenergy, critter_maxenergyMin, critter_maxenergyMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_startenergy ", critter_startenergy, critter_startenergyMin, critter_startenergyMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_procinterval ", critter_procinterval, critter_procintervalMin, critter_procintervalMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_fireinterval ", critter_fireinterval, critter_fireintervalMin, critter_fireintervalMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_minenergyproc ", critter_minenergyproc, critter_minenergyprocMin, critter_minenergyprocMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_minenergyfire ", critter_minenergyfire, critter_minenergyfireMin, critter_minenergyfireMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_firecost ", critter_firecost, critter_firecostMin, critter_firecostMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_size ", critter_sizeI, critter_sizeIMin, critter_sizeIMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("critter_speed ", critter_speedI, critter_speedIMin, critter_speedIMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_sightrange ", critter_sightrangeI, critter_sightrangeIMin, critter_sightrangeIMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_retinasize ", critter_retinasize, critter_retinasizeMin, critter_retinasizeMax, line) ) uselesscounter++;
-// 			else if ( checkConfigFileValue("critter_percentchangetype ", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, line) ) uselesscounter++;
-// 			else if ( checkConfigFileValue("critter_flipnewborns", critter_flipnewborns, line) ) uselesscounter++;
-// 			else if ( checkConfigFileValue("critter_randomrotatenewborns", critter_randomrotatenewborns, line) ) uselesscounter++;
-// 			else if ( checkConfigFileValue("critter_enablecarrying", critter_enablecarrying, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("critter_autosaveinterval ", critter_autosaveinterval, critter_autosaveintervalMin, critter_autosaveintervalMax, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("food_maxlifetime ", food_maxlifetime, food_maxlifetimeMin, food_maxlifetimeMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("food_maxenergy ", food_maxenergy, food_maxenergyMin, food_maxenergyMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("food_size ", food_sizeI, food_sizeIMin, food_sizeIMax, line) ) uselesscounter++;
-
-			else if ( checkConfigFileValue("corpse_disable", corpse_disable, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("corpse_maxlifetime ", corpse_maxlifetime, corpse_maxlifetimeMin, corpse_maxlifetimeMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("corpse_maxenergy ", corpse_maxenergy, corpse_maxenergyMin, corpse_maxenergyMax, line) ) uselesscounter++;
-			else if ( checkConfigFileValue("corpse_size ", corpse_sizeI, corpse_sizeIMin, corpse_sizeIMax, line) ) uselesscounter++;
 
 			else if ( checkConfigFileValue("body_mutationrate ", body_mutationrate, body_mutationrateMin, body_mutationrateMax, line) ) uselesscounter++;
 			else if ( checkConfigFileValue("body_maxmutations ", body_maxmutations, body_maxmutationsMin, body_maxmutationsMax, line) ) uselesscounter++;
@@ -553,8 +485,6 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--mincritters", mincritters, mincrittersMin, mincrittersMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--retinasperrow", retinasperrow, retinasperrowMin, retinasperrowMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--camerasensitivity", camerasensitivity, camerasensitivityMin, camerasensitivityMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--walltype", walltype, walltypeMin, walltypeMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--spreadertype", spreadertype, spreadertypeMin, spreadertypeMax, optind, argv) ) optind++;
 		else if ( sw=="--exit-if-empty") exit_if_empty = true;
 		else if ( sw=="--autoload") autoload = true;
 
@@ -564,18 +494,9 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--critter_maxenergy", critter_maxenergy, critter_maxenergyMin, critter_maxenergyMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_startenergy", critter_startenergy, critter_startenergyMin, critter_startenergyMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_procinterval", critter_procinterval, critter_procintervalMin, critter_procintervalMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--critter_fireinterval", critter_fireinterval, critter_fireintervalMin, critter_fireintervalMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_minenergyproc", critter_minenergyproc, critter_minenergyprocMin, critter_minenergyprocMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--critter_minenergyfire", critter_minenergyfire, critter_minenergyfireMin, critter_minenergyfireMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--critter_firecost", critter_firecost, critter_firecostMin, critter_firecostMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--critter_size", critter_sizeI, critter_sizeIMin, critter_sizeIMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--critter_speed", critter_speedI, critter_speedIMin, critter_speedIMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_sightrange", critter_sightrangeI, critter_sightrangeIMin, critter_sightrangeIMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--critter_retinasize", critter_retinasize, critter_retinasizeMin, critter_retinasizeMax, optind, argv) ) optind++;
-// 		else if ( checkSwitch("--critter_percentchangetype", critter_percentchangetype, critter_percentchangetypeMin, critter_percentchangetypeMax, optind, argv) ) optind++;
-// 		else if (sw=="--critter_flipnewborns") critter_flipnewborns = true;
-// 		else if (sw=="--critter_randomrotatenewborns") critter_randomrotatenewborns = true;
-// 		else if (sw=="--critter_enablecarrying") critter_enablecarrying = true;
 		else if ( checkSwitch("--critter_autosaveinterval", critter_autosaveinterval, critter_autosaveintervalMin, critter_autosaveintervalMax, optind, argv) ) optind++;
 
 	// Food Settings
@@ -583,13 +504,6 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 		else if ( checkSwitch("--food_maxlifetime", food_maxlifetime, food_maxlifetimeMin, food_maxlifetimeMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--food_maxenergy", food_maxenergy, food_maxenergyMin, food_maxenergyMax, optind, argv) ) optind++;
 		else if ( checkSwitch("--food_size", food_sizeI, food_sizeIMin, food_sizeIMax, optind, argv) ) optind++;
-
-	// Corpse Settings
-
-		else if ( checkSwitch("--corpse_maxlifetime", corpse_maxlifetime, corpse_maxlifetimeMin, corpse_maxlifetimeMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--corpse_maxenergy", corpse_maxenergy, corpse_maxenergyMin, corpse_maxenergyMax, optind, argv) ) optind++;
-		else if ( checkSwitch("--corpse_size", corpse_sizeI, corpse_sizeIMin, corpse_sizeIMax, optind, argv) ) optind++;
-		else if (sw=="--corpse_disable") corpse_disable = true;
 
 	// Body Settings
 
@@ -688,16 +602,9 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 
 	
 	// finalizing: calc some floats
-		critter_size = (float)critter_sizeI / 100.0f;
-		critter_speed = (float)critter_speedI / 1000.0f;
 		critter_sightrange = (float)critter_sightrangeI / 10.0f;
 
 		food_size = (float)food_sizeI / 100.0f;
-		corpse_size = (float)corpse_sizeI / 100.0f;
-
-		food_lifeenergyratio = food_size / food_maxenergy;
-		corpse_lifeenergyratio = corpse_size / corpse_maxenergy;
-
 }
 
 
@@ -783,8 +690,8 @@ void Settings::printSettings()
 	cerr << "mincritters " << mincritters << endl;
 	cerr << "retinasperrow " << retinasperrow << endl;
 	cerr << "camerasensitivity " << camerasensitivity << endl;
-	cerr << "walltype " << walltype << endl;
-	cerr << "spreadertype " << spreadertype << endl;
+// 	cerr << "walltype " << walltype << endl;
+// 	cerr << "spreadertype " << spreadertype << endl;
 	cerr << "exit-if-empty " << exit_if_empty << endl << endl;
 	cerr << "autoload " << autoload << endl << endl;
 
@@ -792,12 +699,12 @@ void Settings::printSettings()
 	cerr << "critter_maxenergy " << critter_maxenergy << endl;
 	cerr << "critter_startenergy " << critter_startenergy << endl;
 	cerr << "critter_procinterval " << critter_procinterval << endl;
-	cerr << "critter_fireinterval " << critter_fireinterval << endl;
+// 	cerr << "critter_fireinterval " << critter_fireinterval << endl;
 	cerr << "critter_minenergyproc " << critter_minenergyproc << endl;
-	cerr << "critter_minenergyfire " << critter_minenergyfire << endl;
-	cerr << "critter_firecost " << critter_firecost << endl;
-	cerr << "critter_size " << critter_sizeI << endl;
-	cerr << "critter_speed " << critter_speedI << endl;
+// 	cerr << "critter_minenergyfire " << critter_minenergyfire << endl;
+// 	cerr << "critter_firecost " << critter_firecost << endl;
+// 	cerr << "critter_size " << critter_sizeI << endl;
+// 	cerr << "critter_speed " << critter_speedI << endl;
 	cerr << "critter_sightrange " << critter_sightrangeI << endl;
 	cerr << "critter_retinasize " << critter_retinasize << endl;
 // 	cerr << "critter_percentchangetype " << critter_percentchangetype << endl;
@@ -810,10 +717,10 @@ void Settings::printSettings()
 	cerr << "food_maxenergy  " << food_maxenergy << endl;
 	cerr << "food_size  " << food_sizeI << endl << endl;
 
-	cerr << "corpse_disable  " << corpse_disable << endl;
-	cerr << "corpse_maxlifetime  " << corpse_maxlifetime << endl;
-	cerr << "corpse_maxenergy  " << corpse_maxenergy << endl;
-	cerr << "corpse_size  " << corpse_sizeI << endl << endl;
+// 	cerr << "corpse_disable  " << corpse_disable << endl;
+// 	cerr << "corpse_maxlifetime  " << corpse_maxlifetime << endl;
+// 	cerr << "corpse_maxenergy  " << corpse_maxenergy << endl;
+// 	cerr << "corpse_size  " << corpse_sizeI << endl << endl;
 
 	cerr << "body_mutationrate " << body_mutationrate << endl;
 	cerr << "body_maxmutations " << body_maxmutations << endl;
