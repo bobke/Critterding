@@ -90,9 +90,9 @@ void Body::buildArch()
 // 	original.append("b 99997 box 0 75 75 200\n");
 // 	original.append("m 99999 50, 50, 100\n");
 // 	original.append("c 99999 99998 99999 1.5707 0 0 0 0 -0.25 -0.7853 99998 1.5707 0 0 0 0 0.25 0.7853\n");
-// 	original.append("c 99997 99996 99998 0 1.5707 0 0 0 -0.25 -0.7853 99997 0 1.5707 0 0 0 0.25 0.7853\n");
+// 	original.append("c 99997 99996 99998 1.5707 0 0 0 0 -0.25 -0.7853 99997 1.5707 0 0 0 0 0.25 0.7853\n");
 // 	original.append("cm 99995 99994 99997 0 1.5707 0 0 0 -0.15 -0.7853 99999 0 1.5707 0 0 0 0.25 0.7853\n");
-//  	setArch(&original);
+// 	setArch(&original);
 
 // 	string fourlegged;
 // 	// body
@@ -110,8 +110,26 @@ void Body::buildArch()
 // 	fourlegged.append("c 99995 99994 99999 0 0 -0.7853 0.2 0 -0.325 -0.7853 99996 0 0 0 -0.25 0 0 0.7853\n");
 // 	fourlegged.append("c 99993 99992 99999 0 0 -0.7853 0.2 0 0.325 -0.7853 99995 0 0 0 -0.25 0 0 0.7853\n");
 // 	fourlegged.append("cm 99991 99990 99999 1.5707 0 0 0 0 -0.15 -0.3926 99999 1.5707 0 0 0 0 0.45 0.3926\n");
-// 
 // 	setArch(&fourlegged);
+
+
+// 	string original;
+// 	original.append("b 1000 box 0 200 200 200\n");
+// 	original.append("b 1001 box 0 100 100 100\n");
+// 	original.append("b 1002 box 0 100 100 100\n");
+// 	original.append("b 1003 box 0 100 100 100\n");
+// 	original.append("b 1004 box 0 100 100 100\n");
+// 	original.append("m 99999 50, 50, 100\n");
+// 
+// 	-x
+// 	original.append("c 1000 1001 1000 0.5707 1.3707 0.7707 -0.3 0 0 -0.7853 1001 1.1707 0.0707 0.5707 0.15 0 0 0.7853\n");
+// 	-z
+// 	original.append("c 1002 1003 1000 1.5707 1.5707 1.5707 0 0 -0.3 -0.7853 1002 1.5707 1.5707 1.5707 0 0 0.15 0.7853\n");
+// 	+z
+// 	original.append("c 1004 1005 1000 1.5707 0 0 0 0 0.3 -0.7853 1003 1.5707 0 0 0 0 -0.15 0.7853\n");
+// 	+x
+// 	original.append("c 1006 1007 1000 1.5707 0 0 0.3 0 0 -0.7853 1004 1.5707 0 0 -0.15 0 0 0.7853\n");
+// 	setArch(&original);
 
 	// Create a central body
 		archBodyparts.push_back( archBodypart() );
@@ -123,7 +141,7 @@ void Body::buildArch()
 		bp->y		= randgen->Instance()->get( 20, 200 );
 		bp->z		= randgen->Instance()->get( 20, 200 );
 
-		unsigned int runs = randgen->Instance()->get( 0, 10 );
+		unsigned int runs = randgen->Instance()->get( 0, 4 );
 		for ( unsigned int i=0; i < runs; i++ )
 			addRandomBodypart();
 
@@ -289,13 +307,13 @@ void Body::addRandomConstraint(unsigned int connID1, unsigned int connID2, bool 
 		else
 			co->id_2		= archBodyparts[ connID2 ].id;
 
-		co->rot_x_1		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
-		co->rot_y_1		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
-		co->rot_z_1		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
+		co->rot_x_1		= ((float)randgen->Instance()->get( 0, 1571 ) - 0) / 1000;
+		co->rot_y_1		= ((float)randgen->Instance()->get( 0, 1571 ) - 0) / 1000;
+		co->rot_z_1		= ((float)randgen->Instance()->get( 0, 1571 ) - 0) / 1000;
 
-		co->rot_x_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
-		co->rot_y_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
-		co->rot_z_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
+		co->rot_x_2		= ((float)randgen->Instance()->get( 0, 1571 ) - 0) / 1000;
+		co->rot_y_2		= ((float)randgen->Instance()->get( 0, 1571 ) - 0) / 1000;
+		co->rot_z_2		= ((float)randgen->Instance()->get( 0, 1571 ) - 0) / 1000;
 
 		randomConstraintPosition(co, 1, connID1);
 		randomConstraintPosition(co, 2, connID2);
@@ -306,86 +324,75 @@ void Body::addRandomConstraint(unsigned int connID1, unsigned int connID2, bool 
 
 void Body::randomConstraintPosition(archConstraint* co, unsigned int OneOrTwo, unsigned int connID)
 {
-	unsigned int pickXYZ = randgen->Instance()->get( 0, 2 );
-	int sign = randgen->Instance()->get( 0, 1 );
-	if ( sign == 0 ) sign = -1;
-
 	if ( OneOrTwo == 1 )
 	{
+		co->XYZ = randgen->Instance()->get( 0, 2 );
+		co->sign = randgen->Instance()->get( 0, 1 );
+		if ( co->sign == 0 ) co->sign = -1;
+
 	// now we know the plane to connect to, determine positions
-		if ( pickXYZ == 0 ) // X
+		if ( co->XYZ == 0 ) // X
 		{
-			co->pos_x_1 = ((archBodyparts[connID].x / 1000.0f) + 0.105f) * sign;
+			co->pos_x_1 = (archBodyparts[connID].x / 1000.0f) * co->sign * 1.5f;
 			co->pos_y_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
 			co->pos_z_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
-// 			co->rot_x_1 = 0.0f;
-// 			co->rot_x_1 = 0.0f;
-// 			co->rot_y_1 = 0.0f;
-// 			co->rot_z_1 = 0.0f;
 		}
-		else if ( pickXYZ == 1 ) // Y
+		else if ( co->XYZ == 1 ) // Y
 		{
 			co->pos_x_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
-			co->pos_y_1 = ((archBodyparts[connID].y / 1000.0f) + 0.105f) * sign;
+			co->pos_y_1 = (archBodyparts[connID].y / 1000.0f) * co->sign * 1.5f;
 			co->pos_z_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
-// 			co->rot_y_1 = 0.0f;
 		}
 		else // Z
 		{
 			co->pos_x_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
 			co->pos_y_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
-			co->pos_z_1 = ((archBodyparts[connID].z / 1000.0f) + 0.105f) * sign;
-// 			co->rot_z_1 = 0.0f;
+			co->pos_z_1 = (archBodyparts[connID].z / 1000.0f) * co->sign * 1.5f;
 		}
 	}
 	else
 	{
+		int othersign = -1 * co->sign;
 		if ( !co->isMouthConstraint )
 		{
-			if ( pickXYZ == 0 ) // X
+			if ( co->XYZ == 0 ) // X
 			{
-				co->pos_x_2 = ((archBodyparts[connID].x / 1000.0f) + 0.105f) * sign;
+				co->pos_x_2 = (archBodyparts[connID].x / 1000.0f) * othersign * 1.5f;
 				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
 				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
-// 				co->rot_x_2 = 0.0f;
 			}
-			else if ( pickXYZ == 1 ) // Y
+			else if ( co->XYZ == 1 ) // Y
 			{
 				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
-				co->pos_y_2 = ((archBodyparts[connID].y / 1000.0f) + 0.105f) * sign;
+				co->pos_y_2 = (archBodyparts[connID].y / 1000.0f) * othersign * 1.5f;
 				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
-// 				co->rot_y_2 = 0.0f;
 			}
 			else // Z
 			{
 				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
 				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
-				co->pos_z_2 = ((archBodyparts[connID].z / 1000.0f) + 0.105f) * sign;
-// 				co->rot_y_2 = 0.0f;
+				co->pos_z_2 = (archBodyparts[connID].z / 1000.0f) * othersign * 1.5f;
 			}
 		}
 		else
 		{
-			if ( pickXYZ == 0 ) // X
+			if ( co->XYZ == 0 ) // X
 			{
-				co->pos_x_2 = ((archMouths[connID].x / 1000.0f) + 0.105f) * sign;
+				co->pos_x_2 = (archMouths[connID].x / 1000.0f) * othersign * 1.5f;
 				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].y)*2) - archMouths[connID].y) / 1000;
 				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].z)*2) - archMouths[connID].z) / 1000;
-// 				co->rot_x_2 = 0.0f;
 			}
-			else if ( pickXYZ == 1 ) // Y
+			else if ( co->XYZ == 1 ) // Y
 			{
 				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].x)*2) - archMouths[connID].x) / 1000;
-				co->pos_y_2 = ((archMouths[connID].y / 1000.0f) + 0.105f) * sign;
+				co->pos_y_2 = (archMouths[connID].y / 1000.0f) * othersign * 1.5f;
 				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].z)*2) - archMouths[connID].z) / 1000;
-// 				co->rot_y_2 = 0.0f;
 			}
 			else // Z
 			{
 				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].x)*2) - archMouths[connID].x) / 1000;
 				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].y)*2) - archMouths[connID].y) / 1000;
-				co->pos_z_2 = ((archMouths[connID].z / 1000.0f) + 0.105f) * sign;
-// 				co->rot_y_2 = 0.0f;
+				co->pos_z_2 = (archMouths[connID].z / 1000.0f) * othersign * 1.5f;
 			}
 		}
 	}
@@ -627,6 +634,8 @@ void Body::copyFrom(Body& otherBody)
 		co->isMouthConstraint	= oco->isMouthConstraint;
 		co->constraint_id1	= oco->constraint_id1;
 		co->constraint_id2	= oco->constraint_id2;
+		co->XYZ			= oco->XYZ;
+		co->sign		= oco->sign;
 		co->id_1		= oco->id_1;
 		co->id_2		= oco->id_2;
 		co->rot_x_1		= oco->rot_x_1;
@@ -702,6 +711,12 @@ void Body::setArch(string* content)
 			archConstraints.push_back( CO );
 			archConstraint *co = &archConstraints[archConstraints.size()-1];
 			
+			// XYZ & sign
+				string XYZ = Parser::Instance()->returnUntillStrip( " ", line );
+				if(EOF == sscanf(XYZ.c_str(), "%d", &co->XYZ)) cerr << "error in parsing body" << endl;
+				string SIGN = Parser::Instance()->returnUntillStrip( " ", line );
+				if(EOF == sscanf(SIGN.c_str(), "%d", &co->sign)) cerr << "error in parsing body" << endl;
+
 			// CONSTRAINT IDS
 				string ID = Parser::Instance()->returnUntillStrip( " ", line );
 				if(EOF == sscanf(ID.c_str(), "%d", &co->constraint_id1)) cerr << "error in parsing body" << endl;
@@ -767,6 +782,12 @@ void Body::setArch(string* content)
 			archConstraint *co = &archConstraints[archConstraints.size()-1];
 
 			co->isMouthConstraint = true;
+
+			// XYZ & sign
+				string XYZ = Parser::Instance()->returnUntillStrip( " ", line );
+				if(EOF == sscanf(XYZ.c_str(), "%d", &co->XYZ)) cerr << "error in parsing body" << endl;
+				string SIGN = Parser::Instance()->returnUntillStrip( " ", line );
+				if(EOF == sscanf(SIGN.c_str(), "%d", &co->sign)) cerr << "error in parsing body" << endl;
 
 			// CONSTRAINT IDS
 				string ID = Parser::Instance()->returnUntillStrip( " ", line );
@@ -872,6 +893,7 @@ string* Body::getArch()
 				buf << "cm";
 			else
 				buf << "c";
+			buf << " " << co->XYZ << " " << co->sign;
 			buf << " " << co->constraint_id1 << " " << co->constraint_id2 << " ";
 			buf << co->id_1 << " " << co->rot_x_1 << " " << co->rot_y_1 << " " << co->rot_z_1 << " " << co->pos_x_1 << " " << co->pos_y_1 << " " << co->pos_z_1 << " " << co->limit_1 << " ";
 			buf << co->id_2 << " " << co->rot_x_2 << " " << co->rot_y_2 << " " << co->rot_z_2 << " " << co->pos_x_2 << " " << co->pos_y_2 << " " << co->pos_z_2 << " " << co->limit_2;

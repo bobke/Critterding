@@ -276,8 +276,11 @@ void WorldB::process()
 	// render critter vision
 	for( unsigned int i=0; i < critters.size(); i++)
 	{
-		critters[i]->place();
-		drawWithinCritterSight(i);
+		if ( critters[i]->body.mouths.size() > 0 )
+		{
+			critters[i]->place();
+			drawWithinCritterSight(i);
+		}
 	}
 
 	// Read pixels into retina

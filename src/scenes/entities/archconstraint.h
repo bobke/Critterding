@@ -16,6 +16,9 @@ class archConstraint
 
 		bool isMouthConstraint;
 
+		unsigned int XYZ;
+		int sign;
+		
 		unsigned int id_1;
 		unsigned int id_2;
 
