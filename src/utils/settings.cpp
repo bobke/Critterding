@@ -97,10 +97,10 @@ Settings::Settings()
 	brain_maxsynapses		= 100;
 		brain_maxsynapsesMin		= 1;
 		brain_maxsynapsesMax		= 1000000;
-	brain_minneuronsatbuildtime	= 40;
+	brain_minneuronsatbuildtime	= 50;
 		brain_minneuronsatbuildtimeMin	= 1;
 		brain_minneuronsatbuildtimeMax	= 1000000;
-	brain_maxneuronsatbuildtime	= 100;
+	brain_maxneuronsatbuildtime	= 200;
 		brain_maxneuronsatbuildtimeMin	= 1;
 		brain_maxneuronsatbuildtimeMax	= 1000000;
 
@@ -109,7 +109,7 @@ Settings::Settings()
 		brain_minsynapsesatbuildtimeMax			= 1000000;
 		brain_mutate_minsynapsesatbuildtime		= false;
 
-	brain_maxsynapsesatbuildtime			= 50;
+	brain_maxsynapsesatbuildtime			= 40;
 		brain_maxsynapsesatbuildtimeMin			= 1;
 		brain_maxsynapsesatbuildtimeMax			= 1000000;
 		brain_mutate_maxsynapsesatbuildtime		= false;
