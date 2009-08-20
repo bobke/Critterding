@@ -2,7 +2,20 @@
 
 void CritterB::initConst()
 {
+	// settings and pointers
 	settings = Settings::Instance();
+	retinasperrow = settings->getCVarPtr("retinasperrow");
+	critter_maxlifetime = settings->getCVarPtr("critter_maxlifetime");
+	critter_maxenergy = settings->getCVarPtr("critter_maxenergy");
+	critter_sightrange = settings->getCVarPtr("critter_sightrange");
+	critter_procinterval = settings->getCVarPtr("critter_procinterval");
+	critter_minenergyproc = settings->getCVarPtr("critter_minenergyproc");
+
+	brain_costhavingneuron = settings->getCVarPtr("brain_costhavingneuron");
+	brain_costfiringneuron = settings->getCVarPtr("brain_costfiringneuron");
+	brain_costfiringmotorneuron = settings->getCVarPtr("brain_costfiringmotorneuron");
+	brain_costhavingsynapse = settings->getCVarPtr("brain_costhavingsynapse");
+
 	type = 0;
 
 	totalFrames		= 0;
@@ -11,6 +24,7 @@ void CritterB::initConst()
 // 	sightrange = settings->critter_sightrange;
 	components		= 4;
 	colorTrim		= 0.15f;
+
 }
 
 CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVector3& startPos, unsigned char* retinap)
@@ -24,61 +38,62 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 	
 	adamdist						= 0;
 
+	energyLevel						= settings->getCVar("critter_startenergy");
+
 // 	lifetime						= settings->critter_maxlifetime;
-	retinasize						= settings->critter_retinasize;
+	retinasize						= settings->getCVar("critter_retinasize");
 
-	brain.maxNeurons					= settings->brain_maxneurons;
-	brain.minSynapses					= settings->brain_minsynapses;
-	brain.maxSynapses					= settings->brain_maxsynapses;
+	brain.maxNeurons					= settings->getCVar("brain_maxneurons");
+	brain.minSynapses					= settings->getCVar("brain_minsynapses");
+	brain.maxSynapses					= settings->getCVar("brain_maxsynapses");
+	brain.minNeuronsAtBuildtime				= settings->getCVar("brain_minneuronsatbuildtime");
+	brain.maxNeuronsAtBuildtime				= settings->getCVar("brain_maxneuronsatbuildtime");
 
-	brain.minNeuronsAtBuildtime				= settings->brain_minneuronsatbuildtime;
-	brain.maxNeuronsAtBuildtime				= settings->brain_maxneuronsatbuildtime;
+	brain.minSynapsesAtBuildtime				= settings->getCVar("brain_minsynapsesatbuildtime");
+		brain.mutate_minSynapsesAtBuildtime		= settings->getCVar("brain_mutate_minsynapsesatbuildtime");
 
-	brain.minSynapsesAtBuildtime				= settings->brain_minsynapsesatbuildtime;
-		brain.mutate_minSynapsesAtBuildtime		= settings->brain_mutate_minsynapsesatbuildtime;
+	brain.maxSynapsesAtBuildtime				= settings->getCVar("brain_maxsynapsesatbuildtime");
+		brain.mutate_maxSynapsesAtBuildtime		= settings->getCVar("brain_mutate_maxsynapsesatbuildtime");
 
-	brain.maxSynapsesAtBuildtime				= settings->brain_maxsynapsesatbuildtime;
-		brain.mutate_maxSynapsesAtBuildtime		= settings->brain_mutate_maxsynapsesatbuildtime;
+	brain.percentChanceInhibitoryNeuron			= settings->getCVar("brain_percentchanceinhibitoryneuron");
+		brain.mutate_percentChanceInhibitoryNeuron	= settings->getCVar("brain_mutate_percentchanceinhibitoryneuron");
 
-	brain.percentChanceInhibitoryNeuron			= settings->brain_percentchanceinhibitoryneuron;
-		brain.mutate_percentChanceInhibitoryNeuron	= settings->brain_mutate_percentchanceinhibitoryneuron;
+	brain.percentChanceMotorNeuron				= settings->getCVar("brain_percentchancemotorneuron");
+		brain.mutate_percentChanceMotorNeuron		= settings->getCVar("brain_mutate_percentchancemotorneuron");
 
-	brain.percentChanceConsistentSynapses			= settings->brain_percentchanceconsistentsynapses;
-		brain.mutate_percentChanceConsistentSynapses		= settings->brain_mutate_percentchanceconsistentsynapses;
+	brain.percentChancePlasticNeuron			= settings->getCVar("brain_percentchanceplasticneuron");
+		brain.mutate_percentChancePlasticNeuron			= settings->getCVar("brain_mutate_percentchanceplasticneuron");
 
-	brain.percentChanceInhibitorySynapses			= settings->brain_percentchanceinhibitorysynapses;
-		brain.mutate_percentChanceInhibitorySynapses		= settings->brain_mutate_percentchanceinhibitorysynapses;
+	brain.minPlasticityStrengthen				= settings->getCVar("brain_minplasticitystrengthen");
+	brain.maxPlasticityStrengthen				= settings->getCVar("brain_maxplasticitystrengthen");
+	brain.minPlasticityWeaken				= settings->getCVar("brain_minplasticityweaken");
+	brain.maxPlasticityWeaken				= settings->getCVar("brain_maxplasticityweaken");
+		brain.mutate_PlasticityFactors				= settings->getCVar("brain_mutate_plasticityfactors");
 
-	brain.percentChanceMotorNeuron				= settings->brain_percentchancemotorneuron;
-		brain.mutate_percentChanceMotorNeuron		= settings->brain_mutate_percentchancemotorneuron;
+	brain.minFiringThreshold				= settings->getCVar("brain_minfiringthreshold");
+		brain.mutate_minFiringThreshold				= settings->getCVar("brain_mutate_minfiringthreshold");
 
-	brain.percentChancePlasticNeuron				= settings->brain_percentchanceplasticneuron;
-		brain.mutate_percentChancePlasticNeuron		= settings->brain_mutate_percentchanceplasticneuron;
+	brain.maxFiringThreshold				= settings->getCVar("brain_maxfiringthreshold");
+		brain.mutate_maxFiringThreshold				= settings->getCVar("brain_mutate_maxfiringthreshold");
 
-	brain.minPlasticityStrengthen				= settings->brain_minplasticitystrengthen;
-	brain.maxPlasticityStrengthen				= settings->brain_maxplasticitystrengthen;
-	brain.minPlasticityWeaken				= settings->brain_minplasticityweaken;
-	brain.maxPlasticityWeaken				= settings->brain_maxplasticityweaken;
-		brain.mutate_PlasticityFactors				= settings->brain_mutate_plasticityfactors;
+	brain.maxDendridicBranches				= settings->getCVar("brain_maxdendridicbranches");
+		brain.mutate_maxDendridicBranches		= settings->getCVar("brain_mutate_maxdendridicbranches");
 
-	brain.percentChanceSensorySynapse			= settings->brain_percentchancesensorysynapse;
-		brain.mutate_percentChanceSensorySynapse	= settings->brain_mutate_percentchancesensorysynapse;
+	brain.percentChanceConsistentSynapses			= settings->getCVar("brain_percentchanceconsistentsynapses");
+		brain.mutate_percentChanceConsistentSynapses		= settings->getCVar("brain_mutate_percentchanceconsistentsynapses");
 
-	brain.minFiringThreshold				= settings->brain_minfiringthreshold;
-		brain.mutate_minFiringThreshold				= settings->brain_mutate_minfiringthreshold;
+	brain.percentChanceInhibitorySynapses			= settings->getCVar("brain_percentchanceinhibitorysynapses");
+		brain.mutate_percentChanceInhibitorySynapses		= settings->getCVar("brain_mutate_percentchanceinhibitorysynapses");
 
-	brain.maxFiringThreshold				= settings->brain_maxfiringthreshold;
-		brain.mutate_maxFiringThreshold				= settings->brain_mutate_maxfiringthreshold;
+	brain.percentChanceSensorySynapse			= settings->getCVar("brain_percentchancesensorysynapse");
+		brain.mutate_percentChanceSensorySynapse	= settings->getCVar("brain_mutate_percentchancesensorysynapse");
 
-	brain.maxDendridicBranches				= settings->brain_maxdendridicbranches;
-		brain.mutate_maxDendridicBranches		= settings->brain_mutate_maxdendridicbranches;
-
-	brain.percentMutateEffectAddNeuron			= settings->brain_percentmutateeffectaddneuron;
-	brain.percentMutateEffectRemoveNeuron			= settings->brain_percentmutateeffectremoveneuron;
-	brain.percentMutateEffectAlterNeuron			= settings->brain_percentmutateeffectalterneuron;
-	brain.percentMutateEffectAddSynapse			= settings->brain_percentmutateeffectaddsynapse;
-	brain.percentMutateEffectRemoveSynapse			= settings->brain_percentmutateeffectremovesynapse;
-		brain.mutate_MutateEffects				= settings->brain_mutate_mutateeffects;
+	brain.percentMutateEffectAddNeuron			= settings->getCVar("brain_percentmutateeffectaddneuron");
+	brain.percentMutateEffectRemoveNeuron			= settings->getCVar("brain_percentmutateeffectremoveneuron");
+	brain.percentMutateEffectAlterNeuron			= settings->getCVar("brain_percentmutateeffectalterneuron");
+	brain.percentMutateEffectAddSynapse			= settings->getCVar("brain_percentmutateeffectaddsynapse");
+	brain.percentMutateEffectRemoveSynapse			= settings->getCVar("brain_percentmutateeffectremovesynapse");
+		brain.mutate_MutateEffects				= settings->getCVar("brain_mutate_mutateeffects");
 
 	color[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
@@ -151,8 +166,10 @@ CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVect
 	// critterID is arranged in world, definite critter insertion is not determined yet
 
 	// first things first
-	btDynWorld					= btWorld;
-	retina						= retinap;
+	btDynWorld		= btWorld;
+	retina			= retinap;
+
+	energyLevel		= settings->getCVar("critter_startenergy");
 
 	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
@@ -237,10 +254,10 @@ void CritterB::draw(bool drawFaces)
 		glPushMatrix(); 
 		glMultMatrixf(position);
 
-			if ( settings->colormode == 0 )
-				glColor4f( color[0], color[1], color[2], 0.0f );
-			else if ( settings->colormode == 1 )
+			if ( settings->getCVar("colormode") == 1 )
 				glColor4f( speciescolor[0], speciescolor[1], speciescolor[2], 0.0f );
+			else
+				glColor4f( color[0], color[1], color[2], 0.0f );
 
 // 				const btCapsuleShape* capsuleShape = static_cast<const btCapsuleShape*>(body->bodyparts[j]->shape);
 // 				btScalar radius = capsuleShape->getRadius();
@@ -321,10 +338,10 @@ void CritterB::process()
 
 // 		energyUsed = ( (float)brain.totalNeurons + (float)brain.neuronsFired + (2.0f*(float)motorneuronsfired) + ((float)brain.totalSynapses/10.0f) ) / 200.0f;
 
- 		energyUsed =  brain.totalNeurons	* settings->brain_costhavingneuron;
- 		energyUsed += brain.neuronsFired	* settings->brain_costfiringneuron;
- 		energyUsed += brain.motorneuronsFired	* settings->brain_costfiringmotorneuron;
- 		energyUsed += brain.totalSynapses	* settings->brain_costhavingsynapse;
+ 		energyUsed =  brain.totalNeurons	* *brain_costhavingneuron;
+ 		energyUsed += brain.neuronsFired	* *brain_costfiringneuron;
+ 		energyUsed += brain.motorneuronsFired	* *brain_costfiringmotorneuron;
+ 		energyUsed += brain.totalSynapses	* *brain_costhavingsynapse;
 		energyUsed = energyUsed / 100000;
 // 		cerr << energyUsed << endl;
 
@@ -347,7 +364,7 @@ void CritterB::procInputNeurons()
 
 	// can procreate sensor neuron
 		canProcreate	= false;
-		if ( procreateTimeCount > settings->critter_procinterval && energyLevel > settings->critter_minenergyproc )
+		if ( procreateTimeCount > *critter_procinterval && energyLevel > *critter_minenergyproc )
 		{
 			brain.Inputs[overstep++].output = 1;
 			canProcreate = true;
@@ -355,7 +372,7 @@ void CritterB::procInputNeurons()
 		else brain.Inputs[overstep++].output = 0;
 
 	// energy neurons
-		unsigned int NeuronToFire = (int)((energyLevel / (settings->critter_maxenergy+1)) * 10) + overstep;
+		unsigned int NeuronToFire = (int)((energyLevel / (*critter_maxenergy+1)) * 10) + overstep;
 		unsigned int count = 10 + overstep;
 		while ( overstep < count )
 		{
@@ -364,7 +381,7 @@ void CritterB::procInputNeurons()
 		}
 
 	// age neurons
-		NeuronToFire = (int)(((float)totalFrames / (settings->critter_maxlifetime+1)) * 10) + overstep;
+		NeuronToFire = (int)(((float)totalFrames / (*critter_maxlifetime+1)) * 10) + overstep;
 		count = 10 + overstep;
 		while ( overstep < count )
 		{
@@ -400,7 +417,7 @@ void CritterB::mutateBody()
 {
 	adamdist++;
 
-	unsigned int runs = RandGen::Instance()->get(1, settings->body_maxmutations);
+	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("body_maxmutations"));
 	body.mutate( runs ); // 0 for random
 
 	// a new color
@@ -457,7 +474,7 @@ void CritterB::mutateBrain()
 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
 
-	unsigned int runs = RandGen::Instance()->get(1, settings->brain_maxmutations);
+	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("brain_maxmutations"));
 	brain.mutate( runs ); // 0 for random
 }
 
@@ -547,7 +564,7 @@ string CritterB::saveCritterB()
 		glViewport(framePosX, framePosY, retinasize, retinasize);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, settings->critter_sightrange);
+		glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, (float)*critter_sightrange/10);
 
 		btScalar position[16];
 		btDefaultMotionState* myMotionState = (btDefaultMotionState*)body.mouths[0]->body->getMotionState();
@@ -565,9 +582,9 @@ string CritterB::saveCritterB()
 
 		// Calc 2D cartesian vectors X & Y for frame positioning of retina
 		framePosY = 0;
-		while ( pos >= settings->retinasperrow )
+		while ( pos >= *retinasperrow )
 		{
-			pos -= settings->retinasperrow;
+			pos -= *retinasperrow;
 			framePosY += retinasize;
 		}
 		framePosX = (pos * retinasize) + pos;
@@ -577,13 +594,13 @@ string CritterB::saveCritterB()
 		retinaRowStart = 0;
 
 		// determine on which row of the retina to start for this critter
-		retinaRowLength = settings->retinasperrow * (retinasize+1) * components;
+		retinaRowLength = *retinasperrow * (retinasize+1) * components;
 
 		// determine on which column to start
-		while ( target >= settings->retinasperrow )
+		while ( target >= *retinasperrow )
 		{
 			retinaRowStart += retinasize * retinaRowLength;
-			target -= settings->retinasperrow;
+			target -= *retinasperrow;
 		}
 		retinaColumnStart = target * (retinasize+1) * components;
 

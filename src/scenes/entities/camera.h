@@ -18,8 +18,6 @@ public:
 	// Controls
 	Vector3f rotation;
 
-	unsigned int sensitivity;
-
 	void place();
 	void follow(Vector3f &cameraposition, float &rotation);
 	void follow(btDefaultMotionState* myMotionState) const;
@@ -43,7 +41,9 @@ public:
 	void moveRollLeft(const float& factor);
 	void rollRight(const float& factor);
 	void rollLeft(const float& factor);
-
+private:
+	Settings *settings;
+	const unsigned int*	camerasensitivity;
 };
 
 #endif

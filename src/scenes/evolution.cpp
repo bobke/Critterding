@@ -3,6 +3,8 @@
 Evolution::Evolution()
 {
 	settings = Settings::Instance();
+	camerasensitivity = settings->getCVarPtr("camerasensitivity");
+
 	events = Events::Instance();
 
 	pause = false;
@@ -44,6 +46,10 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP6,		"camera_lookright",		t );
 	
 	mouselook = false;
+
+	if ( settings->getCVar("autoload") )
+		world.loadAllCritters();
+
 }
 
 void Evolution::draw()
@@ -65,7 +71,7 @@ void Evolution::draw()
 		GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 		GLfloat lightColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-		GLfloat lightPos[] = { 0.5f*settings->worldsizeX, 20, 0.5f*settings->worldsizeY, 1.0f };
+		GLfloat lightPos[] = { 0.5f*settings->getCVar("worldsizeX"), 20, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
 		glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
@@ -129,7 +135,7 @@ void Evolution::draw()
 
 	SDL_GL_SwapBuffers();		
 
-	if ( settings->exit_if_empty && world.critters.size() == 0 )
+	if ( world.critters.size() == 0 && settings->getCVar("exit_if_empty") )
 	{
 		cerr << "world is empty, exiting..." << endl;
 		exit(0);
@@ -213,11 +219,12 @@ void Evolution::handlekeyPressed(const KeySym& key)
 
 		case SDLK_c:
 		{
-			settings->colormode++;
+			settings->increaseCVar("colormode", 1);
+/*			settings->colormode++;
 			if ( settings->colormode > settings->colormodeMax )
-				settings->colormode = settings->colormodeMin;
+				settings->colormode = settings->colormodeMin;*/
 			stringstream buf;
-			buf << "Colormode: "<< settings->colormode;
+			buf << "Colormode: "<< settings->getCVar("colormode");
 			Textmessage::Instance()->add(buf);
 		}
 		break;
@@ -249,14 +256,14 @@ void Evolution::handleMouseMotion(int x, int y)
 	if ( mouselook )
 	{
 		if ( x > 0 )
-			camera.lookRight( (float)x/2000 * settings->camerasensitivity );
+			camera.lookRight( (float)x/2000 * *camerasensitivity );
 		else if ( x != 0 )
-			camera.lookLeft( (float)x/-2000 * settings->camerasensitivity );
+			camera.lookLeft( (float)x/-2000 * *camerasensitivity );
 
 		if ( y > 0 )
-			camera.lookDown( (float)y/2000 * settings->camerasensitivity );
+			camera.lookDown( (float)y/2000 * *camerasensitivity );
 		else if ( y != 0 )
-			camera.lookUp( (float)y/-2000 * settings->camerasensitivity );
+			camera.lookUp( (float)y/-2000 * *camerasensitivity );
 	}
 }
 
@@ -267,55 +274,55 @@ void Evolution::handleEvents()
 	
 	if ( events->isActive("dec_critters") )
 	{
-		if ( settings->mincritters > settings->mincrittersMin )
-			settings->mincritters--;
+		settings->decreaseCVar("mincritters", 1);
+// 		if ( settings->mincritters > settings->mincrittersMin )
+// 			settings->mincritters--;
 		stringstream buf;
-		buf << "mincritters: "<< settings->mincritters;
+		buf << "mincritters: "<< settings->getCVar("mincritters");
 		Textmessage::Instance()->add(buf);
 	}
 	if ( events->isActive("inc_critters") )
 	{
-		if ( settings->mincritters < settings->mincrittersMax )
-			settings->mincritters++;
+		settings->increaseCVar("mincritters", 1);
+// 		if ( settings->mincritters < settings->mincrittersMax )
+// 			settings->mincritters++;
 		stringstream buf;
-		buf << "mincritters: "<< settings->mincritters;
+		buf << "mincritters: "<< settings->getCVar("mincritters");
 		Textmessage::Instance()->add(buf);
 	}
 
 	if ( events->isActive("dec_energy") )
 	{
-		if ( (settings->freeEnergyInfo-settings->food_maxenergy) / settings->food_maxenergy >= 0.0f )
+		if ( ( settings->freeEnergyInfo - settings->getCVar("food_maxenergy") ) / settings->getCVar("food_maxenergy") >= 0.0f )
 		{
-			settings->freeEnergyInfo -= settings->food_maxenergy;
-			world.freeEnergy -= settings->food_maxenergy;
+			settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
+			world.freeEnergy -= settings->getCVar("food_maxenergy");
 		}
 		stringstream buf;
-		buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
+		buf << "Energy in system: " << ( settings->freeEnergyInfo / settings->getCVar("food_maxenergy") );
 		Textmessage::Instance()->add(buf);
 	}
 	if ( events->isActive("inc_energy") )
 	{
-		settings->freeEnergyInfo += settings->food_maxenergy;
-		world.freeEnergy += settings->food_maxenergy;
+		settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
+		world.freeEnergy += settings->getCVar("food_maxenergy");
 		stringstream buf;
-		buf << "Energy in system: " << (settings->freeEnergyInfo / settings->food_maxenergy);
+		buf << "Energy in system: " << (settings->freeEnergyInfo / settings->getCVar("food_maxenergy"));
 		Textmessage::Instance()->add(buf);
 	}
 
 	if ( events->isActive("dec_killhalftrigger") )
 	{
-		if ( --settings->critter_killhalfat < settings->critter_killhalfatMin )
-			settings->critter_killhalfat = settings->critter_killhalfatMin;
+		settings->decreaseCVar("critter_killhalfat", 1);
 		stringstream buf;
-		buf << "Kill half of critters at: "<< settings->critter_killhalfat;
+		buf << "Kill half of critters at: "<< settings->getCVar("critter_killhalfat");
 		Textmessage::Instance()->add(buf);
 	}
 	if ( events->isActive("inc_killhalftrigger") )
 	{
-		if ( ++settings->critter_killhalfat > settings->critter_killhalfatMax )
-			settings->critter_killhalfat = settings->critter_killhalfatMax;
+		settings->increaseCVar("critter_killhalfat", 1);
 		stringstream buf;
-		buf << "Kill half of critters at: "<< settings->critter_killhalfat;
+		buf << "Kill half of critters at: "<< settings->getCVar("critter_killhalfat");
 		Textmessage::Instance()->add(buf);
 	}
 
@@ -324,34 +331,30 @@ void Evolution::handleEvents()
 	{
 		if ( events->isActive("dec_mutationrate") )
 		{
-			if ( settings->body_mutationrate >= 1 )
-				settings->body_mutationrate -= 1;
+			settings->decreaseCVar("body_mutationrate", 1);
 			stringstream buf;
-			buf << "Body: Mutation Rate: "<< settings->body_mutationrate << "%";
+			buf << "Body: Mutation Rate: "<< settings->getCVar("body_mutationrate") << "%";
 			Textmessage::Instance()->add(buf);
 		}
 		if ( events->isActive("inc_mutationrate") )
 		{
-			if ( settings->body_mutationrate <= 99 )
-				settings->body_mutationrate += 1;
+			settings->increaseCVar("body_mutationrate", 1);
 			stringstream buf;
-			buf << "Body: Mutation Rate: "<< settings->body_mutationrate << "%";
+			buf << "Body: Mutation Rate: "<< settings->getCVar("body_mutationrate") << "%";
 			Textmessage::Instance()->add(buf);
 		}
 		if ( events->isActive("dec_maxmutations") )
 		{
-			if ( settings->body_maxmutations >= 2 )
-				settings->body_maxmutations -= 1;
+			settings->decreaseCVar("body_maxmutations", 1);
 			stringstream buf;
-			buf << "Body: Max Mutations: "<< settings->body_maxmutations;
+			buf << "Body: Max Mutations: "<< settings->getCVar("body_maxmutations");
 			Textmessage::Instance()->add(buf);
 		}
 		if ( events->isActive("inc_maxmutations") )
 		{
-			if ( settings->body_maxmutations <= 999 )
-				settings->body_maxmutations += 1;
+			settings->increaseCVar("body_maxmutations", 1);
 			stringstream buf;
-			buf << "Body: Max Mutations: "<< settings->body_maxmutations;
+			buf << "Body: Max Mutations: "<< settings->getCVar("body_maxmutations");
 			Textmessage::Instance()->add(buf);
 		}
 	}
@@ -359,34 +362,30 @@ void Evolution::handleEvents()
 	{
 		if ( events->isActive("dec_mutationrate") )
 		{
-			if ( settings->brain_mutationrate >= 1 )
-				settings->brain_mutationrate -= 1;
+			settings->decreaseCVar("brain_mutationrate", 1);
 			stringstream buf;
-			buf << "Brain: Mutation Rate: "<< settings->brain_mutationrate << "%";
+			buf << "Brain: Mutation Rate: "<< settings->getCVar("brain_mutationrate") << "%";
 			Textmessage::Instance()->add(buf);
 		}
 		if ( events->isActive("inc_mutationrate") )
 		{
-			if ( settings->brain_mutationrate <= 99 )
-				settings->brain_mutationrate += 1;
+			settings->increaseCVar("brain_mutationrate", 1);
 			stringstream buf;
-			buf << "Brain: Mutation Rate: "<< settings->brain_mutationrate << "%";
+			buf << "Brain: Mutation Rate: "<< settings->getCVar("brain_mutationrate") << "%";
 			Textmessage::Instance()->add(buf);
 		}
 		if ( events->isActive("dec_maxmutations") )
 		{
-			if ( settings->brain_maxmutations >= 2 )
-				settings->brain_maxmutations -= 1;
+			settings->decreaseCVar("brain_maxmutations", 1);
 			stringstream buf;
-			buf << "Brain: Max Mutations: "<< settings->brain_maxmutations;
+			buf << "Brain: Max Mutations: "<< settings->getCVar("brain_maxmutations");
 			Textmessage::Instance()->add(buf);
 		}
 		if ( events->isActive("inc_maxmutations") )
 		{
-			if ( settings->brain_maxmutations <= 999 )
-				settings->brain_maxmutations += 1;
+			settings->increaseCVar("brain_maxmutations", 1);
 			stringstream buf;
-			buf << "Brain: Max Mutations: "<< settings->brain_maxmutations;
+			buf << "Brain: Max Mutations: "<< settings->getCVar("brain_maxmutations");
 			Textmessage::Instance()->add(buf);
 		}
 	}
@@ -394,17 +393,16 @@ void Evolution::handleEvents()
 	// Camera sensitivity
 	if ( events->isActive("inc_camerasensitivity") )
 	{
-		camera.sensitivity++;
+		settings->increaseCVar("camerasensitivity", 1);
 		stringstream buf;
-		buf << "Camera Sensitivity: "<< camera.sensitivity;
+		buf << "Camera Sensitivity: "<< settings->getCVar("camerasensitivity");
 		Textmessage::Instance()->add(buf);
 	}
 	if ( events->isActive("dec_camerasensitivity") )
 	{
-		if ( camera.sensitivity > 1 )
-			camera.sensitivity--;
+		settings->decreaseCVar("camerasensitivity", 1);
 		stringstream buf;
-		buf << "Camera Sensitivity: "<< camera.sensitivity;
+		buf << "Camera Sensitivity: "<< settings->getCVar("camerasensitivity");
 		Textmessage::Instance()->add(buf);
 	}
 
@@ -443,14 +441,14 @@ void Evolution::handleEvents()
 
 void Evolution::resetCamera()
 {
-	unsigned int biggest = settings->worldsizeX;
-	if ( settings->worldsizeY > biggest )
-		biggest = 1.4f*settings->worldsizeY;
+	unsigned int biggest = settings->getCVar("worldsizeX");
+	if ( settings->getCVar("worldsizeY") > biggest )
+		biggest = 1.4f*settings->getCVar("worldsizeY");
 
 // 	camera.position = Vector3f(-0.5f*settings->worldsizeX, -1.1f*biggest, -0.87*settings->worldsizeY);
 // 	camera.rotation = Vector3f( 70.0f,  0.0f, 0.0f);
 
-	camera.position = Vector3f( -0.5f*settings->worldsizeX, -1.1f*biggest, -0.5f*settings->worldsizeY);
+	camera.position = Vector3f( -0.5f*settings->getCVar("worldsizeX"), -1.1f*biggest, -0.5f*settings->getCVar("worldsizeY"));
 	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
 }
 

@@ -104,6 +104,18 @@ class CritterB
 			unsigned int		retinaRowLength;
 			unsigned int		visionPosition;
 
+		// Settings pointers.. performance
+			const unsigned int*	retinasperrow;
+			const unsigned int*	critter_maxlifetime;
+			const unsigned int*	critter_maxenergy;
+			const unsigned int*	critter_sightrange;
+			const unsigned int*	critter_procinterval;
+			const unsigned int*	critter_minenergyproc;
+
+			const unsigned int*	brain_costhavingneuron;
+			const unsigned int*	brain_costfiringneuron;
+			const unsigned int*	brain_costfiringmotorneuron;
+			const unsigned int*	brain_costhavingsynapse;
 };
 
 #endif

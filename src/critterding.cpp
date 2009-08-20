@@ -21,11 +21,11 @@ int main(int argc, char *argv[])
 
 // 		settings->printSettings();
 
-		if (settings->autoload)
-			mainscene->world.loadAllCritters();
+// 		if (settings->autoload)
+// 			mainscene->world.loadAllCritters();
 
 		mainscene->resetCamera();
-		mainscene->camera.sensitivity = settings->camerasensitivity;
+// 		mainscene->camera.sensitivity = settings->camerasensitivity;
 
 		glwindow.runGLScene(mainscene);
 		
