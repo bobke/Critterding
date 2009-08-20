@@ -19,6 +19,7 @@ class Infobar
 		unsigned int height();
 
 	private:
+		Settings		*settings;
 		Fps fps;
 
 		// horizontal/vertical spacers (padding)

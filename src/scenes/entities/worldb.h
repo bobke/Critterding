@@ -95,6 +95,18 @@ class WorldB
 		// vision
 		unsigned char		*retina;
 		unsigned int		items;
+
+		// Settings pointers.. performance
+		const unsigned int*	retinasperrow;
+		const unsigned int*	critter_maxlifetime;
+		const unsigned int*	critter_maxenergy;
+		const unsigned int*	critter_autosaveinterval;
+		const unsigned int*	critter_killhalfat;
+		const unsigned int*	critter_retinasize;
+		const unsigned int*	critter_sightrange;
+
+		const unsigned int*	food_maxlifetime;
+		const unsigned int*	food_maxenergy;
 };
 
 #endif

@@ -68,6 +68,8 @@ class Evolution : public GLScene {
 		// events
 // 		float		elapsed;
 		void		handleEvents();
+
+		const unsigned int*	camerasensitivity;
 };
 
 #endif

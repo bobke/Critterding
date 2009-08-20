@@ -6,10 +6,11 @@ using namespace std;
 
 Camera::Camera()
 {
+	settings = Settings::Instance();
+	camerasensitivity = settings->getCVarPtr("camerasensitivity");
+
 	position	= Vector3f( 0.0f, 0.0f, 0.0f);
 	rotation	= Vector3f( 75.0f,  0.0f, 0.0f);
-
-	sensitivity	= 1;
 }
 
 void Camera::place()
@@ -102,8 +103,8 @@ void Camera::moveForwardXZ(const float& factor)
 {
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x += sin(reusedY) * factor * sensitivity;
-	position.z += cos(reusedY) * factor * sensitivity;
+	position.x += sin(reusedY) * factor * *camerasensitivity;
+	position.z += cos(reusedY) * factor * *camerasensitivity;
 
 // 	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 // 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;
@@ -113,8 +114,8 @@ void Camera::moveBackwardXZ(const float& factor)
 {
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x -= sin(reusedY) * factor * sensitivity;
-	position.z -= cos(reusedY) * factor * sensitivity;
+	position.x -= sin(reusedY) * factor * *camerasensitivity;
+	position.z -= cos(reusedY) * factor * *camerasensitivity;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
@@ -125,9 +126,9 @@ void Camera::moveForwardXYZ(const float& factor)
 	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x += sin(reusedY) * cos(reusedX) * factor * sensitivity;
-	position.y -= sin(reusedX) * factor * sensitivity;
-	position.z += cos(reusedY) * cos(reusedX) * factor * sensitivity;
+	position.x += sin(reusedY) * cos(reusedX) * factor * *camerasensitivity;
+	position.y -= sin(reusedX) * factor * *camerasensitivity;
+	position.z += cos(reusedY) * cos(reusedX) * factor * *camerasensitivity;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
@@ -138,9 +139,9 @@ void Camera::moveBackwardXYZ(const float& factor)
 	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x -= sin(reusedY) * cos(reusedX) * factor * sensitivity;
-	position.y += sin(reusedX) * factor * sensitivity;
-	position.z -= cos(reusedY) * cos(reusedX) * factor * sensitivity;
+	position.x -= sin(reusedY) * cos(reusedX) * factor * *camerasensitivity;
+	position.y += sin(reusedX) * factor * *camerasensitivity;
+	position.z -= cos(reusedY) * cos(reusedX) * factor * *camerasensitivity;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
@@ -149,8 +150,8 @@ void Camera::moveBackwardXYZ(const float& factor)
 void Camera::moveRight(const float& factor)
 {
 	float reused = (90.0f-rotation.y) * 0.0174532925f;
-	position.x -= sin(reused) * factor * sensitivity;
-	position.z -= cos(reused) * factor * sensitivity;
+	position.x -= sin(reused) * factor * *camerasensitivity;
+	position.z -= cos(reused) * factor * *camerasensitivity;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
@@ -159,8 +160,8 @@ void Camera::moveRight(const float& factor)
 void Camera::moveLeft(const float& factor)
 {
 	float reused = (270.0f-rotation.y) * 0.0174532925f;
-	position.x -= sin(reused) * factor * sensitivity;
-	position.z -= cos(reused) * factor * sensitivity;
+	position.x -= sin(reused) * factor * *camerasensitivity;
+	position.z -= cos(reused) * factor * *camerasensitivity;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
@@ -168,7 +169,7 @@ void Camera::moveLeft(const float& factor)
 
 void Camera::moveUp(const float& factor)
 {
-	position.y -= factor * sensitivity;
+	position.y -= factor * *camerasensitivity;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
@@ -176,7 +177,7 @@ void Camera::moveUp(const float& factor)
 
 void Camera::moveDown(const float& factor)
 {
-	position.y += factor * sensitivity;
+	position.y += factor * *camerasensitivity;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
@@ -184,12 +185,12 @@ void Camera::moveDown(const float& factor)
 
 void Camera::rollLeft(const float& factor)
 {
-	rotation.z += factor * sensitivity;
+	rotation.z += factor * *camerasensitivity;
 }
 
 void Camera::rollRight(const float& factor)
 {
-	rotation.z -= factor * sensitivity;
+	rotation.z -= factor * *camerasensitivity;
 }
 
 
@@ -197,7 +198,7 @@ void Camera::rollRight(const float& factor)
 
 void Camera::lookRight(const float& factor)
 {
-        rotation.y += factor * sensitivity;
+        rotation.y += factor * *camerasensitivity;
 	if ( rotation.y > 360.0f ) rotation.y -= 360.0f;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
@@ -206,7 +207,7 @@ void Camera::lookRight(const float& factor)
 
 void Camera::lookLeft(const float& factor)
 {
-        rotation.y -= factor * sensitivity;
+        rotation.y -= factor * *camerasensitivity;
 	if ( rotation.y < 0.0f ) rotation.y += 360.0f;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
@@ -215,7 +216,7 @@ void Camera::lookLeft(const float& factor)
 
 void Camera::lookUp(const float& factor)
 {
-        rotation.x -= factor * sensitivity;
+        rotation.x -= factor * *camerasensitivity;
 	if ( rotation.x < 0.0f ) rotation.x += 360.0f;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
@@ -224,7 +225,7 @@ void Camera::lookUp(const float& factor)
 
 void Camera::lookDown(const float& factor)
 {
-        rotation.x += factor * sensitivity;
+        rotation.x += factor * *camerasensitivity;
 	if ( rotation.x > 360.0f ) rotation.x -= 360.0f;
 
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;

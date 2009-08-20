@@ -4,9 +4,19 @@
 // FIXME PUT C/H IN CRITTER FILENAME
 WorldB::WorldB()
 {
+	// settings and pointers
 	settings = Settings::Instance();
+		retinasperrow = settings->getCVarPtr("retinasperrow");
+		critter_maxlifetime = settings->getCVarPtr("critter_maxlifetime");
+		critter_maxenergy = settings->getCVarPtr("critter_maxenergy");
+		critter_autosaveinterval = settings->getCVarPtr("critter_autosaveinterval");
+		critter_killhalfat = settings->getCVarPtr("critter_killhalfat");
+		critter_retinasize = settings->getCVarPtr("critter_retinasize");
+		critter_sightrange = settings->getCVarPtr("critter_sightrange");
+		food_maxlifetime = settings->getCVarPtr("food_maxlifetime");
+		food_maxenergy = settings->getCVarPtr("food_maxenergy");
 
-	freeEnergy = settings->food_maxenergy * settings->startenergy;
+	freeEnergy = *food_maxenergy * settings->getCVar("energy");
 	settings->freeEnergyInfo = freeEnergy;
 		
 	currentCritterID	= 0;
@@ -48,32 +58,32 @@ WorldB::WorldB()
 		float WallHalfHeight = WallHeight/2.0f;
 	
 	// Ground Floor
-		btVector3 position( settings->worldsizeX/2.0f, -WallHalfWidth, settings->worldsizeY/2.0f );
-		Wall* w = new Wall( settings->worldsizeX, WallWidth, settings->worldsizeY, position, m_dynamicsWorld );
+		btVector3 position( settings->getCVar("worldsizeX")/2.0f, -WallHalfWidth, settings->getCVar("worldsizeY")/2.0f );
+		Wall* w = new Wall( settings->getCVar("worldsizeX"), WallWidth, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
 		w->color[0] = 0.30f; w->color[1] = 0.20f; w->color[2] = 0.10f;
 		walls.push_back(w);
 
 	// Left Wall
-		position = btVector3 ( 0.0f-WallHalfWidth, WallHalfHeight-WallWidth, settings->worldsizeY/2.0f );
-		w = new Wall( WallWidth, WallHeight, settings->worldsizeY, position, m_dynamicsWorld );
+		position = btVector3 ( 0.0f-WallHalfWidth, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
+		w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
 		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 		walls.push_back(w);
 
 	// Right Wall
-		position = btVector3 ( settings->worldsizeX+WallHalfWidth, WallHalfHeight-WallWidth, settings->worldsizeY/2.0f );
-		w = new Wall( WallWidth, WallHeight, settings->worldsizeY, position, m_dynamicsWorld );
+		position = btVector3 ( settings->getCVar("worldsizeX")+WallHalfWidth, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
+		w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
 		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 		walls.push_back(w);
 
 	// Top Wall
-		position = btVector3 ( settings->worldsizeX/2.0f, WallHalfHeight-WallWidth, 0.0f-WallHalfWidth );
-		w = new Wall( settings->worldsizeX+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
+		position = btVector3 ( settings->getCVar("worldsizeX")/2.0f, WallHalfHeight-WallWidth, 0.0f-WallHalfWidth );
+		w = new Wall( settings->getCVar("worldsizeX")+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
 		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 		walls.push_back(w);
 
 	// Bottom Wall
-		position = btVector3 ( settings->worldsizeX/2.0f, WallHalfHeight-WallWidth, settings->worldsizeY+WallHalfWidth );
-		w = new Wall( settings->worldsizeX+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
+		position = btVector3 ( settings->getCVar("worldsizeX")/2.0f, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")+WallHalfWidth );
+		w = new Wall( settings->getCVar("worldsizeX")+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
 		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 		walls.push_back(w);
 
@@ -152,10 +162,10 @@ WorldB::WorldB()
 void WorldB::process()
 {
 	// Autosave Critters?
-		if ( settings->critter_autosaveinterval > 0 )
+		if ( *critter_autosaveinterval > 0 )
 		{
 			autosaveCounter += Timer::Instance()->elapsed;
-			if ( autosaveCounter > settings->critter_autosaveinterval )
+			if ( autosaveCounter > *critter_autosaveinterval )
 			{
 				autosaveCounter = 0.0f;
 				saveAllCritters();
@@ -163,8 +173,17 @@ void WorldB::process()
 		}
 
 	// kill half?
-		if ( critters.size() >= settings->critter_killhalfat )
+		if ( critters.size() >= *critter_killhalfat )
+		{
 			killHalfOfCritters();
+			
+			// reduce energy :)
+			if ( (settings->freeEnergyInfo - *food_maxenergy) / *food_maxenergy >= 0.0f )
+			{
+				settings->freeEnergyInfo -= *food_maxenergy*5;
+				freeEnergy -= *food_maxenergy*5;
+			}
+		}
 
 	// Remove food
 		for( unsigned int i=0; i < food.size(); i++)
@@ -179,7 +198,7 @@ void WorldB::process()
 			}
 
 			// old food, this should remove stuff from corners
-			else if ( ++food[i]->totalFrames >= settings->food_maxlifetime )
+			else if ( ++food[i]->totalFrames >= *food_maxlifetime )
 			{
 				freeEnergy += food[i]->energyLevel;
 				delete food[i];
@@ -202,7 +221,7 @@ void WorldB::process()
 				i--;
 			}
 			// die of old age
-			else if ( critters[i]->totalFrames > settings->critter_maxlifetime )
+			else if ( critters[i]->totalFrames > *critter_maxlifetime )
 			{
 				stringstream buf;
 				buf << setw(4) << critters[i]->critterID << " old";
@@ -245,22 +264,22 @@ void WorldB::process()
 // 		}
 
 	// Autoinsert Food
-		while ( freeEnergy >= settings->food_maxenergy )
+		while ( freeEnergy >= *food_maxenergy )
 		{
-			insertRandomFood(1, settings->food_maxenergy);
-			freeEnergy -= settings->food_maxenergy;
+			insertRandomFood(1, *food_maxenergy);
+			freeEnergy -= *food_maxenergy;
 			//cerr << "food: " << food.size() << endl;
 		}
 
 	// Autoinsert Critters?
 		// insert critter if < minimum
-		if ( critters.size() < settings->mincritters )
+		if ( critters.size() < settings->getCVar("mincritters") )
 			insertCritter();
 
 		// insert critter if insertcritterevery is reached
-		if ( settings->insertcritterevery > 0 )
+		if ( settings->getCVar("insertcritterevery") > 0 )
 		{
-			if ( insertCritterCounter >= settings->insertcritterevery )
+			if ( insertCritterCounter >= settings->getCVar("insertcritterevery") )
 			{
 				insertCritter();
 				insertCritterCounter = 0;
@@ -287,15 +306,15 @@ void WorldB::process()
 	if ( critters.size() > 0 )
 	{
 		// determine width
-		unsigned int picwidth = (settings->retinasperrow * (settings->critter_retinasize+1));
+		unsigned int picwidth = *retinasperrow * (*critter_retinasize+1);
 
 		// determine height
-		unsigned int picheight = settings->critter_retinasize;
+		unsigned int picheight = *critter_retinasize;
 		unsigned int rows = critters.size();
-		while ( rows > settings->retinasperrow )
+		while ( rows > *retinasperrow )
 		{
-			picheight += settings->critter_retinasize;
-			rows -= settings->retinasperrow;
+			picheight += *critter_retinasize;
+			rows -= *retinasperrow;
 		}
  		glReadBuffer(GL_BACK);
  		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
@@ -452,9 +471,9 @@ void WorldB::process()
 				if ( c->touchingFood )
 				{
 					Food* f = c->touchedFoodID;
-					float eaten = settings->critter_maxenergy / 50.0f;
-					if ( c->energyLevel + eaten > settings->critter_maxenergy )
-						eaten -= (c->energyLevel + eaten) - settings->critter_maxenergy;
+					float eaten = *critter_maxenergy / 50.0f;
+					if ( c->energyLevel + eaten > *critter_maxenergy )
+						eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
 					if ( f->energyLevel - eaten < 0 )
 						eaten = f->energyLevel;
 
@@ -477,10 +496,10 @@ void WorldB::process()
 				bool brainmutant = false;
 				bool bodymutant = false;
 
-				if ( randgen->Instance()->get(1,100) <= settings->brain_mutationrate )
+				if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
 					brainmutant = true;
 
-				if ( randgen->Instance()->get(1,100) <= settings->body_mutationrate )
+				if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
 					bodymutant = true;
 
 				btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.bodyparts[0]->body->getMotionState();
@@ -560,13 +579,12 @@ void WorldB::insertCritter()
 	c->calcFramePos(critters.size()-1);
 
 	// start energy
-	c->energyLevel = settings->critter_startenergy;
 	freeEnergy -= c->energyLevel;
 }
 
 btVector3 WorldB::findPosition()
 {
-	btVector3 pos( (float)randgen->Instance()->get( 0, 100*settings->worldsizeX ) / 100, 1.0f, (float)randgen->Instance()->get( 0, 100*settings->worldsizeY ) / 100 );
+	btVector3 pos( (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeX") ) / 100, 1.0f, (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeY") ) / 100 );
 // 	pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
 // 	pos.y = 1.0;
 // 	pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
@@ -588,13 +606,24 @@ void WorldB::removeCritter(unsigned int cid)
 
 void WorldB::killHalfOfCritters()
 {
-	for ( unsigned int c = 0; c < critters.size(); c++ )
+	unsigned int c = 0;
+	unsigned int halfc = critters.size()/2;
+	while ( c < halfc )
 	{
-		freeEnergy += critters[c]->energyLevel;
+		freeEnergy += critters[0]->energyLevel;
 
-		delete critters[c];
-		critters.erase(critters.begin()+c);
+		delete critters[0];
+		critters.erase(critters.begin());
+		c++;
 	}
+
+// 	for ( unsigned int c = 0; c < critters.size(); c++ )
+// 	{
+// 		freeEnergy += critters[c]->energyLevel;
+// 
+// 		delete critters[c];
+// 		critters.erase(critters.begin()+c);
+// 	}
 
 	// update higher retina frame positions
 	for ( unsigned int c = 0; c < critters.size(); c++ )
@@ -643,6 +672,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 		btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
 
 		// draw everything in it's sight
+		float sightrange = (float)*critter_sightrange/10;
 
 		btScalar position[16];
 
@@ -656,7 +686,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 			Food *f = food[i];
 			btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)f->body.bodyparts[0]->body->getMotionState();
 			btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
-			if ( cposi.distance(fposi) < settings->critter_sightrange )
+			if ( cposi.distance(fposi) < sightrange )
 				f->draw();
 		}
 
@@ -669,7 +699,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 				{
 					btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)f->body.bodyparts[b]->body->getMotionState();
 					btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
-					if ( cposi.distance(fposi) < settings->critter_sightrange )
+					if ( cposi.distance(fposi) < sightrange )
 					{
 						fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
 						glPushMatrix(); 
@@ -710,7 +740,7 @@ void WorldB::loadAllCritters()
 			CritterB *c = new CritterB(content, m_dynamicsWorld, findPosition(), retina);
 
 			unsigned int error = 0;
-			if ( c->retinasize != settings->critter_retinasize ) error = 1;
+			if ( c->retinasize != *critter_retinasize ) error = 1;
 
 			if ( !error)
 			{
@@ -720,7 +750,6 @@ void WorldB::loadAllCritters()
 				c->calcFramePos(critters.size()-1);
 
 				// start energy
-				c->energyLevel = settings->critter_startenergy;
 				freeEnergy -= c->energyLevel;
 			}
 			else
@@ -729,10 +758,10 @@ void WorldB::loadAllCritters()
 				if ( error == 1 )
 				{
 					stringstream buf;
-					buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << files[i];
+					buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
 					Textmessage::Instance()->add(buf);
 
-					cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << settings->critter_retinasize << ")" << endl;
+					cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
 				}
 			}
 		}
