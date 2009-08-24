@@ -23,9 +23,9 @@ class File
 
 		bool		exists(string &file);
 		bool		exists(const char* file);
-		void		save(string &filename, string& content);
-		void		save(string &filename, string* content);
-		bool		open(string &filename, string& content);
+		void		save(const string &filename, const string& content);
+		void		save(const string &filename, string* content);
+		bool		open(const string &filename, string& content);
 		bool		open(const char* filename, string &content);
 };
 
