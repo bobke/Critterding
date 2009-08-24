@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include <iostream>
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -21,9 +22,10 @@ class File
 		~File();
 
 		bool		exists(string &file);
-		void		save(string &filename, string &content);
+		bool		exists(const char* file);
+		void		save(string &filename, string& content);
 		void		save(string &filename, string* content);
-		bool		open(string &filename, string &content);
+		bool		open(string &filename, string& content);
 		bool		open(const char* filename, string &content);
 };
 

@@ -209,6 +209,15 @@ void Evolution::handlekeyPressed(const KeySym& key)
 			pause = !pause;
 			break;
 
+		case SDLK_s: // FIXME make use of savedir (declared in world)
+		{
+			settings->saveProfile();
+			stringstream buf;
+			buf << "Profile written: ./" << settings->profileName;
+			Textmessage::Instance()->add(buf);
+		}
+		break;
+
 		case SDLK_l:
 			sleeper.swap();
 			break;
@@ -220,12 +229,11 @@ void Evolution::handlekeyPressed(const KeySym& key)
 		case SDLK_c:
 		{
 			settings->increaseCVar("colormode", 1);
-/*			settings->colormode++;
-			if ( settings->colormode > settings->colormodeMax )
-				settings->colormode = settings->colormodeMin;*/
 			stringstream buf;
 			buf << "Colormode: "<< settings->getCVar("colormode");
 			Textmessage::Instance()->add(buf);
+// 			*Textmessage::Instance() << "Colormode: "<< settings->getCVar("colormode");
+			
 		}
 		break;
 
@@ -279,6 +287,7 @@ void Evolution::handleEvents()
 // 			settings->mincritters--;
 		stringstream buf;
 		buf << "mincritters: "<< settings->getCVar("mincritters");
+// 		cerr << buf << endl;
 		Textmessage::Instance()->add(buf);
 	}
 	if ( events->isActive("inc_critters") )

@@ -178,7 +178,6 @@ CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVect
 	loadCritterB(critterstring);
 
 	// BODY
-// 	body.buildArch();
 	body.wireArch( (void*)this, btDynWorld, startPos );
 
 	// LINK
@@ -195,6 +194,9 @@ void CritterB::registerBrainInputOutputs()
 
 	// touching food
 		brain.registerInput( 10000 );
+
+	// touching critter
+		brain.registerInput( 10001 );
 
 	// canprocreate
 		brain.registerInput( 20000 );
@@ -417,39 +419,6 @@ void CritterB::mutateBody()
 {
 	adamdist++;
 
-	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("body_maxmutations"));
-	body.mutate( runs ); // 0 for random
-
-	// a new color
-	color[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	color[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	color[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-
-	// a new speciescolor
-	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-}
-
-void CritterB::mutateBrain()
-{
-	adamdist++;
-
-// 	// mutate lifetime
-// 	if ( RandGen::Instance()->get(1,10) <= 5 )
-// 	{
-// 		if ( RandGen::Instance()->get(1,2) == 1 )
-// 		{
-// 			lifetime -= lifetime/20;
-// 		}
-// 		else
-// 		{
-// 			lifetime += lifetime/20;
-// 			if ( lifetime > settings->critter_maxlifetime )
-// 				lifetime = settings->critter_maxlifetime;
-// 		}
-// 	}
-
 	// mutate color
 	unsigned int mode = RandGen::Instance()->get(1,2);
 	unsigned int ncolor = RandGen::Instance()->get(0,2);
@@ -473,6 +442,36 @@ void CritterB::mutateBrain()
 	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
+	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("body_maxmutations"));
+	body.mutate( runs ); // 0 for random
+}
+
+void CritterB::mutateBrain()
+{
+	adamdist++;
+
+	// mutate color
+	unsigned int mode = RandGen::Instance()->get(1,2);
+	unsigned int ncolor = RandGen::Instance()->get(0,2);
+
+	// nasty correction
+	if ( ncolor == 1 )
+		ncolor = 0;
+	if ( mode == 1 )
+	{
+		color[ncolor] += (float)RandGen::Instance()->get(1,10)/100.0f;
+		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
+	}
+	else
+	{
+		color[ncolor] -= (float)RandGen::Instance()->get(1,10)/100.0f;
+		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
+	}
+
+	// a new speciescolor
+	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
 	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("brain_maxmutations"));
 	brain.mutate( runs ); // 0 for random

@@ -2,8 +2,8 @@
 #define CAMERA_H
 
 #include "../../utils/settings.h"
-#include "GL/gl.h"
 #include "vector3f.h"
+#include "GL/gl.h"
 #include "btBulletDynamicsCommon.h"
 
 class Camera{
@@ -11,6 +11,9 @@ public:
 
 	Camera();
 	~Camera();
+
+	// position/rotation matrix
+	btScalar positionm[16];
 
 	// Position
 	Vector3f position;
@@ -43,7 +46,7 @@ public:
 	void rollLeft(const float& factor);
 private:
 	Settings *settings;
-	const unsigned int*	camerasensitivity;
+	const unsigned int* camerasensitivity;
 };
 
 #endif

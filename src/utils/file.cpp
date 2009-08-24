@@ -6,8 +6,13 @@ File::File()
 
 bool File::exists(string &file)
 {
-	fstream file_op(file.c_str(),ios::in);
-	if (file_op)
+	return exists( file.c_str() );
+}
+
+bool File::exists(const char* file)
+{
+	fstream file_op(file,ios::in);
+	if (file_op.is_open())
 	{
 		file_op.close();
 		return true;

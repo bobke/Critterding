@@ -394,6 +394,7 @@ void WorldB::process()
 		
 		// set inputs to false and recheck
 			c->touchingFood = false;
+			c->touchingCritter = false;
 
 		// TOUCH inputs and references -> find overlappings
 			if ( c->body.mouths.size() > 0 )
@@ -444,14 +445,19 @@ void WorldB::process()
 									{
 										if ( f->type == 1 )
 										{
-											c->touchingFood = true;
 											stop = true;
+											c->touchingFood = true;
 											c->touchedFoodID = f;
-
-		// 									cerr << ".";
-		// 									cerr << c << " collides with food: " << Collidingobject << endl;
-											//f->color[0] = 1.0f;
 										}
+										else if ( f->type == 0 )
+										{
+											stop = true;
+											c->touchingCritter = true;
+											c->touchedCritterID = static_cast<CritterB*>(Collidingobject);
+										}
+									}
+									else
+									{
 									}
 							}
 						}
@@ -477,15 +483,20 @@ void WorldB::process()
 					if ( f->energyLevel - eaten < 0 )
 						eaten = f->energyLevel;
 
-/*					cerr << "PRE energies:" << endl;
-					cerr << "c: " << c->energyLevel << endl;
-					cerr << "f: " << f->energyLevel << endl;*/
 					c->energyLevel += eaten;
 					f->energyLevel -= eaten;
-/*					cerr << "POST energies:" << endl;
-					cerr << "c: " << c->energyLevel << endl;
-					cerr << "f: " << f->energyLevel << endl << endl;*/
-					//c->touchedFoodID->resize();
+				}
+				else if ( settings->getCVar("critter_enableherbivores") && c->touchingCritter )
+				{
+					CritterB* ct = c->touchedCritterID;
+					float eaten = *critter_maxenergy / 50.0f;
+					if ( c->energyLevel + eaten > *critter_maxenergy )
+						eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
+					if ( ct->energyLevel - eaten < 0 )
+						eaten = ct->energyLevel;
+
+					c->energyLevel += eaten;
+					ct->energyLevel -= eaten;
 				}
 			}
 
