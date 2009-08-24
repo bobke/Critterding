@@ -81,7 +81,7 @@ class WorldB
 
 		GLDebugDrawer debugDrawer;
 
-// 		Grid			grid;
+		// FIXME give these a better place.  We also want to know where to save profiles to
 		string			homedir;
 		string			progdir;
 		string			savedir;

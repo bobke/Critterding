@@ -5,9 +5,9 @@
 #include <string>
 
 #include "settings.h"
+#include "file.h"
 
 #define FTGL_TEXTURE 5
-
 #include "ftgl/FTGL/ftgl.h"
 
 using namespace std;
@@ -19,22 +19,23 @@ class Textprinter
 		void printTextprinter();
 
 		// get bounding boxes
-		FTPoint getBBox(string& str);
+		FTPoint getBBox(const string& str);
 		FTPoint getBBox(const char *fmt, ...);
 
 		string getFormattedString(const char *fmt, ...);
 
 		// print left aligned
 		void print(float x, float y, const char *fmt, ...);
-		void print(float x, float y, string& str);
+		void print(float x, float y, const string& str);
 		// print right aligned
 		void printR(float x, float y, const char *fmt, ...);
 
-		void setUpFonts();
 	protected:
 		Textprinter();
 	private:
 		FTFont** fonts;
+		void setUpFonts();
+		File file;
 };
 
 #endif

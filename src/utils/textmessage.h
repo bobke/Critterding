@@ -19,7 +19,10 @@ class Textmessage
 	public:
 		static Textmessage* Instance();
 
-		void		add(stringstream& streamptr);
+		void		add(const stringstream& streamptr);
+/*		stringstream&	operator<<(stringstream& streamptr);
+		ostream& 	operator<<(ostream& streamptr);
+		stringstream&	operator<<(const char* streamptr);*/
 		void		draw();
 		unsigned int	maxMessages;
 		float		msgLifetime;

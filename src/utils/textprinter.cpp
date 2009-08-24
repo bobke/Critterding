@@ -33,20 +33,6 @@ void Textprinter::print(float x, float y, const char *fmt, ...)
 	glPopMatrix();
 }
 
-FTPoint Textprinter::getBBox(const char *fmt, ...)
-{
-		va_list ap;     /* our argument pointer */
-		char text[256];
-		va_start(ap, fmt);  /* make ap point to first unnamed arg */
-		/* FIXME: we *should* do boundschecking or something to prevent buffer
-		* overflows/segmentations faults
-		*/
-		vsprintf(text, fmt, ap);
-
-		FTBBox test = fonts[0]->BBox(text);
-		return test.Upper();
-}
-
 string Textprinter::getFormattedString(const char *fmt, ...)
 {
 
@@ -62,8 +48,22 @@ string Textprinter::getFormattedString(const char *fmt, ...)
 	return a;
 }
 
+FTPoint Textprinter::getBBox(const char *fmt, ...)
+{
+		va_list ap;     /* our argument pointer */
+		char text[256];
+		va_start(ap, fmt);  /* make ap point to first unnamed arg */
+		/* FIXME: we *should* do boundschecking or something to prevent buffer
+		* overflows/segmentations faults
+		*/
+		vsprintf(text, fmt, ap);
 
-FTPoint Textprinter::getBBox(string& str)
+		FTBBox test = fonts[0]->BBox(text);
+		return test.Upper();
+}
+
+
+FTPoint Textprinter::getBBox(const string& str)
 {
 	const char *text = str.c_str();
 
@@ -72,7 +72,7 @@ FTPoint Textprinter::getBBox(string& str)
 }
 
 
-void Textprinter::print(float x, float y, string& str)
+void Textprinter::print(float x, float y, const string& str)
 {
 	glPushMatrix();
 
@@ -109,6 +109,16 @@ void Textprinter::setUpFonts()
 
 	// Allocate an array to hold all fonts
 	fonts = new FTFont *[1];
+
+	if ( !file.exists(fontFilePath) )
+	{
+		fontFilePath = "../fonts/verdana.ttf";
+		if ( !file.exists(fontFilePath) )
+		{
+			cerr << "Count not find font " << fontFilePath << endl;
+			exit(1);
+		}
+	}
 
 	fonts[0] = new FTTextureFont(fontFilePath);
 

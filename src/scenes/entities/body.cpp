@@ -2,6 +2,7 @@
 
 Body::Body()
 {
+	settings = Settings::Instance();
 }
 
 void Body::addBodyPart_Capsule(void* owner, float width, float height, float weight, btTransform& offset, btTransform& transform)
@@ -141,7 +142,7 @@ void Body::buildArch()
 		bp->y		= randgen->Instance()->get( 20, 200 );
 		bp->z		= randgen->Instance()->get( 20, 200 );
 
-		unsigned int runs = randgen->Instance()->get( 0, 4 );
+		unsigned int runs = randgen->Instance()->get( 0, settings->getCVar("body_maxbodypartsatbuildtime") );
 		for ( unsigned int i=0; i < runs; i++ )
 			addRandomBodypart();
 
@@ -400,31 +401,27 @@ void Body::randomConstraintPosition(archConstraint* co, unsigned int OneOrTwo, u
 
 void Body::mutate(unsigned int runs)
 {
-	unsigned int pct						= 8;
-	unsigned int percentMutateEffectAddBodypart			= pct;
-	unsigned int percentMutateEffectRemoveBodypart			= pct;
-	unsigned int percentMutateEffectChangeConstraintLimits		= pct;
-	unsigned int percentMutateEffectChangeConstraintAngles		= pct;
-	unsigned int percentMutateEffectChangeConstraintPosition	= pct;
-	unsigned int percentMutateEffectRemoveAndAddMouth		= pct;
-	unsigned int maxBodyparts = 50;
-
 	for ( unsigned int i=0; i < runs; i++ )
 	{
 		unsigned int mode = randgen->Instance()->get(1,100);
 		
 		// ADD BODYPART
-			if ( mode <= percentMutateEffectAddBodypart )
+			unsigned int modesum = settings->getCVar("body_percentmutateeffectaddbodypart");
+			if ( mode <= modesum )
 			{
-				if ( archBodyparts.size() < maxBodyparts )
+				if ( archBodyparts.size() < settings->getCVar("body_maxbodyparts") )
 				{
 					cerr << "adding bodypart" << endl;
 					addRandomBodypart();
 				}
+				else
+					runs++;
+				continue;
 			}
 
 		// REMOVE BODYPART
-			else if ( mode <= percentMutateEffectAddBodypart + percentMutateEffectRemoveBodypart )
+			modesum += settings->getCVar("body_percentmutateeffectremovebodypart");
+			if ( mode <= modesum )
 			{
 				if ( archBodyparts.size() > 2 )
 				{
@@ -465,12 +462,16 @@ void Body::mutate(unsigned int runs)
 							addRandomMouth();
 					}
 					else
-						runs--;
+						runs++;
 				}
+				else
+					runs++;
+				continue;
 			}
 
 		// CHANGE CONSTRAINT LIMITS
-			else if ( mode <= percentMutateEffectAddBodypart + percentMutateEffectRemoveBodypart + percentMutateEffectChangeConstraintLimits )
+			modesum += settings->getCVar("body_percentmutateeffectchangeconstraintlimits");
+			if ( mode <= modesum )
 			{
 				cerr << "changing constraint limits" << endl;
 
@@ -478,10 +479,12 @@ void Body::mutate(unsigned int runs)
 				archConstraint* co = &archConstraints[cid];
 				co->limit_1		= (float)randgen->Instance()->get( 0, 7853 ) / -10000;
 				co->limit_2		= -1.0f * co->limit_1;
+				continue;
 			}
 	
 		// CHANGE CONSTRAINT ANGLES
-			else if ( mode <= percentMutateEffectAddBodypart + percentMutateEffectRemoveBodypart + percentMutateEffectChangeConstraintLimits + percentMutateEffectChangeConstraintAngles )
+			modesum += settings->getCVar("body_percentmutateeffectchangeconstraintangles");
+			if ( mode <= modesum )
 			{
 				cerr << "changing constraint angles" << endl;
 
@@ -494,10 +497,12 @@ void Body::mutate(unsigned int runs)
 				co->rot_x_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
 				co->rot_y_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
 				co->rot_z_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
+				continue;
 			}
 
 		// REPOSITION A CONSTRAINT
-			else if ( mode <= percentMutateEffectAddBodypart + percentMutateEffectRemoveBodypart + percentMutateEffectChangeConstraintLimits + percentMutateEffectChangeConstraintAngles + percentMutateEffectChangeConstraintPosition )
+			modesum += settings->getCVar("body_percentmutateeffectchangeconstraintposition");
+			if ( mode <= modesum )
 			{
 				cerr << "changing constraint position" << endl;
 
@@ -520,17 +525,22 @@ void Body::mutate(unsigned int runs)
 				else
 					randomConstraintPosition(co, 2, connID2);
 
+				continue;
 			}
 
 		// REMOVE AND ADD MOUTH
-			else if ( mode <= percentMutateEffectAddBodypart + percentMutateEffectRemoveBodypart + percentMutateEffectChangeConstraintLimits + percentMutateEffectChangeConstraintAngles + percentMutateEffectChangeConstraintPosition + percentMutateEffectRemoveAndAddMouth )
+			modesum += settings->getCVar("body_percentmutateeffectrepositionmouth");
+			if ( mode <= modesum )
 			{
 				cerr << "remove and add mouth" << endl;
 				removeMouth(0);
 				addRandomMouth();
+
+				continue;
 			}
-			else
-				runs--;
+
+		// if we reach here, none were processed, decrease runs by 1 to make sure we get a hit
+			runs++;
 	}
 }
 

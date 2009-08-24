@@ -35,6 +35,7 @@ Settings::Settings()
 	registerCVar("critter_retinasize",			6, 1, 1000);
 	registerCVar("critter_autosaveinterval",		0, 1, 1000000);
 	registerCVar("critter_killhalfat",			1000, 2, 1000000);
+	registerCVar("critter_enableherbivores",		0, 1, 1);
 
 	registerCVar("food_maxlifetime",			2000, 1, 1000000);
 	registerCVar("food_maxenergy",				1000, 1, 1000000);
@@ -42,6 +43,18 @@ Settings::Settings()
 
 	registerCVar("body_maxmutations",			5, 1, 1000000);
 	registerCVar("body_mutationrate",			10, 0, 100);
+
+	registerCVar("body_maxbodyparts",			30, 0, 1000000);
+	registerCVar("body_maxbodypartsatbuildtime",		5, 0, 1000000);
+	
+	registerCVar("body_percentmutateeffectaddbodypart",	10, 0, 100);
+	registerCVar("body_percentmutateeffectremovebodypart",	10, 0, 100);
+	registerCVar("body_percentmutateeffectchangeconstraintlimits",	10, 0, 100);
+	registerCVar("body_percentmutateeffectchangeconstraintangles",	10, 0, 100);
+	registerCVar("body_percentmutateeffectchangeconstraintposition",	10, 0, 100);
+	registerCVar("body_percentmutateeffectrepositionmouth",	10, 0, 100);
+	
+	
 
 	registerCVar("brain_maxmutations",			10, 1, 1000000);
 	registerCVar("brain_mutationrate",			10, 0, 100);
@@ -136,13 +149,15 @@ void Settings::registerCVar(const string& name, const unsigned int& defaultvalue
 
 unsigned int Settings::getCVar(const string& name)
 {
-	cvarit = cvarlist.find(name);
+	return cvarlist[name]->int_val;
+	
+/*	cvarit = cvarlist.find(name);
 	if ( cvarit != cvarlist.end() )
 		return cvarit->second->int_val;
 	else 
 		cerr << "getCVar: no such key: " << name << endl;
 
-	return 0;
+	return 0;*/
 }
 
 const unsigned int* Settings::getCVarPtr(const string& name)
@@ -368,7 +383,16 @@ void Settings::loadProfile(char* filename)
 		cerr << "cannot open profile '" << filename << "'" << endl;
 		exit(1);
 	}
+}
 
+void Settings::saveProfile() {
+	stringstream buf;
+
+	for( cvarit = cvarlist.begin(); cvarit != cvarlist.end(); cvarit++ )
+		buf << cvarit->first << " " << cvarit->second->int_val << endl;
+
+	string profileContent = buf.str();
+	fileH.save(profileName, profileContent);
 }
 
 void Settings::doCommandLineOptions(int argc, char *argv[])

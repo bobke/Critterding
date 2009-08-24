@@ -22,7 +22,7 @@ void Food::draw()
 		glPushMatrix(); 
 		glMultMatrixf(position);
 
-				glColor4f( color[0], color[1], color[2], 0.0f );
+				glColor4f( color[0], color[1], color[2], 1.0f );
 
 				const btBoxShape* boxShape = static_cast<const btBoxShape*>(body.bodyparts[j]->shape);
 				btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();

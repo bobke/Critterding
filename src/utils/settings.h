@@ -65,21 +65,23 @@ class Settings
 
 		void doCommandLineOptions(int argc, char *argv[]);
 		void loadProfile(char* filename);
+		void saveProfile();
 
 	protected:
 		Settings();
 	private:
+		static Settings* _instance;
+
 		File		fileH;
 		Parser		*parseH;
 
-		std::map<string, cvar*> cvarlist;
+		map<string, cvar*> cvarlist;
 		typedef map <string, cvar*>::const_iterator cvarlist_iterator;
 		cvarlist_iterator cvarit;
 
 		stringstream helpinfo;
 		void createHelpInfo();
 
-		static Settings* _instance;
 };
 
 #endif

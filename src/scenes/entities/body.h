@@ -4,6 +4,7 @@
 #include "../../utils/timer.h"
 #include "../../utils/randgen.h"
 #include "../../utils/parser.h"
+#include "../../utils/settings.h"
 #include "archbodypart.h"
 #include "bodypart.h"
 #include "archconstraint.h"
@@ -58,6 +59,7 @@ class Body
 	private:
 		Parser			*parseH;
 		RandGen			*randgen;
+		Settings		*settings;
 
 		// mutation helpers
 		void			addRandomMouth();

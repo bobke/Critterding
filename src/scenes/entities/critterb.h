@@ -55,6 +55,8 @@ class CritterB
 		bool			canProcreate;
 		bool			touchingFood;
 		Food*			touchedFoodID;
+		bool			touchingCritter;
+		CritterB*		touchedCritterID;
 
 		// Motor Func
  		bool			eat;

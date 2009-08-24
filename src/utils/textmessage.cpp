@@ -16,7 +16,37 @@ Textmessage::Textmessage()
 	hpadding = 10.0f;
 }
 
-void Textmessage::add(stringstream& streamptr)
+// ostream& Textmessage::operator<<(ostream& streamptr)
+// {
+// 	streamptr << "hi";
+// 	return streamptr;
+// }
+// 
+// stringstream& Textmessage::operator<<(stringstream& streamptr)
+// {
+// 	streamptr << "hi";
+// 	return streamptr;
+// }
+// 
+// stringstream& Textmessage::operator<<(const char* streamptr)
+// {
+// 	msg *Msg = new msg;
+// 	Msg->str << streamptr;
+// 	Msg->appeartime = Timer::Instance()->lasttime;
+// 	messages.push_back(Msg);
+// 
+// 	//getLongestMsg();
+// 	FTPoint bbox = Textprinter::Instance()->getBBox( messages[messages.size()-1]->str );
+// 	if ( bbox.X() > longestLength )
+// 		longestLength = bbox.X();
+// 
+// 	// to prevent overfilling:
+// 	deleteExpiredMsg();
+// 
+// 	return Msg->str;
+// }
+
+void Textmessage::add(const stringstream& streamptr)
 {
 	msg *Msg = new msg;
 	Msg->str = streamptr.str();
@@ -24,7 +54,7 @@ void Textmessage::add(stringstream& streamptr)
 	messages.push_back(Msg);
 
 	//getLongestMsg();
-	FTPoint bbox = Textprinter::Instance()->getBBox(messages[messages.size()-1]->str);
+	FTPoint bbox = Textprinter::Instance()->getBBox( messages[messages.size()-1]->str );
 	if ( bbox.X() > longestLength )
 		longestLength = bbox.X();
 
