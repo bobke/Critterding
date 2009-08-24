@@ -20,21 +20,21 @@ bool File::exists(const char* file)
 	else return false;
 }
 
-void File::save(string &filename, string &content)
+void File::save(const string &filename, const string& content)
 {
 	fstream file_op(filename.c_str(),ios::out);
 	file_op << content;
 	file_op.close();
 }
 
-void File::save(string &filename, string* content)
+void File::save(const string &filename, string* content)
 {
 	fstream file_op(filename.c_str(),ios::out);
 	file_op << *content;
 	file_op.close();
 }
 
-bool File::open(string &filename, string &content)
+bool File::open(const string &filename, string &content)
 {
 	content.clear();
 	char str[2000];

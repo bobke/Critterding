@@ -391,8 +391,7 @@ void Settings::saveProfile() {
 	for( cvarit = cvarlist.begin(); cvarit != cvarlist.end(); cvarit++ )
 		buf << cvarit->first << " " << cvarit->second->int_val << endl;
 
-	string profileContent = buf.str();
-	fileH.save(profileName, profileContent);
+	fileH.save(profileName, buf.str());
 }
 
 void Settings::doCommandLineOptions(int argc, char *argv[])

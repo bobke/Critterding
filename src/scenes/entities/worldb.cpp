@@ -800,15 +800,12 @@ void WorldB::saveAllCritters()
 
 	for ( unsigned int i = 0; i < critters.size(); i++ )
 	{
-		string content = critters[i]->saveCritterB();
-	
 		// determine filename
 		stringstream filename;
 		filename << subsavedir << "/" << "critter" << i << ".cr";
-		string sfilename = filename.str();
 	
 		// save critters
-		fileH.save(sfilename, content);
+		fileH.save(filename.str(), critters[i]->saveCritterB());
 	}
  	//cerr << endl << "Saved critters to " << subsavedir << endl << endl;
 	stringstream buf2;
