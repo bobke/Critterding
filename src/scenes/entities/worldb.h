@@ -3,7 +3,7 @@
 
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btIDebugDraw.h"
-#include "../../gl/gldebugdrawer.h"
+// #include "../../gl/gldebugdrawer.h"
 // #include <sstream>
 #include <iomanip>
 // #include <vector>
@@ -79,7 +79,7 @@ class WorldB
 
 		unsigned int		insertCritterCounter;
 
-		GLDebugDrawer debugDrawer;
+// 		GLDebugDrawer debugDrawer;
 
 		// FIXME give these a better place.  We also want to know where to save profiles to
 		string			homedir;

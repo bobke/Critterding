@@ -10,114 +10,114 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-	registerCVar("worldsizeX",				16, 1, 5000);
-	registerCVar("worldsizeY",				12, 1, 5000);
+	registerCVar("worldsizeX",						16, 1, 5000);
+	registerCVar("worldsizeY",						12, 1, 5000);
 
-	registerCVar("energy",					100, 0, 1000000);
-	registerCVar("mincritters",				10, 0, 1000);
+	registerCVar("energy",							100, 0, 1000000);
+	registerCVar("mincritters",						10, 0, 1000);
 
-	registerCVar("insertcritterevery",			0, 0, 1000);
-	registerCVar("retinasperrow",				20, 1, 1000);
-	registerCVar("camerasensitivity",			20, 1, 1000);
+	registerCVar("insertcritterevery",					0, 0, 1000);
+	registerCVar("retinasperrow",						20, 1, 1000);
+	registerCVar("camerasensitivity",					20, 1, 1000);
 
-	registerCVar("colormode",				0, 0, 1, true);
-	registerCVar("exit_if_empty",				0, 0, 1, true);
-	registerCVar("autoload",				0, 0, 1, true);
+	registerCVar("colormode",						0, 0, 1, true);
+	registerCVar("exit_if_empty",						0, 0, 1, true);
+	registerCVar("autoload",						0, 0, 1, true);
 
-	registerCVar("critter_maxlifetime",			10000, 1, 1000000);
-	registerCVar("critter_maxenergy",			5000, 1, 1000000);
+	registerCVar("critter_maxlifetime",					10000, 1, 1000000);
+	registerCVar("critter_maxenergy",					5000, 1, 1000000);
 
-	registerCVar("critter_startenergy",			2500, 1, 1000000);
-	registerCVar("critter_procinterval",			20, 1, 1000000);
-	registerCVar("critter_minenergyproc",			3000, 2, 1000000);
-	registerCVar("critter_sightrange",			70, 1, 1000000);
+	registerCVar("critter_startenergy",					2500, 1, 1000000);
+	registerCVar("critter_procinterval",					20, 1, 1000000);
+	registerCVar("critter_minenergyproc",					3000, 2, 1000000);
+	registerCVar("critter_sightrange",					70, 1, 1000000);
 
-	registerCVar("critter_retinasize",			6, 1, 1000);
-	registerCVar("critter_autosaveinterval",		0, 1, 1000000);
-	registerCVar("critter_killhalfat",			1000, 2, 1000000);
-	registerCVar("critter_enableherbivores",		0, 1, 1);
-
-	registerCVar("food_maxlifetime",			2000, 1, 1000000);
-	registerCVar("food_maxenergy",				1000, 1, 1000000);
-// 	registerCVar("food_size",				15, 1, 100);
-
-	registerCVar("body_maxmutations",			5, 1, 1000000);
-	registerCVar("body_mutationrate",			10, 0, 100);
-
-	registerCVar("body_maxbodyparts",			30, 0, 1000000);
-	registerCVar("body_maxbodypartsatbuildtime",		5, 0, 1000000);
+	registerCVar("critter_retinasize",					6, 1, 1000);
+	registerCVar("critter_autosaveinterval",				0, 0, 1000000);
+	registerCVar("critter_killhalfat",					1000, 2, 1000000);
+	registerCVar("critter_enableherbivores",				0, 0, 1);
 	
-	registerCVar("body_percentmutateeffectaddbodypart",	10, 0, 100);
-	registerCVar("body_percentmutateeffectremovebodypart",	10, 0, 100);
-	registerCVar("body_percentmutateeffectresizebodypart",	20, 0, 100);
-	registerCVar("body_percentmutateeffectchangeconstraintlimits",	10, 0, 100);
-	registerCVar("body_percentmutateeffectchangeconstraintangles",	10, 0, 100);
+	registerCVar("food_maxlifetime",					2000, 1, 1000000);
+	registerCVar("food_maxenergy",						1000, 1, 1000000);
+// 	registerCVar("food_size",						15, 1, 100);
+
+	registerCVar("body_maxmutations",					5, 1, 1000000);
+	registerCVar("body_mutationrate",					10, 0, 100);
+
+	registerCVar("body_maxbodyparts",					30, 0, 1000000);
+	registerCVar("body_maxbodypartsatbuildtime",				5, 0, 1000000);
+	
+	registerCVar("body_percentmutateeffectaddbodypart",			10, 0, 100);
+	registerCVar("body_percentmutateeffectremovebodypart",			10, 0, 100);
+	registerCVar("body_percentmutateeffectresizebodypart",			10, 0, 100);
+	registerCVar("body_percentmutateeffectchangeconstraintlimits",		10, 0, 100);
+	registerCVar("body_percentmutateeffectchangeconstraintangles",		10, 0, 100);
 	registerCVar("body_percentmutateeffectchangeconstraintposition",	10, 0, 100);
-	registerCVar("body_percentmutateeffectrepositionmouth",	10, 0, 100);
+	registerCVar("body_percentmutateeffectrepositionmouth",			10, 0, 100);
 	
 	
 
-	registerCVar("brain_maxmutations",			10, 1, 1000000);
-	registerCVar("brain_mutationrate",			10, 0, 100);
+	registerCVar("brain_maxmutations",					10, 1, 1000000);
+	registerCVar("brain_mutationrate",					10, 0, 100);
 
-	registerCVar("brain_maxneurons",			1000, 1, 1000000);
-	registerCVar("brain_minsynapses",			1, 1, 1000000);
-	registerCVar("brain_maxsynapses",			100, 1, 1000000);
-	registerCVar("brain_minneuronsatbuildtime",		50, 1, 1000000);
-	registerCVar("brain_maxneuronsatbuildtime",		200, 1, 1000000);
+	registerCVar("brain_maxneurons",					1000, 1, 1000000);
+	registerCVar("brain_minsynapses",					1, 1, 1000000);
+	registerCVar("brain_maxsynapses",					100, 1, 1000000);
+	registerCVar("brain_minneuronsatbuildtime",				50, 1, 1000000);
+	registerCVar("brain_maxneuronsatbuildtime",				200, 1, 1000000);
 
-	registerCVar("brain_minsynapsesatbuildtime",		1, 1, 1000000);
-	registerCVar("brain_mutate_minsynapsesatbuildtime",	0, 0, 1, true);
+	registerCVar("brain_minsynapsesatbuildtime",				1, 1, 1000000);
+	registerCVar("brain_mutate_minsynapsesatbuildtime",			0, 0, 1, true);
 
-	registerCVar("brain_maxsynapsesatbuildtime",		40, 1, 1000000);
-	registerCVar("brain_mutate_maxsynapsesatbuildtime",	0, 0, 1, true);
+	registerCVar("brain_maxsynapsesatbuildtime",				40, 1, 1000000);
+	registerCVar("brain_mutate_maxsynapsesatbuildtime",			0, 0, 1, true);
 
-	registerCVar("brain_percentchanceinhibitoryneuron",	50, 0, 100);
-	registerCVar("brain_mutate_percentchanceinhibitoryneuron",	0, 0, 1, true);
+	registerCVar("brain_percentchanceinhibitoryneuron",			50, 0, 100);
+	registerCVar("brain_mutate_percentchanceinhibitoryneuron",		0, 0, 1, true);
 
-	registerCVar("brain_percentchancemotorneuron",		50, 0, 100);
-	registerCVar("brain_mutate_percentchancemotorneuron",	0, 0, 1, true);
+	registerCVar("brain_percentchancemotorneuron",				50, 0, 100);
+	registerCVar("brain_mutate_percentchancemotorneuron",			0, 0, 1, true);
 
-	registerCVar("brain_percentchanceplasticneuron",	20, 0, 100);
-	registerCVar("brain_mutate_percentchanceplasticneuron",	0, 0, 1, true);
+	registerCVar("brain_percentchanceplasticneuron",			20, 0, 100);
+	registerCVar("brain_mutate_percentchanceplasticneuron",			0, 0, 1, true);
 
-	registerCVar("brain_minplasticitystrengthen",		100, 1, 1000000);
-	registerCVar("brain_maxplasticitystrengthen",		1000, 1, 1000000);
-	registerCVar("brain_minplasticityweaken",		1000, 1, 1000000);
-	registerCVar("brain_maxplasticityweaken",		10000, 1, 1000000);
-	registerCVar("brain_mutate_plasticityfactors",		0, 0, 1, true);
+	registerCVar("brain_minplasticitystrengthen",				100, 1, 1000000);
+	registerCVar("brain_maxplasticitystrengthen",				1000, 1, 1000000);
+	registerCVar("brain_minplasticityweaken",				1000, 1, 1000000);
+	registerCVar("brain_maxplasticityweaken",				10000, 1, 1000000);
+	registerCVar("brain_mutate_plasticityfactors",				0, 0, 1, true);
 
-	registerCVar("brain_minfiringthreshold",		2, 1, 1000000);
-	registerCVar("brain_mutate_minfiringthreshold",		0, 0, 1, true);
+	registerCVar("brain_minfiringthreshold",				2, 1, 1000000);
+	registerCVar("brain_mutate_minfiringthreshold",				0, 0, 1, true);
 
-	registerCVar("brain_maxfiringthreshold",		10, 1, 1000000);
-	registerCVar("brain_mutate_maxfiringthreshold",		0, 0, 1, true);
+	registerCVar("brain_maxfiringthreshold",				10, 1, 1000000);
+	registerCVar("brain_mutate_maxfiringthreshold",				0, 0, 1, true);
 
-	registerCVar("brain_maxdendridicbranches",		3, 1, 1000000);
-	registerCVar("brain_mutate_maxdendridicbranches",	0, 0, 1, true);
+	registerCVar("brain_maxdendridicbranches",				3, 1, 1000000);
+	registerCVar("brain_mutate_maxdendridicbranches",			0, 0, 1, true);
 
-	registerCVar("brain_percentchanceconsistentsynapses",	0, 0, 100);
-	registerCVar("brain_mutate_percentchanceconsistentsynapses",	0, 0, 1, true);
+	registerCVar("brain_percentchanceconsistentsynapses",			0, 0, 100);
+	registerCVar("brain_mutate_percentchanceconsistentsynapses",		0, 0, 1, true);
 
-	registerCVar("brain_percentchanceinhibitorysynapses",	50, 0, 100);
-	registerCVar("brain_mutate_percentchanceinhibitorysynapses",	0, 0, 1, true);
+	registerCVar("brain_percentchanceinhibitorysynapses",			50, 0, 100);
+	registerCVar("brain_mutate_percentchanceinhibitorysynapses",		0, 0, 1, true);
 
-	registerCVar("brain_percentchancesensorysynapse",	20, 0, 100);
-	registerCVar("brain_mutate_percentchancesensorysynapse",	0, 0, 1, true);
+	registerCVar("brain_percentchancesensorysynapse",			20, 0, 100);
+	registerCVar("brain_mutate_percentchancesensorysynapse",		0, 0, 1, true);
 
-	registerCVar("brain_percentmutateeffectaddneuron",		10, 0, 100);
-	registerCVar("brain_percentmutateeffectremoveneuron",		10, 0, 100);
-	registerCVar("brain_percentmutateeffectalterneuron",		20, 0, 100);
-	registerCVar("brain_percentmutateeffectaddsynapse",		29, 0, 100);
-	registerCVar("brain_percentmutateeffectremovesynapse",		29, 0, 100);
-	registerCVar("brain_percentMutateEffectAlterMutable",		1, 0, 100);
+	registerCVar("brain_percentmutateeffectaddneuron",			10, 0, 100);
+	registerCVar("brain_percentmutateeffectremoveneuron",			10, 0, 100);
+	registerCVar("brain_percentmutateeffectalterneuron",			20, 0, 100);
+	registerCVar("brain_percentmutateeffectaddsynapse",			29, 0, 100);
+	registerCVar("brain_percentmutateeffectremovesynapse",			29, 0, 100);
+	registerCVar("brain_percentMutateEffectAlterMutable",			1, 0, 100);
 
-	registerCVar("brain_mutate_mutateeffects",		0, 0, 1, true);
+	registerCVar("brain_mutate_mutateeffects",				0, 0, 1, true);
 
-	registerCVar("brain_costhavingneuron",		50, 0, 1000000);
-	registerCVar("brain_costfiringneuron",		10, 0, 1000000);
-	registerCVar("brain_costfiringmotorneuron",	1000, 0, 1000000);
-	registerCVar("brain_costhavingsynapse",		1, 0, 1000000);
+	registerCVar("brain_costhavingneuron",					50, 0, 1000000);
+	registerCVar("brain_costfiringneuron",					10, 0, 1000000);
+	registerCVar("brain_costfiringmotorneuron",				1000, 0, 1000000);
+	registerCVar("brain_costhavingsynapse",					1, 0, 1000000);
 
 	info_critters = 0;
 	info_food = 0;
