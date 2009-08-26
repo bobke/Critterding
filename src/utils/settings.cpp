@@ -49,6 +49,7 @@ Settings::Settings()
 	
 	registerCVar("body_percentmutateeffectaddbodypart",	10, 0, 100);
 	registerCVar("body_percentmutateeffectremovebodypart",	10, 0, 100);
+	registerCVar("body_percentmutateeffectresizebodypart",	20, 0, 100);
 	registerCVar("body_percentmutateeffectchangeconstraintlimits",	10, 0, 100);
 	registerCVar("body_percentmutateeffectchangeconstraintangles",	10, 0, 100);
 	registerCVar("body_percentmutateeffectchangeconstraintposition",	10, 0, 100);
@@ -385,7 +386,8 @@ void Settings::loadProfile(char* filename)
 	}
 }
 
-void Settings::saveProfile() {
+void Settings::saveProfile()
+{
 	stringstream buf;
 
 	for( cvarit = cvarlist.begin(); cvarit != cvarlist.end(); cvarit++ )
@@ -396,21 +398,25 @@ void Settings::saveProfile() {
 
 void Settings::doCommandLineOptions(int argc, char *argv[])
 {
-	int optind=1;
-	// decode arguments
-	while ((optind < argc) && (argv[optind][0]=='-'))
+
+	// first check if --help occurs, overrides the rest
+	for (int i=1; i < argc; i++ )
 	{
-		string sw = argv[optind];
-
-	// Global Settings
-
-		if ( sw=="--help" )
+		string sw = argv[i];
+		if ( sw == "--help" )
 		{
 			cout << helpinfo.str() << endl;
 			exit(1);
 	        }
+	}
 
-		else if ( sw=="--profile" )
+	// decode arguments
+	int optind=1;
+	while ((optind < argc) && (argv[optind][0]=='-'))
+	{
+		string sw = argv[optind];
+
+		if ( sw=="--profile" )
 		{
 			if ( argv[++optind] )
 			{
