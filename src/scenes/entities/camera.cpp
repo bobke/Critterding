@@ -171,6 +171,13 @@ void Camera::moveUp(const float& factor)
 {
 	position.y -= factor * *camerasensitivity;
 
+// 	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
+// 	float reusedZ = (360.0f-rotation.z) * 0.0174532925f;
+// 
+// 	position.x -= sin(reusedZ) * cos(reusedX) * factor * *camerasensitivity;
+// 	position.y += sin(reusedX) * factor * *camerasensitivity;
+// 	position.z -= cos(reusedZ) * cos(reusedX) * factor * *camerasensitivity;
+
 /*	cerr << " camera rot: " << rotation.x << ":" << rotation.y << ":" << rotation.z << endl;
 	cerr << " camera pos: " << position.x << ":" << position.y << ":" << position.z << endl;*/
 }

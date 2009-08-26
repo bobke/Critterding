@@ -49,7 +49,7 @@ WorldB::WorldB()
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints);
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraintLimits);
-	m_dynamicsWorld->setDebugDrawer(&debugDrawer);
+// 	m_dynamicsWorld->setDebugDrawer(&debugDrawer);
 
 	// Wall Constants
 		float WallWidth = 0.5f;
