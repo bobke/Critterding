@@ -273,7 +273,7 @@ void Body::addRandomBodypart()
 	// Throw in a bodypart
 		archBodyparts.push_back( archBodypart() );
 		archBodypart *bp = &archBodyparts[archBodyparts.size()-1];
-		bp->id		= 0;
+		bp->id		= 0; // to avoid uninitialized id
 		bp->id		= getUniqueBodypartID();
 		bp->type	= 0;
 		bp->materialID	= 0;
@@ -466,6 +466,55 @@ void Body::mutate(unsigned int runs)
 				}
 				else
 					runs++;
+				continue;
+			}
+
+		// RESIZE BODYPART
+			modesum += settings->getCVar("body_percentmutateeffectresizebodypart");
+			if ( mode <= modesum )
+			{
+				cerr << "resize bodypart" << endl;
+
+					// pick a random bodypart
+					unsigned int bid = randgen->Instance()->get( 0, archBodyparts.size()-1 );
+
+					archBodyparts.push_back( archBodypart() );
+					archBodypart *bp = &archBodyparts[archBodyparts.size()-1];
+
+					bp->id		= archBodyparts[bid].id;
+					bp->type	= archBodyparts[bid].type;
+					bp->materialID	= archBodyparts[bid].materialID;
+					bp->x		= randgen->Instance()->get( 20, 200 );
+					bp->y		= randgen->Instance()->get( 20, 200 );
+					bp->z		= randgen->Instance()->get( 20, 200 );
+
+					archBodyparts.erase(archBodyparts.begin()+bid);
+
+					// reposition the constraints back to the resized bodypart
+					for ( int i = 0; i < (int)archConstraints.size(); i++ )
+					{
+						archConstraint* co = &archConstraints[i];
+						if ( findBodypart( co->id_1 ) == bp->id )
+						{
+							if ( co->XYZ == 0 ) // X
+								co->pos_x_1 = (bp->x / 1000.0f) * co->sign * 1.5f;
+							else if ( co->XYZ == 1 ) // Y
+								co->pos_y_1 = (bp->y / 1000.0f) * co->sign * 1.5f;
+							else if ( co->XYZ == 2 ) // Z
+								co->pos_z_1 = (bp->z / 1000.0f) * co->sign * 1.5f;
+						}
+						else if ( !co->isMouthConstraint && findBodypart( co->id_2 ) == bp->id )
+						{
+							int othersign = -1 * co->sign;
+							if ( co->XYZ == 0 ) // X
+								co->pos_x_2 = (bp->x / 1000.0f) * othersign * 1.5f;
+							else if ( co->XYZ == 1 ) // Y
+								co->pos_y_2 = (bp->y / 1000.0f) * othersign * 1.5f;
+							else if ( co->XYZ == 2 ) // Z
+								co->pos_z_2 = (bp->z / 1000.0f) * othersign * 1.5f;
+						}
+					}
+
 				continue;
 			}
 
