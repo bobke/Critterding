@@ -278,18 +278,22 @@ btVector3 Evolution::getRayTo(int x,int y)
 	vertical.normalize();
 
 	hor *= directiondepth;
-	vertical *= directiondepth;
+	vertical *= directiondepth * ((float)*settings->winHeight / *settings->winWidth);
 
-	if (*settings->winWidth > *settings->winHeight)
-		hor *= ((float)*settings->winWidth / *settings->winHeight);
-	else
-		vertical *= ((float)*settings->winHeight / *settings->winWidth);
+// 	if (*settings->winWidth > *settings->winHeight)
+// 	{
+// 		hor *= ((float)*settings->winWidth / *settings->winHeight);
+// 		vertical *= ((float)*settings->winHeight / *settings->winWidth);
+// 	}
+// 	else
+// 		vertical *= ((float)*settings->winHeight / *settings->winWidth);
 
+	cerr << ((float)*settings->winWidth / *settings->winHeight) << endl;
 	btVector3 rayToCenter = rayFrom + rayForward;
 
 	btVector3 rayTo = rayToCenter - (0.5f * hor) + (0.5f * vertical);
-	rayTo += x * (hor * (1.0f/(*settings->winWidth)));
-	rayTo -= y * (vertical * (1.0f/(*settings->winHeight)));
+	rayTo += x * (hor * (1.0f/((float)*settings->winWidth)));
+	rayTo -= y * (vertical * (1.0f/((float)*settings->winHeight)));
 	return rayTo;
 }
 
