@@ -159,6 +159,55 @@ WorldB::WorldB()
 // // 	grid.resize(X, Y, m_dynamicsWorld);
 // }
 
+void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
+{
+/*			unsigned int totalp = walls.size()+food.size();
+			for( unsigned int j=0; j < critters.size(); j++)
+			{
+				for( unsigned int k=0; k < critters[j]->body->bodyparts.size(); k++)
+				{
+					totalp++;
+				}
+			}
+*/
+
+			btVector3 rayFrom = btVector3( -drayFrom.x, -drayFrom.y, -drayFrom.z );
+			btVector3 rayTo = btVector3( direction.getX(), -direction.getY(), -direction.getZ() );
+
+			cerr << "origin   : " << rayFrom.getX() << " - " << rayFrom.getY() << " - " << rayFrom.getZ() << endl;
+			cerr << "direction: " << rayTo.getX() <<   " - " << rayTo.getY() <<   " - " << rayTo.getZ() << endl;
+
+			btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);
+			m_dynamicsWorld->rayTest(rayFrom,rayTo,resultCallback);
+
+			if (resultCallback.hasHit())
+			{
+				cerr << endl << "ray hit something" << endl << endl;
+				btRigidBody* body = btRigidBody::upcast(resultCallback.m_collisionObject);
+				if (body)
+				{
+					Food* f = static_cast<Food*>(body->getUserPointer());
+					if ( f )
+					{
+						if ( f->type == 1 )
+						{
+							cerr << endl << "hit food " << endl << endl;
+							f->color[0] = 1.0f;
+							f->color[1] = 1.0f;
+							f->color[2] = 1.0f;
+						}
+						else if ( f->type == 0 )
+						{
+							cerr << endl << "hit critter " << endl << endl;
+							f->color[0] = 1.0f;
+							f->color[1] = 1.0f;
+							f->color[2] = 1.0f;
+						}
+					}
+				}
+			}
+}
+
 void WorldB::process()
 {
 	// Autosave Critters?
@@ -341,54 +390,6 @@ void WorldB::process()
 		// RayCast Test
 // 		if ( 0 == 0 )
 // 		{
-// 			unsigned int totalp = walls.size()+food.size();
-// 			for( unsigned int j=0; j < lmax; j++)
-// 			{
-// 				for( unsigned int k=0; k < critters[j]->body->bodyparts.size(); k++)
-// 				{
-// 					totalp++;
-// 				}
-// 			}
-// 
-// 			btConvexCast::CastResult rayResult;
-// 			btSphereShape pointShape(0.0f);
-// 			btTransform rayFromTrans; rayFromTrans.setIdentity();
-// 			btTransform rayToTrans; rayToTrans.setIdentity();
-// 
-// 			btScalar position[16];
-// 			btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body->mouths[0]->body->getMotionState();
-// 			myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
-// 
-// 			rayFromTrans.setFromOpenGLMatrix(position);
-// 			rayToTrans = rayToTrans*rayToTrans;
-// 
-// 			btVector3 rayFrom = myMotionState->m_graphicsWorldTrans.getOrigin();
-// 			btVector3 rayTo = rayToTrans.getOrigin();
-// 
-// 			btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);
-// 			m_dynamicsWorld->rayTest(rayFrom,rayTo,resultCallback);
-// 
-// 			if (resultCallback.hasHit())
-// 			{
-// 
-// 				btRigidBody* body = btRigidBody::upcast(resultCallback.m_collisionObject);
-// 				if (body)
-// 				{
-// 					Food* f = static_cast<Food*>(body->getUserPointer());
-// 					if ( f )
-// 					{
-// 						if ( f->type == 1 )
-// 						{
-// 							c->touchingFood = true;
-// 							c->touchedFoodID = f;
-// 
-// 							cerr << ".";
-// //							cerr << c << " collides with food: " << Collidingobject << endl;
-// 							f->color[0] = 1.0f;
-// 						}
-// 					}
-// 				}
-// 			}
 // 
 // 		}
 		

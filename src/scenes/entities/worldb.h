@@ -66,7 +66,7 @@ class WorldB
 		void			loadAllCritters();
 
 		void			killHalfOfCritters();
-		
+		void			castRay(Vector3f drayFrom, btVector3 direction);
 		float			autosaveCounter;
 
 	private:
