@@ -45,7 +45,11 @@ void GLScene::handlemousebuttonReleased(int x, int y, const int&)
 {
 }
 
-void GLScene::handleMouseMotion(int x, int y)
+void GLScene::handleMouseMotionRel(int x, int y)
+{
+}
+
+void GLScene::handleMouseMotionAbs(int x, int y)
 {
 }
 

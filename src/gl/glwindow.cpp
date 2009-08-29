@@ -81,7 +81,10 @@ void GLWindow::runGLScene(GLScene* glscene)
 			}
 
 			else if(event.type == SDL_MOUSEMOTION)
-				glscene->handleMouseMotion( event.motion.xrel, event.motion.yrel );
+			{
+				glscene->handleMouseMotionRel( event.motion.xrel, event.motion.yrel );
+				glscene->handleMouseMotionAbs( event.motion.x, event.motion.y );
+			}
 		}
 
 		glscene->draw();

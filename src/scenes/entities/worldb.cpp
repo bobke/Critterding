@@ -1,7 +1,7 @@
-#include <BulletCollision/NarrowPhaseCollision/btConvexCast.h>
 #include "worldb.h"
-/*extern int gNumClampedCcdMotions;*/
-// FIXME PUT C/H IN CRITTER FILENAME
+
+// FIXME remove the pickingconstraint connected to a critter when it dies
+
 WorldB::WorldB()
 {
 	// settings and pointers
@@ -56,6 +56,7 @@ WorldB::WorldB()
 		float WallHalfWidth = WallWidth/2.0f;
 		float WallHeight = 2.0f;
 		float WallHalfHeight = WallHeight/2.0f;
+		mousePickClamping = 30.f;
 	
 	// Ground Floor
 		btVector3 position( settings->getCVar("worldsizeX")/2.0f, -WallHalfWidth, settings->getCVar("worldsizeY")/2.0f );
@@ -86,6 +87,13 @@ WorldB::WorldB()
 		w = new Wall( settings->getCVar("worldsizeX")+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
 		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 		walls.push_back(w);
+
+		// picking
+		gPickingConstraintId = 0;
+		gHitPos = btVector3(-1,-1,-1);
+		gOldPickingDist  = 0.f;
+		pickedBody = 0;//for deactivation state
+		m_pickConstraint = 0;
 
 /*	// clientResetScene
 	gNumClampedCcdMotions = 0;
@@ -161,56 +169,91 @@ WorldB::WorldB()
 
 void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
 {
-/*			unsigned int totalp = walls.size()+food.size();
-			for( unsigned int j=0; j < critters.size(); j++)
-			{
-				for( unsigned int k=0; k < critters[j]->body->bodyparts.size(); k++)
-				{
-					totalp++;
-				}
-			}
-*/
-
-			btVector3 rayFrom = btVector3( -drayFrom.x, -drayFrom.y, -drayFrom.z );
-			btVector3 rayTo = btVector3( direction.getX(), -direction.getY(), -direction.getZ() );
+	btVector3 rayFrom = btVector3( -drayFrom.x, -drayFrom.y, -drayFrom.z );
+	btVector3 rayTo = btVector3( direction.getX(), -direction.getY(), -direction.getZ() );
 
 // 			cerr << "origin   : " << rayFrom.getX() << " - " << rayFrom.getY() << " - " << rayFrom.getZ() << endl;
 // 			cerr << "direction: " << rayTo.getX() <<   " - " << rayTo.getY() <<   " - " << rayTo.getZ() << endl;
 
-			btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);
-			m_dynamicsWorld->rayTest(rayFrom,rayTo,resultCallback);
+	btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);
+	m_dynamicsWorld->rayTest(rayFrom,rayTo,resultCallback);
 
-			if (resultCallback.hasHit())
-			{
+	if (resultCallback.hasHit())
+	{
 // 				cerr << endl << "ray hit something" << endl << endl;
-				btRigidBody* body = btRigidBody::upcast(resultCallback.m_collisionObject);
-				if (body)
-				{
-					Food* f = static_cast<Food*>(body->getUserPointer());
-					if ( f )
-					{
-						if ( f->type == 1 )
-						{
-							cerr << endl << "hit food " << endl << endl;
-							f->color[0] = 1.0f;
-							f->color[1] = 1.0f;
-							f->color[2] = 1.0f;
-						}
-						else
-						{
-							CritterB* b = static_cast<CritterB*>(body->getUserPointer());
-							if ( b->type == 0 )
-							{
-								cerr << endl << "hit critter " << endl << endl;
-								b->color[0] = 1.0f;
-								b->color[1] = 1.0f;
-								b->color[2] = 1.0f;
-							}
-						}
-					}
-				}
+		btRigidBody* body = btRigidBody::upcast(resultCallback.m_collisionObject);
+		if (body)
+		{
+			//other exclusions?
+			if (!(body->isStaticObject() || body->isKinematicObject()))
+			{
+				pickedBody = body;
+				pickedBody->setActivationState(DISABLE_DEACTIVATION);
+
+
+				btVector3 pickPos = resultCallback.m_hitPointWorld;
+				printf("pickPos=%f,%f,%f\n",pickPos.getX(),pickPos.getY(),pickPos.getZ());
+
+
+				btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
+
+				btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body,localPivot);
+				p2p->m_setting.m_impulseClamp = mousePickClamping;
+
+				m_dynamicsWorld->addConstraint(p2p);
+				m_pickConstraint = p2p;
+
+				//save mouse position for dragging
+				gOldPickingPos = rayTo;
+				gHitPos = pickPos;
+
+				gOldPickingDist  = (pickPos-rayFrom).length();
+
+				//very weak constraint for picking
+				p2p->m_setting.m_tau = 0.1f;
 			}
+
+// 			Food* f = static_cast<Food*>(body->getUserPointer());
+// 			if ( f )
+// 			{
+// 				if ( f->type == 1 )
+// 				{
+// // 							cerr << endl << "hit food " << endl;
+// /*					f->color[0] = 1.0f;
+// 					f->color[1] = 1.0f;
+// 					f->color[2] = 1.0f;*/
+// 				}
+// 				else
+// 				{
+// /*					CritterB* b = static_cast<CritterB*>(body->getUserPointer());
+// 					if ( b->type == 0 )
+// 					{
+// // 								cerr << endl << "hit critter " << endl;
+// 						b->color[0] = 1.0f;
+// 						b->color[1] = 1.0f;
+// 						b->color[2] = 1.0f;
+// 					}*/
+// 				}
+// 			}
+		}
+	}
 }
+
+// FIXME remove the pickingconstraint connected to a critter when it dies
+void WorldB::releasePickingConstraint()
+{
+	if (m_pickConstraint && m_dynamicsWorld)
+	{
+		m_dynamicsWorld->removeConstraint(m_pickConstraint);
+		delete m_pickConstraint;
+		//printf("removed constraint %i",gPickingConstraintId);
+		m_pickConstraint = 0;
+		pickedBody->forceActivationState(ACTIVE_TAG);
+		pickedBody->setDeactivationTime( 0.f );
+		pickedBody = 0;
+	}
+}
+
 
 void WorldB::process()
 {
@@ -385,18 +428,6 @@ void WorldB::process()
 	{
 		CritterB *c = critters[i];
 
-		// getAngle test
-/* 		if ( i == 0 )
- 		{
-			float percentAngle = critters[0]->body->constraints[0]->getAngle();
-			cerr << percentAngle << endl;
-		}*/
-		// RayCast Test
-// 		if ( 0 == 0 )
-// 		{
-// 
-// 		}
-		
 		// set inputs to false and recheck
 			c->touchingFood = false;
 			c->touchingCritter = false;
@@ -445,29 +476,27 @@ void WorldB::process()
 									Collidingobject = object2->getUserPointer();
 
 								// Touching Food
-									Food* f = static_cast<Food*>(Collidingobject);
-									if ( f )
+								Food* f = static_cast<Food*>(Collidingobject);
+								if ( f )
+								{
+									if ( f->type == 1 )
 									{
-										if ( f->type == 1 )
-										{
-											stop = true;
-											c->touchingFood = true;
-											c->touchedFoodID = f;
-										}
-										else
-										{
-											CritterB* b = static_cast<CritterB*>(Collidingobject);
-											if ( b->type == 0 )
-											{
-												stop = true;
-												c->touchingCritter = true;
-												c->touchedCritterID = b;
-											}
-										}
+										stop = true;
+										c->touchingFood = true;
+										c->touchedFoodID = f;
 									}
 									else
 									{
+										// Touching Critter
+										CritterB* b = static_cast<CritterB*>(Collidingobject);
+										if ( b->type == 0 )
+										{
+											stop = true;
+											c->touchingCritter = true;
+											c->touchedCritterID = b;
+										}
 									}
+								}
 							}
 						}
 					}
@@ -604,12 +633,7 @@ void WorldB::insertCritter()
 
 btVector3 WorldB::findPosition()
 {
-	btVector3 pos( (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeX") ) / 100, 1.0f, (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeY") ) / 100 );
-// 	pos.x = (float)randgen->Instance()->get( 0, 100*sizeX ) / 100;
-// 	pos.y = 1.0;
-// 	pos.z = (float)randgen->Instance()->get( 0, 100*sizeY ) / 100;
-
-	return pos;
+	return btVector3( (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeX") ) / 100, 1.0f, (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeY") ) / 100 );
 }
 
 void WorldB::removeCritter(unsigned int cid)
@@ -626,24 +650,24 @@ void WorldB::removeCritter(unsigned int cid)
 
 void WorldB::killHalfOfCritters()
 {
-	unsigned int c = 0;
-	unsigned int halfc = critters.size()/2;
-	while ( c < halfc )
-	{
-		freeEnergy += critters[0]->energyLevel;
-
-		delete critters[0];
-		critters.erase(critters.begin());
-		c++;
-	}
-
-// 	for ( unsigned int c = 0; c < critters.size(); c++ )
+// 	unsigned int c = 0;
+// 	unsigned int halfc = critters.size()/2;
+// 	while ( c < halfc )
 // 	{
-// 		freeEnergy += critters[c]->energyLevel;
+// 		freeEnergy += critters[0]->energyLevel;
 // 
-// 		delete critters[c];
-// 		critters.erase(critters.begin()+c);
+// 		delete critters[0];
+// 		critters.erase(critters.begin());
+// 		c++;
 // 	}
+
+	for ( unsigned int c = 0; c < critters.size(); c++ )
+	{
+		freeEnergy += critters[c]->energyLevel;
+
+		delete critters[c];
+		critters.erase(critters.begin()+c);
+	}
 
 	// update higher retina frame positions
 	for ( unsigned int c = 0; c < critters.size(); c++ )

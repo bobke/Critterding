@@ -248,12 +248,6 @@ void Evolution::handlekeyReleased(const KeySym& key)
 	events->deactivateEvent(key);
 }
 
-void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
-{
-// 	cerr << "button " << button << " clicked at " << x << "x" << y << endl;
-	world.castRay(camera.position, getRayTo(x, y));
-}
-
 btVector3 Evolution::getRayTo(int x,int y)
 {
 	float directiondepth = 10000.f;
@@ -284,13 +278,48 @@ btVector3 Evolution::getRayTo(int x,int y)
 	return rayTo;
 }
 
-void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
+void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 {
-// 	cerr << "button " << button << " released at " << x << "x" << y << endl;
+	if ( button == 1 )
+	{
+		cerr << "button " << button << " clicked at " << x << "x" << y << endl;
+		world.castRay(camera.position, getRayTo(x, y));
+	}
 }
 
+void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
+{
+	cerr << "button " << button << " released at " << x << "x" << y << endl;
+	if ( button == 1 )
+	{
+		world.releasePickingConstraint();
+	}
+}
 
-void Evolution::handleMouseMotion(int x, int y)
+void Evolution::handleMouseMotionAbs(int x, int y)
+{
+	if (world.m_pickConstraint)
+	{
+		//move the constraint pivot
+		btPoint2PointConstraint* p2p = static_cast<btPoint2PointConstraint*>(world.m_pickConstraint);
+		if (p2p)
+		{
+			//keep it at the same picking distance
+
+			btVector3 newRayTo = getRayTo(x,y);
+			btVector3 oldPivotInB = p2p->getPivotInB();
+
+			btVector3 rayFrom = btVector3( -camera.position.x, -camera.position.y, -camera.position.z );
+			btVector3 dir = btVector3( newRayTo.getX(), -newRayTo.getY(), -newRayTo.getZ() ) - rayFrom;
+			dir.normalize();
+			dir *= world.gOldPickingDist;
+
+			p2p->setPivotB(rayFrom + dir);
+		}
+	}
+}
+
+void Evolution::handleMouseMotionRel(int x, int y)
 {
 	if ( mouselook )
 	{
