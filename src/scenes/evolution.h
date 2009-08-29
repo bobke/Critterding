@@ -46,7 +46,8 @@ class Evolution : public GLScene {
 		void handlekeyReleased(const KeySym& key);
 		void handlemousebuttonPressed(int x, int y, const int&);
 		void handlemousebuttonReleased(int x, int y, const int&);
-		void handleMouseMotion(int x, int y);
+		void handleMouseMotionRel(int x, int y);
+		void handleMouseMotionAbs(int x, int y);
 		void resetCamera();
 
 		Camera camera;

@@ -24,7 +24,8 @@ class GLScene {
 		virtual void handlemousebuttonPressed(int x, int y, const int&);
 		virtual void handlemousebuttonReleased(int x, int y, const int&);
 
-		virtual void handleMouseMotion(int x, int y);
+		virtual void handleMouseMotionRel(int x, int y);
+		virtual void handleMouseMotionAbs(int x, int y);
 
 		virtual void clean();
 };

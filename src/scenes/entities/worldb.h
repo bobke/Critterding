@@ -67,7 +67,18 @@ class WorldB
 
 		void			killHalfOfCritters();
 		void			castRay(Vector3f drayFrom, btVector3 direction);
+		void			releasePickingConstraint();
+
 		float			autosaveCounter;
+
+		// picking
+		int gPickingConstraintId;
+		btVector3 gOldPickingPos;
+		btVector3 gHitPos;
+		float gOldPickingDist;
+		btRigidBody* pickedBody;//for deactivation state
+		btScalar mousePickClamping;
+		btTypedConstraint* m_pickConstraint;
 
 	private:
 
@@ -107,6 +118,7 @@ class WorldB
 
 		const unsigned int*	food_maxlifetime;
 		const unsigned int*	food_maxenergy;
+
 };
 
 #endif
