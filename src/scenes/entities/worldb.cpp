@@ -174,15 +174,15 @@ void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
 			btVector3 rayFrom = btVector3( -drayFrom.x, -drayFrom.y, -drayFrom.z );
 			btVector3 rayTo = btVector3( direction.getX(), -direction.getY(), -direction.getZ() );
 
-			cerr << "origin   : " << rayFrom.getX() << " - " << rayFrom.getY() << " - " << rayFrom.getZ() << endl;
-			cerr << "direction: " << rayTo.getX() <<   " - " << rayTo.getY() <<   " - " << rayTo.getZ() << endl;
+// 			cerr << "origin   : " << rayFrom.getX() << " - " << rayFrom.getY() << " - " << rayFrom.getZ() << endl;
+// 			cerr << "direction: " << rayTo.getX() <<   " - " << rayTo.getY() <<   " - " << rayTo.getZ() << endl;
 
 			btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);
 			m_dynamicsWorld->rayTest(rayFrom,rayTo,resultCallback);
 
 			if (resultCallback.hasHit())
 			{
-				cerr << endl << "ray hit something" << endl << endl;
+// 				cerr << endl << "ray hit something" << endl << endl;
 				btRigidBody* body = btRigidBody::upcast(resultCallback.m_collisionObject);
 				if (body)
 				{
@@ -196,12 +196,16 @@ void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
 							f->color[1] = 1.0f;
 							f->color[2] = 1.0f;
 						}
-						else if ( f->type == 0 )
+						else
 						{
-							cerr << endl << "hit critter " << endl << endl;
-							f->color[0] = 1.0f;
-							f->color[1] = 1.0f;
-							f->color[2] = 1.0f;
+							CritterB* b = static_cast<CritterB*>(body->getUserPointer());
+							if ( b->type == 0 )
+							{
+								cerr << endl << "hit critter " << endl << endl;
+								b->color[0] = 1.0f;
+								b->color[1] = 1.0f;
+								b->color[2] = 1.0f;
+							}
 						}
 					}
 				}
@@ -450,11 +454,15 @@ void WorldB::process()
 											c->touchingFood = true;
 											c->touchedFoodID = f;
 										}
-										else if ( f->type == 0 )
+										else
 										{
-											stop = true;
-											c->touchingCritter = true;
-											c->touchedCritterID = static_cast<CritterB*>(Collidingobject);
+											CritterB* b = static_cast<CritterB*>(Collidingobject);
+											if ( b->type == 0 )
+											{
+												stop = true;
+												c->touchingCritter = true;
+												c->touchedCritterID = b;
+											}
 										}
 									}
 									else

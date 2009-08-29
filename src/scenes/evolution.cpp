@@ -250,56 +250,43 @@ void Evolution::handlekeyReleased(const KeySym& key)
 
 void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 {
-	cerr << "button " << button << " clicked at " << x << "x" << y << endl;
-	btVector3 direction = getRayTo(x, y);
-	world.castRay(camera.position, direction);
+// 	cerr << "button " << button << " clicked at " << x << "x" << y << endl;
+	world.castRay(camera.position, getRayTo(x, y));
 }
 
 btVector3 Evolution::getRayTo(int x,int y)
 {
 	float directiondepth = 10000.f;
-	btVector3 rayFrom = btVector3( camera.position.x, camera.position.y, camera.position.z );
+	btVector3 origin = btVector3( camera.position.x, camera.position.y, camera.position.z );
 
 	float reusedX = (360.0f-camera.rotation.x) * 0.0174532925f;
 	float reusedY = (camera.rotation.y) * 0.0174532925f;
-	btVector3 rayForward = btVector3( 0.0f + sin(reusedY) * cos(reusedX),
-					  0.0f - sin(reusedX),
-					  0.0f + cos(reusedY) * cos(reusedX) );
+	
+	float sinX = sin(reusedX);
+	float sinY = sin(reusedY);
+	float cosX = cos(reusedX);
+	float cosY = cos(reusedY);
 
-	rayForward *= directiondepth;
+	btVector3 forwardRay = btVector3( sinY * cosX, -sinX, cosY * cosX ) * directiondepth;
+	btVector3 upRay = btVector3( -sinY * sinX, -cosX, -cosY * sinX );
 
-	btVector3 vertical = btVector3( 0.0f - sin(reusedY) * sin(reusedX),
-					0.0f - cos(reusedX),
-					0.0f - cos(reusedY) * sin(reusedX) );
-
-	btVector3 hor = rayForward.cross(vertical);
+	btVector3 hor = forwardRay.cross(upRay);
 	hor.normalize();
- 	vertical = hor.cross(rayForward);
-	vertical.normalize();
-
 	hor *= directiondepth;
-	vertical *= directiondepth * ((float)*settings->winHeight / *settings->winWidth);
 
-// 	if (*settings->winWidth > *settings->winHeight)
-// 	{
-// 		hor *= ((float)*settings->winWidth / *settings->winHeight);
-// 		vertical *= ((float)*settings->winHeight / *settings->winWidth);
-// 	}
-// 	else
-// 		vertical *= ((float)*settings->winHeight / *settings->winWidth);
+	upRay = hor.cross(forwardRay);
+	upRay.normalize();
+	upRay *= directiondepth * ((float)*settings->winHeight / *settings->winWidth);
 
-	cerr << ((float)*settings->winWidth / *settings->winHeight) << endl;
-	btVector3 rayToCenter = rayFrom + rayForward;
-
-	btVector3 rayTo = rayToCenter - (0.5f * hor) + (0.5f * vertical);
+	btVector3 rayTo = (origin + forwardRay) - (0.5f * hor) + (0.5f * upRay);
 	rayTo += x * (hor * (1.0f/((float)*settings->winWidth)));
-	rayTo -= y * (vertical * (1.0f/((float)*settings->winHeight)));
+	rayTo -= y * (upRay * (1.0f/((float)*settings->winHeight)));
 	return rayTo;
 }
 
 void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 {
-	cerr << "button " << button << " released at " << x << "x" << y << endl;
+// 	cerr << "button " << button << " released at " << x << "x" << y << endl;
 }
 
 
@@ -462,10 +449,10 @@ void Evolution::handleEvents()
 	// Camera
 
 	if ( events->isActive("camera_moveup") )
-		camera.moveUp(0.01f);
+		camera.moveUpXZ(0.01f);
 
 	if ( events->isActive("camera_movedown") )
-		camera.moveDown(0.01f);
+		camera.moveDownXZ(0.01f);
 
 	if ( events->isActive("camera_moveforward") )
 		camera.moveForwardXZ(0.01f);
