@@ -12,9 +12,6 @@ public:
 	Camera();
 	~Camera();
 
-	// position/rotation matrix
-	btScalar positionm[16];
-
 	// Position
 	Vector3f position;
 
@@ -22,7 +19,6 @@ public:
 	Vector3f rotation;
 
 	void place();
-	void follow(Vector3f &cameraposition, float &rotation);
 	void follow(btDefaultMotionState* myMotionState) const;
 
 	void lookRight(const float& factor);
@@ -39,11 +35,14 @@ public:
 	void moveBackwardXYZ(const float& factor);
 	void moveRight(const float& factor);
 	void moveLeft(const float& factor);
-	void moveUp(const float& factor);
-	void moveDown(const float& factor);
+	void moveUpXZ(const float& factor);
+	void moveDownXZ(const float& factor);
+	void moveUpXYZ(const float& factor);
+	void moveDownXYZ(const float& factor);
 	void moveRollLeft(const float& factor);
 	void rollRight(const float& factor);
 	void rollLeft(const float& factor);
+
 private:
 	Settings *settings;
 	const unsigned int* camerasensitivity;
