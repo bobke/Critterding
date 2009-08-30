@@ -190,10 +190,8 @@ void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
 				pickedBody = body;
 				pickedBody->setActivationState(DISABLE_DEACTIVATION);
 
-
 				btVector3 pickPos = resultCallback.m_hitPointWorld;
 // 				printf("pickPos=%f,%f,%f\n",pickPos.getX(),pickPos.getY(),pickPos.getZ());
-
 
 				btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
 
@@ -259,8 +257,9 @@ void WorldB::process()
 			// reduce energy :)
 			if ( (settings->freeEnergyInfo - *food_maxenergy) / *food_maxenergy >= 0.0f )
 			{
-				settings->freeEnergyInfo -= *food_maxenergy*5;
-				freeEnergy -= *food_maxenergy*5;
+				int dec = (settings->freeEnergyInfo / settings->getCVar("food_maxenergy")) / 100;
+				settings->freeEnergyInfo -= dec * settings->getCVar("food_maxenergy");
+				freeEnergy -= dec * settings->getCVar("food_maxenergy");
 			}
 		}
 
