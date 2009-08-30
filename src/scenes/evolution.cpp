@@ -3,7 +3,6 @@
 Evolution::Evolution()
 {
 	settings = Settings::Instance();
-	camerasensitivity = settings->getCVarPtr("camerasensitivity");
 
 	events = Events::Instance();
 
@@ -250,11 +249,13 @@ void Evolution::handlekeyReleased(const KeySym& key)
 
 void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 {
-	if ( button == 1 )
+//	cerr << "button " << button << " clicked at " << x << "x" << y << endl;
+	if ( !mouselook )
 	{
-// 		cerr << "button " << button << " clicked at " << x << "x" << y << endl;
-		world.pickBody( x, y );
-// 		world.pickBody(world.camera.position, getRayTo(x, y));
+		if ( button == 1 )
+		{
+			world.pickBody( x, y );
+		}
 	}
 }
 
@@ -277,14 +278,14 @@ void Evolution::handleMouseMotionRel(int x, int y)
 	if ( mouselook )
 	{
 		if ( x > 0 )
-			world.camera.lookRight( (float)x/2000 * *camerasensitivity );
+			world.camera.lookRight( (float)x/100 );
 		else if ( x != 0 )
-			world.camera.lookLeft( (float)x/-2000 * *camerasensitivity );
+			world.camera.lookLeft( (float)x/-100 );
 
 		if ( y > 0 )
-			world.camera.lookDown( (float)y/2000 * *camerasensitivity );
+			world.camera.lookDown( (float)y/100 );
 		else if ( y != 0 )
-			world.camera.lookUp( (float)y/-2000 * *camerasensitivity );
+			world.camera.lookUp( (float)y/-100 );
 	}
 }
 
