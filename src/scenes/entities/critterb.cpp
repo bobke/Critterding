@@ -25,6 +25,7 @@ void CritterB::initConst()
 	components		= 4;
 	colorTrim		= 0.15f;
 
+	isPicked		= false;
 }
 
 CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVector3& startPos, unsigned char* retinap)
