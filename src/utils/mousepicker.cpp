@@ -16,14 +16,13 @@ void Mousepicker::attach( btRigidBody* pickBody, const btVector3& attachPosition
 
 	btVector3 localPivot = pickedBody->getCenterOfMassTransform().inverse() * attachPosition;
 
+	// create constraint and add it to bulletworld
 	constraint = new btPoint2PointConstraint(*pickedBody,localPivot);
 	constraint->m_setting.m_impulseClamp = 30.f;
-
+	constraint->m_setting.m_tau = 0.1f;
 	btDynWorld->addConstraint(constraint);
 
 	oldPickingDist = (attachPosition - rayFrom).length();
-
-	constraint->m_setting.m_tau = 0.1f;
 }
 
 void Mousepicker::detach()
@@ -35,7 +34,7 @@ void Mousepicker::detach()
 		btDynWorld->removeConstraint(constraint);
 		delete constraint;
 		pickedBody->forceActivationState(ACTIVE_TAG);
-		pickedBody->setDeactivationTime( 0.0f );
+		pickedBody->setDeactivationTime( 0.001 );
 
 		// set the object that was picked back to false
 		*pickedBool = false;
