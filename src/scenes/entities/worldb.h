@@ -79,6 +79,7 @@ class WorldB
 		btRigidBody* pickedBody;//for deactivation state
 		btScalar mousePickClamping;
 		btTypedConstraint* m_pickConstraint;
+		bool* pickedBool;
 
 	private:
 

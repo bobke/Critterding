@@ -192,7 +192,7 @@ void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
 
 
 				btVector3 pickPos = resultCallback.m_hitPointWorld;
-				printf("pickPos=%f,%f,%f\n",pickPos.getX(),pickPos.getY(),pickPos.getZ());
+// 				printf("pickPos=%f,%f,%f\n",pickPos.getX(),pickPos.getY(),pickPos.getZ());
 
 
 				btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
@@ -217,25 +217,14 @@ void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
 			if ( f )
 			{
 				if ( f->type == 1 )
-				{
-					f->isPicked = true;
-// 							cerr << endl << "hit food " << endl;
-/*					f->color[0] = 1.0f;
-					f->color[1] = 1.0f;
-					f->color[2] = 1.0f;*/
-				}
+					pickedBool = &f->isPicked;
 				else
 				{
 					CritterB* b = static_cast<CritterB*>(body->getUserPointer());
 					if ( b->type == 0 )
-					{
-						b->isPicked = true;
-// 								cerr << endl << "hit critter " << endl;
-/*						b->color[0] = 1.0f;
-						b->color[1] = 1.0f;
-						b->color[2] = 1.0f;*/
-					}
+						pickedBool = &b->isPicked;
 				}
+				*pickedBool = true;
 			}
 		}
 	}
@@ -254,11 +243,8 @@ void WorldB::releasePickingConstraint()
 		pickedBody->setDeactivationTime( 0.f );
 		pickedBody = 0;
 
-		// FIXME this hack is way too slow
-		for ( unsigned int i=0; i < critters.size(); i++ )
-			critters[i]->isPicked = false;
-		for ( unsigned int i=0; i < food.size(); i++ )
-			food[i]->isPicked = false;
+		// set the object that was picked back to false
+		*pickedBool = false;
 	}
 }
 

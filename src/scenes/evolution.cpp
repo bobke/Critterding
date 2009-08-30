@@ -282,14 +282,14 @@ void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 {
 	if ( button == 1 )
 	{
-		cerr << "button " << button << " clicked at " << x << "x" << y << endl;
+// 		cerr << "button " << button << " clicked at " << x << "x" << y << endl;
 		world.castRay(camera.position, getRayTo(x, y));
 	}
 }
 
 void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 {
-	cerr << "button " << button << " released at " << x << "x" << y << endl;
+// 	cerr << "button " << button << " released at " << x << "x" << y << endl;
 	if ( button == 1 )
 	{
 		world.releasePickingConstraint();
