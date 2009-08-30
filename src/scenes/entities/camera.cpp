@@ -173,6 +173,41 @@ void Camera::lookDown(const float& factor)
 	if ( rotation.x > 360.0f ) rotation.x -= 360.0f;
 }
 
+btVector3 Camera::getScreenClickDirection(const int& x, const int& y)
+{
+	float directiondepth = 1000000.f;
+	btVector3 origin = position;
+
+	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
+	float reusedY = (rotation.y) * 0.0174532925f;
+	
+	float sinX = sin(reusedX);
+	float sinY = sin(reusedY);
+	float cosX = cos(reusedX);
+	float cosY = cos(reusedY);
+
+	btVector3 forwardRay = btVector3( sinY * cosX, -sinX, cosY * cosX ) * directiondepth;
+	btVector3 upRay = btVector3( -sinY * sinX, -cosX, -cosY * sinX );
+
+	btVector3 hor = forwardRay.cross(upRay);
+	hor.normalize();
+	hor *= directiondepth;
+
+	upRay = hor.cross(forwardRay);
+	upRay.normalize();
+	upRay *= directiondepth * ((float)*settings->winHeight / *settings->winWidth);
+
+	btVector3 rayTo = (origin + forwardRay) - (0.5f * hor) + (0.5f * upRay);
+	rayTo += x * (hor * (1.0f/((float)*settings->winWidth)));
+	rayTo -= y * (upRay * (1.0f/((float)*settings->winHeight)));
+
+	// FIXME
+	rayTo.setY(-rayTo.getY());
+	rayTo.setZ(-rayTo.getZ());
+
+	return rayTo;
+}
+
 Camera::~Camera()
 {
 }

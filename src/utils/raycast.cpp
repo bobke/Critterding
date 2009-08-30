@@ -8,17 +8,20 @@ Raycast::Raycast(btDynamicsWorld* btWorld)
 castResult Raycast::cast(const btVector3& rayFrom, const btVector3& rayTo)
 {
 	castResult result;
+	result.hit = false;
+
 	btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);
 	btDynWorld->rayTest(rayFrom,rayTo,resultCallback);
 
 	if (resultCallback.hasHit())
 	{
-		result.hit = true;
 		result.hitBody = btRigidBody::upcast(resultCallback.m_collisionObject);
-		result.hitPosition = resultCallback.m_hitPointWorld;
+		if ( result.hitBody )
+		{
+			result.hit = true;
+			result.hitPosition = resultCallback.m_hitPointWorld;
+		}
 	}
-	else
-		result.hit = false;
 
 	return result;
 }

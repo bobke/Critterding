@@ -13,7 +13,7 @@
 #include "../utils/textmessage.h"
 #include "../utils/textverbosemessage.h"
 #include "../utils/events.h"
-#include "entities/camera.h"
+// #include "entities/camera.h"
 #include "entities/worldb.h"
 
 #include <sstream>
@@ -48,10 +48,8 @@ class Evolution : public GLScene {
 		void handlemousebuttonReleased(int x, int y, const int&);
 		void handleMouseMotionRel(int x, int y);
 		void handleMouseMotionAbs(int x, int y);
-		void resetCamera();
 
-		Camera camera;
-
+// 		Camera camera;
 		WorldB world;
 
 	private:
@@ -69,7 +67,6 @@ class Evolution : public GLScene {
 		// events
 // 		float		elapsed;
 		void		handleEvents();
-		btVector3	getRayTo(int x,int y);
 
 		const unsigned int*	camerasensitivity;
 };

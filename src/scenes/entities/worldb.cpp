@@ -93,12 +93,8 @@ WorldB::WorldB()
 		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 		walls.push_back(w);
 
-		// picking
-// 		gPickingConstraintId = 0;
-// 		gHitPos = btVector3(-1,-1,-1);
-// 		gOldPickingDist  = 0.f;
-// 		pickedBody = 0;//for deactivation state
-// 		m_pickConstraint = 0;
+	// reset cam
+		resetCamera();
 
 /*	// clientResetScene
 	gNumClampedCcdMotions = 0;
@@ -165,36 +161,39 @@ WorldB::WorldB()
 	
 }
 
-void WorldB::pickBody(const btVector3& drayFrom, const btVector3& direction)
+void WorldB::pickBody(const int& x, const int& y)
 {
-	btVector3 rayFrom = -drayFrom;
-	btVector3 rayTo = btVector3( direction.getX(), -direction.getY(), -direction.getZ() );
+	btVector3 rayFrom = -camera.position;
+	btVector3 rayTo = camera.getScreenClickDirection(x, y);
+
 	castResult r = raycast->cast( rayFrom, rayTo );
 	
 	if ( r.hit )
 	{
-		if ( r.hitBody )
+		if ( !( r.hitBody->isStaticObject() || r.hitBody->isKinematicObject() ) )
 		{
-			if ( !( r.hitBody->isStaticObject() || r.hitBody->isKinematicObject() ) )
-			{
-				mousepicker->attach( r.hitBody, r.hitPosition, rayFrom, rayTo );
-			}
+			mousepicker->attach( r.hitBody, r.hitPosition, rayFrom, rayTo );
+		}
 
-			Food* f = static_cast<Food*>(r.hitBody->getUserPointer());
-			if ( f )
+		Food* f = static_cast<Food*>(r.hitBody->getUserPointer());
+		if ( f )
+		{
+			if ( f->type == 1 )
+				mousepicker->pickedBool = &f->isPicked;
+			else
 			{
-				if ( f->type == 1 )
-					mousepicker->pickedBool = &f->isPicked;
-				else
-				{
-					CritterB* b = static_cast<CritterB*>(r.hitBody->getUserPointer());
-					if ( b->type == 0 )
-						mousepicker->pickedBool = &b->isPicked;
-				}
-				*mousepicker->pickedBool = true;
+				CritterB* b = static_cast<CritterB*>(r.hitBody->getUserPointer());
+				if ( b->type == 0 )
+					mousepicker->pickedBool = &b->isPicked;
 			}
+			*mousepicker->pickedBool = true;
 		}
 	}
+}
+
+void WorldB::movePickedBody(const int& x, const int& y)
+{
+	mousepicker->moveTo( camera.position, camera.getScreenClickDirection(x,y) );
 }
 
 void WorldB::process()
@@ -829,6 +828,16 @@ void WorldB::createDirs()
 
 	if ( !dirH.exists(progdir) ) dirH.make(progdir);
 	if ( !dirH.exists(loaddir) ) dirH.make(loaddir);
+}
+
+void WorldB::resetCamera()
+{
+	unsigned int biggest = settings->getCVar("worldsizeX");
+	if ( settings->getCVar("worldsizeY") > biggest )
+		biggest = 1.4f*settings->getCVar("worldsizeY");
+
+	camera.position = btVector3( -0.5f*settings->getCVar("worldsizeX"), -1.1f*biggest, -0.5f*settings->getCVar("worldsizeY"));
+	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
 }
 
 WorldB::~WorldB()

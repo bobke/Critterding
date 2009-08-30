@@ -43,6 +43,7 @@ public:
 	void rollRight(const float& factor);
 	void rollLeft(const float& factor);
 
+	btVector3 getScreenClickDirection(const int& x, const int& y);
 private:
 	Settings *settings;
 	const unsigned int* camerasensitivity;

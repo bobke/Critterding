@@ -102,7 +102,7 @@ void Evolution::draw()
 // 				world.critters[5]->printVision();
 // 			}
 
-		camera.place();
+		world.camera.place();
 		world.drawWithGrid();
 
 
@@ -223,7 +223,7 @@ void Evolution::handlekeyPressed(const KeySym& key)
 			break;
 
 		case SDLK_BACKSPACE:
-			resetCamera();
+			world.resetCamera();
 			break;
 
 		case SDLK_c:
@@ -248,42 +248,13 @@ void Evolution::handlekeyReleased(const KeySym& key)
 	events->deactivateEvent(key);
 }
 
-btVector3 Evolution::getRayTo(int x,int y)
-{
-	float directiondepth = 1000000.f;
-	btVector3 origin = camera.position;
-
-	float reusedX = (360.0f-camera.rotation.x) * 0.0174532925f;
-	float reusedY = (camera.rotation.y) * 0.0174532925f;
-	
-	float sinX = sin(reusedX);
-	float sinY = sin(reusedY);
-	float cosX = cos(reusedX);
-	float cosY = cos(reusedY);
-
-	btVector3 forwardRay = btVector3( sinY * cosX, -sinX, cosY * cosX ) * directiondepth;
-	btVector3 upRay = btVector3( -sinY * sinX, -cosX, -cosY * sinX );
-
-	btVector3 hor = forwardRay.cross(upRay);
-	hor.normalize();
-	hor *= directiondepth;
-
-	upRay = hor.cross(forwardRay);
-	upRay.normalize();
-	upRay *= directiondepth * ((float)*settings->winHeight / *settings->winWidth);
-
-	btVector3 rayTo = (origin + forwardRay) - (0.5f * hor) + (0.5f * upRay);
-	rayTo += x * (hor * (1.0f/((float)*settings->winWidth)));
-	rayTo -= y * (upRay * (1.0f/((float)*settings->winHeight)));
-	return rayTo;
-}
-
 void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 {
 	if ( button == 1 )
 	{
 // 		cerr << "button " << button << " clicked at " << x << "x" << y << endl;
-		world.pickBody(camera.position, getRayTo(x, y));
+		world.pickBody( x, y );
+// 		world.pickBody(world.camera.position, getRayTo(x, y));
 	}
 }
 
@@ -298,25 +269,7 @@ void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 
 void Evolution::handleMouseMotionAbs(int x, int y)
 {
-	if (world.mousepicker->m_pickConstraint)
-	{
-		//move the constraint pivot
-		btPoint2PointConstraint* p2p = static_cast<btPoint2PointConstraint*>(world.mousepicker->m_pickConstraint);
-		if (p2p)
-		{
-			//keep it at the same picking distance
-
-			btVector3 newRayTo = getRayTo(x,y);
-			btVector3 oldPivotInB = p2p->getPivotInB();
-
-			btVector3 rayFrom = -camera.position;
-			btVector3 dir = btVector3( newRayTo.getX(), -newRayTo.getY(), -newRayTo.getZ() ) - rayFrom;
-			dir.normalize();
-			dir *= world.mousepicker->gOldPickingDist;
-
-			p2p->setPivotB(rayFrom + dir);
-		}
-	}
+	world.movePickedBody(x, y);
 }
 
 void Evolution::handleMouseMotionRel(int x, int y)
@@ -324,14 +277,14 @@ void Evolution::handleMouseMotionRel(int x, int y)
 	if ( mouselook )
 	{
 		if ( x > 0 )
-			camera.lookRight( (float)x/2000 * *camerasensitivity );
+			world.camera.lookRight( (float)x/2000 * *camerasensitivity );
 		else if ( x != 0 )
-			camera.lookLeft( (float)x/-2000 * *camerasensitivity );
+			world.camera.lookLeft( (float)x/-2000 * *camerasensitivity );
 
 		if ( y > 0 )
-			camera.lookDown( (float)y/2000 * *camerasensitivity );
+			world.camera.lookDown( (float)y/2000 * *camerasensitivity );
 		else if ( y != 0 )
-			camera.lookUp( (float)y/-2000 * *camerasensitivity );
+			world.camera.lookUp( (float)y/-2000 * *camerasensitivity );
 	}
 }
 
@@ -478,47 +431,34 @@ void Evolution::handleEvents()
 	// Camera
 
 	if ( events->isActive("camera_moveup") )
-		camera.moveUpXZ(0.01f);
+		world.camera.moveUpXZ(0.01f);
 
 	if ( events->isActive("camera_movedown") )
-		camera.moveDownXZ(0.01f);
+		world.camera.moveDownXZ(0.01f);
 
 	if ( events->isActive("camera_moveforward") )
-		camera.moveForwardXZ(0.01f);
+		world.camera.moveForwardXZ(0.01f);
 
 	if ( events->isActive("camera_movebackward") )
-		camera.moveBackwardXZ(0.01f);
+		world.camera.moveBackwardXZ(0.01f);
 
 	if ( events->isActive("camera_moveleft") )
-		camera.moveLeft(0.01f);
+		world.camera.moveLeft(0.01f);
 
 	if ( events->isActive("camera_moveright") )
-		camera.moveRight(0.01f);
+		world.camera.moveRight(0.01f);
 
 	if ( events->isActive("camera_lookup") )
-		camera.lookUp(0.05f);
+		world.camera.lookUp(0.05f);
 
 	if ( events->isActive("camera_lookdown") )
-		camera.lookDown(0.05f);
+		world.camera.lookDown(0.05f);
 
 	if ( events->isActive("camera_lookleft") )
-		camera.lookLeft(0.05f);
+		world.camera.lookLeft(0.05f);
 
 	if ( events->isActive("camera_lookright") )
-		camera.lookRight(0.05f);
-}
-
-void Evolution::resetCamera()
-{
-	unsigned int biggest = settings->getCVar("worldsizeX");
-	if ( settings->getCVar("worldsizeY") > biggest )
-		biggest = 1.4f*settings->getCVar("worldsizeY");
-
-// 	camera.position = Vector3f(-0.5f*settings->worldsizeX, -1.1f*biggest, -0.87*settings->worldsizeY);
-// 	camera.rotation = Vector3f( 70.0f,  0.0f, 0.0f);
-
-	camera.position = btVector3( -0.5f*settings->getCVar("worldsizeX"), -1.1f*biggest, -0.5f*settings->getCVar("worldsizeY"));
-	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
+		world.camera.lookRight(0.05f);
 }
 
 Evolution::~Evolution()
