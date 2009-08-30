@@ -283,7 +283,7 @@ void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 	if ( button == 1 )
 	{
 // 		cerr << "button " << button << " clicked at " << x << "x" << y << endl;
-		world.castRay(camera.position, getRayTo(x, y));
+		world.pickBody(camera.position, getRayTo(x, y));
 	}
 }
 
@@ -292,16 +292,16 @@ void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 // 	cerr << "button " << button << " released at " << x << "x" << y << endl;
 	if ( button == 1 )
 	{
-		world.releasePickingConstraint();
+		world.mousepicker->detach();
 	}
 }
 
 void Evolution::handleMouseMotionAbs(int x, int y)
 {
-	if (world.m_pickConstraint)
+	if (world.mousepicker->m_pickConstraint)
 	{
 		//move the constraint pivot
-		btPoint2PointConstraint* p2p = static_cast<btPoint2PointConstraint*>(world.m_pickConstraint);
+		btPoint2PointConstraint* p2p = static_cast<btPoint2PointConstraint*>(world.mousepicker->m_pickConstraint);
 		if (p2p)
 		{
 			//keep it at the same picking distance
@@ -312,7 +312,7 @@ void Evolution::handleMouseMotionAbs(int x, int y)
 			btVector3 rayFrom = -camera.position;
 			btVector3 dir = btVector3( newRayTo.getX(), -newRayTo.getY(), -newRayTo.getZ() ) - rayFrom;
 			dir.normalize();
-			dir *= world.gOldPickingDist;
+			dir *= world.mousepicker->gOldPickingDist;
 
 			p2p->setPivotB(rayFrom + dir);
 		}

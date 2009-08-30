@@ -17,6 +17,8 @@
 #include "../../utils/settings.h"
 #include "../../utils/textmessage.h"
 #include "../../utils/textverbosemessage.h"
+#include "../../utils/raycast.h"
+#include "../../utils/mousepicker.h"
 // #include "grid.h"
 // #include "floor.h"
 #include "food.h"
@@ -66,26 +68,28 @@ class WorldB
 		void			loadAllCritters();
 
 		void			killHalfOfCritters();
-		void			castRay(const btVector3& drayFrom, const btVector3& direction);
-		void			releasePickingConstraint();
+		void			pickBody(const btVector3& drayFrom, const btVector3& direction);
 
 		float			autosaveCounter;
 
-		// picking
-		int gPickingConstraintId;
-		btVector3 gOldPickingPos;
-		btVector3 gHitPos;
-		float gOldPickingDist;
-		btRigidBody* pickedBody;//for deactivation state
-		btScalar mousePickClamping;
-		btTypedConstraint* m_pickConstraint;
-		bool* pickedBool;
+// 		// picking
+// 		int gPickingConstraintId;
+// 		btVector3 gOldPickingPos;
+// 		btVector3 gHitPos;
+// 		float gOldPickingDist;
+// 		btRigidBody* pickedBody;//for deactivation state
+// 
+// 		btScalar mousePickClamping;
+// 		btTypedConstraint* m_pickConstraint;
+// 		bool* pickedBool;
 
+		Mousepicker*		mousepicker;
 	private:
 
-		Settings		*settings;
-		RandGen			*randgen;
-		Parser			*parseH;
+		Settings*		settings;
+		RandGen*		randgen;
+		Parser*			parseH;
+		Raycast*		raycast;
 		Dir			dirH;
 		File			fileH;
 
