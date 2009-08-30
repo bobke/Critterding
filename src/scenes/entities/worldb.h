@@ -34,7 +34,7 @@ class WorldB
 {
 	public:
 		WorldB();
-		~WorldB();
+		virtual ~WorldB();
 
 		Camera camera;
 		void resetCamera();
