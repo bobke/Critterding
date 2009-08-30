@@ -494,7 +494,7 @@ void Body::mutate(unsigned int runs)
 					for ( int i = 0; i < (int)archConstraints.size(); i++ )
 					{
 						archConstraint* co = &archConstraints[i];
-						if ( findBodypart( co->id_1 ) == bp->id )
+						if ( findBodypart( co->id_1 ) == (int)bp->id )
 						{
 							if ( co->XYZ == 0 ) // X
 								co->pos_x_1 = (bp->x / 1000.0f) * co->sign * 1.5f;
@@ -503,7 +503,7 @@ void Body::mutate(unsigned int runs)
 							else if ( co->XYZ == 2 ) // Z
 								co->pos_z_1 = (bp->z / 1000.0f) * co->sign * 1.5f;
 						}
-						else if ( !co->isMouthConstraint && findBodypart( co->id_2 ) == bp->id )
+						else if ( !co->isMouthConstraint && findBodypart( co->id_2 ) == (int)bp->id )
 						{
 							int othersign = -1 * co->sign;
 							if ( co->XYZ == 0 ) // X
