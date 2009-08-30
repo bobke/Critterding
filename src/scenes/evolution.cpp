@@ -74,23 +74,21 @@ void Evolution::draw()
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
 		glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
-	// 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 		glEnable(GL_COLOR_MATERIAL);
-
-
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-	// 		glHint(GL_FOG_HINT, GL_FASTEST);
-		glShadeModel(GL_FLAT);
-	// 		glShadeModel(GL_SMOOTH);
-		glEnable(GL_DEPTH_TEST);
-	// 		glDisable (GL_LIGHTING);
-	// 		glDisable(GL_COLOR_MATERIAL);
-	// 		glDisable(GL_DITHER);
-		glDisable(GL_POLYGON_SMOOTH);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
+
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+// 		glHint(GL_FOG_HINT, GL_FASTEST);
+
+		glShadeModel(GL_FLAT);
+// 		glShadeModel(GL_SMOOTH);
+
+		glDisable(GL_DITHER);
+		glDisable(GL_POLYGON_SMOOTH);
 
 		world.process();
 
@@ -106,8 +104,11 @@ void Evolution::draw()
 
 
 	// 2D
+		glDisable(GL_DEPTH_TEST);
 		glDisable (GL_LIGHTING);
 		glDisable(GL_LIGHT0);
+		glDisable(GL_COLOR_MATERIAL);
+// 		glDisable(GL_DITHER);
 		glDisable(GL_CULL_FACE);
 
 		glPushMatrix();
@@ -117,20 +118,13 @@ void Evolution::draw()
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		glDisable(GL_DEPTH_TEST);
-
 			infobar.draw();
-
 			infostats.draw(infobar.height());
-
 			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height());
-
 			helpinfo.draw();
-
 			Textmessage::Instance()->draw();
 
 		glPopMatrix();
-		
 
 	SDL_GL_SwapBuffers();		
 
@@ -144,10 +138,7 @@ void Evolution::draw()
 void Evolution::handlekeyPressed(const KeySym& key)
 {
 	if ( pause && key != XK_p )
-	{
-		//usleep(10000);
 		return;
-	}
 
 	switch (key)
 	{
