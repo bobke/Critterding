@@ -45,6 +45,12 @@ WorldB::WorldB()
 
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 
+	// raycast
+	raycast = new Raycast(m_dynamicsWorld);
+
+	// mousepicker
+	mousepicker = new Mousepicker(m_dynamicsWorld);
+
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawWireframe|btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints);
@@ -56,7 +62,6 @@ WorldB::WorldB()
 		float WallHalfWidth = WallWidth/2.0f;
 		float WallHeight = 2.0f;
 		float WallHalfHeight = WallHeight/2.0f;
-		mousePickClamping = 30.f;
 	
 	// Ground Floor
 		btVector3 position( settings->getCVar("worldsizeX")/2.0f, -WallHalfWidth, settings->getCVar("worldsizeY")/2.0f );
@@ -89,11 +94,11 @@ WorldB::WorldB()
 		walls.push_back(w);
 
 		// picking
-		gPickingConstraintId = 0;
-		gHitPos = btVector3(-1,-1,-1);
-		gOldPickingDist  = 0.f;
-		pickedBody = 0;//for deactivation state
-		m_pickConstraint = 0;
+// 		gPickingConstraintId = 0;
+// 		gHitPos = btVector3(-1,-1,-1);
+// 		gOldPickingDist  = 0.f;
+// 		pickedBody = 0;//for deactivation state
+// 		m_pickConstraint = 0;
 
 /*	// clientResetScene
 	gNumClampedCcdMotions = 0;
@@ -160,79 +165,37 @@ WorldB::WorldB()
 	
 }
 
-void WorldB::castRay(const btVector3& drayFrom, const btVector3& direction)
+void WorldB::pickBody(const btVector3& drayFrom, const btVector3& direction)
 {
 	btVector3 rayFrom = -drayFrom;
 	btVector3 rayTo = btVector3( direction.getX(), -direction.getY(), -direction.getZ() );
-
-	btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);
-	m_dynamicsWorld->rayTest(rayFrom,rayTo,resultCallback);
-
-	if (resultCallback.hasHit())
+	castResult r = raycast->cast( rayFrom, rayTo );
+	
+	if ( r.hit )
 	{
-		btRigidBody* body = btRigidBody::upcast(resultCallback.m_collisionObject);
-		if (body)
+		if ( r.hitBody )
 		{
-			//other exclusions?
-			if (!(body->isStaticObject() || body->isKinematicObject()))
+			if ( !( r.hitBody->isStaticObject() || r.hitBody->isKinematicObject() ) )
 			{
-				pickedBody = body;
-				pickedBody->setActivationState(DISABLE_DEACTIVATION);
-
-				btVector3 pickPos = resultCallback.m_hitPointWorld;
-
-				btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
-
-				btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body,localPivot);
-				p2p->m_setting.m_impulseClamp = mousePickClamping;
-
-				m_dynamicsWorld->addConstraint(p2p);
-				m_pickConstraint = p2p;
-
-				//save mouse position for dragging
-				gOldPickingPos = rayTo;
-				gHitPos = pickPos;
-
-				gOldPickingDist  = (pickPos-rayFrom).length();
-
-				//very weak constraint for picking
-				p2p->m_setting.m_tau = 0.1f;
+				mousepicker->attach( r.hitBody, r.hitPosition, rayFrom, rayTo );
 			}
 
-			Food* f = static_cast<Food*>(body->getUserPointer());
+			Food* f = static_cast<Food*>(r.hitBody->getUserPointer());
 			if ( f )
 			{
 				if ( f->type == 1 )
-					pickedBool = &f->isPicked;
+					mousepicker->pickedBool = &f->isPicked;
 				else
 				{
-					CritterB* b = static_cast<CritterB*>(body->getUserPointer());
+					CritterB* b = static_cast<CritterB*>(r.hitBody->getUserPointer());
 					if ( b->type == 0 )
-						pickedBool = &b->isPicked;
+						mousepicker->pickedBool = &b->isPicked;
 				}
-				*pickedBool = true;
+				*mousepicker->pickedBool = true;
 			}
 		}
 	}
 }
-
-void WorldB::releasePickingConstraint()
-{
-	if (m_pickConstraint && m_dynamicsWorld)
-	{
-		m_dynamicsWorld->removeConstraint(m_pickConstraint);
-		delete m_pickConstraint;
-		//printf("removed constraint %i",gPickingConstraintId);
-		m_pickConstraint = 0;
-		pickedBody->forceActivationState(ACTIVE_TAG);
-		pickedBody->setDeactivationTime( 0.f );
-		pickedBody = 0;
-
-		// set the object that was picked back to false
-		*pickedBool = false;
-	}
-}
-
 
 void WorldB::process()
 {
@@ -257,7 +220,8 @@ void WorldB::process()
 			if ( food[i]->energyLevel <= 0 )
 			{
 				freeEnergy += food[i]->energyLevel;
-				if ( food[i]->isPicked ) releasePickingConstraint();
+				if ( food[i]->isPicked )
+					mousepicker->detach();
 				delete food[i];
 				food.erase(food.begin()+i);
 				i--;
@@ -267,7 +231,8 @@ void WorldB::process()
 			else if ( ++food[i]->totalFrames >= *food_maxlifetime )
 			{
 				freeEnergy += food[i]->energyLevel;
-				if ( food[i]->isPicked ) releasePickingConstraint();
+				if ( food[i]->isPicked )
+					mousepicker->detach();
 				delete food[i];
 				food.erase(food.begin()+i);
 				i--;
@@ -639,7 +604,8 @@ void WorldB::removeCritter(unsigned int cid)
 {
 	freeEnergy += critters[cid]->energyLevel;
 
-	if ( critters[cid]->isPicked ) releasePickingConstraint();
+	if ( critters[cid]->isPicked )
+		mousepicker->detach();
 
 	delete critters[cid];
 	critters.erase(critters.begin()+cid);
@@ -880,4 +846,7 @@ WorldB::~WorldB()
 	delete m_broadphase;
 	delete m_solver;
 	delete m_dynamicsWorld;
+	
+	delete raycast;
+	delete mousepicker;
 }
