@@ -9,7 +9,7 @@ Camera::Camera()
 	settings = Settings::Instance();
 	camerasensitivity = settings->getCVarPtr("camerasensitivity");
 
-	position	= Vector3f( 0.0f, 0.0f, 0.0f);
+	position	= btVector3( 0.0f, 0.0f, 0.0f);
 	rotation	= Vector3f( 75.0f,  0.0f, 0.0f);
 }
 
@@ -26,7 +26,7 @@ void Camera::place()
 	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
 	glRotatef(rotation.y, 0.0f, 1.0f, 0.0f);
 	glRotatef(rotation.z, 0.0f, 0.0f, 1.0f);
-	glTranslatef(position.x, position.y, position.z);
+	glTranslatef(position.getX(), position.getY(), position.getZ());
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -61,16 +61,16 @@ void Camera::moveForwardXZ(const float& factor)
 {
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x += sin(reusedY) * factor * *camerasensitivity;
-	position.z += cos(reusedY) * factor * *camerasensitivity;
+	position.setX( position.getX() + sin(reusedY) * factor * *camerasensitivity );
+	position.setZ( position.getZ() + cos(reusedY) * factor * *camerasensitivity );
 }
 
 void Camera::moveBackwardXZ(const float& factor)
 {
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x -= sin(reusedY) * factor * *camerasensitivity;
-	position.z -= cos(reusedY) * factor * *camerasensitivity;
+	position.setX( position.getX() - sin(reusedY) * factor * *camerasensitivity );
+	position.setZ( position.getZ() - cos(reusedY) * factor * *camerasensitivity );
 }
 
 void Camera::moveForwardXYZ(const float& factor)
@@ -78,9 +78,9 @@ void Camera::moveForwardXYZ(const float& factor)
 	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x += sin(reusedY) * cos(reusedX) * factor * *camerasensitivity;
-	position.y -= sin(reusedX) * factor * *camerasensitivity;
-	position.z += cos(reusedY) * cos(reusedX) * factor * *camerasensitivity;
+	position.setX( position.getX() + sin(reusedY) * cos(reusedX) * factor * *camerasensitivity );
+	position.setY( position.getY() - sin(reusedX) * factor * *camerasensitivity );
+	position.setZ( position.getZ() + cos(reusedY) * cos(reusedX) * factor * *camerasensitivity );
 }
 
 void Camera::moveBackwardXYZ(const float& factor)
@@ -88,28 +88,28 @@ void Camera::moveBackwardXYZ(const float& factor)
 	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x -= sin(reusedY) * cos(reusedX) * factor * *camerasensitivity;
-	position.y += sin(reusedX) * factor * *camerasensitivity;
-	position.z -= cos(reusedY) * cos(reusedX) * factor * *camerasensitivity;
+	position.setX( position.getX() - sin(reusedY) * cos(reusedX) * factor * *camerasensitivity );
+	position.setY( position.getY() + sin(reusedX) * factor * *camerasensitivity );
+	position.setZ( position.getZ() - cos(reusedY) * cos(reusedX) * factor * *camerasensitivity );
 }
 
 void Camera::moveRight(const float& factor)
 {
 	float reused = (90.0f-rotation.y) * 0.0174532925f;
-	position.x -= sin(reused) * factor * *camerasensitivity;
-	position.z -= cos(reused) * factor * *camerasensitivity;
+	position.setX( position.getX() - sin(reused) * factor * *camerasensitivity );
+	position.setZ( position.getZ() - cos(reused) * factor * *camerasensitivity );
 }
 
 void Camera::moveLeft(const float& factor)
 {
 	float reused = (270.0f-rotation.y) * 0.0174532925f;
-	position.x -= sin(reused) * factor * *camerasensitivity;
-	position.z -= cos(reused) * factor * *camerasensitivity;
+	position.setX( position.getX() - sin(reused) * factor * *camerasensitivity );
+	position.setZ( position.getZ() - cos(reused) * factor * *camerasensitivity );
 }
 
 void Camera::moveUpXZ(const float& factor)
 {
-	position.y -= factor * *camerasensitivity;
+	position.setY( position.getY() - factor * *camerasensitivity );
 }
 
 void Camera::moveUpXYZ(const float& factor)
@@ -117,14 +117,14 @@ void Camera::moveUpXYZ(const float& factor)
 	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x -= sin(reusedY) * sin(reusedX) * factor * *camerasensitivity;
-	position.y -= cos(reusedX) * factor * *camerasensitivity;
-	position.z -= cos(reusedY) * sin(reusedX) * factor * *camerasensitivity;
+	position.setX( position.getX() - sin(reusedY) * sin(reusedX) * factor * *camerasensitivity );
+	position.setY( position.getY() - cos(reusedX) * factor * *camerasensitivity );
+	position.setZ( position.getZ() - cos(reusedY) * sin(reusedX) * factor * *camerasensitivity );
 }
 
 void Camera::moveDownXZ(const float& factor)
 {
-	position.y += factor * *camerasensitivity;
+	position.setY( position.getY() + factor * *camerasensitivity );
 }
 
 void Camera::moveDownXYZ(const float& factor)
@@ -132,9 +132,9 @@ void Camera::moveDownXYZ(const float& factor)
 	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
 	float reusedY = (360.0f-rotation.y) * 0.0174532925f;
 
-	position.x += sin(reusedY) * sin(reusedX) * factor * *camerasensitivity;
-	position.y += cos(reusedX) * factor * *camerasensitivity;
-	position.z += cos(reusedY) * sin(reusedX) * factor * *camerasensitivity;
+	position.setX( position.getX() + sin(reusedY) * sin(reusedX) * factor * *camerasensitivity );
+	position.setY( position.getY() + cos(reusedX) * factor * *camerasensitivity );
+	position.setZ( position.getZ() + cos(reusedY) * sin(reusedX) * factor * *camerasensitivity );
 }
 
 void Camera::rollLeft(const float& factor)
