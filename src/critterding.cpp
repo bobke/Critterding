@@ -14,21 +14,10 @@ int main(int argc, char *argv[])
 	GLWindow glwindow;
 	glwindow.create("Critterding 2.01 alpha", 640, 640, 24);
 
-		Evolution* mainscene = new Evolution();
+	Evolution* mainscene = new Evolution();
 
-		// global
-// 		mainscene.world.resize(settings->worldsizeX, settings->worldsizeY);
-
-// 		settings->printSettings();
-
-// 		if (settings->autoload)
-// 			mainscene->world.loadAllCritters();
-
-		mainscene->resetCamera();
-// 		mainscene->camera.sensitivity = settings->camerasensitivity;
-
-		glwindow.runGLScene(mainscene);
-		
-		delete mainscene;
+	glwindow.runGLScene(mainscene);
+	
+	delete mainscene;
 
 }

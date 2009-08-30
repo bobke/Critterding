@@ -13,7 +13,7 @@ Settings::Settings()
 	registerCVar("worldsizeX",						16, 1, 5000);
 	registerCVar("worldsizeY",						12, 1, 5000);
 
-	registerCVar("energy",							100, 0, 1000000);
+	registerCVar("energy",							300, 0, 1000000);
 	registerCVar("mincritters",						10, 0, 1000);
 
 	registerCVar("insertcritterevery",					0, 0, 1000);

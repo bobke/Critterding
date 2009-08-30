@@ -26,6 +26,7 @@
 #include "wall.h"
 // #include "bullet.h"
 #include "critterb.h"
+#include "camera.h"
 
 using namespace std;
 
@@ -34,6 +35,9 @@ class WorldB
 	public:
 		WorldB();
 		~WorldB();
+
+		Camera camera;
+		void resetCamera();
 
 		//SpuGatheringCollisionDispatcher*	m_dispatcher;
 		btCollisionDispatcher*	m_dispatcher;
@@ -68,8 +72,8 @@ class WorldB
 		void			loadAllCritters();
 
 		void			killHalfOfCritters();
-		void			pickBody(const btVector3& drayFrom, const btVector3& direction);
-
+		void			pickBody(const int& x, const int& y);
+		void			movePickedBody(const int& x, const int& y);
 		float			autosaveCounter;
 
 // 		// picking
