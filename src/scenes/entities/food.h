@@ -31,6 +31,7 @@ class Food
 		float			energyLevel;
 		unsigned int		totalFrames;
 
+		bool			isPicked;
 	private:
 		Settings		*settings;
 };

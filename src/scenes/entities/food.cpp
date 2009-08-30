@@ -9,6 +9,7 @@ Food::Food()
 	color[2] = 0.0f;
 
 	type = 1;
+	isPicked = false;
 }
 
 void Food::draw()

@@ -213,28 +213,30 @@ void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
 				p2p->m_setting.m_tau = 0.1f;
 			}
 
-// 			Food* f = static_cast<Food*>(body->getUserPointer());
-// 			if ( f )
-// 			{
-// 				if ( f->type == 1 )
-// 				{
-// // 							cerr << endl << "hit food " << endl;
-// /*					f->color[0] = 1.0f;
-// 					f->color[1] = 1.0f;
-// 					f->color[2] = 1.0f;*/
-// 				}
-// 				else
-// 				{
-// /*					CritterB* b = static_cast<CritterB*>(body->getUserPointer());
-// 					if ( b->type == 0 )
-// 					{
-// // 								cerr << endl << "hit critter " << endl;
-// 						b->color[0] = 1.0f;
-// 						b->color[1] = 1.0f;
-// 						b->color[2] = 1.0f;
-// 					}*/
-// 				}
-// 			}
+			Food* f = static_cast<Food*>(body->getUserPointer());
+			if ( f )
+			{
+				if ( f->type == 1 )
+				{
+					f->isPicked = true;
+// 							cerr << endl << "hit food " << endl;
+/*					f->color[0] = 1.0f;
+					f->color[1] = 1.0f;
+					f->color[2] = 1.0f;*/
+				}
+				else
+				{
+					CritterB* b = static_cast<CritterB*>(body->getUserPointer());
+					if ( b->type == 0 )
+					{
+						b->isPicked = true;
+// 								cerr << endl << "hit critter " << endl;
+/*						b->color[0] = 1.0f;
+						b->color[1] = 1.0f;
+						b->color[2] = 1.0f;*/
+					}
+				}
+			}
 		}
 	}
 }
@@ -251,23 +253,18 @@ void WorldB::releasePickingConstraint()
 		pickedBody->forceActivationState(ACTIVE_TAG);
 		pickedBody->setDeactivationTime( 0.f );
 		pickedBody = 0;
+
+		// FIXME this hack is way too slow
+		for ( unsigned int i=0; i < critters.size(); i++ )
+			critters[i]->isPicked = false;
+		for ( unsigned int i=0; i < food.size(); i++ )
+			food[i]->isPicked = false;
 	}
 }
 
 
 void WorldB::process()
 {
-	// Autosave Critters?
-		if ( *critter_autosaveinterval > 0 )
-		{
-			autosaveCounter += Timer::Instance()->elapsed;
-			if ( autosaveCounter > *critter_autosaveinterval )
-			{
-				autosaveCounter = 0.0f;
-				saveAllCritters();
-			}
-		}
-
 	// kill half?
 		if ( critters.size() >= *critter_killhalfat )
 		{
@@ -288,6 +285,7 @@ void WorldB::process()
 			if ( food[i]->energyLevel <= 0 )
 			{
 				freeEnergy += food[i]->energyLevel;
+				if ( food[i]->isPicked ) releasePickingConstraint();
 				delete food[i];
 				food.erase(food.begin()+i);
 				i--;
@@ -297,6 +295,7 @@ void WorldB::process()
 			else if ( ++food[i]->totalFrames >= *food_maxlifetime )
 			{
 				freeEnergy += food[i]->energyLevel;
+				if ( food[i]->isPicked ) releasePickingConstraint();
 				delete food[i];
 				food.erase(food.begin()+i);
 				i--;
@@ -326,7 +325,35 @@ void WorldB::process()
 				removeCritter(i);
 				i--;
 			}
+			// die if y < 100
+			else
+			{
+				btDefaultMotionState* myMotionState = (btDefaultMotionState*)critters[i]->body.bodyparts[0]->body->getMotionState();
+				btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
+				
+				if ( pos.getY() < -100.0f )
+				{
+					stringstream buf;
+					buf << setw(4) << critters[i]->critterID << " went offworld";
+					Textverbosemessage::Instance()->addDeath(buf);
+
+					removeCritter(i);
+					i--;
+				}
+			}
 		}
+
+	// Autosave Critters?
+		if ( *critter_autosaveinterval > 0 )
+		{
+			autosaveCounter += Timer::Instance()->elapsed;
+			if ( autosaveCounter > *critter_autosaveinterval )
+			{
+				autosaveCounter = 0.0f;
+				saveAllCritters();
+			}
+		}
+
 
 // 		btCollisionObjectArray copyArray = m_dynamicsWorld->getCollisionObjectArray();
 // 		int numObjects = m_dynamicsWorld->getNumCollisionObjects();
@@ -639,6 +666,8 @@ btVector3 WorldB::findPosition()
 void WorldB::removeCritter(unsigned int cid)
 {
 	freeEnergy += critters[cid]->energyLevel;
+
+	if ( critters[cid]->isPicked ) releasePickingConstraint();
 
 	delete critters[cid];
 	critters.erase(critters.begin()+cid);
