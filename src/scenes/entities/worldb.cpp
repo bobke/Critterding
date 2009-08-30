@@ -160,27 +160,16 @@ WorldB::WorldB()
 	
 }
 
-// void WorldB::resize(unsigned int X, unsigned int Y)
-// {
-// 	sizeX = X;
-// 	sizeY = Y;
-// // 	grid.resize(X, Y, m_dynamicsWorld);
-// }
-
-void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
+void WorldB::castRay(const btVector3& drayFrom, const btVector3& direction)
 {
-	btVector3 rayFrom = btVector3( -drayFrom.x, -drayFrom.y, -drayFrom.z );
+	btVector3 rayFrom = -drayFrom;
 	btVector3 rayTo = btVector3( direction.getX(), -direction.getY(), -direction.getZ() );
-
-// 			cerr << "origin   : " << rayFrom.getX() << " - " << rayFrom.getY() << " - " << rayFrom.getZ() << endl;
-// 			cerr << "direction: " << rayTo.getX() <<   " - " << rayTo.getY() <<   " - " << rayTo.getZ() << endl;
 
 	btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);
 	m_dynamicsWorld->rayTest(rayFrom,rayTo,resultCallback);
 
 	if (resultCallback.hasHit())
 	{
-// 				cerr << endl << "ray hit something" << endl << endl;
 		btRigidBody* body = btRigidBody::upcast(resultCallback.m_collisionObject);
 		if (body)
 		{
@@ -191,7 +180,6 @@ void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
 				pickedBody->setActivationState(DISABLE_DEACTIVATION);
 
 				btVector3 pickPos = resultCallback.m_hitPointWorld;
-// 				printf("pickPos=%f,%f,%f\n",pickPos.getX(),pickPos.getY(),pickPos.getZ());
 
 				btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
 
@@ -228,7 +216,6 @@ void WorldB::castRay(Vector3f drayFrom, btVector3 direction)
 	}
 }
 
-// FIXME remove the pickingconstraint connected to a critter when it dies
 void WorldB::releasePickingConstraint()
 {
 	if (m_pickConstraint && m_dynamicsWorld)
@@ -257,7 +244,7 @@ void WorldB::process()
 			// reduce energy :)
 			if ( (settings->freeEnergyInfo - *food_maxenergy) / *food_maxenergy >= 0.0f )
 			{
-				int dec = (settings->freeEnergyInfo / settings->getCVar("food_maxenergy")) / 100;
+				int dec = ((settings->freeEnergyInfo / settings->getCVar("food_maxenergy")) / 100);
 				settings->freeEnergyInfo -= dec * settings->getCVar("food_maxenergy");
 				freeEnergy -= dec * settings->getCVar("food_maxenergy");
 			}

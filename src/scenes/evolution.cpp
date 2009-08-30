@@ -250,8 +250,8 @@ void Evolution::handlekeyReleased(const KeySym& key)
 
 btVector3 Evolution::getRayTo(int x,int y)
 {
-	float directiondepth = 10000.f;
-	btVector3 origin = btVector3( camera.position.x, camera.position.y, camera.position.z );
+	float directiondepth = 1000000.f;
+	btVector3 origin = camera.position;
 
 	float reusedX = (360.0f-camera.rotation.x) * 0.0174532925f;
 	float reusedY = (camera.rotation.y) * 0.0174532925f;
@@ -309,7 +309,7 @@ void Evolution::handleMouseMotionAbs(int x, int y)
 			btVector3 newRayTo = getRayTo(x,y);
 			btVector3 oldPivotInB = p2p->getPivotInB();
 
-			btVector3 rayFrom = btVector3( -camera.position.x, -camera.position.y, -camera.position.z );
+			btVector3 rayFrom = -camera.position;
 			btVector3 dir = btVector3( newRayTo.getX(), -newRayTo.getY(), -newRayTo.getZ() ) - rayFrom;
 			dir.normalize();
 			dir *= world.gOldPickingDist;
@@ -517,7 +517,7 @@ void Evolution::resetCamera()
 // 	camera.position = Vector3f(-0.5f*settings->worldsizeX, -1.1f*biggest, -0.87*settings->worldsizeY);
 // 	camera.rotation = Vector3f( 70.0f,  0.0f, 0.0f);
 
-	camera.position = Vector3f( -0.5f*settings->getCVar("worldsizeX"), -1.1f*biggest, -0.5f*settings->getCVar("worldsizeY"));
+	camera.position = btVector3( -0.5f*settings->getCVar("worldsizeX"), -1.1f*biggest, -0.5f*settings->getCVar("worldsizeY"));
 	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
 }
 

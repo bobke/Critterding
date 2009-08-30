@@ -13,7 +13,7 @@ public:
 	~Camera();
 
 	// Position
-	Vector3f position;
+	btVector3 position;
 
 	// Controls
 	Vector3f rotation;
