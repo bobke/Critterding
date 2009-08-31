@@ -34,8 +34,13 @@ class WorldB
 {
 	public:
 		WorldB();
-		virtual ~WorldB();
+		virtual			~WorldB();
+		virtual void		init();
+		virtual void		process();
 
+		Settings*		settings;
+		RandGen*		randgen;
+		Mousepicker*		mousepicker;
 		Camera camera;
 		void resetCamera();
 
@@ -56,7 +61,6 @@ class WorldB
 		float			freeEnergy;
 		//float			freeEnergyInfo;
 
-		void			process();
 		void			drawWithGrid();
 		void			drawWithoutFaces();
 		
@@ -74,6 +78,7 @@ class WorldB
 		void			killHalfOfCritters();
 		void			pickBody(const int& x, const int& y);
 		void			movePickedBody(const int& x, const int& y);
+		void			movePickedBody();
 		float			autosaveCounter;
 
 // 		// picking
@@ -87,11 +92,17 @@ class WorldB
 // 		btTypedConstraint* m_pickConstraint;
 // 		bool* pickedBool;
 
-		Mousepicker*		mousepicker;
-	private:
+		// vision
+		unsigned char		*retina;
+		unsigned int		items;
 
-		Settings*		settings;
-		RandGen*		randgen;
+		const unsigned int*	retinasperrow;
+		const unsigned int*	critter_retinasize;
+
+		// FIXME: inline
+		void		grabVision();
+
+	private:
 		Parser*			parseH;
 		Raycast*		raycast;
 		Dir			dirH;
@@ -112,17 +123,11 @@ class WorldB
 		inline void		createDirs();
 		inline btVector3	findPosition();
 
-		// vision
-		unsigned char		*retina;
-		unsigned int		items;
-
 		// Settings pointers.. performance
-		const unsigned int*	retinasperrow;
 		const unsigned int*	critter_maxlifetime;
 		const unsigned int*	critter_maxenergy;
 		const unsigned int*	critter_autosaveinterval;
 		const unsigned int*	critter_killhalfat;
-		const unsigned int*	critter_retinasize;
 		const unsigned int*	critter_sightrange;
 
 		const unsigned int*	food_maxlifetime;

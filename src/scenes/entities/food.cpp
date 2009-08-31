@@ -4,6 +4,9 @@ Food::Food()
 {
 	settings	= Settings::Instance();
 	totalFrames	= 0;
+	lifetime	= 0;
+	energyLevel	= 0;
+
 	color[0] = 0.0f;
 	color[1] = 0.5f;
 	color[2] = 0.0f;
@@ -35,7 +38,7 @@ void Food::draw()
 	}
 }
 
-void Food::createBody(btDynamicsWorld* m_dynamicsWorld, btVector3 startOffset)
+void Food::createBody(btDynamicsWorld* m_dynamicsWorld, const btVector3& startOffset)
 {
 //	body = new Body ();
 	body.m_ownerWorld = m_dynamicsWorld;

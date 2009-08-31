@@ -27,6 +27,10 @@ class GLWindow {
 		unsigned int w_bpp;		// Bits Per Pixel. With XFree86, highest = 24
 		unsigned int w_width;
 		unsigned int w_height;
+		unsigned int n_width;
+		unsigned int n_height;
+		unsigned int fs;
+		const unsigned int*	settingsfs;
 };
 
 #endif	// GLWINDOW_H

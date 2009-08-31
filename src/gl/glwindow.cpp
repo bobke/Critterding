@@ -21,8 +21,15 @@ void GLWindow::create(const char* title, int width, int height, int bpp)
 	w_width = width;
 	w_height = height;
 
+	n_width = width;
+	n_height = height;
+
 	Settings::Instance()->winWidth = &w_width;
 	Settings::Instance()->winHeight = &w_height;
+
+	settingsfs = Settings::Instance()->getCVarPtr("fullscreen");
+
+	fs = *settingsfs;
 
 	resize();
 }
@@ -31,7 +38,17 @@ void GLWindow::resize()
 {
 	if ( w_height == 0 ) w_height = 1;
 	if ( w_width == 0 ) w_width = 1;
-	SDL_SetVideoMode(w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+
+	if ( fs )
+	{
+		n_width = w_width;
+		n_height = w_height;
+		w_width = 1440;
+		w_height = 900;
+		SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF | SDL_FULLSCREEN );
+	}
+	else
+		SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF );
 }
 
 void GLWindow::runGLScene(GLScene* glscene)
@@ -65,6 +82,20 @@ void GLWindow::runGLScene(GLScene* glscene)
 						glscene->handlekeyPressed( event.key.keysym.sym );
 					break;
 				}
+
+				// fullscreen change
+				if ( fs != *settingsfs )
+				{
+					fs = *settingsfs;
+					
+					if ( !fs )
+					{
+						w_width = n_width;
+						w_height = n_height;
+					}
+					resize();
+				}
+
 			}
 			else if(event.type == SDL_KEYUP)
 				glscene->handlekeyReleased( event.key.keysym.sym );

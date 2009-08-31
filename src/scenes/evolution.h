@@ -14,6 +14,7 @@
 #include "../utils/textverbosemessage.h"
 #include "../utils/events.h"
 #include "entities/worldb.h"
+#include "entities/worldrace.h"
 
 #include <sstream>
 #include <stdio.h>
@@ -43,6 +44,7 @@ class Evolution : public GLScene {
 		void handleMouseMotionAbs(int x, int y);
 
 		WorldB world;
+// 		WorldRace world;
 
 	private:
 		Settings *settings;
@@ -58,6 +60,9 @@ class Evolution : public GLScene {
 		
 		// events
 		void		handleEvents();
+		
+		int		oldx;
+		int		oldy;
 };
 
 #endif

@@ -18,7 +18,7 @@ class Food
 		~Food();
 
 		Body			body;
-		void			createBody(btDynamicsWorld* m_dynamicsWorld, btVector3 startOffset);
+		void			createBody(btDynamicsWorld* m_dynamicsWorld, const btVector3& startOffset);
 		unsigned int		type;
 
 		void			draw();

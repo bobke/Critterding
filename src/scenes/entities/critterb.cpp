@@ -26,6 +26,9 @@ void CritterB::initConst()
 	colorTrim		= 0.15f;
 
 	isPicked		= false;
+
+	eat			= false;
+	procreate		= false;
 }
 
 CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVector3& startPos, unsigned char* retinap)
@@ -116,7 +119,7 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 	brain.wireArch();
 }
 
-CritterB::CritterB(CritterB &other, long unsigned int id, const btVector3& startPos, bool brainmutant, bool bodymutant)
+CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& startPos, bool brainmutant, bool bodymutant)
 {
 	initConst();
 
@@ -237,15 +240,6 @@ void CritterB::registerBrainInputOutputs()
 		brain.registerOutput( &procreate, 100001 );
 }
 
-void CritterB::move()
-{
-	// motorate all constraints
-	for ( unsigned int i=0; i < body.constraints.size(); i++ )
-	{
-		body.constraints[i]->motorate();
-	}
-}
-
 void CritterB::draw(bool drawFaces)
 {
 	for( unsigned int j=0; j < body.bodyparts.size(); j++)
@@ -350,6 +344,19 @@ void CritterB::process()
 
 	// apply energy usage
 	energyLevel -= energyUsed;
+
+	// move
+		// motorate all constraints
+		for ( unsigned int i=0; i < body.constraints.size(); i++ )
+		{
+			body.constraints[i]->motorate();
+		}
+
+	// move ghostobject to mouth object position
+		for ( unsigned int i=0; i < body.mouths.size(); i++ )
+		{
+			body.mouths[i]->updateGhostObjectPosition();
+		}
 }
 
 void CritterB::procInputNeurons()

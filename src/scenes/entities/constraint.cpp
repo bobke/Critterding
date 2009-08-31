@@ -2,6 +2,8 @@
 
 Constraint::Constraint(btDynamicsWorld* ownerWorld, btRigidBody& bodyA, btRigidBody& bodyB, btTransform& localA, btTransform& localB, double limitA, double limitB)
 {
+	input1 = false;
+	input2 = false;
 	// init constraint inputs
 	Inputs.push_back(&input1); // 0: direction +
 	Inputs.push_back(&input2); // 1: direction -
