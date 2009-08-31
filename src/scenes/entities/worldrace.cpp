@@ -152,13 +152,9 @@ void WorldRace::process()
 				critters.clear();
 				food.clear();
 
-			// insert best critter in lane 1
-
-				insMutatedCritter( *bestCritter, 0, false, false );
-
 			// insert mutated batch of critters
 
-				for ( unsigned int i=1; i < numcritters; i++  )
+				for ( unsigned int i=0; i < numcritters-1; i++  )
 				{
 					bool brainmutant = false;
 					bool bodymutant = false;
@@ -174,6 +170,9 @@ void WorldRace::process()
 				for ( unsigned int i=0; i < numcritters; i++  )
 					insFood( i );
 
+			// insert best critter in lane 10
+
+				insMutatedCritter( *bestCritter, numcritters-1, false, false );
 
 		framecounter = 0;
 	}
