@@ -13,13 +13,15 @@ class Mousepicker
 
 		void		attach( btRigidBody* pickBody, const btVector3& attachPosition, const btVector3& rayFrom, const btVector3& rayTo );
 		void		detach();
-		void		moveTo( const btVector3& origin, const btVector3& direction );
+		void		moveTo( const btVector3& origin, const btVector3& newdirection );
+		void		moveFrom( const btVector3& origin );
 
 		bool*				pickedBool;
+		bool				active;
 	private:
 		btDynamicsWorld*		btDynWorld;
 
-		bool				active;
+		btVector3			direction;
 		btPoint2PointConstraint*	constraint;
 		btRigidBody*			pickedBody;
 		float				oldPickingDist;

@@ -33,7 +33,6 @@ WorldB::WorldB()
 
 	m_collisionConfiguration = new btDefaultCollisionConfiguration();
 
-	
 	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
 	//m_dispatcher = new SpuGatheringCollisionDispatcher(m_collisionConfiguration);
 
@@ -56,7 +55,10 @@ WorldB::WorldB()
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints);
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraintLimits);
 // 	m_dynamicsWorld->setDebugDrawer(&debugDrawer);
+}
 
+void WorldB::init()
+{
 	// Wall Constants
 		float WallWidth = 0.5f;
 		float WallHalfWidth = WallWidth/2.0f;
@@ -95,70 +97,6 @@ WorldB::WorldB()
 
 	// reset cam
 		resetCamera();
-
-/*	// clientResetScene
-	gNumClampedCcdMotions = 0;
-	int numObjects = 0;
-	int i;
-
-	if (m_dynamicsWorld)
-	{
-		numObjects = m_dynamicsWorld->getNumCollisionObjects();
-	}
-
-	///create a copy of the array, not a reference!
-	btCollisionObjectArray copyArray = m_dynamicsWorld->getCollisionObjectArray();
-
-	for (i=0;i<copyArray.size();i++)
-	{
-		btRigidBody* body = btRigidBody::upcast(copyArray[i]);
-		if (body)
-			m_dynamicsWorld->removeRigidBody(body);
-	}
-
-
-
-	for (i=0;i<numObjects;i++)
-	{
-		btCollisionObject* colObj = copyArray[i];
-		btRigidBody* body = btRigidBody::upcast(colObj);
-		if (body)
-		{
-			if (body->getMotionState())
-			{
-				btDefaultMotionState* myMotionState = (btDefaultMotionState*)body->getMotionState();
-				myMotionState->m_graphicsWorldTrans = myMotionState->m_startWorldTrans;
-				body->setCenterOfMassTransform( myMotionState->m_graphicsWorldTrans );
-				colObj->setInterpolationWorldTransform( myMotionState->m_startWorldTrans );
-				colObj->forceActivationState(ACTIVE_TAG);
-				colObj->activate();
-				colObj->setDeactivationTime(0);
-				//colObj->setActivationState(WANTS_DEACTIVATION);
-			}
-			//removed cached contact points (this is not necessary if all objects have been removed from the dynamics world)
-			m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(colObj->getBroadphaseHandle(),m_dynamicsWorld->getDispatcher());
-
-			btRigidBody* body = btRigidBody::upcast(colObj);
-			if (body && !body->isStaticObject())
-			{
-				btRigidBody::upcast(colObj)->setLinearVelocity(btVector3(0,0,0));
-				btRigidBody::upcast(colObj)->setAngularVelocity(btVector3(0,0,0));
-			}
-		}
-
-	}
-
-	///reset some internal cached data in the broadphase
-	m_dynamicsWorld->getBroadphase()->resetPool(m_dynamicsWorld->getDispatcher());
-	m_dynamicsWorld->getConstraintSolver()->reset();
-	
-	for ( i=0;i<copyArray.size();i++)
-	{
-		btRigidBody* body = btRigidBody::upcast(copyArray[i]);
-		if (body)
-			m_dynamicsWorld->addRigidBody(btRigidBody::upcast(copyArray[i]));
-	}*/
-	
 }
 
 void WorldB::pickBody(const int& x, const int& y)
@@ -193,7 +131,46 @@ void WorldB::pickBody(const int& x, const int& y)
 
 void WorldB::movePickedBody(const int& x, const int& y)
 {
-	mousepicker->moveTo( camera.position, camera.getScreenClickDirection(x,y) );
+	if ( mousepicker->active )
+		mousepicker->moveTo( camera.position, camera.getScreenClickDirection(x,y) );
+}
+
+void WorldB::movePickedBody()
+{
+	if ( mousepicker->active )
+		mousepicker->moveFrom( camera.position );
+}
+
+void WorldB::grabVision()
+{
+	// render critter vision
+	for( unsigned int i=0; i < critters.size(); i++)
+	{
+		if ( critters[i]->body.mouths.size() > 0 )
+		{
+			critters[i]->place();
+			drawWithinCritterSight(i);
+		}
+	}
+
+	// Read pixels into retina
+	if ( critters.size() > 0 )
+	{
+		// determine width
+		unsigned int picwidth = *retinasperrow * (*critter_retinasize+1);
+
+		// determine height
+		unsigned int picheight = *critter_retinasize;
+		unsigned int rows = critters.size();
+		while ( rows > *retinasperrow )
+		{
+			picheight += *critter_retinasize;
+			rows -= *retinasperrow;
+		}
+ 		glReadBuffer(GL_BACK);
+ 		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
+	}
 }
 
 void WorldB::process()
@@ -290,38 +267,6 @@ void WorldB::process()
 			}
 		}
 
-
-// 		btCollisionObjectArray copyArray = m_dynamicsWorld->getCollisionObjectArray();
-// 		int numObjects = m_dynamicsWorld->getNumCollisionObjects();
-// 		for (int i=0; i < numObjects; i++)
-// 		{
-// 			btCollisionObject* colObj = copyArray[i];
-// 			btRigidBody* body = btRigidBody::upcast(colObj);
-// 			if (body)
-// 			{
-// /*				if (body->getMotionState())
-// 				{
-// 					btDefaultMotionState* myMotionState = (btDefaultMotionState*)body->getMotionState();
-// 					myMotionState->m_graphicsWorldTrans = myMotionState->m_startWorldTrans;
-// 					body->setCenterOfMassTransform( myMotionState->m_graphicsWorldTrans );
-// 					colObj->setInterpolationWorldTransform( myMotionState->m_startWorldTrans );
-// 					colObj->forceActivationState(ACTIVE_TAG);
-// 					colObj->activate();
-// 					colObj->setDeactivationTime(0);
-// 					//colObj->setActivationState(WANTS_DEACTIVATION);
-// 				}*/
-// 				//removed cached contact points (this is not necessary if all objects have been removed from the dynamics world)
-// 				m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(colObj->getBroadphaseHandle(),m_dynamicsWorld->getDispatcher());
-// 
-// /*				btRigidBody* body = btRigidBody::upcast(colObj);
-// 				if (body && !body->isStaticObject())
-// 				{
-// 					btRigidBody::upcast(colObj)->setLinearVelocity(btVector3(0,0,0));
-// 					btRigidBody::upcast(colObj)->setAngularVelocity(btVector3(0,0,0));
-// 				}*/
-// 			}
-// 		}
-
 	// Autoinsert Food
 		while ( freeEnergy >= *food_maxenergy )
 		{
@@ -348,39 +293,12 @@ void WorldB::process()
 				insertCritterCounter++;
 			}
 		}
+
 	// do a bullet step
 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
 
-	// render critter vision
-	for( unsigned int i=0; i < critters.size(); i++)
-	{
-		if ( critters[i]->body.mouths.size() > 0 )
-		{
-			critters[i]->place();
-			drawWithinCritterSight(i);
-		}
-	}
+	grabVision();
 
-	// Read pixels into retina
-	if ( critters.size() > 0 )
-	{
-		// determine width
-		unsigned int picwidth = *retinasperrow * (*critter_retinasize+1);
-
-		// determine height
-		unsigned int picheight = *critter_retinasize;
-		unsigned int rows = critters.size();
-		while ( rows > *retinasperrow )
-		{
-			picheight += *critter_retinasize;
-			rows -= *retinasperrow;
-		}
- 		glReadBuffer(GL_BACK);
- 		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
-	}
-
-// 	settings->info_crittersC = 0;
 	settings->info_totalNeurons = 0;
 	settings->info_totalSynapses = 0;
 	settings->info_totalAdamDistance = 0;
@@ -504,10 +422,8 @@ void WorldB::process()
 		// procreation if procreation energy trigger is hit
 			if ( c->procreate && c->canProcreate )
 			{
-
 				bool brainmutant = false;
 				bool bodymutant = false;
-
 				if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
 					brainmutant = true;
 
@@ -525,10 +441,10 @@ void WorldB::process()
 					buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
 					buf << " ad: " << setw(4) << nc->adamdist;
 					buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
-// 							if ( nc->crittertype == 1 )
-// 								buf << " carnivore";
-// 							else
-// 								buf << " herbivore";
+//					if ( nc->crittertype == 1 )
+//						buf << " carnivore";
+//					else
+//						buf << " herbivore";
 					if ( brainmutant ) buf << " brain mutant";
 					if ( bodymutant ) buf << " body mutant";
 					Textverbosemessage::Instance()->addBirth(buf);
@@ -550,19 +466,10 @@ void WorldB::process()
 					nc->calcFramePos(critters.size()-1);
 			}
 
-		// move
-			c->move();
-
 		// count totals of neurons, synapses and adamdistances
 			settings->info_totalNeurons		+= c->brain.totalNeurons;
 			settings->info_totalSynapses		+= c->brain.totalSynapses;
 			settings->info_totalAdamDistance	+= c->adamdist;
-
-		// move ghostobject to mouth object position
-		for ( unsigned int i=0; i < c->body.mouths.size(); i++ )
-		{
-			c->body.mouths[i]->updateGhostObjectPosition();
-		}
 	}
 
 	settings->info_critters = critters.size();
@@ -587,7 +494,6 @@ void WorldB::insertCritter()
 {
 	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, findPosition(), retina);
 	critters.push_back( c );
-
 	c->calcFramePos(critters.size()-1);
 
 	// start energy

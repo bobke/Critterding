@@ -49,6 +49,10 @@ Evolution::Evolution()
 	if ( settings->getCVar("autoload") )
 		world.loadAllCritters();
 
+	oldx = 0;
+	oldy = 0;
+
+	world.init();
 }
 
 void Evolution::draw()
@@ -101,7 +105,6 @@ void Evolution::draw()
 
 		world.camera.place();
 		world.drawWithGrid();
-
 
 	// 2D
 		glDisable(GL_DEPTH_TEST);
@@ -186,6 +189,7 @@ void Evolution::handlekeyPressed(const KeySym& key)
 				SDL_ShowCursor(0);
 				// clear remaining poll events
 				{ SDL_Event e; while (SDL_PollEvent(&e)) {} };
+				world.mousepicker->detach();
 			}
 			else
 			{
@@ -222,8 +226,15 @@ void Evolution::handlekeyPressed(const KeySym& key)
 			stringstream buf;
 			buf << "Colormode: "<< settings->getCVar("colormode");
 			Textmessage::Instance()->add(buf);
-// 			*Textmessage::Instance() << "Colormode: "<< settings->getCVar("colormode");
-			
+		}
+		break;
+
+		case SDLK_f:
+		{
+			settings->increaseCVar("fullscreen", 1);
+			stringstream buf;
+			buf << "Fullscreen: "<< settings->getCVar("fullscreen");
+			Textmessage::Instance()->add(buf);
 		}
 		break;
 
@@ -261,7 +272,12 @@ void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 
 void Evolution::handleMouseMotionAbs(int x, int y)
 {
-	world.movePickedBody(x, y);
+	if ( !mouselook )
+	{
+		oldx = x;
+		oldy = y;
+		world.movePickedBody(x, y);
+	}
 }
 
 void Evolution::handleMouseMotionRel(int x, int y)
@@ -423,34 +439,64 @@ void Evolution::handleEvents()
 	// Camera
 
 	if ( events->isActive("camera_moveup") )
+	{
 		world.camera.moveUpXZ(0.01f);
+		world.movePickedBody();
+	}
 
 	if ( events->isActive("camera_movedown") )
+	{
 		world.camera.moveDownXZ(0.01f);
+		world.movePickedBody();
+	}
 
 	if ( events->isActive("camera_moveforward") )
+	{
 		world.camera.moveForwardXZ(0.01f);
+		world.movePickedBody();
+	}
 
 	if ( events->isActive("camera_movebackward") )
+	{
 		world.camera.moveBackwardXZ(0.01f);
+		world.movePickedBody();
+	}
 
 	if ( events->isActive("camera_moveleft") )
+	{
 		world.camera.moveLeft(0.01f);
+		world.movePickedBody();
+	}
 
 	if ( events->isActive("camera_moveright") )
+	{
 		world.camera.moveRight(0.01f);
+		world.movePickedBody();
+	}
 
 	if ( events->isActive("camera_lookup") )
-		world.camera.lookUp(0.05f);
+	{
+		world.camera.lookUp(0.03f);
+		world.movePickedBody(oldx, oldy);
+	}
 
 	if ( events->isActive("camera_lookdown") )
-		world.camera.lookDown(0.05f);
+	{
+		world.camera.lookDown(0.03f);
+		world.movePickedBody(oldx, oldy);
+	}
 
 	if ( events->isActive("camera_lookleft") )
-		world.camera.lookLeft(0.05f);
+	{
+		world.camera.lookLeft(0.03f);
+		world.movePickedBody(oldx, oldy);
+	}
 
 	if ( events->isActive("camera_lookright") )
-		world.camera.lookRight(0.05f);
+	{
+		world.camera.lookRight(0.03f);
+		world.movePickedBody(oldx, oldy);
+	}
 }
 
 Evolution::~Evolution()

@@ -41,20 +41,26 @@ void Mousepicker::detach()
 	}
 }
 
-void Mousepicker::moveTo( const btVector3& origin, const btVector3& direction )
+void Mousepicker::moveTo( const btVector3& origin, const btVector3& newdirection )
 {
-	if ( active )
-	{
-		btVector3 oldPivotInB = constraint->getPivotInB();
+	direction = newdirection;
+	btVector3 oldPivotInB = constraint->getPivotInB();
 
-		btVector3 dir = origin + direction;
-		dir.normalize();
-		dir *= oldPickingDist;
+	btVector3 dir = ( origin + direction );
+	dir.normalize();
 
-		constraint->setPivotB( dir - origin);
-	}
+	constraint->setPivotB( (dir * oldPickingDist) - origin);
 }
 
+void Mousepicker::moveFrom( const btVector3& origin )
+{
+	btVector3 oldPivotInB = constraint->getPivotInB();
+
+	btVector3 dir = ( origin + direction );
+	dir.normalize();
+
+	constraint->setPivotB( (dir * oldPickingDist) - origin);
+}
 
 Mousepicker::~Mousepicker()
 {
