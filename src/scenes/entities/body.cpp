@@ -217,36 +217,29 @@ void Body::wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& s
 
 void Body::removeBodypart(unsigned int id)
 {
-	archBodypart* b = &archBodyparts[id];
-
+	cerr << "requested removal of bodypart id " << id << endl;
+	
 	// find constraints where this bodypart is id1, in order to remove connected bodyparts
-	for ( int i = 0; i < (int)archConstraints.size(); i++ )
+	for ( unsigned int i = 0; i < archConstraints.size(); i++ )
 	{
 		archConstraint* c = &archConstraints[i];
-		if ( c->id_1 == b->id )
+		if ( c->id_1 == id )
 		{
+			cerr << " is connected to " << c->isMouthConstraint << " " << c->id_2 << endl;
 			if ( c->isMouthConstraint )
 				removeMouth( findMouth(c->id_2) );
 			else
-				removeBodypart( findBodypart(c->id_2) );
+				removeBodypart( c->id_2 );
 		}
 	}
 
-	archBodyparts.erase(archBodyparts.begin()+id);
+	cerr << "really removing " << id << " which is " << findBodypart( id ) << endl;
+	archBodyparts.erase( archBodyparts.begin() + findBodypart(id) );
 }
 
 void Body::removeMouth(unsigned int id)
 {
-	for ( int i = 0; i < (int)archConstraints.size(); i++ )
-	{
-		archConstraint* c = &archConstraints[i];
-		if ( c->isMouthConstraint && c->id_2 == archMouths[id].id )
-		{
-			archConstraints.erase(archConstraints.begin()+i);
-			i--;
-		}
-	}
-
+	cerr << "removing mouth " << id << endl;
 	archMouths.erase(archMouths.begin()+id);
 }
 
@@ -282,9 +275,8 @@ void Body::addRandomBodypart()
 		bp->z		= randgen->Instance()->get( 20, 200 );
 
 	// Get it connected somehow
-
-		unsigned int connID2 = archBodyparts.size()-1;
 		unsigned int connID1 = randgen->Instance()->get( 0, archBodyparts.size()-1 );
+		unsigned int connID2 = archBodyparts.size()-1;
 		while ( connID1 == connID2 )
 			connID1 = randgen->Instance()->get( 0, archBodyparts.size()-1 );
 
@@ -413,6 +405,7 @@ void Body::mutate(unsigned int runs)
 				{
 					cerr << "adding bodypart" << endl;
 					addRandomBodypart();
+					cerr << "done adding bodypart" << endl;
 				}
 				else
 					runs++;
@@ -425,15 +418,15 @@ void Body::mutate(unsigned int runs)
 			{
 				if ( archBodyparts.size() > 2 )
 				{
-					cerr << "removing bodypart" << endl;
-
 					// pick a random bodypart
 					unsigned int bid = randgen->Instance()->get( 0, archBodyparts.size()-1 );
 
 					// if not main body, remove it
 					if ( archBodyparts[bid].id != 1000 )
 					{
-						removeBodypart(bid);
+						cerr << "removing bodypart " << bid << " id " << archBodyparts[bid].id  << endl;
+
+						removeBodypart( archBodyparts[bid].id );
 
 						cerr << "removing obsolete constraints, expected errors:" << endl;
 						for ( int i = 0; i < (int)archConstraints.size(); i++ )
@@ -457,12 +450,16 @@ void Body::mutate(unsigned int runs)
 						}
 						cerr << "done removing obsolete constraints" << endl << endl;
 
+						cerr << "done removing bodypart" << endl;
+
 						// re add mouth if needed
 						if ( archMouths.size() == 0 )
-							addRandomMouth();
+								addRandomMouth();
+						cerr << "added mouth again" << endl;
 					}
 					else
 						runs++;
+
 				}
 				else
 					runs++;
@@ -515,6 +512,7 @@ void Body::mutate(unsigned int runs)
 						}
 					}
 
+				cerr << "done resize bodypart" << endl;
 				continue;
 			}
 
@@ -528,6 +526,8 @@ void Body::mutate(unsigned int runs)
 				archConstraint* co = &archConstraints[cid];
 				co->limit_1		= (float)randgen->Instance()->get( 0, 7853 ) / -10000;
 				co->limit_2		= -1.0f * co->limit_1;
+
+				cerr << "done changing constraint limits" << endl;
 				continue;
 			}
 	
@@ -546,6 +546,8 @@ void Body::mutate(unsigned int runs)
 				co->rot_x_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
 				co->rot_y_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
 				co->rot_z_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
+
+				cerr << "done changing constraint angles" << endl;
 				continue;
 			}
 
@@ -574,6 +576,7 @@ void Body::mutate(unsigned int runs)
 				else
 					randomConstraintPosition(co, 2, connID2);
 
+				cerr << "done changing constraint position" << endl;
 				continue;
 			}
 
@@ -582,14 +585,28 @@ void Body::mutate(unsigned int runs)
 			if ( mode <= modesum )
 			{
 				cerr << "remove and add mouth" << endl;
+				
+				for ( int i = 0; i < (int)archConstraints.size(); i++ )
+				{
+					archConstraint* c = &archConstraints[i];
+					if ( c->isMouthConstraint && c->id_2 == archMouths[0].id )
+					{
+						archConstraints.erase(archConstraints.begin()+i);
+						i--;
+					}
+				}
+
 				removeMouth(0);
+
 				addRandomMouth();
 
+				cerr << "done remove and add mouth" << endl;
 				continue;
 			}
 
 		// if we reach here, none were processed, decrease runs by 1 to make sure we get a hit
-			runs++;
+			if ( modesum > 0 )
+				runs++;
 	}
 }
 
