@@ -6,8 +6,10 @@ WorldRace::WorldRace()
 
 void WorldRace::init()
 {
-		settings->setCVar("worldsizeX", 50);
-		settings->setCVar("worldsizeY", 7);
+		numcritters = 5;
+
+		settings->setCVar( "worldsizeX", 80 );
+		settings->setCVar( "worldsizeY", 7 );
 		
 	// Wall Constants
 		float WallWidth = 0.5f;
@@ -40,7 +42,6 @@ void WorldRace::init()
 		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 		walls.push_back(w);
 
-		numcritters = 10;
 		critterspacing = (float)settings->getCVar("worldsizeX") / numcritters;
 
 	// seperator walls
@@ -94,6 +95,11 @@ void WorldRace::process()
 
 		// process
 		c->process();
+
+		// count totals of neurons, synapses and adamdistances
+			settings->info_totalNeurons		+= c->brain.totalNeurons;
+			settings->info_totalSynapses		+= c->brain.totalSynapses;
+			settings->info_totalAdamDistance	+= c->adamdist;
 	}
 
 	settings->info_critters = critters.size();
