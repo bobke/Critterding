@@ -217,7 +217,7 @@ void Body::wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& s
 
 void Body::removeBodypart(unsigned int id)
 {
-	cerr << "requested removal of bodypart id " << id << endl;
+// 	cerr << "requested removal of bodypart id " << id << endl;
 	
 	// find constraints where this bodypart is id1, in order to remove connected bodyparts
 	for ( unsigned int i = 0; i < archConstraints.size(); i++ )
@@ -225,7 +225,7 @@ void Body::removeBodypart(unsigned int id)
 		archConstraint* c = &archConstraints[i];
 		if ( c->id_1 == id )
 		{
-			cerr << " is connected to " << c->isMouthConstraint << " " << c->id_2 << endl;
+// 			cerr << " is connected to " << c->isMouthConstraint << " " << c->id_2 << endl;
 			if ( c->isMouthConstraint )
 				removeMouth( findMouth(c->id_2) );
 			else
@@ -233,13 +233,13 @@ void Body::removeBodypart(unsigned int id)
 		}
 	}
 
-	cerr << "really removing " << id << " which is " << findBodypart( id ) << endl;
+// 	cerr << "really removing " << id << " which is " << findBodypart( id ) << endl;
 	archBodyparts.erase( archBodyparts.begin() + findBodypart(id) );
 }
 
 void Body::removeMouth(unsigned int id)
 {
-	cerr << "removing mouth " << id << endl;
+// 	cerr << "removing mouth " << id << endl;
 	archMouths.erase(archMouths.begin()+id);
 }
 
@@ -403,9 +403,9 @@ void Body::mutate(unsigned int runs)
 			{
 				if ( archBodyparts.size() < settings->getCVar("body_maxbodyparts") )
 				{
-					cerr << "adding bodypart" << endl;
+// 					cerr << "adding bodypart" << endl;
 					addRandomBodypart();
-					cerr << "done adding bodypart" << endl;
+// 					cerr << "done adding bodypart" << endl;
 				}
 				else
 					runs++;
@@ -424,11 +424,11 @@ void Body::mutate(unsigned int runs)
 					// if not main body, remove it
 					if ( archBodyparts[bid].id != 1000 )
 					{
-						cerr << "removing bodypart " << bid << " id " << archBodyparts[bid].id  << endl;
+// 						cerr << "removing bodypart " << bid << " id " << archBodyparts[bid].id  << endl;
 
 						removeBodypart( archBodyparts[bid].id );
 
-						cerr << "removing obsolete constraints, expected errors:" << endl;
+// 						cerr << "removing obsolete constraints, expected errors:" << endl;
 						for ( int i = 0; i < (int)archConstraints.size(); i++ )
 						{
 							archConstraint* c = &archConstraints[i];
@@ -448,14 +448,13 @@ void Body::mutate(unsigned int runs)
 								i--;
 							}
 						}
-						cerr << "done removing obsolete constraints" << endl << endl;
+// 						cerr << "done removing obsolete constraints" << endl << endl;
 
-						cerr << "done removing bodypart" << endl;
+// 						cerr << "done removing bodypart" << endl;
 
 						// re add mouth if needed
 						if ( archMouths.size() == 0 )
 								addRandomMouth();
-						cerr << "added mouth again" << endl;
 					}
 					else
 						runs++;
@@ -470,7 +469,7 @@ void Body::mutate(unsigned int runs)
 			modesum += settings->getCVar("body_percentmutateeffectresizebodypart");
 			if ( mode <= modesum )
 			{
-				cerr << "resize bodypart" << endl;
+// 				cerr << "resize bodypart" << endl;
 
 					// pick a random bodypart
 					unsigned int bid = randgen->Instance()->get( 0, archBodyparts.size()-1 );
@@ -512,7 +511,7 @@ void Body::mutate(unsigned int runs)
 						}
 					}
 
-				cerr << "done resize bodypart" << endl;
+// 				cerr << "done resize bodypart" << endl;
 				continue;
 			}
 
@@ -520,14 +519,14 @@ void Body::mutate(unsigned int runs)
 			modesum += settings->getCVar("body_percentmutateeffectchangeconstraintlimits");
 			if ( mode <= modesum )
 			{
-				cerr << "changing constraint limits" << endl;
+// 				cerr << "changing constraint limits" << endl;
 
 				unsigned int cid = randgen->Instance()->get( 0, archConstraints.size()-1 );
 				archConstraint* co = &archConstraints[cid];
 				co->limit_1		= (float)randgen->Instance()->get( 0, 7853 ) / -10000;
 				co->limit_2		= -1.0f * co->limit_1;
 
-				cerr << "done changing constraint limits" << endl;
+// 				cerr << "done changing constraint limits" << endl;
 				continue;
 			}
 	
@@ -535,7 +534,7 @@ void Body::mutate(unsigned int runs)
 			modesum += settings->getCVar("body_percentmutateeffectchangeconstraintangles");
 			if ( mode <= modesum )
 			{
-				cerr << "changing constraint angles" << endl;
+// 				cerr << "changing constraint angles" << endl;
 
 				unsigned int cid = randgen->Instance()->get( 0, archConstraints.size()-1 );
 				archConstraint* co = &archConstraints[cid];
@@ -547,7 +546,7 @@ void Body::mutate(unsigned int runs)
 				co->rot_y_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
 				co->rot_z_2		= ((float)randgen->Instance()->get( 0, 3141 ) - 1571) / 1000;
 
-				cerr << "done changing constraint angles" << endl;
+// 				cerr << "done changing constraint angles" << endl;
 				continue;
 			}
 
@@ -555,7 +554,7 @@ void Body::mutate(unsigned int runs)
 			modesum += settings->getCVar("body_percentmutateeffectchangeconstraintposition");
 			if ( mode <= modesum )
 			{
-				cerr << "changing constraint position" << endl;
+// 				cerr << "changing constraint position" << endl;
 
 				unsigned int cid = randgen->Instance()->get( 0, archConstraints.size()-1 );
 				archConstraint* co = &archConstraints[cid];
@@ -576,7 +575,7 @@ void Body::mutate(unsigned int runs)
 				else
 					randomConstraintPosition(co, 2, connID2);
 
-				cerr << "done changing constraint position" << endl;
+// 				cerr << "done changing constraint position" << endl;
 				continue;
 			}
 
@@ -584,7 +583,7 @@ void Body::mutate(unsigned int runs)
 			modesum += settings->getCVar("body_percentmutateeffectrepositionmouth");
 			if ( mode <= modesum )
 			{
-				cerr << "remove and add mouth" << endl;
+// 				cerr << "remove and add mouth" << endl;
 				
 				for ( int i = 0; i < (int)archConstraints.size(); i++ )
 				{
@@ -600,7 +599,7 @@ void Body::mutate(unsigned int runs)
 
 				addRandomMouth();
 
-				cerr << "done remove and add mouth" << endl;
+// 				cerr << "done remove and add mouth" << endl;
 				continue;
 			}
 
@@ -619,7 +618,7 @@ int Body::findBodypart( unsigned int id )
 			return i;
 		}
 	}
-	cerr << " NOT GOOD: cannot find a bodypart for the id " << id << endl;
+// 	cerr << " NOT GOOD: cannot find a bodypart for the id " << id << endl;
 	return -1;
 }
 
@@ -633,7 +632,7 @@ int Body::findMouth( unsigned int id )
 		}
 	}
 // 	cerr << " NOT GOOD " << endl;
-	cerr << " NOT GOOD: cannot find a mouth for the id " << id << endl;
+// 	cerr << " NOT GOOD: cannot find a mouth for the id " << id << endl;
 	return -1;
 }
 
