@@ -6,7 +6,7 @@ WorldRace::WorldRace()
 
 void WorldRace::init()
 {
-		numcritters = 30;
+		numcritters = 4;
 		testduration = 5000;
 
 		settings->setCVar( "worldsizeX", numcritters*10 );
@@ -105,7 +105,7 @@ void WorldRace::process()
 	framecounter++;
 	if ( framecounter == testduration  )
 	{
-		cerr << endl << "Evaluation..." << endl;
+		cerr << "Evaluation..." << endl;
 
 			// measure their distances from their respective food targets
 			for ( unsigned int i=0; i < numcritters; i++  )
@@ -143,7 +143,7 @@ void WorldRace::process()
 				cerr << "c " << indices[i] << " : " << critters[indices[i]]->fitness_index << endl;
 			}
 
-		cerr << endl << "Reinitialisation..." << endl;
+		cerr << "Reinitialisation..." << endl;
 
 			// backup the 50% best critters
 				vector<CritterB*> best;
@@ -153,7 +153,6 @@ void WorldRace::process()
 					best.push_back( b );
 // 					cerr << " backing up " << indices[i] << endl;
 				}
-				cerr << "1" << endl;
 
 			// remove critters and food
 				for ( unsigned int i=0; i < critters.size(); i++ )
@@ -172,14 +171,12 @@ void WorldRace::process()
 				critters.clear();
 				food.clear();
 
-				cerr << "2" << endl;
 			// reinsert the best critters
 				for ( unsigned int i=0; i < best.size(); i++  )
 				{
 					insMutatedCritter( *best[i], critters.size(), false, false );
 				}
 
-				cerr << "3" << endl;
 			// insert the mutants
 				for ( unsigned int i=0; i < best.size(); i++  )
 				{
@@ -193,7 +190,6 @@ void WorldRace::process()
 
 					insMutatedCritter( *best[i], critters.size(), brainmutant, bodymutant );
 				}
-				cerr << "4" << endl;
 
 			// remove best again
 				for ( unsigned int i=0; i < best.size(); i++  )
@@ -206,34 +202,8 @@ void WorldRace::process()
 					insFood( i );
 
 			framecounter = 0;
-/*
-		// reinitialisation
 
-			// backup our best critter
-
-			// insert mutated batch of critters
-
-				for ( unsigned int i=0; i < numcritters-1; i++  )
-				{
-					bool brainmutant = false;
-					bool bodymutant = false;
-					if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
-						brainmutant = true;
-
-					if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
-						bodymutant = true;
-
-					insMutatedCritter( *bestCritter, i, brainmutant, bodymutant );
-				}
-
-				for ( unsigned int i=0; i < numcritters; i++  )
-					insFood( i );
-
-			// insert best critter in lane 10
-
-				insMutatedCritter( *bestCritter, numcritters-1, false, false );
-
-		*/
+			cerr << endl << endl << "Running..." << endl;
 	}
 }
 
