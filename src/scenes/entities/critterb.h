@@ -30,9 +30,6 @@ class CritterB
 		unsigned int		type;
 		Brainz			brain;
 		Body			body;
-// 		void			createBodyOld(btDynamicsWorld* m_dynamicsWorld, const btVector3& startOffset);
-// 		void			createArchBody();
-// 		void			createBody(const btVector3& startOffset);
 		inline void		registerBrainInputOutputs();
 		void			draw(bool drawFaces);
 		void			move();
@@ -83,6 +80,9 @@ class CritterB
 		void			printVision();
 		
 		bool			isPicked;
+
+		float			fitness_index;
+
 	private:
 
 		Settings		*settings;

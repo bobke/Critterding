@@ -6,9 +6,10 @@ WorldRace::WorldRace()
 
 void WorldRace::init()
 {
-		numcritters = 20;
+		numcritters = 30;
+		testduration = 5000;
 
-		settings->setCVar( "worldsizeX", 200 );
+		settings->setCVar( "worldsizeX", numcritters*10 );
 		settings->setCVar( "worldsizeY", 7 );
 		
 	// Wall Constants
@@ -71,10 +72,6 @@ void WorldRace::init()
 			insFood( i );
 		
 		framecounter = 0;
-		testduration = 1000;
-
-		bestCritter = 0;
-		bestCritter_distance = settings->getCVar("worldsizeY");
 }
 
 void WorldRace::process()
@@ -108,11 +105,7 @@ void WorldRace::process()
 	framecounter++;
 	if ( framecounter == testduration  )
 	{
-		// evaluation
 		cerr << endl << "Evaluation..." << endl;
-
-			unsigned int best = 0;
-			float shortestdistance = settings->getCVar("worldsizeY");
 
 			// measure their distances from their respective food targets
 			for ( unsigned int i=0; i < numcritters; i++  )
@@ -124,39 +117,99 @@ void WorldRace::process()
 				btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
 				btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
 
-				float distance = cposi.distance(fposi);
-				if ( distance < shortestdistance )
-				{
-					best = i;
-					shortestdistance = distance;
-				}
+				critters[i]->fitness_index = 1.0f/cposi.distance(fposi); 
 			}
 
-		cerr << "best critter of run : " << best << " with a distance of " << shortestdistance << endl;
+			// initialize sort indices for
+			vector<int> indices ( numcritters, 0 );
+			for ( unsigned int i = 0; i < numcritters; i++ )
+				indices[i] = i;
+	
+			// sort results
+// 			cerr << "sorting" << endl;
+			for ( int i = numcritters; i>0; i--  )
+				for ( int j = 0; j < i-1; j++  )
+					if ( critters[indices[j]]->fitness_index < critters[indices[j+1]]->fitness_index )
+					{
+						unsigned keepI	= indices[j];
+						indices[j]	= indices[j+1];
+						indices[j+1]	= keepI;
+					}
+// 			cerr << "done sorting" << endl;
 
-// 		if ( shortestdistance < bestCritter_distance )
-// 		{
-// 			cerr << "IMPROVEMENT:  " << shortestdistance << " vs " << bestCritter_distance << endl;
-			// this is the best critter so far, replaces previous best
-			if ( bestCritter )
-				delete bestCritter;
-			bestCritter = new CritterB(*critters[best], currentCritterID++, btVector3( 0.0f, 0.0f, 0.0f ), false, false);
-			bestCritter_distance = shortestdistance;
-// 		}
-		cerr << endl;
+			// display results
+			for ( unsigned int i=0; i < numcritters; i++  )
+			{
+				cerr << "c " << indices[i] << " : " << critters[indices[i]]->fitness_index << endl;
+			}
 
-		// reinitialisation
+		cerr << endl << "Reinitialisation..." << endl;
 
-			// backup our best critter
+			// backup the 50% best critters
+				vector<CritterB*> best;
+				for ( unsigned int i=0; i < numcritters/2; i++  )
+				{
+					CritterB* b = new CritterB(*critters[indices[i]], currentCritterID++, btVector3( 0.0f, 0.0f, 0.0f ), false, false);
+					best.push_back( b );
+// 					cerr << " backing up " << indices[i] << endl;
+				}
+				cerr << "1" << endl;
 
 			// remove critters and food
 				for ( unsigned int i=0; i < critters.size(); i++ )
+				{
+					if ( critters[i]->isPicked )
+						mousepicker->detach();
 					delete critters[i];
+				}
 				critters.clear();
 				for ( unsigned int i=0; i < food.size(); i++ )
+				{
+					if ( food[i]->isPicked )
+						mousepicker->detach();
 					delete food[i];
+				}
 				critters.clear();
 				food.clear();
+
+				cerr << "2" << endl;
+			// reinsert the best critters
+				for ( unsigned int i=0; i < best.size(); i++  )
+				{
+					insMutatedCritter( *best[i], critters.size(), false, false );
+				}
+
+				cerr << "3" << endl;
+			// insert the mutants
+				for ( unsigned int i=0; i < best.size(); i++  )
+				{
+					bool brainmutant = false;
+					bool bodymutant = false;
+					if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
+						brainmutant = true;
+
+					if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
+						bodymutant = true;
+
+					insMutatedCritter( *best[i], critters.size(), brainmutant, bodymutant );
+				}
+				cerr << "4" << endl;
+
+			// remove best again
+				for ( unsigned int i=0; i < best.size(); i++  )
+				{
+					delete best[i];
+				}
+
+			// reinsert respective food units
+				for ( unsigned int i=0; i < numcritters; i++  )
+					insFood( i );
+
+			framecounter = 0;
+/*
+		// reinitialisation
+
+			// backup our best critter
 
 			// insert mutated batch of critters
 
@@ -180,7 +233,7 @@ void WorldRace::process()
 
 				insMutatedCritter( *bestCritter, numcritters-1, false, false );
 
-		framecounter = 0;
+		*/
 	}
 }
 
@@ -200,11 +253,6 @@ void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, boo
 
 void WorldRace::insFood(int nr)
 {
-	if ( nr == 0 )
-	{
-		cerr << "dropping nr 0 at " << (critterspacing/2)+(critterspacing*nr) << endl;
-	}
-		
 	Food *f = new Food;
 	f->energyLevel = 5000;
 

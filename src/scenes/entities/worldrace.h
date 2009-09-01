@@ -21,9 +21,6 @@ class WorldRace : public WorldB {
 
 		unsigned int	framecounter;
 		unsigned int	testduration;
-
-		CritterB*	bestCritter;
-		float		bestCritter_distance;
 };
 
 #endif
