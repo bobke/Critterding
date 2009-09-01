@@ -6,9 +6,9 @@ WorldRace::WorldRace()
 
 void WorldRace::init()
 {
-		numcritters = 5;
+		numcritters = 20;
 
-		settings->setCVar( "worldsizeX", 80 );
+		settings->setCVar( "worldsizeX", 200 );
 		settings->setCVar( "worldsizeY", 7 );
 		
 	// Wall Constants
