@@ -246,7 +246,7 @@ void WorldRace::process()
 					critters[i]->fitness_index =  1.0f /(cposi.distance(fposi) + 0.0000001); 
 				
 				// fitness function 2: energy of food consumed
-					critters[i]->fitness_index += ( 1.0f /(food[i]->energyLevel + 0.0000001));
+					critters[i]->fitness_index += ( 10.0f /(food[i]->energyLevel + 0.0000001));
 
 			}
 
