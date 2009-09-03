@@ -6,8 +6,8 @@ WorldRace::WorldRace()
 
 void WorldRace::init()
 {
-		numcritters = 4;
-		testduration = 30;
+		numcritters = 10;
+		testduration = 100;
 
 		settings->setCVar( "worldsizeX", numcritters*10 );
 		settings->setCVar( "worldsizeY", 10 );
