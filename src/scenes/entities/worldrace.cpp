@@ -69,6 +69,7 @@ void WorldRace::init()
 			insFood( i );
 		
 		framecounter = 0;
+		haveWinner = false;
 
 		cerr<< "Running" << " ... " << endl;
 }
@@ -208,6 +209,10 @@ void WorldRace::process()
 
 					c->energyLevel += eaten;
 					f->energyLevel -= eaten;
+					
+					// if a food unit has no more energy left, we have a winner, the race is over
+					if ( f->energyLevel  == 0.0f )
+						haveWinner = true;
 				}
 			}
 
@@ -221,8 +226,11 @@ void WorldRace::process()
 	settings->info_food = food.size();
 
 	framecounter++;
-	if ( framecounter == settings->getCVar("critter_maxlifetime")  )
+	if ( haveWinner || framecounter >= settings->getCVar("critter_maxlifetime")  )
 	{
+		if ( haveWinner )
+			cerr << "we have a WINNER after " << framecounter << " frames" << endl;
+
 		cerr << "Evaluating..." << endl;
 
 			// measure their distances from their respective food targets
@@ -322,6 +330,7 @@ void WorldRace::process()
 					insFood( i );
 
 			framecounter = 0;
+			haveWinner = false;
 
 			cerr << "Running... " << endl;
 	}

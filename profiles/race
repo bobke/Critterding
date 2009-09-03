@@ -1,5 +1,6 @@
 race 1
 critter_maxlifetime 5000
-worldsizeX 20
+worldsizeX 40
+worldsizeY 15
 brain_mutationrate 33
 body_mutationrate 33
