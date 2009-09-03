@@ -361,7 +361,6 @@ Brainz::Brainz()
 		// add a new neuron
 			if ( mode <= percentMutateEffectAddNeuron )
 			{
-
 				if ( ArchNeurons.size() < maxNeurons )
 				{
 					addRandomArchNeuron();
@@ -369,14 +368,15 @@ Brainz::Brainz()
 					//cerr << "\t+N " << nid << endl;
 
 					// random amount of connections, at mutation time we take the average syns / neuron *2 as a maximum
-					int maxSynapsesAtMutation = (2*(totalSynapses/totalNeurons)) + minSynapsesAtBuildtime;
-					//cerr << "2*(" << totalSynapses << "/" << totalNeurons << "):" << maxSynapsesAtMutation << endl;
+					unsigned int tNeurons = totalNeurons;
+					if ( tNeurons == 0 )
+						tNeurons = 1;
+
+					int maxSynapsesAtMutation = (2*(totalSynapses/tNeurons)) + 1;
 
 					unsigned int cAmount = randgen->Instance()->get( minSynapsesAtBuildtime, maxSynapsesAtMutation );
 					for ( unsigned j = 0; j < cAmount; j++ )
-					{
 						addRandomArchSynapse(nid);
-					}
 				}
 				else runs++;
 			}
