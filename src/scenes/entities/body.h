@@ -46,7 +46,7 @@ class Body
 		void			buildArch();
 		void			setArch(string* content);
 		string*			getArch();
-		void			copyFrom(Body& otherBody);
+		void			copyFrom(const Body& otherBody);
 		void			wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& startOffset);
 		void			mutate(unsigned int runs);
 
