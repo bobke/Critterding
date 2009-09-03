@@ -16,11 +16,9 @@ class WorldRace : public WorldB {
 		void		insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody);
 		void		insFood(int nr);
 		
-		unsigned int	numcritters;
 		float		critterspacing;
 
 		unsigned int	framecounter;
-		unsigned int	testduration;
 		
 		unsigned int	testcounter;
 };

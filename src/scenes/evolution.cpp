@@ -3,8 +3,12 @@
 Evolution::Evolution()
 {
 	settings = Settings::Instance();
-
 	events = Events::Instance();
+
+	if ( settings->getCVar("race") == 1 )
+		world = new WorldRace();
+	else
+		world = new WorldB();
 
 	pause = false;
 // 	drawCVNeurons = false;
@@ -47,12 +51,12 @@ Evolution::Evolution()
 	mouselook = false;
 
 	if ( settings->getCVar("autoload") )
-		world.loadAllCritters();
+		world->loadAllCritters();
 
 	oldx = 0;
 	oldy = 0;
 
-	world.init();
+	world->init();
 }
 
 void Evolution::draw()
@@ -94,17 +98,17 @@ void Evolution::draw()
 		glDisable(GL_DITHER);
 		glDisable(GL_POLYGON_SMOOTH);
 
-		world.process();
+		world->process();
 
-// 			if (world.critters.size() > 10 )
+// 			if (world->critters.size() > 10 )
 // 			{
-// 				camera.follow( (btDefaultMotionState*)world.critters[5]->body.mouths[0]->body->getMotionState() );
-// 				world.drawWithoutFaces();
-// 				world.critters[5]->printVision();
+// 				camera.follow( (btDefaultMotionState*)world->critters[5]->body.mouths[0]->body->getMotionState() );
+// 				world->drawWithoutFaces();
+// 				world->critters[5]->printVision();
 // 			}
 
-		world.camera.place();
-		world.drawWithGrid();
+		world->camera.place();
+		world->drawWithGrid();
 
 	// 2D
 		glDisable(GL_DEPTH_TEST);
@@ -131,7 +135,7 @@ void Evolution::draw()
 
 	SDL_GL_SwapBuffers();		
 
-	if ( world.critters.size() == 0 && settings->getCVar("exit_if_empty") )
+	if ( world->critters.size() == 0 && settings->getCVar("exit_if_empty") )
 	{
 		cerr << "world is empty, exiting..." << endl;
 		exit(0);
@@ -166,18 +170,18 @@ void Evolution::handlekeyPressed(const KeySym& key)
 			break;
 
 		case SDLK_PAGEUP:
-			world.loadAllCritters();
+			world->loadAllCritters();
 			break;
 		case SDLK_PAGEDOWN:
-			world.saveAllCritters();
+			world->saveAllCritters();
 			break;
 
 		case SDLK_i:
-			world.insertCritter();
+			world->insertCritter();
 			break;
 
 		case SDLK_k:
-			world.killHalfOfCritters();
+			world->killHalfOfCritters();
 			break;
 
 		case SDLK_m:
@@ -189,7 +193,7 @@ void Evolution::handlekeyPressed(const KeySym& key)
 				SDL_ShowCursor(0);
 				// clear remaining poll events
 				{ SDL_Event e; while (SDL_PollEvent(&e)) {} };
-				world.mousepicker->detach();
+				world->mousepicker->detach();
 			}
 			else
 			{
@@ -217,7 +221,7 @@ void Evolution::handlekeyPressed(const KeySym& key)
 			break;
 
 		case SDLK_BACKSPACE:
-			world.resetCamera();
+			world->resetCamera();
 			break;
 
 		case SDLK_c:
@@ -256,7 +260,7 @@ void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 	{
 		if ( button == 1 )
 		{
-			world.pickBody( x, y );
+			world->pickBody( x, y );
 		}
 	}
 }
@@ -266,7 +270,7 @@ void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 // 	cerr << "button " << button << " released at " << x << "x" << y << endl;
 	if ( button == 1 )
 	{
-		world.mousepicker->detach();
+		world->mousepicker->detach();
 	}
 }
 
@@ -276,7 +280,7 @@ void Evolution::handleMouseMotionAbs(int x, int y)
 	{
 		oldx = x;
 		oldy = y;
-		world.movePickedBody(x, y);
+		world->movePickedBody(x, y);
 	}
 }
 
@@ -285,14 +289,14 @@ void Evolution::handleMouseMotionRel(int x, int y)
 	if ( mouselook )
 	{
 		if ( x > 0 )
-			world.camera.lookRight( (float)x/100 );
+			world->camera.lookRight( (float)x/100 );
 		else if ( x != 0 )
-			world.camera.lookLeft( (float)x/-100 );
+			world->camera.lookLeft( (float)x/-100 );
 
 		if ( y > 0 )
-			world.camera.lookDown( (float)y/100 );
+			world->camera.lookDown( (float)y/100 );
 		else if ( y != 0 )
-			world.camera.lookUp( (float)y/-100 );
+			world->camera.lookUp( (float)y/-100 );
 	}
 }
 
@@ -326,7 +330,7 @@ void Evolution::handleEvents()
 		if ( ( settings->freeEnergyInfo - settings->getCVar("food_maxenergy") ) / settings->getCVar("food_maxenergy") >= 0.0f )
 		{
 			settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
-			world.freeEnergy -= settings->getCVar("food_maxenergy");
+			world->freeEnergy -= settings->getCVar("food_maxenergy");
 		}
 		stringstream buf;
 		buf << "Energy in system: " << ( settings->freeEnergyInfo / settings->getCVar("food_maxenergy") );
@@ -335,7 +339,7 @@ void Evolution::handleEvents()
 	if ( events->isActive("inc_energy") )
 	{
 		settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
-		world.freeEnergy += settings->getCVar("food_maxenergy");
+		world->freeEnergy += settings->getCVar("food_maxenergy");
 		stringstream buf;
 		buf << "Energy in system: " << (settings->freeEnergyInfo / settings->getCVar("food_maxenergy"));
 		Textmessage::Instance()->add(buf);
@@ -440,62 +444,62 @@ void Evolution::handleEvents()
 
 	if ( events->isActive("camera_moveup") )
 	{
-		world.camera.moveUpXZ(0.01f);
-		world.movePickedBody();
+		world->camera.moveUpXZ(0.01f);
+		world->movePickedBody();
 	}
 
 	if ( events->isActive("camera_movedown") )
 	{
-		world.camera.moveDownXZ(0.01f);
-		world.movePickedBody();
+		world->camera.moveDownXZ(0.01f);
+		world->movePickedBody();
 	}
 
 	if ( events->isActive("camera_moveforward") )
 	{
-		world.camera.moveForwardXZ(0.01f);
-		world.movePickedBody();
+		world->camera.moveForwardXZ(0.01f);
+		world->movePickedBody();
 	}
 
 	if ( events->isActive("camera_movebackward") )
 	{
-		world.camera.moveBackwardXZ(0.01f);
-		world.movePickedBody();
+		world->camera.moveBackwardXZ(0.01f);
+		world->movePickedBody();
 	}
 
 	if ( events->isActive("camera_moveleft") )
 	{
-		world.camera.moveLeft(0.01f);
-		world.movePickedBody();
+		world->camera.moveLeft(0.01f);
+		world->movePickedBody();
 	}
 
 	if ( events->isActive("camera_moveright") )
 	{
-		world.camera.moveRight(0.01f);
-		world.movePickedBody();
+		world->camera.moveRight(0.01f);
+		world->movePickedBody();
 	}
 
 	if ( events->isActive("camera_lookup") )
 	{
-		world.camera.lookUp(0.03f);
-		world.movePickedBody(oldx, oldy);
+		world->camera.lookUp(0.03f);
+		world->movePickedBody(oldx, oldy);
 	}
 
 	if ( events->isActive("camera_lookdown") )
 	{
-		world.camera.lookDown(0.03f);
-		world.movePickedBody(oldx, oldy);
+		world->camera.lookDown(0.03f);
+		world->movePickedBody(oldx, oldy);
 	}
 
 	if ( events->isActive("camera_lookleft") )
 	{
-		world.camera.lookLeft(0.03f);
-		world.movePickedBody(oldx, oldy);
+		world->camera.lookLeft(0.03f);
+		world->movePickedBody(oldx, oldy);
 	}
 
 	if ( events->isActive("camera_lookright") )
 	{
-		world.camera.lookRight(0.03f);
-		world.movePickedBody(oldx, oldy);
+		world->camera.lookRight(0.03f);
+		world->movePickedBody(oldx, oldy);
 	}
 }
 
