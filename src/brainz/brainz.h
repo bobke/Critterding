@@ -130,8 +130,8 @@ class Brainz
 	// build commands
 
 		// functions
-			void			copyFrom(Brainz& otherBrain);
-			void			mergeFrom(Brainz& otherBrain1, Brainz& otherBrain2);
+			void			copyFrom(const Brainz& otherBrain);
+			void			mergeFrom(const Brainz& otherBrain1, const Brainz& otherBrain2);
 			void			registerOutput(bool* var, unsigned int id);
 			void			registerInput(unsigned int id);
 			void			removeObsoleteMotorsAndSensors();

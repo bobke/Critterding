@@ -672,11 +672,11 @@ unsigned int Body::getUniqueConstraintID()
 	return id;
 }
 
-void Body::copyFrom(Body& otherBody)
+void Body::copyFrom(const Body& otherBody)
 {
 	for ( unsigned int i=0; i < otherBody.archBodyparts.size(); i++ )
 	{
-		archBodypart *obp = &otherBody.archBodyparts[i];
+		const archBodypart *obp = &otherBody.archBodyparts[i];
 		archBodyparts.push_back( archBodypart() );
 		archBodypart *bp = &archBodyparts[archBodyparts.size()-1];
 		
@@ -690,7 +690,7 @@ void Body::copyFrom(Body& otherBody)
 
 	for ( unsigned int i=0; i < otherBody.archMouths.size(); i++ )
 	{
-		archMouth *omo = &otherBody.archMouths[i];
+		const archMouth *omo = &otherBody.archMouths[i];
 		archMouths.push_back( archMouth() );
 		archMouth *mo = &archMouths[archMouths.size()-1];
 		
@@ -702,7 +702,7 @@ void Body::copyFrom(Body& otherBody)
 
 	for ( unsigned int i=0; i < otherBody.archConstraints.size(); i++ )
 	{
-		archConstraint *oco = &otherBody.archConstraints[i];
+		const archConstraint *oco = &otherBody.archConstraints[i];
 		archConstraints.push_back( archConstraint() );
 		archConstraint *co = &archConstraints[archConstraints.size()-1];
 		

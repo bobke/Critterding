@@ -861,7 +861,7 @@ Brainz::Brainz()
 		}
 	}
 
-	void Brainz::copyFrom(Brainz& otherBrain)
+	void Brainz::copyFrom(const Brainz& otherBrain)
 	{
 // 		numberOfInputs				= otherBrain.numberOfInputs;
 // 		numberOfOutputs				= otherBrain.numberOfOutputs;
@@ -910,7 +910,7 @@ Brainz::Brainz()
 		for ( unsigned int i = 0; i < otherBrain.ArchNeurons.size(); i++ )
 		{
 			ArchNeuronz an;
-			ArchNeuronz *oan = &otherBrain.ArchNeurons[i];
+			const ArchNeuronz *oan = &otherBrain.ArchNeurons[i];
 
 			an.isInhibitory = oan->isInhibitory;
 
@@ -930,7 +930,7 @@ Brainz::Brainz()
 			for ( unsigned int j = 0; j < oan->ArchSynapses.size(); j++ )
 			{
 				ArchSynapse as;
-				ArchSynapse *oas = &oan->ArchSynapses[j];
+				const ArchSynapse *oas = &oan->ArchSynapses[j];
 
 				as.isSensorNeuron	= oas->isSensorNeuron;
 				as.neuronID		= oas->neuronID;
@@ -942,7 +942,7 @@ Brainz::Brainz()
 		}
 	}
 
-	void Brainz::mergeFrom(Brainz& otherBrain1, Brainz& otherBrain2)
+	void Brainz::mergeFrom(const Brainz& otherBrain1, const Brainz& otherBrain2)
 	{
 // 		numberOfInputs				= otherBrain1.numberOfInputs;
 // 		numberOfOutputs				= otherBrain1.numberOfOutputs;
@@ -998,7 +998,7 @@ Brainz::Brainz()
 			even = !even;
 			ArchNeuronz an;
 
-			ArchNeuronz *oan;
+			const ArchNeuronz *oan;
 
 			if ( i < otherBrain1.ArchNeurons.size() && even )
 				oan = &otherBrain1.ArchNeurons[i];
@@ -1024,7 +1024,7 @@ Brainz::Brainz()
 			for ( unsigned int j = 0; j < oan->ArchSynapses.size(); j++ )
 			{
 				ArchSynapse as;
-				ArchSynapse *oas = &oan->ArchSynapses[j];
+				const ArchSynapse *oas = &oan->ArchSynapses[j];
 
 				as.isSensorNeuron	= oas->isSensorNeuron;
 				as.neuronID		= oas->neuronID;
