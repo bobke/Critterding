@@ -17,6 +17,7 @@ class WorldRace : public WorldB {
 		void		insFood(int nr);
 		
 		float		critterspacing;
+		bool		haveWinner;
 
 		unsigned int	framecounter;
 		
