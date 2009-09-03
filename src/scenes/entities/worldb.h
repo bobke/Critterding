@@ -98,6 +98,7 @@ class WorldB
 
 		const unsigned int*	retinasperrow;
 		const unsigned int*	critter_retinasize;
+		const unsigned int*	critter_maxenergy;
 
 		// FIXME: inline
 		void		grabVision();
@@ -125,7 +126,6 @@ class WorldB
 
 		// Settings pointers.. performance
 		const unsigned int*	critter_maxlifetime;
-		const unsigned int*	critter_maxenergy;
 		const unsigned int*	critter_autosaveinterval;
 		const unsigned int*	critter_killhalfat;
 		const unsigned int*	critter_sightrange;

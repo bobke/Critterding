@@ -7,7 +7,7 @@ WorldRace::WorldRace()
 void WorldRace::init()
 {
 		numcritters = 10;
-		testduration = 100;
+		testduration = 5000;
 
 		settings->setCVar( "worldsizeX", numcritters*10 );
 		settings->setCVar( "worldsizeY", 10 );
@@ -134,8 +134,88 @@ void WorldRace::process()
 	{
 		CritterB *c = critters[i];
 
+		// set inputs to false and recheck
+			c->touchingFood = false;
+
+		// TOUCH inputs and references -> find overlappings
+			if ( c->body.mouths.size() > 0 )
+			{
+				btManifoldArray   manifoldArray;
+				btBroadphasePairArray& pairArray = c->body.mouths[0]->ghostObject->getOverlappingPairCache()->getOverlappingPairArray();
+				int numPairs = pairArray.size();
+
+				for ( int i=0; i < numPairs; i++ )
+				{
+					manifoldArray.clear();
+
+					const btBroadphasePair& pair = pairArray[i];
+
+					//unless we manually perform collision detection on this pair, the contacts are in the dynamics world paircache:
+					btBroadphasePair* collisionPair = m_dynamicsWorld->getPairCache()->findPair(pair.m_pProxy0,pair.m_pProxy1);
+					if (!collisionPair)
+						continue;
+
+					if (collisionPair->m_algorithm)
+						collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
+
+					bool stop = false;
+					for ( int j = 0; j < manifoldArray.size() && !stop; j++ )
+					{
+						btPersistentManifold* manifold = manifoldArray[j];
+						
+						btCollisionObject* object1 = static_cast<btCollisionObject*>(manifold->getBody0());
+						btCollisionObject* object2 = static_cast<btCollisionObject*>(manifold->getBody1());
+
+						if ( object1->getUserPointer() == c && object2->getUserPointer() == c )
+							continue;
+
+						for ( int p = 0; p < manifold->getNumContacts(); p++ )
+						{
+							const btManifoldPoint &pt = manifold->getContactPoint(p);
+							if ( pt.getDistance() < 0.f )
+							{
+								void* Collidingobject;
+								if ( object1->getUserPointer() != c && object1->getUserPointer() != 0 )
+									Collidingobject = object1->getUserPointer();
+								else
+									Collidingobject = object2->getUserPointer();
+
+								// Touching Food
+								Food* f = static_cast<Food*>(Collidingobject);
+								if ( f )
+								{
+									if ( f->type == 1 )
+									{
+										stop = true;
+										c->touchingFood = true;
+										c->touchedFoodID = f;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
 		// process
 		c->process();
+
+		// process Output Neurons
+			if ( c->eat )
+			{
+				if ( c->touchingFood )
+				{
+					Food* f = c->touchedFoodID;
+					float eaten = *critter_maxenergy / 50.0f;
+					if ( c->energyLevel + eaten > *critter_maxenergy )
+						eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
+					if ( f->energyLevel - eaten < 0 )
+						eaten = f->energyLevel;
+
+					c->energyLevel += eaten;
+					f->energyLevel -= eaten;
+				}
+			}
 
 		// count totals of neurons, synapses and adamdistances
 			settings->info_totalNeurons		+= c->brain.totalNeurons;
@@ -161,7 +241,9 @@ void WorldRace::process()
 				btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
 				btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
 
-				critters[i]->fitness_index = 1.0f/cposi.distance(fposi); 
+				critters[i]->fitness_index = 1.0f /(cposi.distance(fposi) + 0.0000001); 
+				critters[i]->fitness_index += 1.0f /(food[i]->energyLevel + 0.0000001);
+
 			}
 
 			// initialize sort indices for
@@ -252,6 +334,7 @@ void WorldRace::process()
 void WorldRace::insCritter(int nr)
 {
 	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), retina);
+	c->energyLevel = 500;
 	critters.push_back( c );
 	c->calcFramePos(critters.size()-1);
 }
@@ -259,7 +342,12 @@ void WorldRace::insCritter(int nr)
 void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody)
 {
 	CritterB *nc;
-	nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), mutateBrain, mutateBody);
+	// give an edge to the one in lane 2
+	if ( nr == 1 )
+		nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-3.0f ), mutateBrain, mutateBody);
+	else
+		nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), mutateBrain, mutateBody);
+	nc->energyLevel = 500;
 	critters.push_back( nc );
 	nc->calcFramePos(critters.size()-1);
 }
