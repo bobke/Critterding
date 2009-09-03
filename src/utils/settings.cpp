@@ -11,6 +11,7 @@ Settings::Settings()
 	profileName			= "default";
 
 	registerCVar("fullscreen",						0, 0, 1, true);
+	registerCVar("race",							0, 0, 1, true);
 
 	registerCVar("worldsizeX",						16, 1, 5000);
 	registerCVar("worldsizeY",						12, 1, 5000);

@@ -6,12 +6,6 @@ WorldRace::WorldRace()
 
 void WorldRace::init()
 {
-		numcritters = 10;
-		testduration = 5000;
-
-		settings->setCVar( "worldsizeX", numcritters*10 );
-		settings->setCVar( "worldsizeY", 10 );
-		
 	// Wall Constants
 		float WallWidth = 0.5f;
 		float WallHalfWidth = WallWidth/2.0f;
@@ -44,7 +38,7 @@ void WorldRace::init()
 		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 		walls.push_back(w);
 
-		critterspacing = (float)settings->getCVar("worldsizeX") / numcritters;
+		critterspacing = (float)settings->getCVar("worldsizeX") / settings->getCVar("mincritters");
 
 	// seperator walls
 		WallWidth = 0.2f;
@@ -55,7 +49,7 @@ void WorldRace::init()
 	// insert first batch of critters
 		testcounter = 1;
 		cerr << endl << "Initializing run " << testcounter << " ... " << endl;
-		for ( unsigned int i=1; i < numcritters; i++  )
+		for ( unsigned int i=1; i < settings->getCVar("mincritters"); i++  )
 		{
 			position = btVector3 ( 0.0f-WallHalfWidth + (critterspacing*i), WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
 			w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
@@ -67,11 +61,11 @@ void WorldRace::init()
 		resetCamera();
 
 	// insert first batch of critters
-		for ( unsigned int i=0; i < numcritters; i++  )
+		for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
 			insCritter( i );
 
 	// insert food
-		for ( unsigned int i=0; i < numcritters; i++  )
+		for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
 			insFood( i );
 		
 		framecounter = 0;
@@ -227,33 +221,35 @@ void WorldRace::process()
 	settings->info_food = food.size();
 
 	framecounter++;
-	if ( framecounter == testduration  )
+	if ( framecounter == settings->getCVar("critter_maxlifetime")  )
 	{
 		cerr << "Evaluating..." << endl;
 
 			// measure their distances from their respective food targets
-			for ( unsigned int i=0; i < numcritters; i++  )
+			for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
 			{
-				// calculate the distance between food and critter
-				btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)critters[i]->body.mouths[0]->body->getMotionState();
-				btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
+				// fitness function 1: distance to food cube
+					btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)critters[i]->body.mouths[0]->body->getMotionState();
+					btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
 
-				btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
-				btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
+					btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
+					btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
 
-				critters[i]->fitness_index = 1.0f /(cposi.distance(fposi) + 0.0000001); 
-				critters[i]->fitness_index += 1.0f /(food[i]->energyLevel + 0.0000001);
+					critters[i]->fitness_index =  1.0f /(cposi.distance(fposi) + 0.0000001); 
+				
+				// fitness function 2: energy of food consumed
+					critters[i]->fitness_index += ( 1.0f /(food[i]->energyLevel + 0.0000001));
 
 			}
 
 			// initialize sort indices for
-			vector<int> indices ( numcritters, 0 );
-			for ( unsigned int i = 0; i < numcritters; i++ )
+			vector<int> indices ( settings->getCVar("mincritters"), 0 );
+			for ( unsigned int i = 0; i < settings->getCVar("mincritters"); i++ )
 				indices[i] = i;
 	
 			// sort results
 // 			cerr << "sorting" << endl;
-			for ( int i = numcritters; i>0; i--  )
+			for ( int i = settings->getCVar("mincritters"); i>0; i--  )
 				for ( int j = 0; j < i-1; j++  )
 					if ( critters[indices[j]]->fitness_index < critters[indices[j+1]]->fitness_index )
 					{
@@ -264,7 +260,7 @@ void WorldRace::process()
 // 			cerr << "done sorting" << endl;
 
 			// display results
-			for ( unsigned int i=0; i < numcritters; i++  )
+			for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
 			{
 				cerr << "c " << indices[i] << " : " << critters[indices[i]]->fitness_index << endl;
 			}
@@ -273,7 +269,7 @@ void WorldRace::process()
 
 			// backup the 50% best critters
 				vector<CritterB*> best;
-				for ( unsigned int i=0; i < numcritters/2; i++  )
+				for ( unsigned int i=0; i < settings->getCVar("mincritters")/2; i++  )
 				{
 					CritterB* b = new CritterB(*critters[indices[i]], currentCritterID++, btVector3( 0.0f, 0.0f, 0.0f ), false, false);
 					best.push_back( b );
@@ -322,7 +318,7 @@ void WorldRace::process()
 					delete best[i];
 
 			// reinsert respective food units
-				for ( unsigned int i=0; i < numcritters; i++  )
+				for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
 					insFood( i );
 
 			framecounter = 0;
@@ -331,6 +327,7 @@ void WorldRace::process()
 	}
 }
 
+// FIXME: overwrite maxenergylevel
 void WorldRace::insCritter(int nr)
 {
 	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), retina);
@@ -355,7 +352,7 @@ void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, boo
 void WorldRace::insFood(int nr)
 {
 	Food *f = new Food;
-	f->energyLevel = 5000;
+	f->energyLevel = 4000;
 
 	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, 1.0f ) );
 
