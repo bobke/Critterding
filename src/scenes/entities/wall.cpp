@@ -14,7 +14,7 @@ Wall::Wall(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dyn
 	color[3]	= 0.0f;
 
 	groundShape = new btBoxShape( btVector3( halfX ,halfY, halfZ ) );
-	btTransform groundTransform;
+	
 	groundTransform.setIdentity();
 	groundTransform.setOrigin( position );
 
@@ -23,14 +23,14 @@ Wall::Wall(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dyn
 	fixedGround->setWorldTransform(groundTransform);
 	m_ownerWorld->addCollisionObject(fixedGround);
 
-	fixedGround->getWorldTransform().getOpenGLMatrix(m);
+	fixedGround->getWorldTransform().getOpenGLMatrix(nposition);
 }
 
 void Wall::draw()
 {
 // 	fixedGround->getWorldTransform().getOpenGLMatrix(m);
 	glPushMatrix(); 
-	glMultMatrixf(m);
+	glMultMatrixf(nposition);
 
 		glColor4f( color[0], color[1], color[2], color[3] );
 

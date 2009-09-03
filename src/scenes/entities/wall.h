@@ -18,15 +18,15 @@ class Wall
 		void			create(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dynamicsWorld);
 
 		float			color[4];
-
+		btTransform		groundTransform;
 	private:
 		btDynamicsWorld* 	m_ownerWorld;
 		float			halfX;
 		float			halfY;
 		float			halfZ;
 		btCollisionShape*	groundShape;
+		btScalar		nposition[16];
 		btCollisionObject*	fixedGround;
-		btScalar		m[16];
 };
 
 #endif
