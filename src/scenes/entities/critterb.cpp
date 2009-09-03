@@ -140,9 +140,6 @@ CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& start
 	speciescolor[1]					= other.speciescolor[1];
 	speciescolor[2]					= other.speciescolor[2];
 
-	// BODY FIXME HACK IMPROVE WITHOUT PARSING
-// 	string* otherBodyArch = other.body.getArch();
-// 	body.setArch(otherBodyArch);
 	body.copyFrom(other.body);
 	brain.copyFrom(other.brain);
 

@@ -21,6 +21,8 @@ class WorldRace : public WorldB {
 
 		unsigned int	framecounter;
 		unsigned int	testduration;
+		
+		unsigned int	testcounter;
 };
 
 #endif
