@@ -340,9 +340,9 @@ void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, boo
 {
 	CritterB *nc;
 	// give an edge to the one in lane 2
-	if ( nr == 1 )
-		nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-3.0f ), mutateBrain, mutateBody);
-	else
+// 	if ( nr == 1 )
+// 		nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-3.0f ), mutateBrain, mutateBody);
+// 	else
 		nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), mutateBrain, mutateBody);
 	nc->energyLevel = 500;
 	critters.push_back( nc );
