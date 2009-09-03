@@ -159,7 +159,7 @@ void Body::wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& s
 
 	btTransform transform;
 	transform.setIdentity();
-	transform.setOrigin( btVector3( 0.0f, 0.1f, 0.0f ) );
+	transform.setOrigin( btVector3( 0.1f, 0.1f, 0.1f ) );
 
 	for ( unsigned int i=0; i < archBodyparts.size(); i++ )
 	{
