@@ -49,23 +49,7 @@ void WorldRace::process()
 		}
 
 		// Read pixels into retina
-		if ( critters.size() > 0 )
-		{
-			// determine width
-			unsigned int picwidth = *retinasperrow * (*critter_retinasize+1);
-
-			// determine height
-			unsigned int picheight = *critter_retinasize;
-			unsigned int rows = critters.size();
-			while ( rows > *retinasperrow )
-			{
-				picheight += *critter_retinasize;
-				rows -= *retinasperrow;
-			}
-			glReadBuffer(GL_BACK);
-			glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-			glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
-		}
+		grabVision();
 
 	settings->info_totalNeurons = 0;
 	settings->info_totalSynapses = 0;

@@ -50,6 +50,9 @@ WorldB::WorldB()
 	// mousepicker
 	mousepicker = new Mousepicker(m_dynamicsWorld);
 
+	// determine vision width
+	picwidth = *retinasperrow * (*critter_retinasize+1);
+	
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawWireframe|btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints);
@@ -139,38 +142,6 @@ void WorldB::movePickedBody()
 {
 	if ( mousepicker->active )
 		mousepicker->moveFrom( camera.position );
-}
-
-void WorldB::grabVision()
-{
-	// render critter vision
-	for( unsigned int i=0; i < critters.size(); i++)
-	{
-		if ( critters[i]->body.mouths.size() > 0 )
-		{
-			critters[i]->place();
-			drawWithinCritterSight(i);
-		}
-	}
-
-	// Read pixels into retina
-	if ( critters.size() > 0 )
-	{
-		// determine width
-		unsigned int picwidth = *retinasperrow * (*critter_retinasize+1);
-
-		// determine height
-		unsigned int picheight = *critter_retinasize;
-		unsigned int rows = critters.size();
-		while ( rows > *retinasperrow )
-		{
-			picheight += *critter_retinasize;
-			rows -= *retinasperrow;
-		}
- 		glReadBuffer(GL_BACK);
- 		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
-	}
 }
 
 void WorldB::process()
@@ -297,6 +268,7 @@ void WorldB::process()
 	// do a bullet step
 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
 
+	renderVision();
 	grabVision();
 
 	settings->info_totalNeurons = 0;
