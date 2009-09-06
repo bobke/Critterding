@@ -11,6 +11,8 @@ Constraint::Constraint(btDynamicsWorld* ownerWorld, btRigidBody& bodyA, btRigidB
 	m_ownerWorld = ownerWorld;
 
 	hinge = new btHingeConstraint( bodyA, bodyB, localA, localB );
+// 	hinge->m_setting.m_impulseClamp = 30.f;
+// 	hinge->m_setting.m_tau = 0.1f;
 	hinge->setLimit( limitA, limitB );
 	m_ownerWorld->addConstraint( hinge, true );
 

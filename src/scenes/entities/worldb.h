@@ -102,6 +102,7 @@ class WorldB
 
 		// FIXME: inline
 		void		grabVision();
+		void		checkCollisions( CritterB* c );
 
 	private:
 		Parser*			parseH;

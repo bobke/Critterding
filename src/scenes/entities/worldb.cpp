@@ -309,80 +309,8 @@ void WorldB::process()
 	{
 		CritterB *c = critters[i];
 
-		// set inputs to false and recheck
-			c->touchingFood = false;
-			c->touchingCritter = false;
-
 		// TOUCH inputs and references -> find overlappings
-			if ( c->body.mouths.size() > 0 )
-			{
-				btManifoldArray   manifoldArray;
-				btBroadphasePairArray& pairArray = c->body.mouths[0]->ghostObject->getOverlappingPairCache()->getOverlappingPairArray();
-				int numPairs = pairArray.size();
-
-				for ( int i=0; i < numPairs; i++ )
-				{
-					manifoldArray.clear();
-
-					const btBroadphasePair& pair = pairArray[i];
-
-					//unless we manually perform collision detection on this pair, the contacts are in the dynamics world paircache:
-					btBroadphasePair* collisionPair = m_dynamicsWorld->getPairCache()->findPair(pair.m_pProxy0,pair.m_pProxy1);
-					if (!collisionPair)
-						continue;
-
-					if (collisionPair->m_algorithm)
-						collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
-
-					bool stop = false;
-					for ( int j = 0; j < manifoldArray.size() && !stop; j++ )
-					{
-						btPersistentManifold* manifold = manifoldArray[j];
-						
-						btCollisionObject* object1 = static_cast<btCollisionObject*>(manifold->getBody0());
-						btCollisionObject* object2 = static_cast<btCollisionObject*>(manifold->getBody1());
-
-						if ( object1->getUserPointer() == c && object2->getUserPointer() == c )
-							continue;
-
-						for ( int p = 0; p < manifold->getNumContacts(); p++ )
-						{
-							const btManifoldPoint &pt = manifold->getContactPoint(p);
-							if ( pt.getDistance() < 0.f )
-							{
-								void* Collidingobject;
-								if ( object1->getUserPointer() != c && object1->getUserPointer() != 0 )
-									Collidingobject = object1->getUserPointer();
-								else
-									Collidingobject = object2->getUserPointer();
-
-								// Touching Food
-								Food* f = static_cast<Food*>(Collidingobject);
-								if ( f )
-								{
-									if ( f->type == 1 )
-									{
-										stop = true;
-										c->touchingFood = true;
-										c->touchedFoodID = f;
-									}
-									else
-									{
-										// Touching Critter
-										CritterB* b = static_cast<CritterB*>(Collidingobject);
-										if ( b->type == 0 )
-										{
-											stop = true;
-											c->touchingCritter = true;
-											c->touchedCritterID = b;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+			checkCollisions(  c );
 
 		// process
 			c->process();
@@ -475,6 +403,83 @@ void WorldB::process()
 	settings->info_critters = critters.size();
 	settings->info_food = food.size();
 
+}
+
+void WorldB::checkCollisions( CritterB* c )
+{
+	// set inputs to false and recheck
+		c->touchingFood = false;
+		c->touchingCritter = false;
+
+	if ( c->body.mouths.size() > 0 )
+	{
+		btManifoldArray   manifoldArray;
+		btBroadphasePairArray& pairArray = c->body.mouths[0]->ghostObject->getOverlappingPairCache()->getOverlappingPairArray();
+		int numPairs = pairArray.size();
+
+		for ( int i=0; i < numPairs; i++ )
+		{
+			manifoldArray.clear();
+
+			const btBroadphasePair& pair = pairArray[i];
+
+			//unless we manually perform collision detection on this pair, the contacts are in the dynamics world paircache:
+			btBroadphasePair* collisionPair = m_dynamicsWorld->getPairCache()->findPair(pair.m_pProxy0,pair.m_pProxy1);
+			if (!collisionPair)
+				continue;
+
+			if (collisionPair->m_algorithm)
+				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
+
+			bool stop = false;
+			for ( int j = 0; j < manifoldArray.size() && !stop; j++ )
+			{
+				btPersistentManifold* manifold = manifoldArray[j];
+				
+				btCollisionObject* object1 = static_cast<btCollisionObject*>(manifold->getBody0());
+				btCollisionObject* object2 = static_cast<btCollisionObject*>(manifold->getBody1());
+
+				if ( object1->getUserPointer() == c && object2->getUserPointer() == c )
+					continue;
+
+				for ( int p = 0; p < manifold->getNumContacts(); p++ )
+				{
+					const btManifoldPoint &pt = manifold->getContactPoint(p);
+					if ( pt.getDistance() < 0.f )
+					{
+						void* Collidingobject;
+						if ( object1->getUserPointer() != c && object1->getUserPointer() != 0 )
+							Collidingobject = object1->getUserPointer();
+						else
+							Collidingobject = object2->getUserPointer();
+
+						// Touching Food
+						Food* f = static_cast<Food*>(Collidingobject);
+						if ( f )
+						{
+							if ( f->type == 1 )
+							{
+								stop = true;
+								c->touchingFood = true;
+								c->touchedFoodID = f;
+							}
+							else
+							{
+								// Touching Critter
+								CritterB* b = static_cast<CritterB*>(Collidingobject);
+								if ( b->type == 0 )
+								{
+									stop = true;
+									c->touchingCritter = true;
+									c->touchedCritterID = b;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void WorldB::insertRandomFood(int amount, float energy)
