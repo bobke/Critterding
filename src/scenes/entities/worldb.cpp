@@ -359,9 +359,11 @@ void WorldB::process()
 					c->procreateTimeCount = 0;
 
 					settings->info_critters++;
-					settings->info_totalNeurons += nc->brain.totalNeurons;
-					settings->info_totalSynapses += nc->brain.totalSynapses;
-					settings->info_totalAdamDistance += nc->adamdist;
+					settings->info_totalNeurons		+= nc->brain.totalNeurons;
+					settings->info_totalSynapses		+= nc->brain.totalSynapses;
+					settings->info_totalAdamDistance	+= nc->adamdist;
+					settings->info_totalBodyparts		+= nc->body.bodyparts.size();
+					settings->info_totalWeight		+= nc->body.totalWeight;
 
 					critters.push_back( nc );
 					
