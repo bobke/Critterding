@@ -16,6 +16,7 @@ class Infostats
 		unsigned int height();
 
 	private:
+		Settings*		settings;
 		// horizontal/vertical spacers (padding)
 		unsigned int hsp;
 		unsigned int vsp;

@@ -57,6 +57,9 @@ class Settings
 		unsigned int info_totalSynapses;
 		unsigned int info_totalAdamDistance;
 
+		unsigned int info_totalBodyparts;
+		unsigned int info_totalWeight;
+
 		unsigned int *winWidth;
 		unsigned int *winHeight;
 

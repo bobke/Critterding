@@ -55,6 +55,7 @@ class Body
 		vector<archMouth>	archMouths;
 
 		btDynamicsWorld* 	m_ownerWorld;
+		float			totalWeight;
 
 	private:
 		Parser			*parseH;

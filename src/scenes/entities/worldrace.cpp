@@ -35,8 +35,37 @@ void WorldRace::process()
 	// do a bullet step
 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
 
-	// render critter vision
-		grabVision();
+	// render critter vision, optimized for this sim
+		for( unsigned int i=0; i < critters.size(); i++)
+		{
+			if ( critters[i]->body.mouths.size() > 0 )
+			{
+				critters[i]->place();
+				food[i]->draw();
+
+				for( unsigned int i=0; i < walls.size(); i++)
+					walls[i]->draw();
+			}
+		}
+
+		// Read pixels into retina
+		if ( critters.size() > 0 )
+		{
+			// determine width
+			unsigned int picwidth = *retinasperrow * (*critter_retinasize+1);
+
+			// determine height
+			unsigned int picheight = *critter_retinasize;
+			unsigned int rows = critters.size();
+			while ( rows > *retinasperrow )
+			{
+				picheight += *critter_retinasize;
+				rows -= *retinasperrow;
+			}
+			glReadBuffer(GL_BACK);
+			glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+			glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
+		}
 
 	settings->info_totalNeurons = 0;
 	settings->info_totalSynapses = 0;
