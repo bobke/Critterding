@@ -38,7 +38,7 @@ Settings::Settings()
 	registerCVar("critter_retinasize",					6, 1, 1000);
 	registerCVar("critter_autosaveinterval",				0, 0, 1000000);
 	registerCVar("critter_killhalfat",					1000, 2, 1000000);
-	registerCVar("critter_enableherbivores",				0, 0, 1);
+	registerCVar("critter_enablecarnivores",				0, 0, 1, true);
 	
 	registerCVar("food_maxlifetime",					10000, 1, 1000000);
 	registerCVar("food_maxenergy",						1000, 1, 1000000);
