@@ -37,7 +37,6 @@ void WorldRace::process()
 
 	// render critter vision, optimized for this sim
 		for( unsigned int i=0; i < critters.size(); i++)
-		{
 			if ( critters[i]->body.mouths.size() > 0 )
 			{
 				critters[i]->place();
@@ -46,7 +45,6 @@ void WorldRace::process()
 				for( unsigned int i=0; i < walls.size(); i++)
 					walls[i]->draw();
 			}
-		}
 
 		// Read pixels into retina
 		grabVision();
@@ -66,7 +64,7 @@ void WorldRace::process()
 			checkCollisions(  c );
 
 		// process
-		c->process();
+			c->process();
 
 		// process Output Neurons
 			if ( c->eat && c->touchingFood )
@@ -106,43 +104,40 @@ void WorldRace::process()
 		cerr << "Evaluating..." << endl;
 
 			// measure their distances from their respective food targets
-			for ( unsigned int i=0; i < critters.size(); i++  )
-			{
-				// fitness function 1: distance to food cube
-					btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)critters[i]->body.mouths[0]->body->getMotionState();
-					btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
+				for ( unsigned int i=0; i < critters.size(); i++  )
+				{
+					// fitness function 1: distance to food cube
+						btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)critters[i]->body.mouths[0]->body->getMotionState();
+						btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
 
-					btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
-					btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
+						btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
+						btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
 
-					critters[i]->fitness_index =  1.0f /(cposi.distance(fposi) + 0.0000001); 
-				
-				// fitness function 2: energy of food consumed
-					critters[i]->fitness_index += ( 10.0f /(food[i]->energyLevel + 0.0000001));
+						critters[i]->fitness_index =  1.0f /(cposi.distance(fposi) + 0.0000001); 
+					
+					// fitness function 2: energy of food consumed
+						critters[i]->fitness_index += ( 10.0f /(food[i]->energyLevel + 0.0000001));
 
-			}
+				}
 
 			// initialize sort indices for
-			vector<int> indices ( critters.size(), 0 );
-			for ( unsigned int i = 0; i < critters.size(); i++ )
-				indices[i] = i;
+				vector<int> indices ( critters.size(), 0 );
+				for ( unsigned int i = 0; i < critters.size(); i++ )
+					indices[i] = i;
 	
 			// sort results
-			for ( int i = critters.size(); i>0; i--  )
-				for ( int j = 0; j < i-1; j++  )
-					if ( critters[indices[j]]->fitness_index < critters[indices[j+1]]->fitness_index )
-					{
-						unsigned keepI	= indices[j];
-						indices[j]	= indices[j+1];
-						indices[j+1]	= keepI;
-					}
-// 			cerr << "done sorting" << endl;
+				for ( int i = critters.size(); i>0; i--  )
+					for ( int j = 0; j < i-1; j++  )
+						if ( critters[indices[j]]->fitness_index < critters[indices[j+1]]->fitness_index )
+						{
+							unsigned keepI	= indices[j];
+							indices[j]	= indices[j+1];
+							indices[j+1]	= keepI;
+						}
 
 			// display results
-			for ( unsigned int i=0; i < critters.size(); i++  )
-			{
-				cerr << "c " << indices[i] << " : " << critters[indices[i]]->fitness_index << endl;
-			}
+				for ( unsigned int i=0; i < critters.size(); i++  )
+					cerr << "c " << indices[i] << " : " << critters[indices[i]]->fitness_index << endl;
 
 		cerr << endl << "Initializing run " << ++testcounter << " ... " << endl;
 
@@ -153,11 +148,7 @@ void WorldRace::process()
 				if ( critters.size() == 1 )
 					bestNum = 1;
 				for ( unsigned int i=0; i < bestNum; i++  )
-				{
-					CritterB* b = new CritterB(*critters[indices[i]], currentCritterID++, btVector3( 0.0f, 0.0f, 0.0f ), false, false);
-					best.push_back( b );
-// 					cerr << " backing up " << indices[i] << endl;
-				}
+					best.push_back( new CritterB(*critters[indices[i]], currentCritterID++, btVector3( 0.0f, 0.0f, 0.0f ), false, false) );
 
 			// remove critters and food
 				for ( unsigned int i=0; i < critters.size(); i++ )
@@ -180,17 +171,12 @@ void WorldRace::process()
 
 			// reinsert the best critters
 				for ( unsigned int i=0; i < best.size() && i < settings->getCVar("mincritters"); i++  )
-				{
 					insMutatedCritter( *best[i], critters.size(), false, false );
-				}
 
 			// insert the mutants
-// 				cerr << "inserting critters" << endl;
-
 				unsigned int count = 0;
 				while ( critters.size() < settings->getCVar("mincritters") )
 				{
-// 					cerr << " inserting " << critters.size() << endl;
 					if ( best.size() > 0 )
 					{
 						bool brainmutant = false;
@@ -226,7 +212,6 @@ void WorldRace::process()
 	}
 }
 
-// FIXME: overwrite maxenergylevel
 void WorldRace::insCritter(int nr)
 {
 	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), retina);
@@ -248,9 +233,7 @@ void WorldRace::insFood(int nr)
 {
 	Food *f = new Food;
 	f->energyLevel = 4000;
-
 	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, 1.0f ) );
-
 	food.push_back( f );
 }
 
