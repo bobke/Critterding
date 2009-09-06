@@ -101,8 +101,42 @@ class WorldB
 		const unsigned int*	critter_maxenergy;
 
 		// FIXME: inline
-		void		grabVision();
+// 		void		renderVision();
+// 		void		grabVision();
+
 		void		checkCollisions( CritterB* c );
+
+		inline void grabVision()
+		{
+			// Read pixels into retina
+			if ( critters.size() > 0 )
+			{
+				// determine height
+				unsigned int picheight = *critter_retinasize;
+				unsigned int rows = critters.size();
+				while ( rows > *retinasperrow )
+				{
+					picheight += *critter_retinasize;
+					rows -= *retinasperrow;
+				}
+				glReadBuffer(GL_BACK);
+				glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+				glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
+			}
+		}
+
+		inline void renderVision()
+		{
+			// render critter vision
+			for( unsigned int i=0; i < critters.size(); i++)
+			{
+				if ( critters[i]->body.mouths.size() > 0 )
+				{
+					critters[i]->place();
+					drawWithinCritterSight(i);
+				}
+			}
+		}
 
 	private:
 		Parser*			parseH;
@@ -134,6 +168,8 @@ class WorldB
 		const unsigned int*	food_maxlifetime;
 		const unsigned int*	food_maxenergy;
 
+		// vision opts
+		unsigned int picwidth;
 };
 
 #endif
