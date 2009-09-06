@@ -128,6 +128,9 @@ Settings::Settings()
 	info_totalNeurons = 0;
 	info_totalSynapses = 0;
 	info_totalAdamDistance = 0;
+
+	info_totalBodyparts = 0;
+	info_totalWeight = 0;
 	
 	createHelpInfo();
 }

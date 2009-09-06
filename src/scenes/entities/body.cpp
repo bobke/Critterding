@@ -3,6 +3,7 @@
 Body::Body()
 {
 	settings = Settings::Instance();
+	totalWeight = 0.0f;
 }
 
 void Body::addBodyPart_Capsule(void* owner, float width, float height, float weight, btTransform& offset, btTransform& transform)
@@ -31,6 +32,7 @@ void Body::addBodyPart_Capsule(void* owner, float width, float height, float wei
 
 void Body::addBodyPart_Box(void* owner, float x, float y, float z, float weight, btTransform& offset, btTransform& transform)
 {
+	totalWeight += weight;
 	Bodypart *b = new Bodypart(
 		m_ownerWorld,
 		owner,
@@ -44,6 +46,7 @@ void Body::addBodyPart_Box(void* owner, float x, float y, float z, float weight,
 
 void Body::addMouth(void* owner, float x, float y, float z, float weight, btTransform& offset, btTransform& transform)
 {
+	totalWeight += weight;
 
 	Mouth *m = new Mouth(
 		m_ownerWorld,
@@ -159,7 +162,7 @@ void Body::wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& s
 
 	btTransform transform;
 	transform.setIdentity();
-	transform.setOrigin( btVector3( 0.1f, 0.1f, 0.1f ) );
+	transform.setOrigin( btVector3( 0.0f, 0.0f, 0.0f ) );
 
 	for ( unsigned int i=0; i < archBodyparts.size(); i++ )
 	{
@@ -170,8 +173,8 @@ void Body::wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& s
 		{
 			// calculate weight
 			float weight = ((bp->x*bp->y*bp->z)/1000) * 0.001f; // FIXME 0.001 is density of material
+			totalWeight += weight;
 			Bodypart *b = new Bodypart(m_ownerWorld, owner, btVector3( bp->x/1000, bp->y/1000, bp->z/1000 ), weight, offset, transform);
-// 			Bodypart *b = new Bodypart(m_ownerWorld);
 			bodyparts.push_back( b );
 		}
 	}
