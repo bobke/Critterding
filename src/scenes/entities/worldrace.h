@@ -12,6 +12,8 @@ class WorldRace : public WorldB {
 		void		process();
 		void		init();
 	private:
+		void		makeFloor();
+		void		clearFloor();
 		void		insCritter(int nr);
 		void		insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody);
 		void		insFood(int nr);
