@@ -97,7 +97,6 @@ void WorldRace::process()
 
 // 	cerr << critters.size() << endl;
 	// render critter vision
-		float sightrange = (float)settings->getCVar("critter_sightrange")/10;
 		for( unsigned int i=0; i < critters.size(); i++)
 		{
 			if ( critters[i]->body.mouths.size() > 0 )
@@ -105,15 +104,8 @@ void WorldRace::process()
 				critters[i]->place();
 				food[i]->draw();
 
-				btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)critters[i]->body.mouths[0]->body->getMotionState();
-				btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
 				for( unsigned int i=0; i < walls.size(); i++)
-				{
-					Wall *f = walls[i];
-					btVector3 fposi = f->groundTransform.getOrigin();
-					if ( cposi.distance(fposi) < sightrange )
-						f->draw();
-				}
+					walls[i]->draw();
 			}
 		}
 

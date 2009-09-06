@@ -593,12 +593,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 		btScalar position[16];
 
 		for( unsigned int i=0; i < walls.size(); i++)
-		{
-			Wall *f = walls[i];
-			btVector3 fposi = f->groundTransform.getOrigin();
-			if ( cposi.distance(fposi) < sightrange )
-				f->draw();
-		}
+			walls[i]->draw();
 
 		for( unsigned int i=0; i < food.size(); i++)
 		{
