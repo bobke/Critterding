@@ -18,7 +18,7 @@ void WorldRace::init()
 
 	// insert first batch of critters
 		for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
-			insCritter( i );
+			insRandomCritter( i );
 
 	// insert food
 		for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
@@ -194,7 +194,7 @@ void WorldRace::process()
 							count = 0;
 					}
 					else
-						insCritter( critters.size() );
+						insRandomCritter( critters.size() );
 				}
 
 			// remove best again
@@ -212,10 +212,10 @@ void WorldRace::process()
 	}
 }
 
-void WorldRace::insCritter(int nr)
+void WorldRace::insRandomCritter(int nr)
 {
 	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), retina);
-	c->energyLevel = 500;
+	c->energyLevel = settings->getCVar("critter_maxenergy");
 	critters.push_back( c );
 	c->calcFramePos(critters.size()-1);
 }
@@ -224,7 +224,7 @@ void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, boo
 {
 	CritterB *nc;
 	nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), mutateBrain, mutateBody);
-	nc->energyLevel = 500;
+	nc->energyLevel = settings->getCVar("critter_maxenergy");
 	critters.push_back( nc );
 	nc->calcFramePos(critters.size()-1);
 }
@@ -232,7 +232,7 @@ void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, boo
 void WorldRace::insFood(int nr)
 {
 	Food *f = new Food;
-	f->energyLevel = 4000;
+	f->energyLevel = settings->getCVar("food_maxenergy");
 	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, 1.0f ) );
 	food.push_back( f );
 }

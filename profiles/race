@@ -5,3 +5,5 @@ worldsizeX 50
 worldsizeY 15
 brain_mutationrate 33
 body_mutationrate 33
+food_maxenergy 4000
+critter_maxenergy 500
