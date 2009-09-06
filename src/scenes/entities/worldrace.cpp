@@ -6,6 +6,38 @@ WorldRace::WorldRace()
 
 void WorldRace::init()
 {
+	testcounter = 1;
+
+	// reset cam
+		resetCamera();
+
+	cerr << endl << "Initializing run " << testcounter << " ... " << endl;
+
+	// insert Floor
+		makeFloor();
+
+	// insert first batch of critters
+		for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
+			insCritter( i );
+
+	// insert food
+		for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
+			insFood( i );
+		
+		framecounter = 0;
+		haveWinner = false;
+
+	cerr<< "Running" << " ... " << endl;
+}
+
+void WorldRace::makeFloor()
+{
+	for ( unsigned int i=0; i < walls.size(); i++ )	
+		delete walls[i];
+	walls.clear();
+
+	critterspacing = (float)settings->getCVar("worldsizeX") / settings->getCVar("mincritters");
+
 	// Wall Constants
 		float WallWidth = 0.5f;
 		float WallHalfWidth = WallWidth/2.0f;
@@ -38,17 +70,12 @@ void WorldRace::init()
 		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 		walls.push_back(w);
 
-		critterspacing = (float)settings->getCVar("worldsizeX") / settings->getCVar("mincritters");
-
 	// seperator walls
 		WallWidth = 0.2f;
 		WallHalfWidth = WallWidth/2.0f;
 		WallHeight = 1.0f;
 		WallHalfHeight = WallHeight/2.0f;
 
-	// insert first batch of critters
-		testcounter = 1;
-		cerr << endl << "Initializing run " << testcounter << " ... " << endl;
 		for ( unsigned int i=1; i < settings->getCVar("mincritters"); i++  )
 		{
 			position = btVector3 ( 0.0f-WallHalfWidth + (critterspacing*i), WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
@@ -56,31 +83,21 @@ void WorldRace::init()
 			w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 			walls.push_back(w);
 		}
+}
 
-	// reset cam
-		resetCamera();
-
-	// insert first batch of critters
-		for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
-			insCritter( i );
-
-	// insert food
-		for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
-			insFood( i );
-		
-		framecounter = 0;
-		haveWinner = false;
-
-		cerr<< "Running" << " ... " << endl;
+void WorldRace::clearFloor()
+{
 }
 
 void WorldRace::process()
 {
+// 	cerr << "1" << endl;
 	// do a bullet step
 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
 
+// 	cerr << critters.size() << endl;
+	// render critter vision
 		float sightrange = (float)settings->getCVar("critter_sightrange")/10;
-		// render critter vision
 		for( unsigned int i=0; i < critters.size(); i++)
 		{
 			if ( critters[i]->body.mouths.size() > 0 )
@@ -100,6 +117,7 @@ void WorldRace::process()
 			}
 		}
 
+// 	cerr << "2" << endl;
 		// Read pixels into retina
 		if ( critters.size() > 0 )
 		{
@@ -118,6 +136,7 @@ void WorldRace::process()
 			glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 			glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 		}
+// 	cerr << "3" << endl;
 
 
 	settings->info_totalNeurons = 0;
@@ -226,7 +245,7 @@ void WorldRace::process()
 	settings->info_food = food.size();
 
 	framecounter++;
-	if ( haveWinner || framecounter >= settings->getCVar("critter_maxlifetime")  )
+	if ( (haveWinner || framecounter >= settings->getCVar("critter_maxlifetime")) )
 	{
 		if ( haveWinner )
 			cerr << "we have a WINNER after " << framecounter << " frames" << endl;
@@ -234,7 +253,7 @@ void WorldRace::process()
 		cerr << "Evaluating..." << endl;
 
 			// measure their distances from their respective food targets
-			for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
+			for ( unsigned int i=0; i < critters.size(); i++  )
 			{
 				// fitness function 1: distance to food cube
 					btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)critters[i]->body.mouths[0]->body->getMotionState();
@@ -251,13 +270,13 @@ void WorldRace::process()
 			}
 
 			// initialize sort indices for
-			vector<int> indices ( settings->getCVar("mincritters"), 0 );
-			for ( unsigned int i = 0; i < settings->getCVar("mincritters"); i++ )
+			vector<int> indices ( critters.size(), 0 );
+			for ( unsigned int i = 0; i < critters.size(); i++ )
 				indices[i] = i;
 	
 			// sort results
 // 			cerr << "sorting" << endl;
-			for ( int i = settings->getCVar("mincritters"); i>0; i--  )
+			for ( int i = critters.size(); i>0; i--  )
 				for ( int j = 0; j < i-1; j++  )
 					if ( critters[indices[j]]->fitness_index < critters[indices[j+1]]->fitness_index )
 					{
@@ -268,7 +287,7 @@ void WorldRace::process()
 // 			cerr << "done sorting" << endl;
 
 			// display results
-			for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
+			for ( unsigned int i=0; i < critters.size(); i++  )
 			{
 				cerr << "c " << indices[i] << " : " << critters[indices[i]]->fitness_index << endl;
 			}
@@ -277,7 +296,11 @@ void WorldRace::process()
 
 			// backup the 50% best critters
 				vector<CritterB*> best;
-				for ( unsigned int i=0; i < settings->getCVar("mincritters")/2; i++  )
+
+				unsigned int bestNum = critters.size()/2;
+				if ( critters.size() == 1 )
+					bestNum = 1;
+				for ( unsigned int i=0; i < bestNum; i++  )
 				{
 					CritterB* b = new CritterB(*critters[indices[i]], currentCritterID++, btVector3( 0.0f, 0.0f, 0.0f ), false, false);
 					best.push_back( b );
@@ -298,28 +321,59 @@ void WorldRace::process()
 						mousepicker->detach();
 					delete food[i];
 				}
-				critters.clear();
 				food.clear();
 
+			// clear floor and remake it
+				makeFloor();
+
 			// reinsert the best critters
-				for ( unsigned int i=0; i < best.size(); i++  )
+				for ( unsigned int i=0; i < best.size() && i < settings->getCVar("mincritters"); i++  )
 				{
 					insMutatedCritter( *best[i], critters.size(), false, false );
 				}
 
 			// insert the mutants
-				for ( unsigned int i=0; i < best.size(); i++  )
+// 				cerr << "inserting critters" << endl;
+
+				unsigned int count = 0;
+				while ( critters.size() < settings->getCVar("mincritters") )
 				{
-					bool brainmutant = false;
-					bool bodymutant = false;
-					if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
-						brainmutant = true;
+// 					cerr << " inserting " << critters.size() << endl;
+					if ( best.size() > 0 )
+					{
+						bool brainmutant = false;
+						bool bodymutant = false;
+						if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
+							brainmutant = true;
 
-					if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
-						bodymutant = true;
+						if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
+							bodymutant = true;
 
-					insMutatedCritter( *best[i], critters.size(), brainmutant, bodymutant );
+// 						cerr << "1" << endl;
+						insMutatedCritter( *best[count], critters.size(), brainmutant, bodymutant );
+// 						cerr << "2" << endl;
+
+						count++;
+						if ( count == best.size() && count > 0 )
+							count = 0;
+					}
+					else
+						insCritter( critters.size() );
 				}
+
+// 				cerr << "done inserting critters" << endl;
+// 				for ( unsigned int i=0; i < best.size(); i++  )
+// 				{
+// 					bool brainmutant = false;
+// 					bool bodymutant = false;
+// 					if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
+// 						brainmutant = true;
+// 
+// 					if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
+// 						bodymutant = true;
+// 
+// 					insMutatedCritter( *best[i], critters.size(), brainmutant, bodymutant );
+// 				}
 
 			// remove best again
 				for ( unsigned int i=0; i < best.size(); i++  )
@@ -334,6 +388,7 @@ void WorldRace::process()
 
 			cerr << "Running... " << endl;
 	}
+	clearFloor();
 }
 
 // FIXME: overwrite maxenergylevel
