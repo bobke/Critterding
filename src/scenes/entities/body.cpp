@@ -141,9 +141,9 @@ void Body::buildArch()
 		bp->id		= 1000;
 		bp->type	= 0;
 		bp->materialID	= 0;
-		bp->x		= randgen->Instance()->get( 20, 200 );
-		bp->y		= randgen->Instance()->get( 20, 200 );
-		bp->z		= randgen->Instance()->get( 20, 200 );
+		bp->x		= randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
+		bp->y		= randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
+		bp->z		= randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
 
 		unsigned int runs = randgen->Instance()->get( 0, settings->getCVar("body_maxbodypartsatbuildtime") );
 		for ( unsigned int i=0; i < runs; i++ )
@@ -183,7 +183,10 @@ void Body::wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& s
 	for ( unsigned int i=0; i < archMouths.size(); i++ )
 	{
 		archMouth *mo = &archMouths[i];
-		addMouth(owner, mo->x/1000, mo->y/1000, mo->z/1000, 0.5f, offset, transform);
+		// calculate weight
+		float weight = ((mo->x*mo->y*mo->z)/1000) * 0.001f; // FIXME 0.001 is density of material
+		totalWeight += weight;
+		addMouth(owner, mo->x/1000, mo->y/1000, mo->z/1000, weight, offset, transform);
 	}
 
 	btTransform localA;
@@ -252,9 +255,9 @@ void Body::addRandomMouth()
 		archMouths.push_back( archMouth() );
 		archMouth* mo = &archMouths[archMouths.size()-1];
 		mo->id		= 1000;
-		mo->x		= randgen->Instance()->get( 40, 100 );
-		mo->y		= randgen->Instance()->get( 40, 100 );
-		mo->z		= randgen->Instance()->get( 40, 100 );
+		mo->x		= randgen->Instance()->get( settings->getCVar("body_minheadsize"), settings->getCVar("body_maxheadsize") );
+		mo->y		= randgen->Instance()->get( settings->getCVar("body_minheadsize"), settings->getCVar("body_maxheadsize") );
+		mo->z		= randgen->Instance()->get( settings->getCVar("body_minheadsize"), settings->getCVar("body_maxheadsize") );
 
 	// Get it connected somehow
 
@@ -273,9 +276,9 @@ void Body::addRandomBodypart()
 		bp->id		= getUniqueBodypartID();
 		bp->type	= 0;
 		bp->materialID	= 0;
-		bp->x		= randgen->Instance()->get( 20, 200 );
-		bp->y		= randgen->Instance()->get( 20, 200 );
-		bp->z		= randgen->Instance()->get( 20, 200 );
+		bp->x		= randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
+		bp->y		= randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
+		bp->z		= randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
 
 	// Get it connected somehow
 		unsigned int connID1 = randgen->Instance()->get( 0, archBodyparts.size()-1 );
@@ -483,9 +486,107 @@ void Body::mutate(unsigned int runs)
 					bp->id		= archBodyparts[bid].id;
 					bp->type	= archBodyparts[bid].type;
 					bp->materialID	= archBodyparts[bid].materialID;
-					bp->x		= randgen->Instance()->get( 20, 200 );
-					bp->y		= randgen->Instance()->get( 20, 200 );
-					bp->z		= randgen->Instance()->get( 20, 200 );
+					bp->x		= archBodyparts[bid].x;
+					bp->y		= archBodyparts[bid].y;
+					bp->z		= archBodyparts[bid].z;
+
+					unsigned int axismode = randgen->Instance()->get(0,2);
+					if ( axismode == 0 )
+						bp->x = randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
+					else if ( axismode == 1 )
+						bp->y = randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
+					else
+						bp->z = randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
+
+					archBodyparts.erase(archBodyparts.begin()+bid);
+
+					// reposition the constraints back to the resized bodypart
+					for ( int i = 0; i < (int)archConstraints.size(); i++ )
+					{
+						archConstraint* co = &archConstraints[i];
+						if ( findBodypart( co->id_1 ) == (int)bp->id )
+						{
+							if ( co->XYZ == 0 ) // X
+								co->pos_x_1 = (bp->x / 1000.0f) * co->sign * 1.5f;
+							else if ( co->XYZ == 1 ) // Y
+								co->pos_y_1 = (bp->y / 1000.0f) * co->sign * 1.5f;
+							else if ( co->XYZ == 2 ) // Z
+								co->pos_z_1 = (bp->z / 1000.0f) * co->sign * 1.5f;
+						}
+						else if ( !co->isMouthConstraint && findBodypart( co->id_2 ) == (int)bp->id )
+						{
+							int othersign = -1 * co->sign;
+							if ( co->XYZ == 0 ) // X
+								co->pos_x_2 = (bp->x / 1000.0f) * othersign * 1.5f;
+							else if ( co->XYZ == 1 ) // Y
+								co->pos_y_2 = (bp->y / 1000.0f) * othersign * 1.5f;
+							else if ( co->XYZ == 2 ) // Z
+								co->pos_z_2 = (bp->z / 1000.0f) * othersign * 1.5f;
+						}
+					}
+
+// 				cerr << "done resize bodypart" << endl;
+				continue;
+			}
+
+		// RESIZE BODYPART SLIGHTLY
+			modesum += settings->getCVar("body_percentmutateeffectresizebodypart_slightly");
+			if ( mode <= modesum )
+			{
+// 				cerr << "resize bodypart slightly" << endl;
+
+					// pick a random bodypart
+					unsigned int bid = randgen->Instance()->get( 0, archBodyparts.size()-1 );
+
+					archBodyparts.push_back( archBodypart() );
+					archBodypart *bp = &archBodyparts[archBodyparts.size()-1];
+
+					bp->id		= archBodyparts[bid].id;
+					bp->type	= archBodyparts[bid].type;
+					bp->materialID	= archBodyparts[bid].materialID;
+					bp->x		= archBodyparts[bid].x;
+					bp->y		= archBodyparts[bid].y;
+					bp->z		= archBodyparts[bid].z;
+
+					unsigned int axismode = randgen->Instance()->get(0,2);
+					unsigned int direction = randgen->Instance()->get(0,1);
+					if ( axismode == 0 )
+					{
+						if ( direction == 0 )
+							bp->x += randgen->Instance()->get( 1, settings->getCVar("body_maxbodypartsize") / 10 );
+						else
+							bp->x -= randgen->Instance()->get( 1, settings->getCVar("body_maxbodypartsize") / 10 );
+					}
+					else if ( axismode == 1 )
+					{
+						if ( direction == 0 )
+							bp->y += randgen->Instance()->get( 1, settings->getCVar("body_maxbodypartsize") / 10 );
+						else
+							bp->y -= randgen->Instance()->get( 1, settings->getCVar("body_maxbodypartsize") / 10 );
+					}
+					else
+					{
+						if ( direction == 0 )
+							bp->z += randgen->Instance()->get( 1, settings->getCVar("body_maxbodypartsize") / 10 );
+						else
+							bp->z -= randgen->Instance()->get( 1, settings->getCVar("body_maxbodypartsize") / 10 );
+					}
+
+					// see that they didn't go over their limits
+					if ( bp->x < settings->getCVar("body_minbodypartsize") )
+						bp->x = settings->getCVar("body_minbodypartsize");
+					else if ( bp->x > settings->getCVar("body_maxbodypartsize") )
+						bp->x = settings->getCVar("body_minbodypartsize");
+
+					if ( bp->y < settings->getCVar("body_minbodypartsize") )
+						bp->y = settings->getCVar("body_minbodypartsize");
+					else if ( bp->y > settings->getCVar("body_maxbodypartsize") )
+						bp->y = settings->getCVar("body_minbodypartsize");
+
+					if ( bp->z < settings->getCVar("body_minbodypartsize") )
+						bp->z = settings->getCVar("body_minbodypartsize");
+					else if ( bp->z > settings->getCVar("body_maxbodypartsize") )
+						bp->z = settings->getCVar("body_minbodypartsize");
 
 					archBodyparts.erase(archBodyparts.begin()+bid);
 

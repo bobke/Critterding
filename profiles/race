@@ -1,9 +1,14 @@
 race 1
+
 mincritters 20
-critter_maxlifetime 5000
-worldsizeX 50
-worldsizeY 15
+
+worldsizeX 100
+worldsizeY 20
+
+food_maxenergy 4000
+
+critter_maxlifetime 2000
+critter_maxenergy 50000
+
 brain_mutationrate 33
 body_mutationrate 33
-food_maxenergy 4000
-critter_maxenergy 500

@@ -49,16 +49,22 @@ Settings::Settings()
 
 	registerCVar("body_maxbodyparts",					30, 0, 1000000);
 	registerCVar("body_maxbodypartsatbuildtime",				5, 0, 1000000);
-	
+
+	registerCVar("body_minbodypartsize",					20, 1, 1000000);
+	registerCVar("body_maxbodypartsize",					200, 1, 1000000);
+	registerCVar("body_minheadsize",					20, 1, 1000000);
+	registerCVar("body_maxheadsize",					200, 1, 1000000);
+
 	registerCVar("body_percentmutateeffectaddbodypart",			10, 0, 100);
 	registerCVar("body_percentmutateeffectremovebodypart",			10, 0, 100);
 	registerCVar("body_percentmutateeffectresizebodypart",			10, 0, 100);
+	registerCVar("body_percentmutateeffectresizebodypart_slightly",		10, 0, 100);
 	registerCVar("body_percentmutateeffectchangeconstraintlimits",		10, 0, 100);
 	registerCVar("body_percentmutateeffectchangeconstraintangles",		10, 0, 100);
 	registerCVar("body_percentmutateeffectchangeconstraintposition",	10, 0, 100);
 	registerCVar("body_percentmutateeffectrepositionmouth",			10, 0, 100);
-	
-	
+
+
 
 	registerCVar("brain_maxmutations",					10, 1, 1000000);
 	registerCVar("brain_mutationrate",					10, 0, 100);

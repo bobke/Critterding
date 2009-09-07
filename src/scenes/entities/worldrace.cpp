@@ -214,8 +214,8 @@ void WorldRace::process()
 
 void WorldRace::insRandomCritter(int nr)
 {
-	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), retina);
-	c->energyLevel = settings->getCVar("critter_maxenergy");
+	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(critterspacing/2) ), retina);
+	c->energyLevel = settings->getCVar("critter_maxenergy") / 2;
 	critters.push_back( c );
 	c->calcFramePos(critters.size()-1);
 }
@@ -223,8 +223,8 @@ void WorldRace::insRandomCritter(int nr)
 void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody)
 {
 	CritterB *nc;
-	nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-1.0f ), mutateBrain, mutateBody);
-	nc->energyLevel = settings->getCVar("critter_maxenergy");
+	nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(critterspacing/2) ), mutateBrain, mutateBody);
+	nc->energyLevel = settings->getCVar("critter_maxenergy") / 2;
 	critters.push_back( nc );
 	nc->calcFramePos(critters.size()-1);
 }
@@ -233,7 +233,7 @@ void WorldRace::insFood(int nr)
 {
 	Food *f = new Food;
 	f->energyLevel = settings->getCVar("food_maxenergy");
-	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, 1.0f ) );
+	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, (critterspacing/2) ) );
 	food.push_back( f );
 }
 
