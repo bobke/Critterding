@@ -479,16 +479,16 @@ void Body::mutate(unsigned int runs)
 
 					// pick a random bodypart
 					unsigned int bid = randgen->Instance()->get( 0, archBodyparts.size()-1 );
+					archBodypart *bp = &archBodyparts[bid];
+// 					archBodyparts.push_back( archBodypart() );
+// 					archBodypart *bp = &archBodyparts[archBodyparts.size()-1];
 
-					archBodyparts.push_back( archBodypart() );
-					archBodypart *bp = &archBodyparts[archBodyparts.size()-1];
-
-					bp->id		= archBodyparts[bid].id;
-					bp->type	= archBodyparts[bid].type;
-					bp->materialID	= archBodyparts[bid].materialID;
-					bp->x		= archBodyparts[bid].x;
-					bp->y		= archBodyparts[bid].y;
-					bp->z		= archBodyparts[bid].z;
+// 					bp->id		= archBodyparts[bid].id;
+// 					bp->type	= archBodyparts[bid].type;
+// 					bp->materialID	= archBodyparts[bid].materialID;
+// 					bp->x		= archBodyparts[bid].x;
+// 					bp->y		= archBodyparts[bid].y;
+// 					bp->z		= archBodyparts[bid].z;
 
 					unsigned int axismode = randgen->Instance()->get(0,2);
 					if ( axismode == 0 )
@@ -498,7 +498,7 @@ void Body::mutate(unsigned int runs)
 					else
 						bp->z = randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
 
-					archBodyparts.erase(archBodyparts.begin()+bid);
+// 					archBodyparts.erase(archBodyparts.begin()+bid);
 
 					// reposition the constraints back to the resized bodypart
 					for ( int i = 0; i < (int)archConstraints.size(); i++ )
