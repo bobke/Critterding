@@ -3,7 +3,7 @@ race 1
 mincritters 20
 
 worldsizeX 100
-worldsizeY 20
+worldsizeY 15
 
 food_maxenergy 4000
 
