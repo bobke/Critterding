@@ -19,7 +19,7 @@ void Infostats::draw( unsigned int posY )
 		unsigned int xstart = 0;
 		unsigned int xstop = *settings->winWidth;
 
-		unsigned int ystart = posY+5;
+		unsigned int ystart = posY+0;
 		unsigned int ystop = posY + barheight;
 
 
