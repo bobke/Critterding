@@ -19,12 +19,8 @@
 #include "../../utils/textverbosemessage.h"
 #include "../../utils/raycast.h"
 #include "../../utils/mousepicker.h"
-// #include "grid.h"
-// #include "floor.h"
 #include "food.h"
-// #include "corpse.h"
 #include "wall.h"
-// #include "bullet.h"
 #include "critterb.h"
 #include "camera.h"
 
@@ -70,27 +66,16 @@ class WorldB
 
 		void			insertRandomFood(int amount, float energy);
 
-		void			insertCritter();
+		virtual void		insertCritter();
 // 		void			positionCritterB(unsigned int cid);
 		void			saveAllCritters();
-		void			loadAllCritters();
+		virtual void		loadAllCritters();
 
 		void			killHalfOfCritters();
 		void			pickBody(const int& x, const int& y);
 		void			movePickedBody(const int& x, const int& y);
 		void			movePickedBody();
 		float			autosaveCounter;
-
-// 		// picking
-// 		int gPickingConstraintId;
-// 		btVector3 gOldPickingPos;
-// 		btVector3 gHitPos;
-// 		float gOldPickingDist;
-// 		btRigidBody* pickedBody;//for deactivation state
-// 
-// 		btScalar mousePickClamping;
-// 		btTypedConstraint* m_pickConstraint;
-// 		bool* pickedBool;
 
 		// vision
 		unsigned char		*retina;
@@ -99,10 +84,6 @@ class WorldB
 		const unsigned int*	retinasperrow;
 		const unsigned int*	critter_retinasize;
 		const unsigned int*	critter_maxenergy;
-
-		// FIXME: inline
-// 		void		renderVision();
-// 		void		grabVision();
 
 		void		checkCollisions( CritterB* c );
 
@@ -138,11 +119,13 @@ class WorldB
 			}
 		}
 
-	private:
-		Parser*			parseH;
-		Raycast*		raycast;
 		Dir			dirH;
+		Parser*			parseH;
 		File			fileH;
+
+		string			loaddir;
+	private:
+		Raycast*		raycast;
 
 		unsigned int		insertCritterCounter;
 
@@ -152,7 +135,6 @@ class WorldB
 		string			homedir;
 		string			progdir;
 		string			savedir;
-		string			loaddir;
 
 		// methods
 		inline void		removeCritter(unsigned int cid);

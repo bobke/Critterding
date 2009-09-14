@@ -117,6 +117,7 @@ void Body::buildArch()
 // 	setArch(&fourlegged);
 
 
+
 // 	string original;
 // 	original.append("b 1000 box 0 200 200 200\n");
 // 	original.append("b 1001 box 0 100 100 100\n");
@@ -184,7 +185,7 @@ void Body::wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& s
 	{
 		archMouth *mo = &archMouths[i];
 		// calculate weight
-		float weight = ((mo->x*mo->y*mo->z)/1000) * 0.001f; // FIXME 0.001 is density of material
+		float weight = ((mo->x*mo->y*mo->z)/1000) * 0.0005f; // FIXME 0.001 is density of material
 		totalWeight += weight;
 		addMouth(owner, mo->x/1000, mo->y/1000, mo->z/1000, weight, offset, transform);
 	}
@@ -883,7 +884,7 @@ void Body::setArch(string* content)
 		else if ( parseH->Instance()->beginMatchesStrip( "c ", line ) )
 		{
 			// c 99999 1.5707963 0 0 0 0 -0.25 99998 1.5707963 0 0 0 0 0.25
-
+// 			cm 0 1 1000 1001 1000 1.115 -0.752 -0.102 0.258 0.089 -0.133 -0.1103 1000 -1.4 -1.007 -1.287 -0.258 0.039 0.137 0.1103
 // 			cerr << "constraint" << endl;
 
 			archConstraint CO;

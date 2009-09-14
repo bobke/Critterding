@@ -16,8 +16,12 @@ void WorldRace::init()
 	// insert Floor
 		makeFloor();
 
+	// autoload critters
+	if ( settings->getCVar("autoload") )
+		loadAllCritters();
+
 	// insert first batch of critters
-		for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
+		for ( unsigned int i=critters.size(); i < settings->getCVar("mincritters"); i++  )
 			insRandomCritter( i );
 
 	// insert food
@@ -212,31 +216,6 @@ void WorldRace::process()
 	}
 }
 
-void WorldRace::insRandomCritter(int nr)
-{
-	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(critterspacing/2) ), retina);
-	c->energyLevel = settings->getCVar("critter_maxenergy") / 2;
-	critters.push_back( c );
-	c->calcFramePos(critters.size()-1);
-}
-
-void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody)
-{
-	CritterB *nc;
-	nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(critterspacing/2) ), mutateBrain, mutateBody);
-	nc->energyLevel = settings->getCVar("critter_maxenergy") / 2;
-	critters.push_back( nc );
-	nc->calcFramePos(critters.size()-1);
-}
-
-void WorldRace::insFood(int nr)
-{
-	Food *f = new Food;
-	f->energyLevel = settings->getCVar("food_maxenergy");
-	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, (critterspacing/2) ) );
-	food.push_back( f );
-}
-
 void WorldRace::makeFloor()
 {
 	for ( unsigned int i=0; i < walls.size(); i++ )	
@@ -290,6 +269,98 @@ void WorldRace::makeFloor()
 			w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 			walls.push_back(w);
 		}
+}
+
+void WorldRace::insRandomCritter(int nr)
+{
+	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), retina);
+	c->energyLevel = settings->getCVar("critter_maxenergy") / 2;
+	critters.push_back( c );
+	c->calcFramePos(critters.size()-1);
+}
+
+void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody)
+{
+	CritterB *nc;
+	nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), mutateBrain, mutateBody);
+	nc->energyLevel = settings->getCVar("critter_maxenergy") / 2;
+	critters.push_back( nc );
+	nc->calcFramePos(critters.size()-1);
+}
+
+void WorldRace::insFood(int nr)
+{
+	Food *f = new Food;
+	f->energyLevel = settings->getCVar("food_maxenergy");
+	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")/4 ) );
+	food.push_back( f );
+}
+
+void WorldRace::insertCritter()
+{
+	cerr << "inserting critters is disabled during race" << endl;
+}
+
+void WorldRace::loadAllCritters()
+{
+	if ( critters.size() > 0 )
+	{
+		stringstream buf;
+		buf << "use --autoload 1 at commandline to autoload critters into a race";
+		Textmessage::Instance()->add(buf);
+		cerr << "use --autoload 1 at commandline to autoload critters into a race" << endl;
+	}
+	else
+	{
+		vector<string> files;
+		dirH.listContentsFull(loaddir, files);
+
+		unsigned int inserted = 0;
+		for ( unsigned int i = 0; i < files.size() && inserted < settings->getCVar("mincritters"); i++ )
+		{
+			if ( parseH->Instance()->endMatches( ".cr", files[i] ) )
+			{
+				stringstream buf;
+				buf << "loading " << files[i];
+				Textmessage::Instance()->add(buf);
+
+				string content;
+				fileH.open( files[i], content ); 
+
+				critterspacing = (float)settings->getCVar("worldsizeX") / settings->getCVar("mincritters");
+				CritterB *c = new CritterB(content, m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*i), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), retina);
+
+				unsigned int error = 0;
+				if ( c->retinasize != *critter_retinasize ) error = 1;
+
+				if ( !error)
+				{
+					critters.push_back( c );
+
+					c->critterID = currentCritterID++;
+					c->calcFramePos(critters.size()-1);
+					c->energyLevel = settings->getCVar("critter_maxenergy") / 2;
+					inserted++;
+				}
+				else
+				{
+					delete c;
+					if ( error == 1 )
+					{
+						stringstream buf;
+						buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
+						Textmessage::Instance()->add(buf);
+
+						cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
+					}
+				}
+			}
+		}
+		stringstream buf;
+		buf << "Loaded critters from " << loaddir;
+		Textmessage::Instance()->add(buf);
+		//cerr << endl << "Loaded critters from " << loaddir << endl << endl;
+	}
 }
 
 WorldRace::~WorldRace()

@@ -10,10 +10,16 @@ Constraint::Constraint(btDynamicsWorld* ownerWorld, btRigidBody& bodyA, btRigidB
 	
 	m_ownerWorld = ownerWorld;
 
+// 	btTypedConstraint* c_hinge = new btHingeConstraint( bodyA, bodyB, localA, localB );
+// 	c_hinge->m_limitSoftness = 0.9f;
+// 	c_hinge->m_solveLimit = false;
+
+// 	hinge = static_cast<btHingeConstraint*>(c_hinge);
 	hinge = new btHingeConstraint( bodyA, bodyB, localA, localB );
+	
 // 	hinge->m_setting.m_impulseClamp = 30.f;
 // 	hinge->m_setting.m_tau = 0.1f;
-	hinge->setLimit( limitA, limitB );
+	hinge->setLimit( limitA, limitB, 0.9f, 0.3f, 1.0f );
 	m_ownerWorld->addConstraint( hinge, true );
 
 	// Calculate full and half range of hinge, HACK could be more efficient

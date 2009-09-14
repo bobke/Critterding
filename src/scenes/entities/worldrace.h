@@ -11,6 +11,8 @@ class WorldRace : public WorldB {
 
 		void		process();
 		void		init();
+		void		insertCritter();
+		void		loadAllCritters();
 	private:
 		void		makeFloor();
 		void		insRandomCritter(int nr);

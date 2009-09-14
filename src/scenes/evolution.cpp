@@ -50,9 +50,6 @@ Evolution::Evolution()
 	
 	mouselook = false;
 
-	if ( settings->getCVar("autoload") )
-		world->loadAllCritters();
-
 	oldx = 0;
 	oldy = 0;
 
