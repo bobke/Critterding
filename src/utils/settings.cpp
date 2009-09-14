@@ -13,8 +13,8 @@ Settings::Settings()
 	registerCVar("fullscreen",						0, 0, 1, true);
 	registerCVar("race",							0, 0, 1, true);
 
-	registerCVar("worldsizeX",						16, 1, 5000);
-	registerCVar("worldsizeY",						12, 1, 5000);
+	registerCVar("worldsizeX",						10, 1, 5000);
+	registerCVar("worldsizeY",						7, 1, 5000);
 
 	registerCVar("energy",							300, 0, 1000000);
 	registerCVar("mincritters",						10, 0, 1000);
@@ -35,14 +35,14 @@ Settings::Settings()
 	registerCVar("critter_minenergyproc",					3000, 2, 1000000);
 	registerCVar("critter_sightrange",					70, 1, 1000000);
 
-	registerCVar("critter_retinasize",					6, 1, 1000);
+	registerCVar("critter_retinasize",					8, 1, 1000);
 	registerCVar("critter_autosaveinterval",				0, 0, 1000000);
 	registerCVar("critter_killhalfat",					1000, 2, 1000000);
-	registerCVar("critter_enablecarnivores",				0, 0, 1, true);
+	registerCVar("critter_enablecarnivores",				1, 0, 1, true);
 	
 	registerCVar("food_maxlifetime",					10000, 1, 1000000);
 	registerCVar("food_maxenergy",						1000, 1, 1000000);
-// 	registerCVar("food_size",						15, 1, 100);
+	registerCVar("food_size",						100, 1, 1000000);
 
 	registerCVar("body_maxmutations",					5, 1, 1000000);
 	registerCVar("body_mutationrate",					10, 0, 100);
@@ -53,7 +53,7 @@ Settings::Settings()
 	registerCVar("body_minbodypartsize",					20, 1, 1000000);
 	registerCVar("body_maxbodypartsize",					200, 1, 1000000);
 	registerCVar("body_minheadsize",					20, 1, 1000000);
-	registerCVar("body_maxheadsize",					200, 1, 1000000);
+	registerCVar("body_maxheadsize",					40, 1, 1000000);
 
 	registerCVar("body_percentmutateeffectaddbodypart",			10, 0, 100);
 	registerCVar("body_percentmutateeffectremovebodypart",			10, 0, 100);

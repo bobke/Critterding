@@ -44,6 +44,10 @@ WorldB::WorldB()
 
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 
+// 	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_USE_WARMSTARTING + SOLVER_SIMD;
+	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_SIMD + SOLVER_USE_WARMSTARTING + SOLVER_CACHE_FRIENDLY;
+	
+	m_dynamicsWorld->getSolverInfo().m_numIterations = 10;
 	// raycast
 	raycast = new Raycast(m_dynamicsWorld);
 
@@ -100,6 +104,9 @@ void WorldB::init()
 
 	// reset cam
 		resetCamera();
+
+	if ( settings->getCVar("autoload") )
+		loadAllCritters();
 }
 
 void WorldB::pickBody(const int& x, const int& y)

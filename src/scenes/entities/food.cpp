@@ -50,7 +50,7 @@ void Food::createBody(btDynamicsWorld* m_dynamicsWorld, const btVector3& startOf
 	transform.setIdentity();
 	transform.setOrigin( btVector3(0.0f, 0.10f, 0.0f) );
 
-	body.addBodyPart_Box((void*)this, 0.10f, 0.10f, 0.10f, 1.0f, offset, transform);
+	body.addBodyPart_Box((void*)this, (float)settings->getCVar("food_size")/1000, (float)settings->getCVar("food_size")/1000, (float)settings->getCVar("food_size")/1000, 1.0f, offset, transform);
 }
 
 Food::~Food()
