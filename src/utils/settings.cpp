@@ -86,13 +86,13 @@ Settings::Settings()
 	registerCVar("worldsizeY",						7, 1, 5000, false, "size of the world along axis Y");
 
 	registerCVar("energy",							300, 0, 1000000, false, "energy in the system by number of food cubes");
-	registerCVar("mincritters",						5, 0, 1000, false, "minimal number of critters");
+	registerCVar("mincritters",						5, 0, 1000, false, "minimum number of critters");
 
 	registerCVar("insertcritterevery",					0, 0, 1000, false, "inserts a random critter every n frames");
 	registerCVar("retinasperrow",						20, 1, 1000, false, "number of vision retinas to stack per row onscreen");
 	registerCVar("camerasensitivity",					20, 1, 1000, false, "sensitivity of the camera");
 
-	registerCVar("colormode",						0, 0, 1, true, "colors genetically exact critter identically");
+	registerCVar("colormode",						0, 0, 1, true, "colors genetically exact critters identically");
 	registerCVar("exit_if_empty",						0, 0, 1, true, "exit simulation if there are no critters");
 	registerCVar("autoload",						0, 0, 1, true, "autoload critters from ~/.critterding/load");
 
@@ -105,7 +105,7 @@ Settings::Settings()
 	registerCVar("critter_sightrange",					70, 1, 1000000, false, "distance a critter can see (10 = 1 worldsize)");
 
 	registerCVar("critter_retinasize",					8, 1, 1000, false, "size of a critters eye retina");
-	registerCVar("critter_autosaveinterval",				0, 0, 1000000, false, "save critters ever n seconds");
+	registerCVar("critter_autosaveinterval",				0, 0, 1000000, false, "save critters every n seconds");
 	registerCVar("critter_killhalfat",					1000, 2, 1000000, false, "kill 50% of critters if population reaches n");
 	registerCVar("critter_enableomnivores",					0, 0, 1, true, "enables critters to eat each other");
 	
@@ -113,27 +113,27 @@ Settings::Settings()
 	registerCVar("food_maxenergy",						1000, 1, 1000000, false, "maximum amount of energy a food unit has");
 	registerCVar("food_size",						100, 1, 1000000, false, "size of a food unit");
 
-	registerCVar("body_maxmutations",					5, 1, 1000000, false, "maximum mutations for a body mutant");
+	registerCVar("body_maxmutations",					5, 1, 1000000, false, "maximum mutations on a body mutant");
 	registerCVar("body_mutationrate",					10, 0, 100, false, "percentage of newborns that mutate bodies");
 
-	registerCVar("body_maxbodyparts",					30, 0, 1000000, false, "maximum bodyparts per critter");
-	registerCVar("body_maxbodypartsatbuildtime",				5, 0, 1000000, false, "maximum bodyparts for a new critter");
+	registerCVar("body_maxbodyparts",					30, 0, 1000000, false, "maximum body parts per critter");
+	registerCVar("body_maxbodypartsatbuildtime",				5, 0, 1000000, false, "maximum body parts for a new critter");
 
-	registerCVar("body_minbodypartsize",					20, 1, 1000000, false, "minimum size of a critters bodypart");
-	registerCVar("body_maxbodypartsize",					200, 1, 1000000, false, "maximum size of a critters bodypart");
-	registerCVar("body_minheadsize",					20, 1, 1000000, false, "minimum size of a critters headt");
+	registerCVar("body_minbodypartsize",					20, 1, 1000000, false, "minimum size of a critters body part");
+	registerCVar("body_maxbodypartsize",					200, 1, 1000000, false, "maximum size of a critters body part");
+	registerCVar("body_minheadsize",					20, 1, 1000000, false, "minimum size of a critters head");
 	registerCVar("body_maxheadsize",					40, 1, 1000000, false, "maximum size of a critters head");
 
-	registerCVar("body_percentmutateeffectaddbodypart",			10, 0, 100, false, "chance of adding a bodypart");
-	registerCVar("body_percentmutateeffectremovebodypart",			10, 0, 100, false, "chance of removing a bodypart");
-	registerCVar("body_percentmutateeffectresizebodypart",			10, 0, 100, false, "chance of resizing a bodypart");
-	registerCVar("body_percentmutateeffectresizebodypart_slightly",		10, 0, 100, false, "chance of slightly resizing a bodypart");
+	registerCVar("body_percentmutateeffectaddbodypart",			10, 0, 100, false, "chance of adding a body part");
+	registerCVar("body_percentmutateeffectremovebodypart",			10, 0, 100, false, "chance of removing a body part");
+	registerCVar("body_percentmutateeffectresizebodypart",			10, 0, 100, false, "chance of resizing a body part");
+	registerCVar("body_percentmutateeffectresizebodypart_slightly",		10, 0, 100, false, "chance of slightly resizing a body part");
 	registerCVar("body_percentmutateeffectchangeconstraintlimits",		10, 0, 100, false, "chance of changing a joints motion limits");
 	registerCVar("body_percentmutateeffectchangeconstraintangles",		10, 0, 100, false, "chance of changing a joints position angles");
 	registerCVar("body_percentmutateeffectchangeconstraintposition",	10, 0, 100, false, "chance of changing a joints position");
-	registerCVar("body_percentmutateeffectrepositionmouth",			10, 0, 100, false, "chance of repositioning mouth");
+	registerCVar("body_percentmutateeffectrepositionmouth",			10, 0, 100, false, "chance of repositioning head");
 
-	registerCVar("brain_maxmutations",					10, 1, 1000000, false, "maximum mutations for a brain mutant");
+	registerCVar("brain_maxmutations",					10, 1, 1000000, false, "maximum mutations on a brain mutant");
 	registerCVar("brain_mutationrate",					10, 0, 100, false, "percentage of newborns that mutate brains");
 
 	registerCVar("brain_maxneurons",					1000, 1, 1000000, false, "maximum neurons per critter");

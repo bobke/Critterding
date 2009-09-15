@@ -102,7 +102,7 @@ void Infostats::draw( unsigned int posY )
 		Textprinter::Instance()->print(col2+hsp,	ystart+vsp*rc,	"body");
 
 		rc++;
-		Textprinter::Instance()->print(col2+hsp,	ystart+vsp*rc,	"avg bodyparts:");
+		Textprinter::Instance()->print(col2+hsp,	ystart+vsp*rc,	"avg body parts:");
 		if ( settings->info_critters > 0 )
 			Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", (float)settings->info_totalBodyparts / settings->info_critters);
 		else
