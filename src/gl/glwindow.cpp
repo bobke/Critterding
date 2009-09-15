@@ -43,8 +43,8 @@ void GLWindow::resize()
 	{
 		n_width = w_width;
 		n_height = w_height;
-		w_width = 1280;
-		w_height = 1024;
+		w_width = Settings::Instance()->getCVar("fsX");
+		w_height = Settings::Instance()->getCVar("fsY");;
 		SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF | SDL_FULLSCREEN );
 	}
 	else

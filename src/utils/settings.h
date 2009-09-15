@@ -20,7 +20,8 @@ enum cvartype {
 
 struct cvar
 {
-	string name;
+// 	string name;
+	string comment;
 	cvartype type;
 
 	unsigned int int_val;
@@ -35,8 +36,9 @@ class Settings
 		static Settings* Instance();
 		~Settings();
 
-		void			registerCVar(const string& name, const unsigned int& defaultvalue, const unsigned int& min_val, const unsigned int& max_val);
-		void			registerCVar(const string& name, const unsigned int& defaultvalue, const unsigned int& min_val, const unsigned int& max_val, bool loop);
+		void			registerCVar(const string& name, const unsigned int& defaultvalue, const unsigned int& min_val, const unsigned int& max_val, const string& comment);
+		void			registerCVar(const string& name, const unsigned int& defaultvalue, const unsigned int& min_val, const unsigned int& max_val, bool loop, const string& comment);
+
 		void			unregisterCVar(const string& name);
 		bool			isCVar(const string& name);
 
