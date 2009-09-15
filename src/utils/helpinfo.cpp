@@ -5,7 +5,7 @@ Helpinfo::Helpinfo()
 	active = false;
 
 	halfboxwidth = 210.0f;
-	halfboxheight = 250.0f;
+	halfboxheight = 260.0f;
 }
 
 void Helpinfo::draw()
@@ -111,6 +111,9 @@ void Helpinfo::draw()
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "l", "toggle fps limiter (30 fps)");
+
+		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "m", "toggle mouse mode");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "p", "pause");
