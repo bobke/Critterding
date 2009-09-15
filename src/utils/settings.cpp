@@ -143,7 +143,6 @@ Settings::Settings()
 	registerCVar("brain_maxneuronsatbuildtime",				200, 1, 1000000, false, "maximum neurons for a new critter");
 
 	registerCVar("brain_minsynapsesatbuildtime",				1, 1, 1000000, false, "minimum synapses for a new neuron");
-
 	registerCVar("brain_maxsynapsesatbuildtime",				40, 1, 1000000, false, "maximum synapses for a new neuron of a new critter");
 
 	registerCVar("brain_percentchanceinhibitoryneuron",			50, 0, 100, false, "percent chance a neuron is inhibotory");
