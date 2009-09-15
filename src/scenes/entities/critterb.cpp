@@ -54,10 +54,10 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 	brain.maxNeuronsAtBuildtime				= settings->getCVar("brain_maxneuronsatbuildtime");
 
 	brain.minSynapsesAtBuildtime				= settings->getCVar("brain_minsynapsesatbuildtime");
-		brain.mutate_minSynapsesAtBuildtime		= settings->getCVar("brain_mutate_minsynapsesatbuildtime");
+// 		brain.mutate_minSynapsesAtBuildtime		= settings->getCVar("brain_mutate_minsynapsesatbuildtime");
 
 	brain.maxSynapsesAtBuildtime				= settings->getCVar("brain_maxsynapsesatbuildtime");
-		brain.mutate_maxSynapsesAtBuildtime		= settings->getCVar("brain_mutate_maxsynapsesatbuildtime");
+// 		brain.mutate_maxSynapsesAtBuildtime		= settings->getCVar("brain_mutate_maxsynapsesatbuildtime");
 
 	brain.percentChanceInhibitoryNeuron			= settings->getCVar("brain_percentchanceinhibitoryneuron");
 		brain.mutate_percentChanceInhibitoryNeuron	= settings->getCVar("brain_mutate_percentchanceinhibitoryneuron");

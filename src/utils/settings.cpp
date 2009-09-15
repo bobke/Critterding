@@ -143,10 +143,8 @@ Settings::Settings()
 	registerCVar("brain_maxneuronsatbuildtime",				200, 1, 1000000, false, "maximum neurons for a new critter");
 
 	registerCVar("brain_minsynapsesatbuildtime",				1, 1, 1000000, false, "minimum synapses for a new neuron");
-	registerCVar("brain_mutate_minsynapsesatbuildtime",			0, 0, 1, true, "mutate this value");
 
-	registerCVar("brain_maxsynapsesatbuildtime",				40, 1, 1000000, false, "minimum synapses for a new neuron");
-	registerCVar("brain_mutate_maxsynapsesatbuildtime",			0, 0, 1, true, "mutate this value"); // FIXME OBSOLETE
+	registerCVar("brain_maxsynapsesatbuildtime",				40, 1, 1000000, false, "maximum synapses for a new neuron of a new critter");
 
 	registerCVar("brain_percentchanceinhibitoryneuron",			50, 0, 100, false, "percent chance a neuron is inhibotory");
 	registerCVar("brain_mutate_percentchanceinhibitoryneuron",		0, 0, 1, true, "mutate this value");
@@ -172,7 +170,7 @@ Settings::Settings()
 	registerCVar("brain_maxdendridicbranches",				3, 1, 1000000, false, "maximum number of dendrites per neuron");
 	registerCVar("brain_mutate_maxdendridicbranches",			0, 0, 1, true, "mutate this value");
 
-	registerCVar("brain_percentchanceconsistentsynapses",			0, 0, 100, false, "percent chance a neurons synapses are all inhibitory or exhibitory");
+	registerCVar("brain_percentchanceconsistentsynapses",			0, 0, 100, false, "percent chance a neurons synapses are all inhibitory or excititatory");
 	registerCVar("brain_mutate_percentchanceconsistentsynapses",		0, 0, 1, true, "mutate this value");
 
 	registerCVar("brain_percentchanceinhibitorysynapses",			50, 0, 100, false, "percent chance a synapse is inhibitory");
@@ -232,15 +230,15 @@ void Settings::registerCVar(const string& name, const unsigned int& defaultvalue
 
 unsigned int Settings::getCVar(const string& name)
 {
-	return cvarlist[name]->int_val;
+// 	return cvarlist[name]->int_val;
 	
-/*	cvarit = cvarlist.find(name);
+	cvarit = cvarlist.find(name);
 	if ( cvarit != cvarlist.end() )
 		return cvarit->second->int_val;
 	else 
 		cerr << "getCVar: no such key: " << name << endl;
 
-	return 0;*/
+	return 0;
 }
 
 const unsigned int* Settings::getCVarPtr(const string& name)

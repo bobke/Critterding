@@ -106,9 +106,7 @@ class Brainz
 
 		// min/max synapses at build time
 			unsigned int		minSynapsesAtBuildtime;
-				bool			mutate_minSynapsesAtBuildtime;
 			unsigned int		maxSynapsesAtBuildtime;
-				bool			mutate_maxSynapsesAtBuildtime;
 
 		// absolute min/max synapses (mutation/plastic bounding)
 			unsigned int		minSynapses;

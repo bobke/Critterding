@@ -23,10 +23,8 @@ Brainz::Brainz()
 
 		// mutatables
 
-		minSynapsesAtBuildtime				= 3;
-			mutate_minSynapsesAtBuildtime		= false;
-		maxSynapsesAtBuildtime				= 150;
-			mutate_maxSynapsesAtBuildtime		= false;
+		minSynapsesAtBuildtime				= 1;
+		maxSynapsesAtBuildtime				= 50;
 
 		percentChanceInhibitoryNeuron			= 50;
 			mutate_percentChanceInhibitoryNeuron	= false;
@@ -596,7 +594,7 @@ Brainz::Brainz()
 		// change a mutatable
 			else if (  mode <= percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron + percentMutateEffectAlterNeuron + percentMutateEffectAddSynapse + percentMutateEffectRemoveSynapse + percentMutateEffectAlterMutable )
 			{
-				unsigned int imode = randgen->Instance()->get(1,14);
+				unsigned int imode = randgen->Instance()->get(1,12);
 
 				if ( imode == 1 && mutate_percentChanceInhibitoryNeuron )
 				{
@@ -652,25 +650,7 @@ Brainz::Brainz()
 					else if ( percentChanceSensorySynapse > minSynapses+factor )	percentChanceSensorySynapse-=factor;
 				}
 
-				else if ( imode == 7 && mutate_minSynapsesAtBuildtime )
-				{
-					unsigned int jmode = randgen->Instance()->get(1,2);
-					unsigned int factor = randgen->Instance()->get(1,5);
-
-					if ( jmode == 1 && minSynapsesAtBuildtime < maxSynapsesAtBuildtime-factor )	minSynapsesAtBuildtime+=factor;
-					else if ( minSynapsesAtBuildtime > 1+factor )					minSynapsesAtBuildtime-=factor; // !!! > 1
-				}
-
-				else if ( imode == 8 && mutate_maxSynapsesAtBuildtime )
-				{
-					unsigned int jmode = randgen->Instance()->get(1,2);
-					unsigned int factor = randgen->Instance()->get(1,5);
-
-					if ( jmode == 1 && maxSynapsesAtBuildtime < maxSynapses-factor )	maxSynapsesAtBuildtime+=factor; // !!! < maxSynapses
-					else if ( maxSynapsesAtBuildtime > minSynapsesAtBuildtime+factor )	maxSynapsesAtBuildtime-=factor; // !!! > minSynapsesAtBuildtime
-				}
-
-				else if ( imode == 9 && mutate_minFiringThreshold )
+				else if ( imode == 7 && mutate_minFiringThreshold )
 				{
 					unsigned int jmode = randgen->Instance()->get(1,2);
 					unsigned int factor = randgen->Instance()->get(1,5);
@@ -679,7 +659,7 @@ Brainz::Brainz()
 					else if ( minFiringThreshold > 1+factor )				minFiringThreshold-=factor; // !!! > 1
 				}
 
-				else if ( imode == 10 && mutate_maxFiringThreshold )
+				else if ( imode == 8 && mutate_maxFiringThreshold )
 				{
 					unsigned int jmode = randgen->Instance()->get(1,2);
 					unsigned int factor = randgen->Instance()->get(1,5);
@@ -688,7 +668,7 @@ Brainz::Brainz()
 					else if ( maxFiringThreshold > minFiringThreshold+factor )	maxFiringThreshold-=factor; // !!! > minFiringThreshold
 				}
 
-				else if ( imode == 11 && mutate_maxDendridicBranches )
+				else if ( imode == 9 && mutate_maxDendridicBranches )
 				{
 					unsigned int jmode = randgen->Instance()->get(1,2);
 					unsigned int factor = randgen->Instance()->get(1,5);
@@ -697,7 +677,7 @@ Brainz::Brainz()
 					else if ( maxDendridicBranches > 1+factor )		maxDendridicBranches-=factor; // !!! > 1
 				}
 
-				else if ( imode == 12 && mutate_percentMutation )
+				else if ( imode == 10 && mutate_percentMutation )
 				{
 					unsigned int jmode = randgen->Instance()->get(1,2);
 					unsigned int factor = randgen->Instance()->get(1,5);
@@ -706,7 +686,7 @@ Brainz::Brainz()
 					else if ( percentMutation > 1+factor )			percentMutation-=factor; // !!! > 1 or no more mutation at all
 				}
 
-				else if ( imode == 13 && mutate_MutateEffects )
+				else if ( imode == 11 && mutate_MutateEffects )
 				{
 					// up or down
 					unsigned int jmode = randgen->Instance()->get(1,2);
@@ -734,7 +714,7 @@ Brainz::Brainz()
 					}
 				}
 
-				else if ( imode == 14 && mutate_PlasticityFactors )
+				else if ( imode == 12 && mutate_PlasticityFactors )
 				{
 					// up or down
 					unsigned int jmode = randgen->Instance()->get(1,2);
@@ -863,17 +843,9 @@ Brainz::Brainz()
 
 	void Brainz::copyFrom(const Brainz& otherBrain)
 	{
-// 		numberOfInputs				= otherBrain.numberOfInputs;
-// 		numberOfOutputs				= otherBrain.numberOfOutputs;
 		maxNeurons				= otherBrain.maxNeurons;
 		minSynapses				= otherBrain.minSynapses;
 		maxSynapses				= otherBrain.maxSynapses;
-// 		minSynapsesAtBuildtime			= otherBrain.minSynapsesAtBuildtime;
-// 		mutate_minSynapsesAtBuildtime		= otherBrain.mutate_minSynapsesAtBuildtime;
-// 		maxSynapsesAtBuildtime			= otherBrain.maxSynapsesAtBuildtime;
-// 		mutate_maxSynapsesAtBuildtime		= otherBrain.mutate_maxSynapsesAtBuildtime;
-// 		percentMutation				= otherBrain.percentMutation;
-// 		mutate_percentMutation			= otherBrain.mutate_percentMutation;
 		percentChanceInhibitoryNeuron		= otherBrain.percentChanceInhibitoryNeuron;
 		mutate_percentChanceInhibitoryNeuron	= otherBrain.mutate_percentChanceInhibitoryNeuron;
 
@@ -944,17 +916,9 @@ Brainz::Brainz()
 
 	void Brainz::mergeFrom(const Brainz& otherBrain1, const Brainz& otherBrain2)
 	{
-// 		numberOfInputs				= otherBrain1.numberOfInputs;
-// 		numberOfOutputs				= otherBrain1.numberOfOutputs;
 		maxNeurons				= otherBrain1.maxNeurons;
 		minSynapses				= otherBrain1.minSynapses;
 		maxSynapses				= otherBrain1.maxSynapses;
-// 		minSynapsesAtBuildtime			= otherBrain1.minSynapsesAtBuildtime;
-// 		mutate_minSynapsesAtBuildtime		= otherBrain1.mutate_minSynapsesAtBuildtime;
-// 		maxSynapsesAtBuildtime			= otherBrain1.maxSynapsesAtBuildtime;
-// 		mutate_maxSynapsesAtBuildtime		= otherBrain1.mutate_maxSynapsesAtBuildtime;
-//		percentMutation				= otherBrain1.percentMutation;
-// 		mutate_percentMutation			= otherBrain1.mutate_percentMutation;
 		percentChanceInhibitoryNeuron		= otherBrain1.percentChanceInhibitoryNeuron;
 		mutate_percentChanceInhibitoryNeuron	= otherBrain1.mutate_percentChanceInhibitoryNeuron;
 
@@ -1246,34 +1210,6 @@ Brainz::Brainz()
 					else			mutate_percentChanceSensorySynapse = false;
 				}
 
-// 			else if ( parseH->Instance()->beginMatchesStrip( "minSynapsesAtBuildtime=", line ) )
-// 			{
-// 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-// 				if(EOF == sscanf(Holder.c_str(), "%d", &minSynapsesAtBuildtime))			cerr << "ERROR INSERTING CRITTER" << endl;
-// 			}
-// 				else if ( parseH->Instance()->beginMatchesStrip( "mutate_minSynapsesAtBuildtime=", line ) )
-// 				{
-// 					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-// 					int result;
-// 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
-// 					if ( result == 1 )	mutate_minSynapsesAtBuildtime = true;
-// 					else			mutate_minSynapsesAtBuildtime = false;
-// 				}
-// 
-// 			else if ( parseH->Instance()->beginMatchesStrip( "maxSynapsesAtBuildtime=", line ) )
-// 			{
-// 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-// 				if(EOF == sscanf(Holder.c_str(), "%d", &maxSynapsesAtBuildtime))			cerr << "ERROR INSERTING CRITTER" << endl;
-// 			}
-// 				else if ( parseH->Instance()->beginMatchesStrip( "mutate_maxSynapsesAtBuildtime=", line ) )
-// 				{
-// 					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-// 					int result;
-// 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
-// 					if ( result == 1 )	mutate_maxSynapsesAtBuildtime = true;
-// 					else			mutate_maxSynapsesAtBuildtime = false;
-// 				}
-
 			else if ( parseH->Instance()->beginMatchesStrip( "minFiringThreshold=", line ) )
 			{
 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
@@ -1414,21 +1350,10 @@ Brainz::Brainz()
 	{
 			stringstream buf;
 	
-//			buf << "numberOfInputs="			<< numberOfInputs << ";" << endl;
-//			buf << "numberOfOutputs="			<< numberOfOutputs << ";" << endl;
-	
 			buf << "maxNeurons="				<< maxNeurons << ";" << endl;
 			buf << "minSynapses="				<< minSynapses << ";" << endl;
 			buf << "maxSynapses="				<< maxSynapses << ";" << endl;
 
-/*			buf << "minSynapsesAtBuildtime="		<< minSynapsesAtBuildtime << ";" << endl;
-				buf << "mutate_minSynapsesAtBuildtime="		<< mutate_minSynapsesAtBuildtime << ";" << endl;
-			buf << "maxSynapsesAtBuildtime="		<< maxSynapsesAtBuildtime << ";" << endl;
-				buf << "mutate_maxSynapsesAtBuildtime="		<< mutate_maxSynapsesAtBuildtime << ";" << endl;*/
-	
-/*			buf << "percentMutation="			<< percentMutation << ";" << endl;
-				buf << "mutate_percentMutation="		<< mutate_percentMutation << ";" << endl;*/
-	
 			buf << "percentChanceInhibitoryNeuron="		<< percentChanceInhibitoryNeuron << ";" << endl;
 				buf << "mutate_percentChanceInhibitoryNeuron="	<< mutate_percentChanceInhibitoryNeuron << ";" << endl;
 			buf << "percentChanceMotorNeuron="		<< percentChanceMotorNeuron << ";" << endl;
