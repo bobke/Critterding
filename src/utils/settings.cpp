@@ -92,7 +92,7 @@ Settings::Settings()
 	registerCVar("brain_maxplasticitystrengthen",				1000, 1, 1000000, false, "maximum weight by which plastic synapses strengthen");
 	registerCVar("brain_minplasticityweaken",				1000, 1, 1000000, false, "minimum weight by which plastic synapses weaken");
 	registerCVar("brain_maxplasticityweaken",				10000, 1, 1000000, false, "maximum weight by which plastic synapses weaken");
-	registerCVar("brain_mutate_plasticityfactors",				0, 0, 1, true, "mutate these values");
+	registerCVar("brain_mutate_plasticityfactors",				0, 0, 1, true, "mutate min/max plasticity values");
 
 	registerCVar("brain_minfiringthreshold",				2, 1, 1000000, false, "minimum firingthreshold of a neuron");
 	registerCVar("brain_mutate_minfiringthreshold",				0, 0, 1, true, "mutate this value");
