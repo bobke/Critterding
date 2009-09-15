@@ -10,72 +10,6 @@ Settings::Settings()
 {
 	profileName			= "default";
 
-// 	helpinfo << endl;
-// 	helpinfo << "  Food Settings" << endl;
-// 	helpinfo << "  --food_maxlifetime         [" << food_maxlifetime << "]  Maximum amount of frames food exists" << endl;
-// 	helpinfo << "  --food_maxenergy          [" << food_maxenergy << "]  Maximum amount of energy in a food unit" << endl;
-// 	helpinfo << "  --food_size                 [" << food_sizeI << "]  Size of a food unit" << endl;
-// 	helpinfo << endl;
-// 
-// 	helpinfo << "  Body Settings" << endl;
-// 	helpinfo << "  --body_mutationrate      [" << body_mutationrate << "]  When a critter procreates there is a " << body_mutationrate << "% chance its body will mutate" << endl;
-// 	helpinfo << "  --body_maxmutations       [" << body_maxmutations << "]  When a critters body mutates, it can do " << body_maxmutations << " mutations at maximum" << endl;
-// 
-// 	helpinfo << endl;
-// 	helpinfo << "  Brain Settings" << endl;
-// 	helpinfo << "  --brain_mutationrate      [" << brain_mutationrate << "]  When a critter procreates there is a " << brain_mutationrate << "% chance its brain will mutate" << endl;
-// 	helpinfo << "  --brain_maxmutations       [" << brain_maxmutations << "]  When a critters brain mutates, it can do " << brain_maxmutations << " mutations at maximum" << endl;
-// 
-// 	helpinfo << "  --brain_maxneurons                           [" << brain_maxneurons << "]  Max neurons per critter" << endl;
-// 	helpinfo << "  --brain_minsynapses                             [" << brain_minsynapses << "]  Min synapses per neuron" << endl;
-// 	helpinfo << "  --brain_maxsynapses                           [" << brain_maxsynapses << "]  Max synapses per neuron" << endl;
-// 	helpinfo << "  --brain_minneuronsatbuildtime                  [" << brain_minneuronsatbuildtime << "]  Min neurons for a new critter" << endl;
-// 	helpinfo << "  --brain_maxneuronsatbuildtime                  [" << brain_maxneuronsatbuildtime << "]  Max neurons for a new critter" << endl;
-// 	helpinfo << "  --brain_minsynapsesatbuildtime                  [" << brain_minsynapsesatbuildtime << "]  Min synapses when creating new neuron" << endl;
-// 	helpinfo << "    --brain_mutate_minsynapsesatbuildtime              If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_maxsynapsesatbuildtime                 [" << brain_maxsynapsesatbuildtime << "]  Max synapses when creating new neuron" << endl;
-// 	helpinfo << "    --brain_mutate_maxsynapsesatbuildtime              If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_percentchanceinhibitoryneuron          [" << brain_percentchanceinhibitoryneuron << "]  % chance neuron is inhibitory (vs exhibitory)" << endl;
-// 	helpinfo << "    --brain_mutate_percentchanceinhibitoryneuron       If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_percentchancemotorneuron               [" << brain_percentchancemotorneuron << "]  % chance a neuron is a motor neuron, this value seems" << endl;
-// 	helpinfo << "                                                       high, but when it tries to create a motor neuron that is" << endl;
-// 	helpinfo << "                                                       is already taken, it will stay a normal neuron" << endl;
-// 	helpinfo << "    --brain_mutate_percentchancemotorneuron            If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_percentchanceplasticneuron             [" << brain_percentchanceplasticneuron << "]  % chance a neuron applies synaptic plasticity" << endl;
-// 	helpinfo << "    --brain_mutate_percentchanceplasticneuron          If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_minplasticitystrengthen               [" << brain_minplasticitystrengthen << "]  Min weight by which plastic synapses strengthen (1/" << brain_minplasticitystrengthen << ")" << endl;
-// 	helpinfo << "  --brain_maxplasticitystrengthen              [" << brain_maxplasticitystrengthen << "]  Max weight by which plastic synapses strengthen (1/" << brain_maxplasticitystrengthen << ")" << endl;
-// 	helpinfo << "  --brain_minplasticityweaken                  [" << brain_minplasticityweaken << "]  Min weight by which plastic synapses weaken (1/" << brain_minplasticityweaken << ")" << endl;
-// 	helpinfo << "  --brain_maxplasticityweaken                 [" << brain_maxplasticityweaken << "]  Max weight by which plastic synapses weaken (1/" << brain_maxplasticityweaken << ")" << endl;
-// 	helpinfo << "    --brain_mutate_plasticityfactors                   If set, all values above will mutate" << endl;
-// 	helpinfo << "  --brain_minfiringthreshold                      [" << brain_minfiringthreshold << "]  Min firing threshold of a neuron" << endl;
-// 	helpinfo << "    --brain_mutate_minfiringthreshold                  If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_maxfiringthreshold                     [" << brain_maxfiringthreshold << "]  Max firing threshold of a neuron" << endl;
-// 	helpinfo << "    --brain_mutate_maxfiringthreshold                  If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_maxdendridicbranches                    [" << brain_maxdendridicbranches << "]  Max dendridic branches per neuron" << endl;
-// 	helpinfo << "    --brain_mutate_maxdendridicbranches                If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_percentchanceconsistentsynapses        [" << brain_percentchanceconsistentsynapses << "]  % chance neuron has consistent synapses" << endl;
-// 	helpinfo << "                                                       meaning all (new) synapses are inhibitory or exhibitory" << endl;
-// 	helpinfo << "    --brain_mutate_percentchanceconsistentsynapses     If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_percentchanceinhibitorysynapses        [" << brain_percentchanceinhibitorysynapses << "]  % chance a synapse is inhibitory (vs exhibitory)" << endl;
-// 	helpinfo << "    --brain_mutate_percentchanceinhibitorysynapses     If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_percentchancesensorysynapse            [" << brain_percentchancesensorysynapse << "]  % chance a synapse connects with a sensor (inputneuron)" << endl;
-// 	helpinfo << "    --brain_mutate_percentchancesensorysynapse         If set, the value above will mutate" << endl;
-// 	helpinfo << "  --brain_percentmutateeffectaddneuron           [" << brain_percentmutateeffectaddneuron << "]  % chance of adding a neuron for a mutationrun" << endl;
-// 	helpinfo << "  --brain_percentmutateeffectremoveneuron        [" << brain_percentmutateeffectremoveneuron << "]  % chance of removing a neuron for a mutationrun" << endl;
-// 	helpinfo << "  --brain_percentmutateeffectalterneuron         [" << brain_percentmutateeffectalterneuron << "]  % chance of altering a neuron for a mutationrun" << endl;
-// 	helpinfo << "  --brain_percentmutateeffectaddsynapse          [" << brain_percentmutateeffectaddsynapse << "]  % chance of adding a synapse for a mutationrun" << endl;
-// 	helpinfo << "  --brain_percentmutateeffectremovesynapse       [" << brain_percentmutateeffectremovesynapse << "]  % chance of removing a synapse for a mutationrun" << endl;
-// 	helpinfo << "  --brain_percentMutateEffectAlterMutable         [" << brain_percentMutateEffectAlterMutable << "]  % chance of altering a mutable" << endl;
-// 
-// 	helpinfo << "    --brain_mutate_mutateeffects                       If set, all values above will mutate" << endl;
-// 
-// 	helpinfo << "  --brain_costhavingneuron                      [" << brain_costhavingneuron << "]  Energycost per frame for having a neuron" << endl;
-// 	helpinfo << "  --brain_costfiringneuron                      [" << brain_costfiringneuron << "]  Energycost per frame for firing a neuron" << endl;
-// 	helpinfo << "  --brain_costfiringmotorneuron                 [" << brain_costfiringmotorneuron << "]  Energycost per frame for firing a motorneuron" << endl;
-// 	helpinfo << "  --brain_costhavingsynapse                      [" << brain_costhavingsynapse << "]  Energycost per frame for having a synapse" << endl;
-
-
 	registerCVar("fullscreen",						0, 0, 1, true, "enable fullscreen mode");
 	registerCVar("fsX",							800, 1, 1000000, false, "fullscreen resolution X");
 	registerCVar("fsY",							600, 1, 1000000, false, "fullscreen resolution Y");
@@ -183,9 +117,9 @@ Settings::Settings()
 	registerCVar("brain_percentmutateeffectalterneuron",			20, 0, 100, false, "chance of altering a neuron");
 	registerCVar("brain_percentmutateeffectaddsynapse",			29, 0, 100, false, "chance of adding a synapse");
 	registerCVar("brain_percentmutateeffectremovesynapse",			29, 0, 100, false, "chance of removing a synapse");
-	registerCVar("brain_percentMutateEffectAlterMutable",			1, 0, 100, false,"mutate these values");
+	registerCVar("brain_mutate_mutateeffects",				0, 0, 1, true, "mutate mutation effects");
 
-	registerCVar("brain_mutate_mutateeffects",				0, 0, 1, true, "mutate these values");
+	registerCVar("brain_percentmutateeffectaltermutable",			1, 0, 100, false,"mutate value of a mutatable option");
 
 	registerCVar("brain_costhavingneuron",					50, 0, 1000000, false, "cost of having a neuron (1/100000 energy)");
 	registerCVar("brain_costfiringneuron",					10, 0, 1000000, false, "cost of firing a neuron");
