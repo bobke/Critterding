@@ -314,7 +314,7 @@ void WorldB::process()
 					c->energyLevel += eaten;
 					f->energyLevel -= eaten;
 				}
-				else if ( settings->getCVar("critter_enablecarnivores") && c->touchingCritter )
+				else if ( settings->getCVar("critter_enableomnivores") && c->touchingCritter )
 				{
 					CritterB* ct = c->touchedCritterID;
 					float eaten = *critter_maxenergy / 50.0f;
