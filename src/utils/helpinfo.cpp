@@ -68,34 +68,46 @@ void Helpinfo::draw()
 		printInfoLine(heightpos, widthpos1, widthpos2, "F4", "show/hide birth and death events");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F5/F6", "decrease/increase minimum critters");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F5/F6", "dec/inc minimum critters");
 
 //		heightpos += vspace;
 //		printInfoLine(heightpos, widthpos1, widthpos2, "F5/F6", "adjust energy in the system (by 25 units)");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F7", "insert new critter (adam)");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F7/F8", "dec/inc kill half of population trigger");
+
+// 		heightpos += vspace;
+// 		printInfoLine(heightpos, widthpos1, widthpos2, "F8", "toggle timed food inserts");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F8", "toggle timed food inserts");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F9/F10", "dec/inc max mutations per brain mutant");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F9/F10", "adjust max mutations per mutant");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F11/F12", "dec/inc brain mutation rate (%)");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F11/F12", "adjust mutation rate (%)");
+		printInfoLine(heightpos, widthpos1, widthpos2, "shift F9/F10", "dec/inc max mutations per body mutant");
+
+		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "shift F11/F12", "dec/inc body mutation rate (%)");
 
 // 		heightpos += vspace;
 // 		printInfoLine(heightpos, widthpos1, widthpos2, "tab", "show/hide critter statistics");
 
+/*		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "insert", "insert adam");
+*/
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "insert", "toggle hide critter retinas");
+		printInfoLine(heightpos, widthpos1, widthpos2, "keypad +/-", "dec/inc energy in the system by 1 food unit");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "keypad +/-", "adjust energy in the system");
+		printInfoLine(heightpos, widthpos1, widthpos2, "c", "switch critter color mode");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "f", "toggle critterview");
+		printInfoLine(heightpos, widthpos1, widthpos2, "f", "toggle fullscreen");
+
+		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "i", "insert adam");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "l", "toggle fps limiter (30 fps)");
@@ -104,16 +116,19 @@ void Helpinfo::draw()
 		printInfoLine(heightpos, widthpos1, widthpos2, "p", "pause");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "w", "activate/toggle wall types");
+		printInfoLine(heightpos, widthpos1, widthpos2, "s", "save profile to ./");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "x", "deactivate wall");
+		printInfoLine(heightpos, widthpos1, widthpos2, "k", "kill half of critters");
 
-		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "v", "toggle verbosity");
+// 		heightpos += vspace;
+// 		printInfoLine(heightpos, widthpos1, widthpos2, "w", "activate/toggle wall types");
 
-		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "c", "switch critter color mode");
+// 		heightpos += vspace;
+// 		printInfoLine(heightpos, widthpos1, widthpos2, "x", "deactivate wall");
+
+// 		heightpos += vspace;
+// 		printInfoLine(heightpos, widthpos1, widthpos2, "v", "toggle verbosity");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "PgUp", "load all critters from \"~/.critterding/load\"");
@@ -154,9 +169,9 @@ void Helpinfo::draw()
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "NumKey 6", "look right");
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "keypad /", "decrease camera sensitivity");
+		printInfoLine(heightpos, widthpos1, widthpos2, "keypad /", "dec camera sensitivity");
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "keypad *", "increase camera sensitivity");
+		printInfoLine(heightpos, widthpos1, widthpos2, "keypad *", "inc camera sensitivity");
 
 
 		glDisable(GL_TEXTURE_2D);
