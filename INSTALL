@@ -4,10 +4,6 @@ Requirements
 freetype2
 SDL
 
-FTGL and Bullet Physics code where imported to ensure
-compatibility
-
-
 Basic Installation
 ==================
 
