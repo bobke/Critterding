@@ -1,3 +1,6 @@
+INSTALLATION
+ - Installation instructions can be found in the INSTALL file
+
 TERMINOLOGY
 
  - Adam
@@ -6,19 +9,18 @@ TERMINOLOGY
  - Adam Distance (ad)
       : generations with mutations since adam
 
-
 OPTIONS
 
   option                                                    [default] [range]      [comment]
 
   --autoload                                                0         0-1          autoload critters from ~/.critterding/load
   --body_maxbodyparts                                       30        0-1000000    maximum body parts per critter            
-  --body_maxbodypartsatbuildtime                            5         0-1000000    maximum body parts for a new critter      
+  --body_maxbodypartsatbuildtime                            6         1-1000000    maximum body parts for a new critter      
   --body_maxbodypartsize                                    200       1-1000000    maximum size of a critters body part      
-  --body_maxheadsize                                        40        1-1000000    maximum size of a critters head           
+  --body_maxheadsize                                        80        1-1000000    maximum size of a critters head           
   --body_maxmutations                                       5         1-1000000    maximum mutations on a body mutant        
   --body_minbodypartsize                                    20        1-1000000    minimum size of a critters body part      
-  --body_minheadsize                                        20        1-1000000    minimum size of a critters head           
+  --body_minheadsize                                        30        1-1000000    minimum size of a critters head           
   --body_mutationrate                                       10        0-100        percentage of newborns that mutate bodies 
   --body_percentmutateeffectaddbodypart                     10        0-100        chance of adding a body part              
   --body_percentmutateeffectchangeconstraintangles          10        0-100        chance of changing a joints position angles
@@ -95,8 +97,8 @@ OPTIONS
   --mincritters                                             5         0-1000       minimum number of critters
   --race                                                    0         0-1          enable race simulation
   --retinasperrow                                           20        1-1000       number of vision retinas to stack per row onscreen
-  --worldsizeX                                              10        1-5000       size of the world along axis X
-  --worldsizeY                                              7         1-5000       size of the world along axis Y
+  --worldsizeX                                              12        1-5000       size of the world along axis X
+  --worldsizeY                                              8         1-5000       size of the world along axis Y
 
  To save the default settings to a profile, press "s" in the simulation.
  It will be saved to ./default and can be loaded by using "--profile ./default"
@@ -108,12 +110,8 @@ OTHER THINGS
 
  - Make sure the retina boxes in the lower left of the window never leave the
    boundaries of the window.  Offscreen rendering is not supported by many
-   video card drivers.  For some drivers vision won't even work if you minimize
+   video card drivers.  For some drivers vision will not work if you minimize
    the window or change desktops.
-
- - Slow videocards will gain some performance gains by making the window's width smaller.
-   Again watch out the retinas do not leave the window boundaries, the option --retinasperrow
-   can be used to adjust your needs.
 
 
 Bob Winckelmans <bob.winckelmans@telenet.be>
