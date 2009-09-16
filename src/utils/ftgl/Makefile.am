@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I/usr/include/freetype2
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libftgl.la
 noinst_HEADERS = $(ftgl_headers)

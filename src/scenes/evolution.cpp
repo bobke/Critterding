@@ -72,22 +72,32 @@ void Evolution::draw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// 3D
-		GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
+// 		GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
+		GLfloat ambientLight[] = {0.7f, 0.7f, 0.7f, 0.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
-		GLfloat lightColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+// 		GLfloat lightColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+		GLfloat lightColor[] = { 0.03f, 0.03f, 0.03f, 0.0f };
 		GLfloat lightPos[] = { 0.5f*settings->getCVar("worldsizeX"), 20, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
+// 		GLfloat lightPos1[] = { 0.0f, 20.0f, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
+// 		GLfloat lightPos2[] = { settings->getCVar("worldsizeX")+1.0f, 20, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
 		glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+// 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
+// 		glLightfv(GL_LIGHT0, GL_POSITION, lightPos1);
+// 		glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor);
+// 		glLightfv(GL_LIGHT1, GL_POSITION, lightPos2);
 
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
-		glEnable(GL_COLOR_MATERIAL);
+// 		glEnable(GL_LIGHT1);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 // 		glHint(GL_FOG_HINT, GL_FASTEST);
+// 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 		glShadeModel(GL_FLAT);
 // 		glShadeModel(GL_SMOOTH);
@@ -111,6 +121,7 @@ void Evolution::draw()
 		glDisable(GL_DEPTH_TEST);
 		glDisable (GL_LIGHTING);
 		glDisable(GL_LIGHT0);
+// 		glDisable(GL_LIGHT1);
 		glDisable(GL_COLOR_MATERIAL);
 // 		glDisable(GL_DITHER);
 		glDisable(GL_CULL_FACE);

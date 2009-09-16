@@ -16,8 +16,8 @@ Settings::Settings()
 
 	registerCVar("race",							0, 0, 1, true, "enable race simulation");
 
-	registerCVar("worldsizeX",						10, 1, 5000, false, "size of the world along axis X");
-	registerCVar("worldsizeY",						7, 1, 5000, false, "size of the world along axis Y");
+	registerCVar("worldsizeX",						12, 1, 5000, false, "size of the world along axis X");
+	registerCVar("worldsizeY",						8, 1, 5000, false, "size of the world along axis Y");
 
 	registerCVar("energy",							300, 0, 1000000, false, "energy in the system by number of food cubes");
 	registerCVar("mincritters",						5, 0, 1000, false, "minimum number of critters");
@@ -51,7 +51,7 @@ Settings::Settings()
 	registerCVar("body_mutationrate",					10, 0, 100, false, "percentage of newborns that mutate bodies");
 
 	registerCVar("body_maxbodyparts",					30, 0, 1000000, false, "maximum body parts per critter");
-	registerCVar("body_maxbodypartsatbuildtime",				3, 1, 1000000, false, "maximum body parts for a new critter");
+	registerCVar("body_maxbodypartsatbuildtime",				6, 1, 1000000, false, "maximum body parts for a new critter");
 
 	registerCVar("body_minbodypartsize",					20, 1, 1000000, false, "minimum size of a critters body part");
 	registerCVar("body_maxbodypartsize",					200, 1, 1000000, false, "maximum size of a critters body part");

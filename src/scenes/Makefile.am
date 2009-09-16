@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I../utils/bullet -I/usr/include/freetype2
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libscenes.la
 libscenes_la_SOURCES = evolution.cpp
