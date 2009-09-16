@@ -1,3 +1,13 @@
+1.0-beta10
+---------
+changed the physics backend to Bullet Physics
+changed input and window backend to SDL
+a racing mode
+mouse support for looking and interactivity
+profile saving (patch from Eric Burton)
+fullscreen support
+many large improvements overall
+
 1.0-beta9
 ---------
 dedicated skincolors for herbivores(Red/Blue) / carnivores(Green/Blue)
