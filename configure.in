@@ -8,4 +8,4 @@ AC_PROG_CXX
 AM_PROG_LIBTOOL
 
 AC_OUTPUT(Makefile src/Makefile src/brainz/Makefile \
-	src/gl/Makefile src/scenes/Makefile src/scenes/entities/Makefile src/utils/Makefile src/utils/ftgl/Makefile)
+	src/gl/Makefile src/scenes/Makefile src/scenes/entities/Makefile src/utils/Makefile src/utils/ftgl/Makefile src/utils/bullet/Makefile)

@@ -4,7 +4,7 @@
 #include "../../utils/settings.h"
 #include "vector3f.h"
 #include "GL/gl.h"
-#include "btBulletDynamicsCommon.h"
+#include "../../utils/bullet/btBulletDynamicsCommon.h"
 
 class Camera{
 public:

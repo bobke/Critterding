@@ -1,7 +1,7 @@
 bin_PROGRAMS = critterding
 
 # set the include path found by configure
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I./utils/bullet -I/usr/include/freetype2
 
 # the library search path.
 
@@ -10,7 +10,10 @@ SUBDIRS = utils brainz gl scenes
 
 
 critterding_SOURCES = critterding.cpp
-critterding_LDADD = $(top_builddir)/src/gl/libgl.la \
-	$(top_builddir)/src/scenes/libscenes.la $(top_builddir)/src/utils/libutils.la -lGL -lfreetype -lBulletDynamics -lBulletCollision -lLinearMath  -lSDL
+critterding_LDADD =	$(top_builddir)/src/gl/libgl.la \
+			$(top_builddir)/src/scenes/libscenes.la \
+			$(top_builddir)/src/utils/libutils.la \
+			-lGL -lfreetype -lSDL
+# -lBulletDynamics -lBulletCollision -lLinearMath  
 # -lftgl
 critterding_LDFLAGS = -avoid-version -no-undefined

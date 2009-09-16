@@ -1,8 +1,8 @@
 #ifndef DISPLAYLISTS_H
 #define DISPLAYLISTS_H
 
-#include "btBulletDynamicsCommon.h"
-#include "BulletCollision/CollisionShapes/btShapeHull.h"
+#include "bullet/btBulletDynamicsCommon.h"
+// #include "BulletCollision/CollisionShapes/btShapeHull.h"
 #include <string>
 #include <iostream>
 #include <sstream>
