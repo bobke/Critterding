@@ -51,12 +51,12 @@ Settings::Settings()
 	registerCVar("body_mutationrate",					10, 0, 100, false, "percentage of newborns that mutate bodies");
 
 	registerCVar("body_maxbodyparts",					30, 0, 1000000, false, "maximum body parts per critter");
-	registerCVar("body_maxbodypartsatbuildtime",				5, 0, 1000000, false, "maximum body parts for a new critter");
+	registerCVar("body_maxbodypartsatbuildtime",				3, 1, 1000000, false, "maximum body parts for a new critter");
 
 	registerCVar("body_minbodypartsize",					20, 1, 1000000, false, "minimum size of a critters body part");
 	registerCVar("body_maxbodypartsize",					200, 1, 1000000, false, "maximum size of a critters body part");
-	registerCVar("body_minheadsize",					20, 1, 1000000, false, "minimum size of a critters head");
-	registerCVar("body_maxheadsize",					40, 1, 1000000, false, "maximum size of a critters head");
+	registerCVar("body_minheadsize",					30, 1, 1000000, false, "minimum size of a critters head");
+	registerCVar("body_maxheadsize",					80, 1, 1000000, false, "maximum size of a critters head");
 
 	registerCVar("body_percentmutateeffectaddbodypart",			10, 0, 100, false, "chance of adding a body part");
 	registerCVar("body_percentmutateeffectremovebodypart",			10, 0, 100, false, "chance of removing a body part");

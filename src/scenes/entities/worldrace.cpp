@@ -74,7 +74,7 @@ void WorldRace::process()
 			if ( c->eat && c->touchingFood )
 			{
 				Food* f = c->touchedFoodID;
-				float eaten = *critter_maxenergy / 50.0f;
+				float eaten = *critter_maxenergy / 100.0f;
 				if ( c->energyLevel + eaten > *critter_maxenergy )
 					eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
 				if ( f->energyLevel - eaten < 0 )
@@ -120,7 +120,7 @@ void WorldRace::process()
 						critters[i]->fitness_index =  1.0f /(cposi.distance(fposi) + 0.0000001); 
 					
 					// fitness function 2: energy of food consumed
-						critters[i]->fitness_index += ( 10.0f /(food[i]->energyLevel + 0.0000001));
+						critters[i]->fitness_index += ( (float)settings->getCVar("food_maxenergy") /(food[i]->energyLevel + 0.0000001));
 
 				}
 

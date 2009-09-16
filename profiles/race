@@ -1,15 +1,15 @@
 race 1
 
-mincritters 20
+mincritters 30
 
-worldsizeX 100
+worldsizeX 130
 worldsizeY 15
 
-food_maxenergy 4000
+food_maxenergy 3000
 food_size 1000
 
 critter_maxlifetime 3000
 critter_maxenergy 50000
 
-brain_mutationrate 33
-body_mutationrate 33
+brain_mutationrate 20
+body_mutationrate 20
