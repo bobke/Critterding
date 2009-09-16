@@ -191,6 +191,22 @@ void WorldB::process()
 				food.erase(food.begin()+i);
 				i--;
 			}
+/*			// die if y < 100
+			else
+			{
+				btDefaultMotionState* myMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
+				btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
+
+				if ( pos.getY() < -100.0f )
+				{
+					freeEnergy += food[i]->energyLevel;
+					if ( food[i]->isPicked )
+						mousepicker->detach();
+					delete food[i];
+					food.erase(food.begin()+i);
+					i--;
+				}
+			}*/
 		}
 
 	// remove all dead critters
@@ -305,7 +321,7 @@ void WorldB::process()
 				if ( c->touchingFood )
 				{
 					Food* f = c->touchedFoodID;
-					float eaten = *critter_maxenergy / 50.0f;
+					float eaten = *critter_maxenergy / 100.0f;
 					if ( c->energyLevel + eaten > *critter_maxenergy )
 						eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
 					if ( f->energyLevel - eaten < 0 )
@@ -317,7 +333,7 @@ void WorldB::process()
 				else if ( settings->getCVar("critter_enableomnivores") && c->touchingCritter )
 				{
 					CritterB* ct = c->touchedCritterID;
-					float eaten = *critter_maxenergy / 50.0f;
+					float eaten = *critter_maxenergy / 100.0f;
 					if ( c->energyLevel + eaten > *critter_maxenergy )
 						eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
 					if ( ct->energyLevel - eaten < 0 )
@@ -526,6 +542,9 @@ void WorldB::killHalfOfCritters()
 	for ( unsigned int c = 0; c < critters.size(); c++ )
 	{
 		freeEnergy += critters[c]->energyLevel;
+
+		if ( critters[c]->isPicked )
+			mousepicker->detach();
 
 		delete critters[c];
 		critters.erase(critters.begin()+c);

@@ -146,7 +146,7 @@ void Body::buildArch()
 		bp->y		= randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
 		bp->z		= randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
 
-		unsigned int runs = randgen->Instance()->get( 0, settings->getCVar("body_maxbodypartsatbuildtime") );
+		unsigned int runs = randgen->Instance()->get( 0, settings->getCVar("body_maxbodypartsatbuildtime")-1 ); // -1 -> central bodypart
 		for ( unsigned int i=0; i < runs; i++ )
 			addRandomBodypart();
 
@@ -185,7 +185,7 @@ void Body::wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& s
 	{
 		archMouth *mo = &archMouths[i];
 		// calculate weight
-		float weight = ((mo->x*mo->y*mo->z)/1000) * 0.0005f; // FIXME 0.001 is density of material
+		float weight = ((mo->x*mo->y*mo->z)/1000) * 0.00025f; // FIXME 0.001 is density of material
 		totalWeight += weight;
 		addMouth(owner, mo->x/1000, mo->y/1000, mo->z/1000, weight, offset, transform);
 	}
