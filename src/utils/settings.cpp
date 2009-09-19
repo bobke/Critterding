@@ -19,6 +19,7 @@ Settings::Settings()
 
 	registerCVar("worldsizeX",						12, 1, 5000, false, "size of the world along axis X");
 	registerCVar("worldsizeY",						8, 1, 5000, false, "size of the world along axis Y");
+	registerCVar("worldwalls",						1, 0, 1, false, "enable walls around the world");
 
 	registerCVar("energy",							300, 0, 1000000, false, "energy in the system by number of food cubes");
 	registerCVar("mincritters",						5, 0, 1000, false, "minimum number of critters");
