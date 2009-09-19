@@ -14,7 +14,8 @@ Settings::Settings()
 	registerCVar("fsX",							800, 1, 1000000, false, "fullscreen resolution X");
 	registerCVar("fsY",							600, 1, 1000000, false, "fullscreen resolution Y");
 
-	registerCVar("race",							0, 0, 1, true, "enable race simulation");
+	registerCVar("race",							0, 0, 1, false, "enable race simulation");
+	registerCVar("testworld",						0, 0, 1, false, "enable race simulation");
 
 	registerCVar("worldsizeX",						12, 1, 5000, false, "size of the world along axis X");
 	registerCVar("worldsizeY",						8, 1, 5000, false, "size of the world along axis Y");

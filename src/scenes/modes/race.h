@@ -14,7 +14,7 @@ class WorldRace : public WorldB {
 		void		insertCritter();
 		void		loadAllCritters();
 	private:
-		void		makeFloor();
+		void		makeRaceFloor();
 		void		insRandomCritter(int nr);
 		void		insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody);
 		void		insFood(int nr);
