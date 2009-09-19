@@ -8,13 +8,10 @@ void WorldRace::init()
 {
 	testcounter = 1;
 
-	// reset cam
-		resetCamera();
-
 	cerr << endl << "Initializing run " << testcounter << " ... " << endl;
 
 	// insert Floor
-		makeFloor();
+		makeRaceFloor();
 
 	// autoload critters
 	if ( settings->getCVar("autoload") )
@@ -171,7 +168,7 @@ void WorldRace::process()
 				food.clear();
 
 			// clear floor and remake it
-				makeFloor();
+				makeRaceFloor();
 
 			// reinsert the best critters
 				for ( unsigned int i=0; i < best.size() && i < settings->getCVar("mincritters"); i++  )
@@ -216,7 +213,7 @@ void WorldRace::process()
 	}
 }
 
-void WorldRace::makeFloor()
+void WorldRace::makeRaceFloor()
 {
 	for ( unsigned int i=0; i < walls.size(); i++ )	
 		delete walls[i];
@@ -224,48 +221,18 @@ void WorldRace::makeFloor()
 
 	critterspacing = (float)settings->getCVar("worldsizeX") / settings->getCVar("mincritters");
 
-	// Wall Constants
-		float WallWidth = 0.5f;
-		float WallHalfWidth = WallWidth/2.0f;
-		float WallHeight = 2.0f;
-		float WallHalfHeight = WallHeight/2.0f;
-
-	// Ground Floor
-		btVector3 position( settings->getCVar("worldsizeX")/2.0f, -WallHalfWidth, settings->getCVar("worldsizeY")/2.0f );
-		Wall* w = new Wall( settings->getCVar("worldsizeX"), WallWidth, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
-		w->color[0] = 0.30f; w->color[1] = 0.20f; w->color[2] = 0.10f;
-		walls.push_back(w);
-	// Left Wall
-		position = btVector3 ( 0.0f-WallHalfWidth, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
-		w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
-		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
-		walls.push_back(w);
-	// Right Wall
-		position = btVector3 ( settings->getCVar("worldsizeX")+WallHalfWidth, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
-		w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
-		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
-		walls.push_back(w);
-	// Top Wall
-		position = btVector3 ( settings->getCVar("worldsizeX")/2.0f, WallHalfHeight-WallWidth, 0.0f-WallHalfWidth );
-		w = new Wall( settings->getCVar("worldsizeX")+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
-		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
-		walls.push_back(w);
-	// Bottom Wall
-		position = btVector3 ( settings->getCVar("worldsizeX")/2.0f, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")+WallHalfWidth );
-		w = new Wall( settings->getCVar("worldsizeX")+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
-		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
-		walls.push_back(w);
+	makeFloor();
 
 	// seperator walls
-		WallWidth = 0.2f;
-		WallHalfWidth = WallWidth/2.0f;
-		WallHeight = 1.0f;
-		WallHalfHeight = WallHeight/2.0f;
+		float WallWidth = 0.2f;
+		float WallHalfWidth = WallWidth/2.0f;
+		float WallHeight = 1.0f;
+		float WallHalfHeight = WallHeight/2.0f;
 
 		for ( unsigned int i=1; i < settings->getCVar("mincritters"); i++  )
 		{
-			position = btVector3 ( 0.0f-WallHalfWidth + (critterspacing*i), WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
-			w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
+			btVector3 position = btVector3 ( 0.0f-WallHalfWidth + (critterspacing*i), WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
+			Wall* w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
 			w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
 			walls.push_back(w);
 		}

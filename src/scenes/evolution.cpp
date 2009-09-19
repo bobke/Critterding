@@ -7,6 +7,11 @@ Evolution::Evolution()
 
 	if ( settings->getCVar("race") == 1 )
 		world = new WorldRace();
+	else if ( settings->getCVar("testworld") == 1 )
+	{
+		world = new TestWorld1();
+		cerr << "test world yeah" << endl;
+	}
 	else
 		world = new WorldB();
 

@@ -56,6 +56,10 @@ WorldB::WorldB()
 
 	// determine vision width
 	picwidth = *retinasperrow * (*critter_retinasize+1);
+
+	// reset cam
+		resetCamera();
+
 	
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawWireframe|btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
@@ -66,44 +70,10 @@ WorldB::WorldB()
 
 void WorldB::init()
 {
-	// Wall Constants
-		float WallWidth = 0.5f;
-		float WallHalfWidth = WallWidth/2.0f;
-		float WallHeight = 2.0f;
-		float WallHalfHeight = WallHeight/2.0f;
-	
-	// Ground Floor
-		btVector3 position( settings->getCVar("worldsizeX")/2.0f, -WallHalfWidth, settings->getCVar("worldsizeY")/2.0f );
-		Wall* w = new Wall( settings->getCVar("worldsizeX"), WallWidth, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
-		w->color[0] = 0.30f; w->color[1] = 0.20f; w->color[2] = 0.10f;
-		walls.push_back(w);
+	makeFloor();
 
-	// Left Wall
-		position = btVector3 ( 0.0f-WallHalfWidth, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
-		w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
-		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
-		walls.push_back(w);
-
-	// Right Wall
-		position = btVector3 ( settings->getCVar("worldsizeX")+WallHalfWidth, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
-		w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
-		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
-		walls.push_back(w);
-
-	// Top Wall
-		position = btVector3 ( settings->getCVar("worldsizeX")/2.0f, WallHalfHeight-WallWidth, 0.0f-WallHalfWidth );
-		w = new Wall( settings->getCVar("worldsizeX")+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
-		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
-		walls.push_back(w);
-
-	// Bottom Wall
-		position = btVector3 ( settings->getCVar("worldsizeX")/2.0f, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")+WallHalfWidth );
-		w = new Wall( settings->getCVar("worldsizeX")+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
-		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
-		walls.push_back(w);
-
-	// reset cam
-		resetCamera();
+// 	// reset cam
+// 		resetCamera();
 
 	if ( settings->getCVar("autoload") )
 		loadAllCritters();
@@ -752,6 +722,46 @@ void WorldB::resetCamera()
 	camera.position = btVector3( -0.5f*settings->getCVar("worldsizeX"), -1.1f*biggest, -0.5f*settings->getCVar("worldsizeY"));
 	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
 }
+
+void WorldB::makeFloor()
+{
+	for ( unsigned int i=0; i < walls.size(); i++ )	
+		delete walls[i];
+	walls.clear();
+
+	// Wall Constants
+		float WallWidth = 0.5f;
+		float WallHalfWidth = WallWidth/2.0f;
+		float WallHeight = 2.0f;
+		float WallHalfHeight = WallHeight/2.0f;
+
+	// Ground Floor
+		btVector3 position( settings->getCVar("worldsizeX")/2.0f, -WallHalfWidth, settings->getCVar("worldsizeY")/2.0f );
+		Wall* w = new Wall( settings->getCVar("worldsizeX"), WallWidth, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
+		w->color[0] = 0.30f; w->color[1] = 0.20f; w->color[2] = 0.10f;
+		walls.push_back(w);
+	// Left Wall
+		position = btVector3 ( 0.0f-WallHalfWidth, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
+		w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
+		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+		walls.push_back(w);
+	// Right Wall
+		position = btVector3 ( settings->getCVar("worldsizeX")+WallHalfWidth, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
+		w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
+		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+		walls.push_back(w);
+	// Top Wall
+		position = btVector3 ( settings->getCVar("worldsizeX")/2.0f, WallHalfHeight-WallWidth, 0.0f-WallHalfWidth );
+		w = new Wall( settings->getCVar("worldsizeX")+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
+		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+		walls.push_back(w);
+	// Bottom Wall
+		position = btVector3 ( settings->getCVar("worldsizeX")/2.0f, WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")+WallHalfWidth );
+		w = new Wall( settings->getCVar("worldsizeX")+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
+		w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+		walls.push_back(w);
+}
+
 
 WorldB::~WorldB()
 {
