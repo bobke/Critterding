@@ -1,7 +1,7 @@
 #ifndef WORLDRACE_H
 #define WORLDRACE_H
 
-#include "worldb.h"
+#include "../entities/worldb.h"
 
 class WorldRace : public WorldB {
 
