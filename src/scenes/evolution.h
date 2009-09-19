@@ -14,7 +14,7 @@
 #include "../utils/textverbosemessage.h"
 #include "../utils/events.h"
 #include "entities/worldb.h"
-#include "entities/worldrace.h"
+#include "modes/race.h"
 
 #include <sstream>
 #include <stdio.h>
