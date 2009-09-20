@@ -50,12 +50,6 @@ void WorldRace::process()
 		// Read pixels into retina
 		grabVision();
 
-	settings->info_totalNeurons = 0;
-	settings->info_totalSynapses = 0;
-	settings->info_totalAdamDistance = 0;
-	settings->info_totalBodyparts = 0;
-	settings->info_totalWeight = 0;
-
 	// process all critters
 	for( unsigned int i=0; i < critters.size(); i++)
 	{
@@ -84,17 +78,7 @@ void WorldRace::process()
 				if ( f->energyLevel  == 0.0f )
 					haveWinner = true;
 			}
-
-		// count totals of neurons, synapses and adamdistances
-			settings->info_totalNeurons		+= c->brain.totalNeurons;
-			settings->info_totalSynapses		+= c->brain.totalSynapses;
-			settings->info_totalAdamDistance	+= c->adamdist;
-			settings->info_totalBodyparts		+= c->body.bodyparts.size();
-			settings->info_totalWeight		+= c->body.totalWeight;
 	}
-
-	settings->info_critters = critters.size();
-	settings->info_food = food.size();
 
 	framecounter++;
 	if ( (haveWinner || framecounter >= settings->getCVar("critter_maxlifetime")) )

@@ -264,12 +264,6 @@ void WorldB::process()
 	renderVision();
 	grabVision();
 
-	settings->info_totalNeurons = 0;
-	settings->info_totalSynapses = 0;
-	settings->info_totalAdamDistance = 0;
-	settings->info_totalBodyparts = 0;
-	settings->info_totalWeight = 0;
-
 	// process all critters
 	unsigned int lmax = critters.size();
 	for( unsigned int i=0; i < lmax; i++)
@@ -336,10 +330,7 @@ void WorldB::process()
 					buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
 					buf << " ad: " << setw(4) << nc->adamdist;
 					buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
-//					if ( nc->crittertype == 1 )
-//						buf << " carnivore";
-//					else
-//						buf << " herbivore";
+
 					if ( brainmutant ) buf << " brain mutant";
 					if ( bodymutant ) buf << " body mutant";
 					Textverbosemessage::Instance()->addBirth(buf);
@@ -349,31 +340,33 @@ void WorldB::process()
 					c->energyLevel = nc->energyLevel;
 
 				// reset procreation energy count
-					c->procreateTimeCount = 0;
-
-					settings->info_critters++;
-					settings->info_totalNeurons		+= nc->brain.totalNeurons;
-					settings->info_totalSynapses		+= nc->brain.totalSynapses;
-					settings->info_totalAdamDistance	+= nc->adamdist;
-					settings->info_totalBodyparts		+= nc->body.bodyparts.size();
-					settings->info_totalWeight		+= nc->body.totalWeight;
-
 					critters.push_back( nc );
-					
 					nc->calcFramePos(critters.size()-1);
 			}
-
-		// count totals of neurons, synapses and adamdistances
-			settings->info_totalNeurons		+= c->brain.totalNeurons;
-			settings->info_totalSynapses		+= c->brain.totalSynapses;
-			settings->info_totalAdamDistance	+= c->adamdist;
-			settings->info_totalBodyparts		+= c->body.bodyparts.size();
-			settings->info_totalWeight		+= c->body.totalWeight;
 	}
+
+
+}
+
+void WorldB::getGeneralStats()
+{
+	settings->info_totalNeurons = 0;
+	settings->info_totalSynapses = 0;
+	settings->info_totalAdamDistance = 0;
+	settings->info_totalBodyparts = 0;
+	settings->info_totalWeight = 0;
 
 	settings->info_critters = critters.size();
 	settings->info_food = food.size();
 
+	for( unsigned int i=0; i < critters.size(); i++)
+	{
+		settings->info_totalNeurons		+= critters[i]->brain.totalNeurons;
+		settings->info_totalSynapses		+= critters[i]->brain.totalSynapses;
+		settings->info_totalAdamDistance	+= critters[i]->adamdist;
+		settings->info_totalBodyparts		+= critters[i]->body.bodyparts.size();
+		settings->info_totalWeight		+= critters[i]->body.totalWeight;
+	}
 }
 
 void WorldB::checkCollisions( CritterB* c )

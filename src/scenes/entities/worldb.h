@@ -33,7 +33,8 @@ class WorldB
 		virtual			~WorldB();
 		virtual void		init();
 		virtual void		process();
-		void		makeFloor();
+		void			getGeneralStats();
+		void			makeFloor();
 		
 		Settings*		settings;
 		RandGen*		randgen;

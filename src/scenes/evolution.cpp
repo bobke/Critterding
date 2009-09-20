@@ -111,6 +111,7 @@ void Evolution::draw()
 		glDisable(GL_POLYGON_SMOOTH);
 
 		world->process();
+		world->getGeneralStats();
 
 // 			if (world->critters.size() > 10 )
 // 			{
