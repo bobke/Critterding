@@ -12,7 +12,7 @@ Textverbosemessage::Textverbosemessage()
 	msgLifetime = 0.0f;
 	longestLength = 0;
 
-	active = true;
+	active = false;
 }
 
 void Textverbosemessage::addBirth(stringstream& streamptr)

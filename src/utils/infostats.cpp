@@ -9,7 +9,7 @@ Infostats::Infostats()
 
 	barheight = 86;
 
-	active = true;
+	active = false;
 }
 
 void Infostats::draw( unsigned int posY )
