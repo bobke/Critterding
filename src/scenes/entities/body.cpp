@@ -483,15 +483,6 @@ void Body::mutate(unsigned int runs)
 					// pick a random bodypart
 					unsigned int bid = randgen->Instance()->get( 0, archBodyparts.size()-1 );
 					archBodypart *bp = &archBodyparts[bid];
-// 					archBodyparts.push_back( archBodypart() );
-// 					archBodypart *bp = &archBodyparts[archBodyparts.size()-1];
-
-// 					bp->id		= archBodyparts[bid].id;
-// 					bp->type	= archBodyparts[bid].type;
-// 					bp->materialID	= archBodyparts[bid].materialID;
-// 					bp->x		= archBodyparts[bid].x;
-// 					bp->y		= archBodyparts[bid].y;
-// 					bp->z		= archBodyparts[bid].z;
 
 					unsigned int axismode = randgen->Instance()->get(0,2);
 					if ( axismode == 0 )
@@ -501,32 +492,8 @@ void Body::mutate(unsigned int runs)
 					else
 						bp->z = randgen->Instance()->get( settings->getCVar("body_minbodypartsize"), settings->getCVar("body_maxbodypartsize") );
 
-// 					archBodyparts.erase(archBodyparts.begin()+bid);
-
 					// reposition the constraints back to the resized bodypart
-					for ( int i = 0; i < (int)archConstraints.size(); i++ )
-					{
-						archConstraint* co = &archConstraints[i];
-						if ( findBodypart( co->id_1 ) == (int)bp->id )
-						{
-							if ( co->XYZ == 0 ) // X
-								co->pos_x_1 = (bp->x / 2000.0f) * co->sign * bodypartspacer;
-							else if ( co->XYZ == 1 ) // Y
-								co->pos_y_1 = (bp->y / 2000.0f) * co->sign * bodypartspacer;
-							else if ( co->XYZ == 2 ) // Z
-								co->pos_z_1 = (bp->z / 2000.0f) * co->sign * bodypartspacer;
-						}
-						else if ( !co->isMouthConstraint && findBodypart( co->id_2 ) == (int)bp->id )
-						{
-							int othersign = -1 * co->sign;
-							if ( co->XYZ == 0 ) // X
-								co->pos_x_2 = (bp->x / 2000.0f) * othersign * bodypartspacer;
-							else if ( co->XYZ == 1 ) // Y
-								co->pos_y_2 = (bp->y / 2000.0f) * othersign * bodypartspacer;
-							else if ( co->XYZ == 2 ) // Z
-								co->pos_z_2 = (bp->z / 2000.0f) * othersign * bodypartspacer;
-						}
-					}
+					repositiontoConstraints(bp);
 
 // 				cerr << "done resize bodypart" << endl;
 				continue;
@@ -540,16 +507,7 @@ void Body::mutate(unsigned int runs)
 
 					// pick a random bodypart
 					unsigned int bid = randgen->Instance()->get( 0, archBodyparts.size()-1 );
-
-					archBodyparts.push_back( archBodypart() );
-					archBodypart *bp = &archBodyparts[archBodyparts.size()-1];
-
-					bp->id		= archBodyparts[bid].id;
-					bp->type	= archBodyparts[bid].type;
-					bp->materialID	= archBodyparts[bid].materialID;
-					bp->x		= archBodyparts[bid].x;
-					bp->y		= archBodyparts[bid].y;
-					bp->z		= archBodyparts[bid].z;
+					archBodypart* bp = &archBodyparts[bid];
 
 					unsigned int axismode = randgen->Instance()->get(0,2);
 					unsigned int direction = randgen->Instance()->get(0,1);
@@ -591,34 +549,92 @@ void Body::mutate(unsigned int runs)
 					else if ( bp->z > settings->getCVar("body_maxbodypartsize") )
 						bp->z = settings->getCVar("body_minbodypartsize");
 
-					archBodyparts.erase(archBodyparts.begin()+bid);
-
 					// reposition the constraints back to the resized bodypart
-					for ( int i = 0; i < (int)archConstraints.size(); i++ )
-					{
-						archConstraint* co = &archConstraints[i];
-						if ( findBodypart( co->id_1 ) == (int)bp->id )
-						{
-							if ( co->XYZ == 0 ) // X
-								co->pos_x_1 = (bp->x / 2000.0f) * co->sign * bodypartspacer;
-							else if ( co->XYZ == 1 ) // Y
-								co->pos_y_1 = (bp->y / 2000.0f) * co->sign * bodypartspacer;
-							else if ( co->XYZ == 2 ) // Z
-								co->pos_z_1 = (bp->z / 2000.0f) * co->sign * bodypartspacer;
-						}
-						else if ( !co->isMouthConstraint && findBodypart( co->id_2 ) == (int)bp->id )
-						{
-							int othersign = -1 * co->sign;
-							if ( co->XYZ == 0 ) // X
-								co->pos_x_2 = (bp->x / 2000.0f) * othersign * bodypartspacer;
-							else if ( co->XYZ == 1 ) // Y
-								co->pos_y_2 = (bp->y / 2000.0f) * othersign * bodypartspacer;
-							else if ( co->XYZ == 2 ) // Z
-								co->pos_z_2 = (bp->z / 2000.0f) * othersign * bodypartspacer;
-						}
-					}
+					repositiontoConstraints(bp);
 
 // 				cerr << "done resize bodypart" << endl;
+				continue;
+			}
+
+		// RESIZE MOUTH
+			modesum += settings->getCVar("body_percentmutateeffectresizehead");
+			if ( mode <= modesum )
+			{
+// 				cerr << "resize mouth" << endl;
+
+					// pick a random head
+					unsigned int mid = randgen->Instance()->get( 0, archMouths.size()-1 );
+					archMouth* head = &archMouths[mid];
+
+					unsigned int axismode = randgen->Instance()->get(0,2);
+					if ( axismode == 0 )
+						head->x = randgen->Instance()->get( settings->getCVar("body_minheadsize"), settings->getCVar("body_maxheadsize") );
+					else if ( axismode == 1 )
+						head->y = randgen->Instance()->get( settings->getCVar("body_minheadsize"), settings->getCVar("body_maxheadsize") );
+					else
+						head->z = randgen->Instance()->get( settings->getCVar("body_minheadsize"), settings->getCVar("body_maxheadsize") );
+
+					// reposition the constraints back to the resized bodypart
+					repositiontoConstraints(head);
+
+// 				cerr << "done resize head" << endl;
+				continue;
+			}
+
+		// RESIZE BODYPART SLIGHTLY
+			modesum += settings->getCVar("body_percentmutateeffectresizehead_slightly");
+			if ( mode <= modesum )
+			{
+// 				cerr << "resize head slightly" << endl;
+
+					// pick a random head
+					unsigned int mid = randgen->Instance()->get( 0, archMouths.size()-1 );
+					archMouth* head = &archMouths[mid];
+
+					unsigned int axismode = randgen->Instance()->get(0,2);
+					unsigned int direction = randgen->Instance()->get(0,1);
+					if ( axismode == 0 )
+					{
+						if ( direction == 0 )
+							head->x += randgen->Instance()->get( 1, settings->getCVar("body_maxheadsize") / 10 );
+						else
+							head->x -= randgen->Instance()->get( 1, settings->getCVar("body_maxheadsize") / 10 );
+					}
+					else if ( axismode == 1 )
+					{
+						if ( direction == 0 )
+							head->y += randgen->Instance()->get( 1, settings->getCVar("body_maxheadsize") / 10 );
+						else
+							head->y -= randgen->Instance()->get( 1, settings->getCVar("body_maxheadsize") / 10 );
+					}
+					else
+					{
+						if ( direction == 0 )
+							head->z += randgen->Instance()->get( 1, settings->getCVar("body_maxheadsize") / 10 );
+						else
+							head->z -= randgen->Instance()->get( 1, settings->getCVar("body_maxheadsize") / 10 );
+					}
+
+					// see that they didn't go over their limits
+					if ( head->x < settings->getCVar("body_minheadsize") )
+						head->x = settings->getCVar("body_minheadsize");
+					else if ( head->x > settings->getCVar("body_maxheadsize") )
+						head->x = settings->getCVar("body_minheadsize");
+
+					if ( head->y < settings->getCVar("body_minheadsize") )
+						head->y = settings->getCVar("body_minheadsize");
+					else if ( head->y > settings->getCVar("body_maxheadsize") )
+						head->y = settings->getCVar("body_minheadsize");
+
+					if ( head->z < settings->getCVar("body_minheadsize") )
+						head->z = settings->getCVar("body_minheadsize");
+					else if ( head->z > settings->getCVar("body_maxheadsize") )
+						head->z = settings->getCVar("body_minheadsize");
+
+					// reposition the constraints back to the resized bodypart
+					repositiontoConstraints(head);
+
+// 				cerr << "done resize head" << endl;
 				continue;
 			}
 
@@ -687,7 +703,7 @@ void Body::mutate(unsigned int runs)
 			}
 
 		// REMOVE AND ADD MOUTH
-			modesum += settings->getCVar("body_percentmutateeffectrepositionmouth");
+			modesum += settings->getCVar("body_percentmutateeffectrepositionhead");
 			if ( mode <= modesum )
 			{
 // 				cerr << "remove and add mouth" << endl;
@@ -713,6 +729,53 @@ void Body::mutate(unsigned int runs)
 		// if we reach here, none were processed, decrease runs by 1 to make sure we get a hit
 			if ( modesum > 0 )
 				runs++;
+	}
+}
+
+void Body::repositiontoConstraints( archBodypart* bp )
+{
+	// reposition the constraints back to the resized bodypart / mouth
+	for ( int i = 0; i < (int)archConstraints.size(); i++ )
+	{
+		archConstraint* co = &archConstraints[i];
+		if ( findBodypart( co->id_1 ) == (int)bp->id )
+		{
+			if ( co->XYZ == 0 ) // X
+				co->pos_x_1 = (bp->x / 2000.0f) * co->sign * bodypartspacer;
+			else if ( co->XYZ == 1 ) // Y
+				co->pos_y_1 = (bp->y / 2000.0f) * co->sign * bodypartspacer;
+			else if ( co->XYZ == 2 ) // Z
+				co->pos_z_1 = (bp->z / 2000.0f) * co->sign * bodypartspacer;
+		}
+		else if ( !co->isMouthConstraint && findBodypart( co->id_2 ) == (int)bp->id )
+		{
+			int othersign = -1 * co->sign;
+			if ( co->XYZ == 0 ) // X
+				co->pos_x_2 = (bp->x / 2000.0f) * othersign * bodypartspacer;
+			else if ( co->XYZ == 1 ) // Y
+				co->pos_y_2 = (bp->y / 2000.0f) * othersign * bodypartspacer;
+			else if ( co->XYZ == 2 ) // Z
+				co->pos_z_2 = (bp->z / 2000.0f) * othersign * bodypartspacer;
+		}
+	}
+}
+
+void Body::repositiontoConstraints( archMouth* bp )
+{
+	// reposition the constraints back to the resized bodypart / mouth
+	for ( int i = 0; i < (int)archConstraints.size(); i++ )
+	{
+		archConstraint* co = &archConstraints[i];
+		if ( co->isMouthConstraint && findBodypart( co->id_2 ) == (int)bp->id )
+		{
+			int othersign = -1 * co->sign;
+			if ( co->XYZ == 0 ) // X
+				co->pos_x_2 = (bp->x / 2000.0f) * othersign * bodypartspacer;
+			else if ( co->XYZ == 1 ) // Y
+				co->pos_y_2 = (bp->y / 2000.0f) * othersign * bodypartspacer;
+			else if ( co->XYZ == 2 ) // Z
+				co->pos_z_2 = (bp->z / 2000.0f) * othersign * bodypartspacer;
+		}
 	}
 }
 
@@ -1142,5 +1205,3 @@ Body::~Body()
 		for ( unsigned int i=0; i < constraints.size(); i++ )
 			delete constraints[i];
 }
-
-

@@ -63,6 +63,8 @@ class Body
 		Settings		*settings;
 
 		float			bodypartspacer;
+		void			repositiontoConstraints( archBodypart* bp );
+		void			repositiontoConstraints( archMouth* bp );
 		// mutation helpers
 		void			addRandomMouth();
 		void			addRandomBodypart();
