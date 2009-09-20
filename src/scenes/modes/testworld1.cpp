@@ -14,13 +14,17 @@ void TestWorld1::process()
 	// do a bullet step
 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
 
-		settings->info_totalNeurons = 0;
-		settings->info_totalSynapses = 0;
-		settings->info_totalAdamDistance = 0;
-		settings->info_totalBodyparts = 0;
-		settings->info_totalWeight = 0;
-		settings->info_critters = critters.size();
-		settings->info_food = food.size();
+	// render and grab vision
+		renderVision();
+		grabVision();
+
+	// process all critters
+		unsigned int lmax = critters.size();
+		for( unsigned int i=0; i < lmax; i++)
+		{
+			CritterB *c = critters[i];
+			c->process();
+		}
 }
 
 TestWorld1::~TestWorld1()
