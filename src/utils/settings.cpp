@@ -60,16 +60,19 @@ Settings::Settings()
 	registerCVar("body_minheadsize",					30, 1, 1000000, false, "minimum size of a critters head");
 	registerCVar("body_maxheadsize",					80, 1, 1000000, false, "maximum size of a critters head");
 
-	registerCVar("body_percentmutateeffectaddbodypart",			10, 0, 100, false, "chance of adding a body part");
-	registerCVar("body_percentmutateeffectremovebodypart",			10, 0, 100, false, "chance of removing a body part");
-	registerCVar("body_percentmutateeffectresizebodypart",			10, 0, 100, false, "chance of resizing a body part");
-	registerCVar("body_percentmutateeffectresizebodypart_slightly",		20, 0, 100, false, "chance of slightly resizing a body part");
-	registerCVar("body_percentmutateeffectchangeconstraintlimits",		10, 0, 100, false, "chance of changing a joints motion limits");
-	registerCVar("body_percentmutateeffectchangeconstraintangles",		10, 0, 100, false, "chance of changing a joints position angles");
-	registerCVar("body_percentmutateeffectchangeconstraintposition",	10, 0, 100, false, "chance of changing a joints position");
-	registerCVar("body_percentmutateeffectresizehead",			10, 0, 100, false, "chance of resizing a head");
-	registerCVar("body_percentmutateeffectresizehead_slightly",		20, 0, 100, false, "chance of resizing a head");
-	registerCVar("body_percentmutateeffectrepositionhead",			10, 0, 100, false, "chance of repositioning head");
+	registerCVar("body_percentmutateeffectaddbodypart",			1, 0, 100, false, "chance of adding a body part");
+	registerCVar("body_percentmutateeffectremovebodypart",			1, 0, 100, false, "chance of removing a body part");
+	registerCVar("body_percentmutateeffectresizebodypart",			1, 0, 100, false, "chance of resizing a body part");
+	registerCVar("body_percentmutateeffectresizebodypart_slightly",		5, 0, 100, false, "chance of slightly resizing a body part");
+	registerCVar("body_percentmutateeffectchangeconstraintlimits",		1, 0, 100, false, "chance of changing a joints motion limits");
+	registerCVar("body_percentmutateeffectchangeconstraintlimits_slightly",	5, 0, 100, false, "chance of slightly changing a joints motion limits");
+	registerCVar("body_percentmutateeffectchangeconstraintangles",		1, 0, 100, false, "chance of changing a joints position angles");
+	registerCVar("body_percentmutateeffectchangeconstraintangles_slightly",	5, 0, 100, false, "chance of changing a joints position angles");
+	registerCVar("body_percentmutateeffectchangeconstraintposition",	1, 0, 100, false, "chance of changing a joints position");
+	registerCVar("body_percentmutateeffectchangeconstraintposition_slightly", 5, 0, 100, false, "chance of slightly changing a joints position");
+	registerCVar("body_percentmutateeffectresizehead",			1, 0, 100, false, "chance of resizing a head");
+	registerCVar("body_percentmutateeffectresizehead_slightly",		5, 0, 100, false, "chance of slightly resizing a head");
+	registerCVar("body_percentmutateeffectrepositionhead",			1, 0, 100, false, "chance of repositioning head");
 
 	registerCVar("brain_maxmutations",					10, 1, 1000000, false, "maximum mutations on a brain mutant");
 	registerCVar("brain_mutationrate",					10, 0, 100, false, "percentage of newborns that mutate brains");
