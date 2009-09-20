@@ -4,6 +4,7 @@ Body::Body()
 {
 	settings = Settings::Instance();
 	totalWeight = 0.0f;
+	bodypartspacer = 2.2f;
 }
 
 void Body::addBodyPart_Capsule(void* owner, float width, float height, float weight, btTransform& offset, btTransform& transform)
@@ -324,7 +325,6 @@ void Body::addRandomConstraint(unsigned int connID1, unsigned int connID2, bool 
 
 void Body::randomConstraintPosition(archConstraint* co, unsigned int OneOrTwo, unsigned int connID)
 {
-	float spacer = 2.2f;
 	if ( OneOrTwo == 1 )
 	{
 		co->XYZ = randgen->Instance()->get( 0, 2 );
@@ -335,21 +335,21 @@ void Body::randomConstraintPosition(archConstraint* co, unsigned int OneOrTwo, u
 		if ( co->XYZ == 0 ) // X
 		{
 			// ((x / 1000.0f)  / 2)  * 1.5f * co->sign = 
-			co->pos_x_1 = (archBodyparts[connID].x / 2000.0f) * co->sign * spacer;
+			co->pos_x_1 = (archBodyparts[connID].x / 2000.0f) * co->sign * bodypartspacer;
 			co->pos_y_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
 			co->pos_z_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
 		}
 		else if ( co->XYZ == 1 ) // Y
 		{
 			co->pos_x_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
-			co->pos_y_1 = (archBodyparts[connID].y / 2000.0f) * co->sign * spacer;
+			co->pos_y_1 = (archBodyparts[connID].y / 2000.0f) * co->sign * bodypartspacer;
 			co->pos_z_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
 		}
 		else // Z
 		{
 			co->pos_x_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
 			co->pos_y_1 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
-			co->pos_z_1 = (archBodyparts[connID].z / 2000.0f) * co->sign * spacer;
+			co->pos_z_1 = (archBodyparts[connID].z / 2000.0f) * co->sign * bodypartspacer;
 		}
 	}
 	else
@@ -359,42 +359,42 @@ void Body::randomConstraintPosition(archConstraint* co, unsigned int OneOrTwo, u
 		{
 			if ( co->XYZ == 0 ) // X
 			{
-				co->pos_x_2 = (archBodyparts[connID].x / 2000.0f) * othersign * spacer;
+				co->pos_x_2 = (archBodyparts[connID].x / 2000.0f) * othersign * bodypartspacer;
 				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
 				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
 			}
 			else if ( co->XYZ == 1 ) // Y
 			{
 				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
-				co->pos_y_2 = (archBodyparts[connID].y / 2000.0f) * othersign * spacer;
+				co->pos_y_2 = (archBodyparts[connID].y / 2000.0f) * othersign * bodypartspacer;
 				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].z)*2) - archBodyparts[connID].z) / 1000;
 			}
 			else // Z
 			{
 				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].x)*2) - archBodyparts[connID].x) / 1000;
 				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archBodyparts[connID].y)*2) - archBodyparts[connID].y) / 1000;
-				co->pos_z_2 = (archBodyparts[connID].z / 2000.0f) * othersign * spacer;
+				co->pos_z_2 = (archBodyparts[connID].z / 2000.0f) * othersign * bodypartspacer;
 			}
 		}
 		else
 		{
 			if ( co->XYZ == 0 ) // X
 			{
-				co->pos_x_2 = (archMouths[connID].x / 2000.0f) * othersign * spacer;
+				co->pos_x_2 = (archMouths[connID].x / 2000.0f) * othersign * bodypartspacer;
 				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].y)*2) - archMouths[connID].y) / 1000;
 				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].z)*2) - archMouths[connID].z) / 1000;
 			}
 			else if ( co->XYZ == 1 ) // Y
 			{
 				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].x)*2) - archMouths[connID].x) / 1000;
-				co->pos_y_2 = (archMouths[connID].y / 2000.0f) * othersign * spacer;
+				co->pos_y_2 = (archMouths[connID].y / 2000.0f) * othersign * bodypartspacer;
 				co->pos_z_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].z)*2) - archMouths[connID].z) / 1000;
 			}
 			else // Z
 			{
 				co->pos_x_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].x)*2) - archMouths[connID].x) / 1000;
 				co->pos_y_2 = ((float)randgen->Instance()->get( 0, (archMouths[connID].y)*2) - archMouths[connID].y) / 1000;
-				co->pos_z_2 = (archMouths[connID].z / 2000.0f) * othersign * spacer;
+				co->pos_z_2 = (archMouths[connID].z / 2000.0f) * othersign * bodypartspacer;
 			}
 		}
 	}
@@ -510,21 +510,21 @@ void Body::mutate(unsigned int runs)
 						if ( findBodypart( co->id_1 ) == (int)bp->id )
 						{
 							if ( co->XYZ == 0 ) // X
-								co->pos_x_1 = (bp->x / 1000.0f) * co->sign * 1.5f;
+								co->pos_x_1 = (bp->x / 2000.0f) * co->sign * bodypartspacer;
 							else if ( co->XYZ == 1 ) // Y
-								co->pos_y_1 = (bp->y / 1000.0f) * co->sign * 1.5f;
+								co->pos_y_1 = (bp->y / 2000.0f) * co->sign * bodypartspacer;
 							else if ( co->XYZ == 2 ) // Z
-								co->pos_z_1 = (bp->z / 1000.0f) * co->sign * 1.5f;
+								co->pos_z_1 = (bp->z / 2000.0f) * co->sign * bodypartspacer;
 						}
 						else if ( !co->isMouthConstraint && findBodypart( co->id_2 ) == (int)bp->id )
 						{
 							int othersign = -1 * co->sign;
 							if ( co->XYZ == 0 ) // X
-								co->pos_x_2 = (bp->x / 1000.0f) * othersign * 1.5f;
+								co->pos_x_2 = (bp->x / 2000.0f) * othersign * bodypartspacer;
 							else if ( co->XYZ == 1 ) // Y
-								co->pos_y_2 = (bp->y / 1000.0f) * othersign * 1.5f;
+								co->pos_y_2 = (bp->y / 2000.0f) * othersign * bodypartspacer;
 							else if ( co->XYZ == 2 ) // Z
-								co->pos_z_2 = (bp->z / 1000.0f) * othersign * 1.5f;
+								co->pos_z_2 = (bp->z / 2000.0f) * othersign * bodypartspacer;
 						}
 					}
 
@@ -600,21 +600,21 @@ void Body::mutate(unsigned int runs)
 						if ( findBodypart( co->id_1 ) == (int)bp->id )
 						{
 							if ( co->XYZ == 0 ) // X
-								co->pos_x_1 = (bp->x / 1000.0f) * co->sign * 1.5f;
+								co->pos_x_1 = (bp->x / 2000.0f) * co->sign * bodypartspacer;
 							else if ( co->XYZ == 1 ) // Y
-								co->pos_y_1 = (bp->y / 1000.0f) * co->sign * 1.5f;
+								co->pos_y_1 = (bp->y / 2000.0f) * co->sign * bodypartspacer;
 							else if ( co->XYZ == 2 ) // Z
-								co->pos_z_1 = (bp->z / 1000.0f) * co->sign * 1.5f;
+								co->pos_z_1 = (bp->z / 2000.0f) * co->sign * bodypartspacer;
 						}
 						else if ( !co->isMouthConstraint && findBodypart( co->id_2 ) == (int)bp->id )
 						{
 							int othersign = -1 * co->sign;
 							if ( co->XYZ == 0 ) // X
-								co->pos_x_2 = (bp->x / 1000.0f) * othersign * 1.5f;
+								co->pos_x_2 = (bp->x / 2000.0f) * othersign * bodypartspacer;
 							else if ( co->XYZ == 1 ) // Y
-								co->pos_y_2 = (bp->y / 1000.0f) * othersign * 1.5f;
+								co->pos_y_2 = (bp->y / 2000.0f) * othersign * bodypartspacer;
 							else if ( co->XYZ == 2 ) // Z
-								co->pos_z_2 = (bp->z / 1000.0f) * othersign * 1.5f;
+								co->pos_z_2 = (bp->z / 2000.0f) * othersign * bodypartspacer;
 						}
 					}
 

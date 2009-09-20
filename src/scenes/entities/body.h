@@ -62,6 +62,7 @@ class Body
 		RandGen			*randgen;
 		Settings		*settings;
 
+		float			bodypartspacer;
 		// mutation helpers
 		void			addRandomMouth();
 		void			addRandomBodypart();
