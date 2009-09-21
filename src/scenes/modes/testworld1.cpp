@@ -56,7 +56,7 @@ void TestWorld1::process()
 
 btVector3 TestWorld1::findPosition()
 {
-	for ( unsigned int i=0; i < elevations-1; i++ )
+	for ( unsigned int i=0; i < elevations; i++ )
 	{
 		if ( randgen->Instance()->get( i, elevations-1 ) == i )
 		{
@@ -67,12 +67,6 @@ btVector3 TestWorld1::findPosition()
 			);
 		}
 	}
-
-	return btVector3( 
-		(float)settings->getCVar("worldsizeX")/2.0f - (float)settings->getCVar("worldsizeX")/(decSizeFactor*2*(elevations+1)) + ((float)randgen->Instance()->get( 0, (float)settings->getCVar("worldsizeX")/(decSizeFactor*(elevations+1))*100 ) / 100),
-		insertHight, 
-		(float)settings->getCVar("worldsizeY")/2.0f - (float)settings->getCVar("worldsizeY")/(decSizeFactor*2*(elevations+1)) + ((float)randgen->Instance()->get( 0, (float)settings->getCVar("worldsizeY")/(decSizeFactor*(elevations+1))*100 ) / 100)
-	);
 }
 
 TestWorld1::~TestWorld1()
