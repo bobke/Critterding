@@ -11,9 +11,10 @@ class TestWorld1 : public WorldB {
 
 		void		process();
 		void		init();
-// 		void		insertCritter();
-// 		void		loadAllCritters();
 	private:
+		btVector3 findPosition();
+		float decSizeFactor;
+		unsigned int elevations;
 };
 
 #endif
