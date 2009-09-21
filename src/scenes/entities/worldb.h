@@ -33,7 +33,17 @@ class WorldB
 		virtual			~WorldB();
 		virtual void		init();
 		virtual void		process();
+		virtual btVector3	findPosition();
+		float			insertHight;
 		void			getGeneralStats();
+		void			killHalf();
+		void			expireFood();
+		void			expireCritters();
+		void			autoinsertFood();
+		void			autosaveCritters();
+		void			autoinsertCritters();
+		void			eat( CritterB* c );
+		void			procreate( CritterB* c );
 		void			makeFloor();
 		
 		Settings*		settings;
@@ -130,7 +140,6 @@ class WorldB
 		Raycast*		raycast;
 
 		unsigned int		insertCritterCounter;
-
 // 		GLDebugDrawer debugDrawer;
 
 		// FIXME give these a better place.  We also want to know where to save profiles to
@@ -141,7 +150,6 @@ class WorldB
 		// methods
 		inline void		removeCritter(unsigned int cid);
 		inline void		createDirs();
-		inline btVector3	findPosition();
 
 		// Settings pointers.. performance
 		const unsigned int*	critter_maxlifetime;

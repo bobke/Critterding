@@ -22,7 +22,8 @@ WorldB::WorldB()
 	currentCritterID	= 0;
 	insertCritterCounter	= 0;
 	autosaveCounter		= 0.0f;
-
+	insertHight		= 1.0f;
+	
 	// vision retina allocation
 	items = 4 * 800 * 600;
 	retina = (unsigned char*)malloc(items);
@@ -124,139 +125,22 @@ void WorldB::movePickedBody()
 void WorldB::process()
 {
 	// kill half?
-		if ( critters.size() >= *critter_killhalfat )
-		{
-			killHalfOfCritters();
-			
-			// reduce energy :)
-			if ( (settings->freeEnergyInfo - *food_maxenergy) / *food_maxenergy >= 0.0f )
-			{
-				int dec = ((settings->freeEnergyInfo / settings->getCVar("food_maxenergy")) / 100);
-				settings->freeEnergyInfo -= dec * settings->getCVar("food_maxenergy");
-				freeEnergy -= dec * settings->getCVar("food_maxenergy");
-			}
-		}
+		killHalf();
 
 	// Remove food
-		for( unsigned int i=0; i < food.size(); i++)
-		{
-			// food was eaten
-			if ( food[i]->energyLevel <= 0 )
-			{
-				freeEnergy += food[i]->energyLevel;
-				if ( food[i]->isPicked )
-					mousepicker->detach();
-				delete food[i];
-				food.erase(food.begin()+i);
-				i--;
-			}
-
-			// old food, this should remove stuff from corners
-			else if ( ++food[i]->totalFrames >= *food_maxlifetime )
-			{
-				freeEnergy += food[i]->energyLevel;
-				if ( food[i]->isPicked )
-					mousepicker->detach();
-				delete food[i];
-				food.erase(food.begin()+i);
-				i--;
-			}
-/*			// die if y < 100
-			else
-			{
-				btDefaultMotionState* myMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
-				btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
-
-				if ( pos.getY() < -100.0f )
-				{
-					freeEnergy += food[i]->energyLevel;
-					if ( food[i]->isPicked )
-						mousepicker->detach();
-					delete food[i];
-					food.erase(food.begin()+i);
-					i--;
-				}
-			}*/
-		}
-
-	// remove all dead critters
-		for( unsigned int i=0; i < critters.size(); i++)
-		{
-			// see if energy level isn't below 0 -> die, or die of old age
-			if ( critters[i]->energyLevel <= 0.0f )
-			{
-				stringstream buf;
-				buf << setw(4) << critters[i]->critterID << " starved";
-				Textverbosemessage::Instance()->addDeath(buf);
-
-				removeCritter(i);
-				i--;
-			}
-			// die of old age
-			else if ( critters[i]->totalFrames > *critter_maxlifetime )
-			{
-				stringstream buf;
-				buf << setw(4) << critters[i]->critterID << " old";
-				Textverbosemessage::Instance()->addDeath(buf);
-
-				removeCritter(i);
-				i--;
-			}
-			// die if y < 100
-			else
-			{
-				btDefaultMotionState* myMotionState = (btDefaultMotionState*)critters[i]->body.bodyparts[0]->body->getMotionState();
-				btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
-				
-				if ( pos.getY() < -100.0f )
-				{
-					stringstream buf;
-					buf << setw(4) << critters[i]->critterID << " went offworld";
-					Textverbosemessage::Instance()->addDeath(buf);
-
-					removeCritter(i);
-					i--;
-				}
-			}
-		}
-
-	// Autosave Critters?
-		if ( *critter_autosaveinterval > 0 )
-		{
-			autosaveCounter += Timer::Instance()->elapsed;
-			if ( autosaveCounter > *critter_autosaveinterval )
-			{
-				autosaveCounter = 0.0f;
-				saveAllCritters();
-			}
-		}
+		expireFood();
 
 	// Autoinsert Food
-		while ( freeEnergy >= *food_maxenergy )
-		{
-			insertRandomFood(1, *food_maxenergy);
-			freeEnergy -= *food_maxenergy;
-			//cerr << "food: " << food.size() << endl;
-		}
+		autoinsertFood();
+
+	// remove all dead critters
+		expireCritters();
+
+	// Autosave Critters?
+		autosaveCritters();
 
 	// Autoinsert Critters?
-		// insert critter if < minimum
-		if ( critters.size() < settings->getCVar("mincritters") )
-			insertCritter();
-
-		// insert critter if insertcritterevery is reached
-		if ( settings->getCVar("insertcritterevery") > 0 )
-		{
-			if ( insertCritterCounter >= settings->getCVar("insertcritterevery") )
-			{
-				insertCritter();
-				insertCritterCounter = 0;
-			}
-			else
-			{
-				insertCritterCounter++;
-			}
-		}
+		autoinsertCritters();
 
 	// do a bullet step
 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
@@ -280,72 +164,228 @@ void WorldB::process()
 			freeEnergy += c->energyUsed;
 
 		// process Output Neurons
-			if ( c->eat )
-			{
-				if ( c->touchingFood )
-				{
-					Food* f = c->touchedFoodID;
-					float eaten = *critter_maxenergy / 100.0f;
-					if ( c->energyLevel + eaten > *critter_maxenergy )
-						eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
-					if ( f->energyLevel - eaten < 0 )
-						eaten = f->energyLevel;
-
-					c->energyLevel += eaten;
-					f->energyLevel -= eaten;
-				}
-				else if ( settings->getCVar("critter_enableomnivores") && c->touchingCritter )
-				{
-					CritterB* ct = c->touchedCritterID;
-					float eaten = *critter_maxenergy / 100.0f;
-					if ( c->energyLevel + eaten > *critter_maxenergy )
-						eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
-					if ( ct->energyLevel - eaten < 0 )
-						eaten = ct->energyLevel;
-
-					c->energyLevel += eaten;
-					ct->energyLevel -= eaten;
-				}
-			}
+			eat(c);
 
 		// procreation if procreation energy trigger is hit
-			if ( c->procreate && c->canProcreate )
-			{
-				bool brainmutant = false;
-				bool bodymutant = false;
-				if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
-					brainmutant = true;
-
-				if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
-					bodymutant = true;
-
-				btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.bodyparts[0]->body->getMotionState();
-				btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
-				np.setY(1.0f);
-				CritterB *nc = new CritterB(*c, currentCritterID++, np, brainmutant, bodymutant);
-				//CritterB *nc = new CritterB(*c, currentCritterID++, findPosition(), mutant);
-
-				// display message of birth
-					stringstream buf;
-					buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
-					buf << " ad: " << setw(4) << nc->adamdist;
-					buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
-
-					if ( brainmutant ) buf << " brain mutant";
-					if ( bodymutant ) buf << " body mutant";
-					Textverbosemessage::Instance()->addBirth(buf);
-
-				// split energies in half
-					nc->energyLevel = c->energyLevel/2.0f;
-					c->energyLevel = nc->energyLevel;
-
-				// reset procreation energy count
-					critters.push_back( nc );
-					nc->calcFramePos(critters.size()-1);
-			}
+			procreate(c);
 	}
 
 
+}
+
+void WorldB::procreate( CritterB* c )
+{
+	if ( c->procreate && c->canProcreate )
+	{
+		bool brainmutant = false;
+		bool bodymutant = false;
+		if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
+			brainmutant = true;
+
+		if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
+			bodymutant = true;
+
+		btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.bodyparts[0]->body->getMotionState();
+		btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
+		np.setY(insertHight);
+		CritterB *nc = new CritterB(*c, currentCritterID++, np, brainmutant, bodymutant);
+		//CritterB *nc = new CritterB(*c, currentCritterID++, findPosition(), mutant);
+
+		// display message of birth
+			stringstream buf;
+			buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
+			buf << " ad: " << setw(4) << nc->adamdist;
+			buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
+
+			if ( brainmutant ) buf << " brain mutant";
+			if ( bodymutant ) buf << " body mutant";
+			Textverbosemessage::Instance()->addBirth(buf);
+
+		// split energies in half
+			nc->energyLevel = c->energyLevel/2.0f;
+			c->energyLevel = nc->energyLevel;
+
+		// reset procreation energy count
+			critters.push_back( nc );
+			nc->calcFramePos(critters.size()-1);
+	}
+}
+
+void WorldB::eat( CritterB* c )
+{
+	if ( c->eat )
+	{
+		if ( c->touchingFood )
+		{
+			Food* f = c->touchedFoodID;
+			float eaten = *critter_maxenergy / 100.0f;
+			if ( c->energyLevel + eaten > *critter_maxenergy )
+				eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
+			if ( f->energyLevel - eaten < 0 )
+				eaten = f->energyLevel;
+
+			c->energyLevel += eaten;
+			f->energyLevel -= eaten;
+		}
+		else if ( settings->getCVar("critter_enableomnivores") && c->touchingCritter )
+		{
+			CritterB* ct = c->touchedCritterID;
+			float eaten = *critter_maxenergy / 100.0f;
+			if ( c->energyLevel + eaten > *critter_maxenergy )
+				eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
+			if ( ct->energyLevel - eaten < 0 )
+				eaten = ct->energyLevel;
+
+			c->energyLevel += eaten;
+			ct->energyLevel -= eaten;
+		}
+	}
+}
+
+void WorldB::killHalf()
+{
+	if ( critters.size() >= *critter_killhalfat )
+	{
+		killHalfOfCritters();
+		
+		// reduce energy :)
+		if ( (settings->freeEnergyInfo - *food_maxenergy) / *food_maxenergy >= 0.0f )
+		{
+			int dec = ((settings->freeEnergyInfo / settings->getCVar("food_maxenergy")) / 100);
+			settings->freeEnergyInfo -= dec * settings->getCVar("food_maxenergy");
+			freeEnergy -= dec * settings->getCVar("food_maxenergy");
+		}
+	}
+}
+
+void WorldB::autoinsertCritters()
+{
+	// insert critter if < minimum
+	if ( critters.size() < settings->getCVar("mincritters") )
+		insertCritter();
+
+	// insert critter if insertcritterevery is reached
+	if ( settings->getCVar("insertcritterevery") > 0 )
+	{
+		if ( insertCritterCounter >= settings->getCVar("insertcritterevery") )
+		{
+			insertCritter();
+			insertCritterCounter = 0;
+		}
+		else
+		{
+			insertCritterCounter++;
+		}
+	}
+}
+
+void WorldB::autosaveCritters()
+{
+	if ( *critter_autosaveinterval > 0 )
+	{
+		autosaveCounter += Timer::Instance()->elapsed;
+		if ( autosaveCounter > *critter_autosaveinterval )
+		{
+			autosaveCounter = 0.0f;
+			saveAllCritters();
+		}
+	}
+}
+
+void WorldB::autoinsertFood()
+{
+	while ( freeEnergy >= *food_maxenergy )
+	{
+		insertRandomFood(1, *food_maxenergy);
+		freeEnergy -= *food_maxenergy;
+		//cerr << "food: " << food.size() << endl;
+	}
+}
+
+void WorldB::expireCritters()
+{
+	for( unsigned int i=0; i < critters.size(); i++)
+	{
+		// see if energy level isn't below 0 -> die, or die of old age
+		if ( critters[i]->energyLevel <= 0.0f )
+		{
+			stringstream buf;
+			buf << setw(4) << critters[i]->critterID << " starved";
+			Textverbosemessage::Instance()->addDeath(buf);
+
+			removeCritter(i);
+			i--;
+		}
+		// die of old age
+		else if ( critters[i]->totalFrames > *critter_maxlifetime )
+		{
+			stringstream buf;
+			buf << setw(4) << critters[i]->critterID << " old";
+			Textverbosemessage::Instance()->addDeath(buf);
+
+			removeCritter(i);
+			i--;
+		}
+		// die if y < 100
+		else
+		{
+			btDefaultMotionState* myMotionState = (btDefaultMotionState*)critters[i]->body.bodyparts[0]->body->getMotionState();
+			btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
+			
+			if ( pos.getY() < -100.0f )
+			{
+				stringstream buf;
+				buf << setw(4) << critters[i]->critterID << " went offworld";
+				Textverbosemessage::Instance()->addDeath(buf);
+
+				removeCritter(i);
+				i--;
+			}
+		}
+	}
+}
+
+void WorldB::expireFood()
+{
+	for( unsigned int i=0; i < food.size(); i++)
+	{
+		// food was eaten
+		if ( food[i]->energyLevel <= 0 )
+		{
+			freeEnergy += food[i]->energyLevel;
+			if ( food[i]->isPicked )
+				mousepicker->detach();
+			delete food[i];
+			food.erase(food.begin()+i);
+			i--;
+		}
+		// old food, this should remove stuff from corners
+		else if ( ++food[i]->totalFrames >= *food_maxlifetime )
+		{
+			freeEnergy += food[i]->energyLevel;
+			if ( food[i]->isPicked )
+				mousepicker->detach();
+			delete food[i];
+			food.erase(food.begin()+i);
+			i--;
+		}
+/*		// die if y < 100
+		else
+		{
+			btDefaultMotionState* myMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
+			btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
+
+			if ( pos.getY() < -100.0f )
+			{
+				freeEnergy += food[i]->energyLevel;
+				if ( food[i]->isPicked )
+					mousepicker->detach();
+				delete food[i];
+				food.erase(food.begin()+i);
+				i--;
+			}
+		}*/
+	}
 }
 
 void WorldB::getGeneralStats()
@@ -471,7 +511,7 @@ void WorldB::insertCritter()
 
 btVector3 WorldB::findPosition()
 {
-	return btVector3( (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeX") ) / 100, 1.0f, (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeY") ) / 100 );
+	return btVector3( (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeX") ) / 100, insertHight, (float)randgen->Instance()->get( 0, 100*settings->getCVar("worldsizeY") ) / 100 );
 }
 
 void WorldB::removeCritter(unsigned int cid)

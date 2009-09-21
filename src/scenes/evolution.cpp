@@ -78,11 +78,11 @@ void Evolution::draw()
 
 	// 3D
 // 		GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
-		GLfloat ambientLight[] = {0.7f, 0.7f, 0.7f, 0.0f};
+		GLfloat ambientLight[] = {0.6f, 0.6f, 0.6f, 0.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 // 		GLfloat lightColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-		GLfloat lightColor[] = { 0.03f, 0.03f, 0.03f, 0.0f };
-		GLfloat lightPos[] = { 0.5f*settings->getCVar("worldsizeX"), 20, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
+		GLfloat lightColor[] = { 0.04f, 0.04f, 0.04f, 0.0f };
+		GLfloat lightPos[] = { 0.5f*settings->getCVar("worldsizeX"), 50.0f, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
 // 		GLfloat lightPos1[] = { 0.0f, 20.0f, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
 // 		GLfloat lightPos2[] = { settings->getCVar("worldsizeX")+1.0f, 20, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
