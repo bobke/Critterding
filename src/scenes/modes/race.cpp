@@ -279,7 +279,7 @@ void WorldRace::loadAllCritters()
 				fileH.open( files[i], content ); 
 
 				critterspacing = (float)settings->getCVar("worldsizeX") / settings->getCVar("mincritters");
-				CritterB *c = new CritterB(content, m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*i), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), retina);
+				CritterB *c = new CritterB(content, m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*critters.size()), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), retina);
 
 				unsigned int error = 0;
 				if ( c->retinasize != *critter_retinasize ) error = 1;
