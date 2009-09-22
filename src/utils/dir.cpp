@@ -18,7 +18,12 @@ bool Dir::exists(string &directory)
 
 void Dir::make(string &directory)
 {
+#ifndef _WIN32
 	mkdir( directory.c_str(), 0755 );
+#else
+	mkdir( directory.c_str() );
+#endif
+	
 }
 
 void Dir::listContents(string dir, vector<string> &files)

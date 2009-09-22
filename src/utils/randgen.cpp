@@ -3,13 +3,12 @@
 RandGen* RandGen::Instance () 
 {
 	static RandGen t;
-	return &t; // _instance isn't needed in this case
+	return &t;
 }
 
 RandGen::RandGen()
 {
-	gettimeofday(&now, &timer_tz);
-	srand(now.tv_usec);
+	srand(Timer::Instance()->lasttime.tv_usec);
 	count = 0;
 }
 
@@ -17,10 +16,9 @@ unsigned int RandGen::get(unsigned int minimum, unsigned int maximum)
 {
 	if ( maximum > minimum )
 	{
-		if (++count > 100)
+		if (++count > 1000)
 		{
-			gettimeofday(&now, &timer_tz);
-			srand(now.tv_usec);
+			srand(Timer::Instance()->lasttime.tv_usec);
 			count = 0;
 		}
 	
