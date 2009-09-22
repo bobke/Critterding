@@ -7,6 +7,70 @@ AC_LANG_CPLUSPLUS
 AC_PROG_CXX
 AM_PROG_LIBTOOL
 
+AC_MSG_CHECKING([host type])
+case "$host" in
+	*-apple-darwin*)
+		HOST_LIBS="-lz"
+		HOST_GL_LIBS="-framework OpenGL"
+		HOST_SDL_LIBS="-framework SDL -framework Cocoa"
+		ICON_CLIENT=""
+		ICON_SERVER=""
+		SDLMAIN="SDLMain.o"
+		INSTALLTYPE="application bundle"
+		OS=OSX
+                AC_MSG_RESULT(OS X)
+		AC_DEFINE_UNQUOTED(_OSX, 1, [Define this if you're building for native OS X])
+dnl
+dnl Don't rely on AC_PROG_OBJC presence (e.g. autoconf 2.59)
+dnl http://www.mail-archive.com/xine-cvslog@lists.sourceforge.net/msg01693.html
+dnl
+     		m4_ifdef(
+			[AC_PROG_OBJC],
+       			[AC_PROG_OBJC],
+			[AC_CHECK_TOOL([OBJC], [gcc])
+			AC_SUBST(OBJC)
+			AC_SUBST(OBJCFLAGS)]
+		)
+		;;
+		
+        *-*-mingw*)
+                HOST_LIBS="-lws2_32 -lz"
+                HOST_GL_LIBS="-lopengl32 -lglu32"
+		HOST_AL_LIBS="-lopenal32"
+		ICON_CLIENT="osirion-res.o"
+		ICON_SERVER="osiriond-res.o"
+		SDLMAIN=""
+		INSTALLTYPE="single directory"
+		OS=WIN32
+                AC_MSG_RESULT(win32)
+                ;;
+        *)
+                HOST_LIBS="-lz"
+                HOST_GL_LIBS="-lGL -lGLU"
+		ICON_CLIENT=""
+		ICON_SERVER=""
+		SDLMAIN=""
+		INSTALLTYPE="standard"
+                AC_MSG_RESULT(generic unix)
+		OS=UNIX
+                ;;
+esac
+
+dnl
+dnl Make Objective-C work with automake 1.7.x
+dnl http://mlblog.osdir.com/sysutils.automake.general/2003-05/msg00030.shtml
+dnl
+AM_CONDITIONAL([am__fastdepOBJC], false)
+
+AC_SUBST(OS)
+dnl AC_SUBST(HOST_LIBS)
+dnl AC_SUBST(ICON_CLIENT)
+dnl AC_SUBST(ICON_SERVER)
+AC_SUBST(SDLMAIN)
+
+AC_DEFINE(OS, $OS, [Operating System])
+
+
 AC_OUTPUT(Makefile src/Makefile src/brainz/Makefile \
 				src/gl/Makefile \
 				src/scenes/Makefile \
