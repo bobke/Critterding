@@ -1,3 +1,6 @@
+#ifdef _WIN32
+	#include <unistd.h>
+#endif
 #include "evolution.h"
 
 Evolution::Evolution()
@@ -156,9 +159,9 @@ void Evolution::draw()
 	}
 }
 
-void Evolution::handlekeyPressed(const KeySym& key)
+void Evolution::handlekeyPressed(const SDLKey& key)
 {
-	if ( pause && key != XK_p )
+	if ( pause && key != SDLK_p )
 		return;
 
 	switch (key)
@@ -262,7 +265,7 @@ void Evolution::handlekeyPressed(const KeySym& key)
 	}
 }
 
-void Evolution::handlekeyReleased(const KeySym& key)
+void Evolution::handlekeyReleased(const SDLKey& key)
 {
 	events->deactivateEvent(key);
 }

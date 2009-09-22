@@ -1,3 +1,6 @@
+#ifdef _WIN32
+	#include <unistd.h>
+#endif
 #include "sleeper.h"
 
 Sleeper::Sleeper()
@@ -26,7 +29,6 @@ void Sleeper::mark()
 			if ( sleeptime >= stepsize )	sleeptime -= stepsize;
 			else 				sleeptime = 0;
 		}
-	
 		if (sleeptime > 0 ) usleep(sleeptime);
 	}
 }

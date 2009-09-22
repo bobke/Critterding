@@ -6,8 +6,9 @@
 #include <SDL/SDL.h>
 
 /* Headers needed for keys used in the program */
-#include <X11/Xlib.h>
-#include <X11/keysym.h> // FIXME GET RID OF KEYSIM AND XLIB
+#include <SDL/SDL_keysym.h>
+// #include <X11/Xlib.h>
+// #include <X11/keysym.h> // FIXME GET RID OF KEYSIM AND XLIB
 
 class GLScene {
 	public:
@@ -18,8 +19,8 @@ class GLScene {
 		// This is the drawing function. Whatever needs to be drawn, goes in this function
 		virtual void draw();
 		// glwindow passes events to the scene
-		virtual void handlekeyPressed(const KeySym& key);
-		virtual void handlekeyReleased(const KeySym& key);
+		virtual void handlekeyPressed(const SDLKey& key);
+		virtual void handlekeyReleased(const SDLKey& key);
 
 		virtual void handlemousebuttonPressed(int x, int y, const int&);
 		virtual void handlemousebuttonReleased(int x, int y, const int&);

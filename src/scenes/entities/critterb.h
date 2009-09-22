@@ -1,5 +1,9 @@
 #ifndef CRITTERB_H
 #define CRITTERB_H
+#ifdef _WIN32
+	#include <time.h>
+	#include <windows.h>
+#endif
 
 #include "btBulletDynamicsCommon.h"
 #include "GL/gl.h"

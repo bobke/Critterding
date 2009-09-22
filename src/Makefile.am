@@ -13,7 +13,9 @@ critterding_SOURCES = critterding.cpp
 critterding_LDADD =	$(top_builddir)/src/gl/libgl.la \
 			$(top_builddir)/src/scenes/libscenes.la \
 			$(top_builddir)/src/utils/libutils.la \
-			-lGL -lfreetype -lSDL
+			$(HOST_LIBS)
+
+# -lGL -lfreetype -lSDL
 # -lBulletDynamics -lBulletCollision -lLinearMath  
 # -lftgl
 critterding_LDFLAGS = -avoid-version -no-undefined
