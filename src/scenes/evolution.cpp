@@ -46,7 +46,7 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	delay,	0, 	speedup );
 	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	delay,	0, 	speedup );
 
-	sharedTimer* t = events->registerSharedtimer( 15 );
+	sharedTimer* t = events->registerSharedtimer( 20 );
 
 	events->registerEvent(SDLK_HOME,	"camera_moveup", 		t );
 	events->registerEvent(SDLK_END,		"camera_movedown", 		t );
