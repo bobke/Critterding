@@ -767,7 +767,7 @@ void WorldB::resetCamera()
 	if ( settings->getCVar("worldsizeY") > biggest )
 		biggest = 1.4f*settings->getCVar("worldsizeY");
 
-	camera.position = btVector3( -0.5f*settings->getCVar("worldsizeX"), -1.1f*biggest, -0.5f*settings->getCVar("worldsizeY"));
+	camera.position = btVector3( -0.5f*settings->getCVar("worldsizeX"), -1.3f*biggest, -0.5f*settings->getCVar("worldsizeY"));
 	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
 }
 

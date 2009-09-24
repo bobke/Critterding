@@ -30,6 +30,7 @@ class GLWindow {
 		unsigned int n_width;
 		unsigned int n_height;
 		unsigned int fs;
+		SDL_Surface* surface;
 		const unsigned int*	settingsfs;
 };
 
