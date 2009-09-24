@@ -22,9 +22,6 @@ class Timer
 		float timediff(const struct timeval& now, const struct timeval& lasttime);
 		
 		float bullet_ms;
-/*		#ifdef _WIN32
-			int gettimeofday(struct timeval *tv, struct timezone *tz);
-		#endif*/
 	protected:
 		Timer();
 	private:

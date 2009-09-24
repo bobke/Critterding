@@ -10,7 +10,7 @@ Events::Events()
 {
 }
 
-sharedTimer* Events::registerSharedtimer(float responsetime)
+sharedTimer* Events::registerSharedtimer(unsigned int responsetime)
 {
 	// create a new event and a pointer to it
 	sharedtimers.push_back(sharedTimer());

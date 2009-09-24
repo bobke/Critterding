@@ -1,9 +1,5 @@
 #ifndef WORLDB_H
 #define WORLDB_H
-#ifdef _WIN32
-	#include <time.h>
-	#include <windows.h>
-#endif
 
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btIDebugDraw.h"
