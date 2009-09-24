@@ -12,7 +12,7 @@ class Timer
 {
 	public:
 		static Timer* Instance();
-		int elapsed;
+		unsigned int elapsed;
 		void mark();
 
 		int sdl_now;

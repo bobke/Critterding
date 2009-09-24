@@ -23,9 +23,9 @@ struct event
 	bool			active;
 	long unsigned int 	bindkey;
 	unsigned int		responsetime;
-	float			fresponsetime;		// floating responsetime
-	unsigned int		minfresponsetime;	// minimum floating responsetime
-	float			fresponseinterval;	// floating degredation interval
+	int			fresponsetime;		// responsetime
+	unsigned int		minfresponsetime;	// minimum responsetime
+	unsigned int		fresponseinterval;	// degredation interval
 	unsigned int		elapsed;
 	
 	bool			timerisshared;

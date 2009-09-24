@@ -88,7 +88,7 @@ void Events::processSharedTimers()
 	for ( unsigned int i=0; i < sharedtimers.size(); i++ )
 	{
 		sharedTimer* t = &sharedtimers[i];
-		t->elapsed += (float)Timer::Instance()->elapsed;
+		t->elapsed += Timer::Instance()->elapsed;
 		if ( t->elapsed >= t->responsetime )
 		{
 			t->elapsed = 0;
@@ -110,29 +110,28 @@ bool Events::isActive(const string& name)
 
 			event* e = &events[i];
 			
-			// event does not use a timer
-				if ( e->responsetime == 0 )
-					return e->active;
-
 			// event uses a shared timer
 				if ( e->timerisshared )
 				{
 					if ( e->stimer->active )
 						return e->active;
-					//return e->stimer->active;
 				}
 				else
 				{
+					// event does not use a timer
+					if ( e->responsetime == 0 )
+						return e->active;
+
 					// event has it's own timer
 					if ( e->active )
 					{
 						e->elapsed += Timer::Instance()->elapsed;
-						if ( e->elapsed >= e->fresponsetime )
+						if ( (int)e->elapsed >= e->fresponsetime )
 						{
 							if ( e->responsetime > e->minfresponsetime )
 							{
 								e->fresponsetime -= e->fresponseinterval;
-								if ( e->fresponsetime < e->minfresponsetime )
+								if ( e->fresponsetime < (int)e->minfresponsetime )
 									e->fresponsetime = e->minfresponsetime;
 							}
 							e->elapsed = 0;
