@@ -1,11 +1,6 @@
 #ifndef RANDGEN_H
 #define RANDGEN_H
 
-#ifdef _WIN32
-	#include <time.h>
-	#include <windows.h>
-#endif
-
 #include <cstdlib>
 #include "timer.h"
 
@@ -22,7 +17,7 @@ class RandGen
 	private:
 		static RandGen* _instance;
 
-		unsigned int		count;
+		unsigned int count;
 };
 
 #endif
