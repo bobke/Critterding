@@ -1,9 +1,5 @@
 #ifndef FOOD_H
 #define FOOD_H
-#ifdef _WIN32
-	#include <time.h>
-	#include <windows.h>
-#endif
 
 #include "btBulletDynamicsCommon.h"
 #include "GL/gl.h"

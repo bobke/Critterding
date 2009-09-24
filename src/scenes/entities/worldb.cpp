@@ -1,6 +1,8 @@
+#ifdef _WIN32
+	#include <windows.h>
+	#include <shlobj.h>
+#endif
 #include "worldb.h"
-
-// FIXME remove the pickingconstraint connected to a critter when it dies
 
 WorldB::WorldB()
 {

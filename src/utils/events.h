@@ -22,11 +22,11 @@ struct event
 	string			name;
 	bool			active;
 	long unsigned int 	bindkey;
-	float			responsetime;
+	unsigned int		responsetime;
 	float			fresponsetime;		// floating responsetime
-	float			minfresponsetime;	// minimum floating responsetime
+	unsigned int		minfresponsetime;	// minimum floating responsetime
 	float			fresponseinterval;	// floating degredation interval
-	float			elapsed;
+	unsigned int		elapsed;
 	
 	bool			timerisshared;
 	sharedTimer*		stimer;
@@ -37,7 +37,7 @@ class Events
 	public:
 		static Events*		Instance();
 
-		sharedTimer*		registerSharedtimer(float responsetime);
+		sharedTimer*		registerSharedtimer(unsigned int responsetime);
 
 		void			registerEvent(SDLKey key, const string& name, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
 		void			registerEvent(SDLKey key, const string& name, sharedTimer* stimer);
