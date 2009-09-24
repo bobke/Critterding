@@ -31,6 +31,7 @@ void GLWindow::create(const char* title, int width, int height, int bpp)
 
 	fs = *settingsfs;
 
+	surface=0;
 	resize();
 }
 
@@ -41,14 +42,37 @@ void GLWindow::resize()
 
 	if ( fs )
 	{
+		SDL_FreeSurface(surface);
 		n_width = w_width;
 		n_height = w_height;
 		w_width = Settings::Instance()->getCVar("fsX");
-		w_height = Settings::Instance()->getCVar("fsY");;
-		SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF | SDL_FULLSCREEN );
+		w_height = Settings::Instance()->getCVar("fsY");
+
+		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );
 	}
 	else
-		SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF );
+	{
+#ifdef _WIN32
+		if ( surface != 0 )
+		{
+			SDL_Init(SDL_INIT_VIDEO);
+
+			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 4);
+			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
+			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 4);
+			SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
+			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		}
+		else
+			surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF | SDL_ANYFORMAT );
+#else
+		SDL_FreeSurface(surface);
+		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF | SDL_ANYFORMAT );
+#endif
+	}
+
+
 }
 
 void GLWindow::runGLScene(GLScene* glscene)

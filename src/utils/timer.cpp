@@ -62,7 +62,7 @@ int Timer::gettimeofday(struct timeval *tv, struct timezone *tz)
 		tz->tz_minuteswest = _timezone / 60;
 		tz->tz_dsttime = _daylight;
 	}
-
+	cerr << "yeah" << endl;
 	return 0;
 }
 #endif

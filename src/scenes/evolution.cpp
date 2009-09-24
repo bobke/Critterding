@@ -250,6 +250,7 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 		}
 		break;
 
+#ifndef _WIN32
 		case SDLK_f:
 		{
 			settings->increaseCVar("fullscreen", 1);
@@ -258,7 +259,7 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			Textmessage::Instance()->add(buf);
 		}
 		break;
-
+#endif
 		default:
 			events->activateEvent(key);
 			break;
