@@ -13,7 +13,7 @@ Timer::Timer()
 {
 	// calc lasttime for first time
 	gettimeofday(&lasttime, &timer_tz);
-	sdl_lasttime = SDL_GetTicks();
+	sdl_lasttime = 0;
 }
 
 void Timer::mark()
