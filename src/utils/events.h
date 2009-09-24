@@ -13,8 +13,8 @@ using namespace std;
 struct sharedTimer
 {
 	bool			active;
-	float			responsetime;
-	float			elapsed;
+	unsigned int		responsetime;
+	unsigned int		elapsed;
 };
 
 struct event
@@ -39,7 +39,7 @@ class Events
 
 		sharedTimer*		registerSharedtimer(float responsetime);
 
-		void			registerEvent(SDLKey key, const string& name, float responsetime, float minfresponsetime, float fresponseinterval);
+		void			registerEvent(SDLKey key, const string& name, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
 		void			registerEvent(SDLKey key, const string& name, sharedTimer* stimer);
 
 		void			activateEvent(const long unsigned int key);

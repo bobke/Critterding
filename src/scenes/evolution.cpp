@@ -21,27 +21,30 @@ Evolution::Evolution()
 	pause = false;
 // 	drawCVNeurons = false;
 
-	events->registerEvent(SDLK_LSHIFT,	"lshift", 			0.0f,	0.0f, 	0.0f );
-	events->registerEvent(SDLK_RSHIFT,	"rshift", 			0.0f,	0.0f, 	0.0f );
+	unsigned int delay = 150;
+	unsigned int speedup = 2;
+
+	events->registerEvent(SDLK_LSHIFT,	"lshift", 			0,	0, 	0 );
+	events->registerEvent(SDLK_RSHIFT,	"rshift", 			0,	0, 	0 );
 
 	// events
-	events->registerEvent(SDLK_F5,		"dec_critters", 		0.2f,	0.0f, 	0.01f );
-	events->registerEvent(SDLK_F6,		"inc_critters", 		0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_F5,		"dec_critters", 		delay,	0, 	speedup );
+	events->registerEvent(SDLK_F6,		"inc_critters", 		delay,	0, 	speedup );
 
-	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", 			0.2f,	0.0f, 	0.01f );
-	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", 			0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", 			delay,	0, 	speedup );
+	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", 			delay,	0, 	speedup );
 
-	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", 		0.2f,	0.0f, 	0.01f );
-	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", 		0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", 		delay,	0, 	speedup );
+	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", 		delay,	0, 	speedup );
 
-	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		0.2f,	0.0f, 	0.01f );
-	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		delay,	0, 	speedup );
+	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		delay,	0, 	speedup );
 
-	events->registerEvent(SDLK_F11,		"dec_mutationrate", 		0.2f,	0.0f, 	0.01f );
-	events->registerEvent(SDLK_F12,		"inc_mutationrate", 		0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_F11,		"dec_mutationrate", 		delay,	0, 	speedup );
+	events->registerEvent(SDLK_F12,		"inc_mutationrate", 		delay,	0, 	speedup );
 
-	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	0.2f,	0.0f, 	0.01f );
-	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	0.2f,	0.0f, 	0.01f );
+	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	delay,	0, 	speedup );
+	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	delay,	0, 	speedup );
 
 	sharedTimer* t = events->registerSharedtimer( 0.02f );
 

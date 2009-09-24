@@ -36,7 +36,7 @@ void TestWorld1::process()
 	autosaveCritters();
 	autoinsertCritters();
 
-	m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
+	m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
 
 	renderVision();
 	grabVision();

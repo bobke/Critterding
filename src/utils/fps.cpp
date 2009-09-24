@@ -14,7 +14,7 @@ void Fps::mark()
 
 	if ( t->elapsed > 0.0f )
 	{
-		dispsum += (1.0f/t->elapsed);
+		dispsum += t->bullet_ms;
 
 		if ( ++dispcounter == dispevery )
 		{

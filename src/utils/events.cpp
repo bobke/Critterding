@@ -35,7 +35,7 @@ void Events::registerEvent(SDLKey key, const string& name, sharedTimer* stimer)
 	e->stimer = stimer;
 }
 
-void Events::registerEvent(SDLKey key, const string& name, float responsetime, float minfresponsetime, float fresponseinterval)
+void Events::registerEvent(SDLKey key, const string& name, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval)
 {
 	// create a new event and a pointer to it
 	events.push_back(event());
@@ -88,10 +88,10 @@ void Events::processSharedTimers()
 	for ( unsigned int i=0; i < sharedtimers.size(); i++ )
 	{
 		sharedTimer* t = &sharedtimers[i];
-		t->elapsed += Timer::Instance()->elapsed;
+		t->elapsed += (float)Timer::Instance()->elapsed;
 		if ( t->elapsed >= t->responsetime )
 		{
-			t->elapsed = 0.0f;
+			t->elapsed = 0;
 			t->active = true;
 		}
 		else
@@ -111,7 +111,7 @@ bool Events::isActive(const string& name)
 			event* e = &events[i];
 			
 			// event does not use a timer
-				if ( e->responsetime == 0.0f )
+				if ( e->responsetime == 0 )
 					return e->active;
 
 			// event uses a shared timer
@@ -135,7 +135,7 @@ bool Events::isActive(const string& name)
 								if ( e->fresponsetime < e->minfresponsetime )
 									e->fresponsetime = e->minfresponsetime;
 							}
-							e->elapsed = 0.0f;
+							e->elapsed = 0;
 							return true;
 						}
 					}

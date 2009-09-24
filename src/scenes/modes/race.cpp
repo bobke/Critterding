@@ -34,7 +34,7 @@ void WorldRace::init()
 void WorldRace::process()
 {
 	// do a bullet step
-		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000000.f);
+		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
 
 	// render critter vision, optimized for this sim
 		for( unsigned int i=0; i < critters.size(); i++)
