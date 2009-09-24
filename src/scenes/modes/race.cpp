@@ -128,21 +128,22 @@ void WorldRace::process()
 
 			// backup the 50% best critters
 				vector<CritterB*> best;
-
 				unsigned int bestNum = critters.size()/2;
 				if ( critters.size() == 1 )
 					bestNum = 1;
 				for ( unsigned int i=0; i < bestNum; i++  )
 					best.push_back( new CritterB(*critters[indices[i]], currentCritterID++, btVector3( 0.0f, 0.0f, 0.0f ), false, false) );
-
 			// remove critters and food
 				for ( unsigned int i=0; i < critters.size(); i++ )
 				{
 					if ( critters[i]->isPicked )
 						mousepicker->detach();
+// FIXME on windows, we segfault here 1/10 after the first run
 					delete critters[i];
+// FIXME
 				}
 				critters.clear();
+
 				for ( unsigned int i=0; i < food.size(); i++ )
 				{
 					if ( food[i]->isPicked )
@@ -232,8 +233,7 @@ void WorldRace::insRandomCritter(int nr)
 
 void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody)
 {
-	CritterB *nc;
-	nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), mutateBrain, mutateBody);
+	CritterB *nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), mutateBrain, mutateBody);
 	nc->energyLevel = settings->getCVar("critter_maxenergy") / 2;
 	critters.push_back( nc );
 	nc->calcFramePos(critters.size()-1);
