@@ -19,6 +19,7 @@
 #include "../../utils/textverbosemessage.h"
 #include "../../utils/raycast.h"
 #include "../../utils/mousepicker.h"
+#include "../../utils/statsbuffer.h"
 #include "food.h"
 #include "wall.h"
 #include "critterb.h"
@@ -47,6 +48,7 @@ class WorldB
 		void			makeFloor();
 		
 		Settings*		settings;
+		Statsbuffer*		statsBuffer;
 		RandGen*		randgen;
 		Mousepicker*		mousepicker;
 		Camera camera;
@@ -97,7 +99,7 @@ class WorldB
 		const unsigned int*	critter_retinasize;
 		const unsigned int*	critter_maxenergy;
 
-		void		checkCollisions( CritterB* c );
+		void			checkCollisions( CritterB* c );
 
 		inline void grabVision()
 		{

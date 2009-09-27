@@ -2,7 +2,6 @@
 #define HELPINFO_H
 
 #include "textprinter.h"
-#include "textprinter.h"
 
 using namespace std;
 
@@ -19,8 +18,8 @@ class Helpinfo
 		Textprinter *textprinter;
 		bool active;
 
-		float halfboxwidth;
-		float halfboxheight;
+		unsigned int halfboxwidth;
+		unsigned int halfboxheight;
 
 		void printInfoLine(float heightpos, float widthpos1, float widthpos2, const char* key, const char* expl);
 };

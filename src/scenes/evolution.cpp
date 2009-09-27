@@ -147,7 +147,8 @@ void Evolution::draw()
 
 			infobar.draw();
 			infostats.draw(infobar.height());
-			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height());
+			statsGraph.draw(infobar.height()+infostats.height());
+			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height()+statsGraph.height());
 			helpinfo.draw();
 			Textmessage::Instance()->draw();
 
@@ -194,6 +195,10 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			break;
 		case SDLK_PAGEDOWN:
 			world->saveAllCritters();
+			break;
+
+		case SDLK_g:
+			statsGraph.swap();
 			break;
 
 		case SDLK_i:
