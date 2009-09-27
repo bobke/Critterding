@@ -12,7 +12,7 @@ Statsbuffer::Statsbuffer()
 
 	recordInterval = 100;
 	framecounter = 0;
-	maxSnapshots = 10000;
+	maxSnapshots = 3000;
 }
 
 void Statsbuffer::add()

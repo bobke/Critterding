@@ -2,7 +2,7 @@
 
 Statsgraph::Statsgraph()
 {
-	active = true;
+	active = false;
 
 	statsBuffer = Statsbuffer::Instance();
 	settings = Settings::Instance();
@@ -73,20 +73,22 @@ void Statsgraph::draw( unsigned int posY )
 				// so,  highest ~ boxheight
 				// and, number ~ boxwidth
 			
+				float heightratio = ((float)boxheight/highest);
+			
 			// draw the number of critters graph
 
 				glColor3f(0.0f, 1.0f, 0.0f);
 				glBegin(GL_POINTS);
 					for ( unsigned int i=start; i < number; i++ )
 					{
-						glVertex2f( x1+i-start, y2-((float)boxheight/highest)*statsBuffer->snapshots[i].food );
+						glVertex2f( x1+i-start, y2-(heightratio*statsBuffer->snapshots[i].food) );
 					}
 				glEnd();
 				glColor3f(1.0f, 0.0f, 0.0f);
 				glBegin(GL_POINTS);
 					for ( unsigned int i=start; i < number; i++ )
 					{
-						glVertex2f( x1+i-start, y2-((float)boxheight/highest)*statsBuffer->snapshots[i].critters );
+						glVertex2f( x1+i-start, y2-(heightratio*statsBuffer->snapshots[i].critters) );
 					}
 				glEnd();
 			}
