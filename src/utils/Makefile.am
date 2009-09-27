@@ -2,10 +2,10 @@ INCLUDES = $(all_includes) -I./bullet -I/usr/include/freetype2
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libutils.la
 noinst_HEADERS =      dir.h   file.h   parser.h   randgen.h   timer.h   fps.h   sleeper.h   settings.h   displaylists.h infobar.h     infostats.h   helpinfo.h   textprinter.h   \
-		      textmessage.h   textverbosemessage.h   events.h   raycast.h   mousepicker.h
+		      textmessage.h   textverbosemessage.h   events.h   raycast.h   mousepicker.h   statsbuffer.h   statsgraph.h
 
 libutils_la_SOURCES = dir.cpp file.cpp parser.cpp randgen.cpp timer.cpp fps.cpp sleeper.cpp settings.cpp displaylists.cpp infobar.cpp infostats.cpp helpinfo.cpp textprinter.cpp \
-                      textmessage.cpp textverbosemessage.cpp events.cpp raycast.cpp mousepicker.cpp
+                      textmessage.cpp textverbosemessage.cpp events.cpp raycast.cpp mousepicker.cpp statsbuffer.cpp statsgraph.cpp
 		      
 libutils_la_LIBADD = $(top_builddir)/src/utils/ftgl/libftgl.la $(top_builddir)/src/utils/bullet/libbulletmath.la $(top_builddir)/src/utils/bullet/libbulletcollision.la \
                      $(top_builddir)/src/utils/bullet/libbulletdynamics.la

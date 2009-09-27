@@ -44,7 +44,7 @@ bool Sleeper::isRenderTime()
 		timeSinceLastRender = 0.0f;
 		return true;
 	}
-		
+
 //  	cerr << "returning false" << endl;
 	return false;
 }

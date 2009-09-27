@@ -18,6 +18,8 @@ WorldB::WorldB()
 		food_maxlifetime = settings->getCVarPtr("food_maxlifetime");
 		food_maxenergy = settings->getCVarPtr("food_maxenergy");
 
+	statsBuffer = Statsbuffer::Instance();
+
 	freeEnergy = *food_maxenergy * settings->getCVar("energy");
 	settings->freeEnergyInfo = freeEnergy;
 		
@@ -285,7 +287,7 @@ void WorldB::autosaveCritters()
 {
 	if ( *critter_autosaveinterval > 0 )
 	{
-		autosaveCounter += Timer::Instance()->elapsed;
+		autosaveCounter += (Timer::Instance()->elapsed/1000);
 		if ( autosaveCounter > *critter_autosaveinterval )
 		{
 			autosaveCounter = 0.0f;
@@ -409,6 +411,9 @@ void WorldB::getGeneralStats()
 		settings->info_totalBodyparts		+= critters[i]->body.bodyparts.size();
 		settings->info_totalWeight		+= critters[i]->body.totalWeight;
 	}
+
+	statsBuffer->add();
+
 }
 
 void WorldB::checkCollisions( CritterB* c )

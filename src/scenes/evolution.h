@@ -9,6 +9,7 @@
 #include "../utils/settings.h"
 #include "../utils/infobar.h"
 #include "../utils/infostats.h"
+#include "../utils/statsgraph.h"
 #include "../utils/helpinfo.h"
 #include "../utils/textmessage.h"
 #include "../utils/textverbosemessage.h"
@@ -53,6 +54,7 @@ class Evolution : public GLScene {
 		Events *events;
 		Sleeper sleeper;
 		Infobar infobar;
+		Statsgraph statsGraph;
 		Infostats infostats;
 		Helpinfo helpinfo;
 
