@@ -134,7 +134,6 @@ void GLWindow::runGLScene(GLScene* glscene)
 				SDL_GetMouseState(&x, &y);
 				glscene->handlemousebuttonReleased( x, y, event.button.button );
 			}
-
 			else if(event.type == SDL_MOUSEMOTION)
 			{
 				glscene->handleMouseMotionRel( event.motion.xrel, event.motion.yrel );

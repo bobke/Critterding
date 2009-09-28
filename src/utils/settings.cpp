@@ -32,7 +32,7 @@ Settings::Settings()
 	registerCVar("exit_if_empty",						0, 0, 1, true, "exit simulation if there are no critters");
 	registerCVar("autoload",						0, 0, 1, true, "autoload critters from ~/.critterding/load");
 
-	registerCVar("critter_maxlifetime",					10000, 1, 1000000, false, "maximum number of frames a critter lives");
+	registerCVar("critter_maxlifetime",					6000, 1, 1000000, false, "maximum number of frames a critter lives");
 	registerCVar("critter_maxenergy",					5000, 1, 1000000, false, "maximum amount of energy a critter has");
 
 	registerCVar("critter_startenergy",					2500, 1, 1000000, false, "energy a new critter starts with");
