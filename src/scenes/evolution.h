@@ -46,8 +46,6 @@ class Evolution : public GLScene {
 		void handleMouseMotionAbs(int x, int y);
 
 		WorldB* world;
-// 		WorldB world;
-// 		WorldRace world;
 
 	private:
 		Settings *settings;

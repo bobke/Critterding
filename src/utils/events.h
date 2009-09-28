@@ -23,8 +23,8 @@ struct event
 	bool			active;
 	long unsigned int 	bindkey;
 	unsigned int		responsetime;
-	int			fresponsetime;		// responsetime
-	unsigned int		minfresponsetime;	// minimum responsetime
+	int			fresponsetime;
+	unsigned int		minfresponsetime;
 	unsigned int		fresponseinterval;	// degredation interval
 	unsigned int		elapsed;
 	
