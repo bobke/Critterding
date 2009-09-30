@@ -242,6 +242,7 @@ void WorldB::eat( CritterB* c )
 
 			c->energyLevel += eaten;
 			ct->energyLevel -= eaten;
+			ct->eaten = true;
 		}
 	}
 }
@@ -314,7 +315,10 @@ void WorldB::expireCritters()
 		if ( critters[i]->energyLevel <= 0.0f )
 		{
 			stringstream buf;
-			buf << setw(4) << critters[i]->critterID << " starved";
+			if ( critters[i]->eaten )
+				buf << setw(4) << critters[i]->critterID << " eaten";
+			else
+				buf << setw(4) << critters[i]->critterID << " starved";
 			Textverbosemessage::Instance()->addDeath(buf);
 
 			removeCritter(i);
