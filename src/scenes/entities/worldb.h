@@ -146,6 +146,10 @@ class WorldB
 		Raycast*		raycast;
 
 		castResult		mouseRay;
+		bool			mouseRayHit;
+		unsigned int		mouseRayHitType;
+		CritterB*		mouseRayHitC;
+		Food*			mouseRayHitF;
 		btVector3		mouseRayTo;
 
 		unsigned int		insertCritterCounter;
