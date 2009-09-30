@@ -8,7 +8,19 @@ RandGen* RandGen::Instance ()
 
 RandGen::RandGen()
 {
-	srand(Timer::Instance()->lasttime.tv_usec);
+	unsigned int n1 = Timer::Instance()->lasttime.tv_usec;
+	usleep(10000);
+	Timer::Instance()->mark();
+
+	unsigned int n2 = Timer::Instance()->lasttime.tv_usec;
+	usleep(10000);
+	Timer::Instance()->mark();
+
+	unsigned int n3 = Timer::Instance()->lasttime.tv_usec;
+
+// 	cerr << (n1*n2)-n3 << endl;
+
+	srand( (n1*n2)-n3 );
 	count = 0;
 }
 
@@ -18,7 +30,9 @@ unsigned int RandGen::get(unsigned int minimum, unsigned int maximum)
 	{
 		if (++count > 1000)
 		{
-			srand(Timer::Instance()->lasttime.tv_usec);
+			unsigned int newseed = Timer::Instance()->lasttime.tv_usec;
+			if ( newseed > 0 )
+				srand( newseed + (rand() % (maximum-minimum+1)) + minimum );
 			count = 0;
 		}
 	

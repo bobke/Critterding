@@ -173,7 +173,7 @@ void Camera::lookDown(const float& factor)
 	if ( rotation.x > 360.0f ) rotation.x -= 360.0f;
 }
 
-btVector3 Camera::getScreenClickDirection(const int& x, const int& y)
+btVector3 Camera::getScreenDirection(const int& x, const int& y)
 {
 	float directiondepth = 1000000.f;
 	btVector3 origin = position;
