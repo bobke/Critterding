@@ -89,29 +89,30 @@ void WorldB::castMouseRay()
 // 	cerr << "casting" << endl;
 	mouseRay = raycast->cast( -camera.position, mouseRayTo );
 
-//	testing the hover FIXME
-/*	if ( mouseRay.hit )
+	mouseRayHit = false;
+	if ( mouseRay.hit )
 	{
 		if ( !( mouseRay.hitBody->isStaticObject() || mouseRay.hitBody->isKinematicObject() ) )
 		{
 			Food* f = static_cast<Food*>(mouseRay.hitBody->getUserPointer());
 			if ( f->type == 1 )
 			{
-// 				cerr << "food" << endl;
-				mousepicker->pickedBool = &f->isPicked;
+				mouseRayHit = true;
+				mouseRayHitF = f;
+				mouseRayHitType = f->type;
 			}
 			else
 			{
 				CritterB* b = static_cast<CritterB*>(mouseRay.hitBody->getUserPointer());
 				if ( b->type == 0 )
 				{
-// 					cerr << "critter" << endl;
-					mousepicker->pickedBool = &b->isPicked;
+					mouseRayHit = true;
+					mouseRayHitC = b;
+					mouseRayHitType = b->type;
 				}
 			}
-			*mousepicker->pickedBool = true;
 		}
-	}*/
+	}
 }
 
 void WorldB::calcMouseDirection(const int& x, const int& y)
@@ -122,25 +123,16 @@ void WorldB::calcMouseDirection(const int& x, const int& y)
 
 void WorldB::pickBody(const int& x, const int& y)
 {
-	if ( mouseRay.hit )
+	if ( mouseRayHit )
 	{
-// 		cerr << "hit" << endl;
-		if ( !( mouseRay.hitBody->isStaticObject() || mouseRay.hitBody->isKinematicObject() ) )
-		{
-// 			cerr << "attaching" << endl;
-			mousepicker->attach( mouseRay.hitBody, mouseRay.hitPosition, -camera.position, mouseRayTo );
+		mousepicker->attach( mouseRay.hitBody, mouseRay.hitPosition, -camera.position, mouseRayTo );
 
-			Food* f = static_cast<Food*>(mouseRay.hitBody->getUserPointer());
-			if ( f->type == 1 )
-				mousepicker->pickedBool = &f->isPicked;
-			else
-			{
-				CritterB* b = static_cast<CritterB*>(mouseRay.hitBody->getUserPointer());
-				if ( b->type == 0 )
-					mousepicker->pickedBool = &b->isPicked;
-			}
-			*mousepicker->pickedBool = true;
-		}
+		if ( mouseRayHitType == 1 )
+			mousepicker->pickedBool = &mouseRayHitF->isPicked;
+		else if ( mouseRayHitType == 0 )
+			mousepicker->pickedBool = &mouseRayHitC->isPicked;
+
+		*mousepicker->pickedBool = true;
 	}
 }
 
