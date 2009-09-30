@@ -34,6 +34,8 @@ class CritterB
 		void			draw(bool drawFaces);
 		void			move();
 		
+		bool			eaten;
+		
 		unsigned long		critterID;
 
 		unsigned int		adamdist;

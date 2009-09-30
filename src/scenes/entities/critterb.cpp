@@ -313,6 +313,8 @@ void CritterB::process()
 		totalFrames++;
 		procreateTimeCount++;
 
+		eaten = false;
+
 	// reset motor bools
 		movementsmade	= 0;
 // 		eat		= false;
