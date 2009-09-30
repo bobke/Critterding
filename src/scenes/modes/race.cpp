@@ -132,10 +132,14 @@ void WorldRace::process()
 				if ( critters.size() == 1 )
 					bestNum = 1;
 				for ( unsigned int i=0; i < bestNum; i++  )
-					best.push_back( new CritterB(*critters[indices[i]], currentCritterID++, btVector3( 0.0f, 0.0f, 0.0f ), false, false) );
+					best.push_back( new CritterB(*critters[indices[i]], critters[indices[i]]->critterID, btVector3( 0.0f, 0.0f, 0.0f ), false, false) );
 			// remove critters and food
 				for ( unsigned int i=0; i < critters.size(); i++ )
 				{
+					stringstream buf;
+					buf << setw(4) << critters[i]->critterID << " old";
+					Textverbosemessage::Instance()->addDeath(buf);
+
 					if ( critters[i]->isPicked )
 						mousepicker->detach();
 // FIXME on windows, we segfault here 1/10 after the first run
@@ -157,7 +161,7 @@ void WorldRace::process()
 
 			// reinsert the best critters
 				for ( unsigned int i=0; i < best.size() && i < settings->getCVar("mincritters"); i++  )
-					insMutatedCritter( *best[i], critters.size(), false, false );
+					insMutatedCritter( *best[i], critters.size(), best[i]->critterID, false, false );
 
 			// insert the mutants
 				unsigned int count = 0;
@@ -173,11 +177,23 @@ void WorldRace::process()
 						if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
 							bodymutant = true;
 
-						insMutatedCritter( *best[count], critters.size(), brainmutant, bodymutant );
+						insMutatedCritter( *best[count], critters.size(), currentCritterID++, brainmutant, bodymutant );
+
+						CritterB* c = best[count];
+						CritterB* nc = critters[critters.size()-1];
+						stringstream buf;
+						buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
+						buf << " ad: " << setw(4) << nc->adamdist;
+						buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
 
 						count++;
 						if ( count == best.size() && count > 0 )
 							count = 0;
+
+
+						if ( brainmutant ) buf << " brain mutant";
+						if ( bodymutant ) buf << " body mutant";
+						Textverbosemessage::Instance()->addBirth(buf);
 					}
 					else
 						insRandomCritter( critters.size() );
@@ -231,9 +247,9 @@ void WorldRace::insRandomCritter(int nr)
 	c->calcFramePos(critters.size()-1);
 }
 
-void WorldRace::insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody)
+void WorldRace::insMutatedCritter(CritterB& other, int nr, unsigned int id, bool mutateBrain, bool mutateBody)
 {
-	CritterB *nc = new CritterB(other, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), mutateBrain, mutateBody);
+	CritterB *nc = new CritterB(other, id, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), mutateBrain, mutateBody);
 	nc->energyLevel = settings->getCVar("critter_maxenergy") / 2;
 	critters.push_back( nc );
 	nc->calcFramePos(critters.size()-1);

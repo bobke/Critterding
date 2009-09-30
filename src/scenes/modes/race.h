@@ -16,7 +16,7 @@ class WorldRace : public WorldB {
 	private:
 		void		makeRaceFloor();
 		void		insRandomCritter(int nr);
-		void		insMutatedCritter(CritterB& other, int nr, bool mutateBrain, bool mutateBody);
+		void		insMutatedCritter(CritterB& other, int nr, unsigned int id, bool mutateBrain, bool mutateBody);
 		void		insFood(int nr);
 		
 		float		critterspacing;
