@@ -76,6 +76,8 @@ void Evolution::draw()
 	}
 
 	handleEvents();
+	if (!mouselook)
+		world->castMouseRay();
 
 	Timer::Instance()->mark();
 	sleeper.mark();
@@ -306,7 +308,8 @@ void Evolution::handleMouseMotionAbs(int x, int y)
 	{
 		oldx = x;
 		oldy = y;
-		world->movePickedBody(x, y);
+		world->calcMouseDirection(x, y);
+		world->movePickedBodyTo();
 	}
 }
 
@@ -471,61 +474,65 @@ void Evolution::handleEvents()
 	if ( events->isActive("camera_moveup") )
 	{
 		world->camera.moveUpXZ(0.01f);
-		world->movePickedBody();
+		world->movePickedBodyFrom();
 	}
 
 	if ( events->isActive("camera_movedown") )
 	{
 		world->camera.moveDownXZ(0.01f);
-		world->movePickedBody();
+		world->movePickedBodyFrom();
 	}
 
 	if ( events->isActive("camera_moveforward") )
 	{
 		world->camera.moveForwardXZ(0.01f);
-		world->movePickedBody();
+		world->movePickedBodyFrom();
 	}
 
 	if ( events->isActive("camera_movebackward") )
 	{
 		world->camera.moveBackwardXZ(0.01f);
-		world->movePickedBody();
+		world->movePickedBodyFrom();
 	}
 
 	if ( events->isActive("camera_moveleft") )
 	{
 		world->camera.moveLeft(0.01f);
-		world->movePickedBody();
+		world->movePickedBodyFrom();
 	}
 
 	if ( events->isActive("camera_moveright") )
 	{
 		world->camera.moveRight(0.01f);
-		world->movePickedBody();
+		world->movePickedBodyFrom();
 	}
 
 	if ( events->isActive("camera_lookup") )
 	{
 		world->camera.lookUp(0.03f);
-		world->movePickedBody(oldx, oldy);
+		world->calcMouseDirection(oldx, oldy);
+		world->movePickedBodyTo();
 	}
 
 	if ( events->isActive("camera_lookdown") )
 	{
 		world->camera.lookDown(0.03f);
-		world->movePickedBody(oldx, oldy);
+		world->calcMouseDirection(oldx, oldy);
+		world->movePickedBodyTo();
 	}
 
 	if ( events->isActive("camera_lookleft") )
 	{
 		world->camera.lookLeft(0.03f);
-		world->movePickedBody(oldx, oldy);
+		world->calcMouseDirection(oldx, oldy);
+		world->movePickedBodyTo();
 	}
 
 	if ( events->isActive("camera_lookright") )
 	{
 		world->camera.lookRight(0.03f);
-		world->movePickedBody(oldx, oldy);
+		world->calcMouseDirection(oldx, oldy);
+		world->movePickedBodyTo();
 	}
 }
 

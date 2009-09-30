@@ -84,28 +84,58 @@ void WorldB::init()
 		loadAllCritters();
 }
 
+void WorldB::castMouseRay()
+{
+// 	cerr << "casting" << endl;
+	mouseRay = raycast->cast( -camera.position, mouseRayTo );
+
+//	testing the hover FIXME
+/*	if ( mouseRay.hit )
+	{
+		if ( !( mouseRay.hitBody->isStaticObject() || mouseRay.hitBody->isKinematicObject() ) )
+		{
+			Food* f = static_cast<Food*>(mouseRay.hitBody->getUserPointer());
+			if ( f->type == 1 )
+			{
+// 				cerr << "food" << endl;
+				mousepicker->pickedBool = &f->isPicked;
+			}
+			else
+			{
+				CritterB* b = static_cast<CritterB*>(mouseRay.hitBody->getUserPointer());
+				if ( b->type == 0 )
+				{
+// 					cerr << "critter" << endl;
+					mousepicker->pickedBool = &b->isPicked;
+				}
+			}
+			*mousepicker->pickedBool = true;
+		}
+	}*/
+}
+
+void WorldB::calcMouseDirection(const int& x, const int& y)
+{
+// 	cerr << "updating mouserayto" << endl;
+	mouseRayTo = camera.getScreenDirection(x, y);
+}
+
 void WorldB::pickBody(const int& x, const int& y)
 {
-	btVector3 rayFrom = -camera.position;
-	btVector3 rayTo = camera.getScreenClickDirection(x, y);
-
-	castResult r = raycast->cast( rayFrom, rayTo );
-	
-	if ( r.hit )
+	if ( mouseRay.hit )
 	{
-		if ( !( r.hitBody->isStaticObject() || r.hitBody->isKinematicObject() ) )
+// 		cerr << "hit" << endl;
+		if ( !( mouseRay.hitBody->isStaticObject() || mouseRay.hitBody->isKinematicObject() ) )
 		{
-			mousepicker->attach( r.hitBody, r.hitPosition, rayFrom, rayTo );
-		}
+// 			cerr << "attaching" << endl;
+			mousepicker->attach( mouseRay.hitBody, mouseRay.hitPosition, -camera.position, mouseRayTo );
 
-		Food* f = static_cast<Food*>(r.hitBody->getUserPointer());
-		if ( f )
-		{
+			Food* f = static_cast<Food*>(mouseRay.hitBody->getUserPointer());
 			if ( f->type == 1 )
 				mousepicker->pickedBool = &f->isPicked;
 			else
 			{
-				CritterB* b = static_cast<CritterB*>(r.hitBody->getUserPointer());
+				CritterB* b = static_cast<CritterB*>(mouseRay.hitBody->getUserPointer());
 				if ( b->type == 0 )
 					mousepicker->pickedBool = &b->isPicked;
 			}
@@ -114,13 +144,13 @@ void WorldB::pickBody(const int& x, const int& y)
 	}
 }
 
-void WorldB::movePickedBody(const int& x, const int& y)
+void WorldB::movePickedBodyTo()
 {
 	if ( mousepicker->active )
-		mousepicker->moveTo( camera.position, camera.getScreenClickDirection(x,y) );
+		mousepicker->moveTo( camera.position, mouseRayTo );
 }
 
-void WorldB::movePickedBody()
+void WorldB::movePickedBodyFrom()
 {
 	if ( mousepicker->active )
 		mousepicker->moveFrom( camera.position );

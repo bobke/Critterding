@@ -86,9 +86,11 @@ class WorldB
 		virtual void		loadAllCritters();
 
 		void			killHalfOfCritters();
+
 		void			pickBody(const int& x, const int& y);
-		void			movePickedBody(const int& x, const int& y);
-		void			movePickedBody();
+		void			castMouseRay();
+		void			movePickedBodyTo();
+		void			movePickedBodyFrom();
 		float			autosaveCounter;
 
 		// vision
@@ -133,6 +135,8 @@ class WorldB
 			}
 		}
 
+		void			calcMouseDirection(const int& x, const int& y);
+
 		Dir			dirH;
 		Parser*			parseH;
 		File			fileH;
@@ -140,6 +144,9 @@ class WorldB
 		string			loaddir;
 	private:
 		Raycast*		raycast;
+
+		castResult		mouseRay;
+		btVector3		mouseRayTo;
 
 		unsigned int		insertCritterCounter;
 // 		GLDebugDrawer debugDrawer;
