@@ -23,7 +23,7 @@ WorldB::WorldB()
 	freeEnergy = *food_maxenergy * settings->getCVar("energy");
 	settings->freeEnergyInfo = freeEnergy;
 		
-	currentCritterID	= 0;
+	currentCritterID	= 1;
 	insertCritterCounter	= 0;
 	autosaveCounter		= 0.0f;
 	insertHight		= 1.0f;
