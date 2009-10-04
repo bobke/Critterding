@@ -404,6 +404,7 @@ void CritterB::procInputNeurons()
 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
 			{
 				brain.Inputs[overstep++].output = (float)retina[w] / 256.0f;
+/*				cerr << (int)retina[w] << endl;*/
 // 				cerr << "brain.Inputs[" << overstep <<  "].output" << endl;
 			}
 		}

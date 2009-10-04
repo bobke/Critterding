@@ -31,6 +31,9 @@ class GLWindow {
 		unsigned int n_height;
 		unsigned int fs;
 		SDL_Surface* surface;
+		const SDL_VideoInfo* vidInfo;
+		int vidFlags;
+		bool hwaccel;
 		const unsigned int*	settingsfs;
 };
 

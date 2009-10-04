@@ -6,14 +6,42 @@ GLWindow::GLWindow()
 
 void GLWindow::create(const char* title, int width, int height, int bpp)
 {
-	w_bpp = bpp;
-	SDL_Init(SDL_INIT_VIDEO);
+
+	if( SDL_Init(SDL_INIT_VIDEO) < 0 )
+	{
+		cerr << "Video initialization failed: " << SDL_GetError() << endl;
+		exit(1);
+	}
+	vidInfo = SDL_GetVideoInfo();
+	
+	w_bpp = vidInfo->vfmt->BitsPerPixel;
+// 	w_bpp = 8;
+	
+	if ( !vidInfo )
+	{
+		cerr << "Cannot get video information: " <<  SDL_GetError() << endl;
+		exit(1);
+	}
+
+	vidFlags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE;
+
+	hwaccel = false;
+	if( vidInfo->hw_available != 0 )
+	{
+		hwaccel = true;
+		vidFlags |= SDL_HWSURFACE;
+	}
+	else
+		vidFlags |= SDL_SWSURFACE;
+
+        if( vidInfo->blit_hw != 0 )
+                vidFlags |= SDL_HWACCEL;
 
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 4);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 4);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	SDL_WM_SetCaption(title, 0);
@@ -33,6 +61,11 @@ void GLWindow::create(const char* title, int width, int height, int bpp)
 
 	surface=0;
 	resize();
+
+	cerr << "SDL: subsystem initalized\n";
+// 	cerr << "Video " << front.width() << "x" << front.height() << "x" << int(front.getSurface()->format->BitsPerPixel) << "\n";
+	cerr << "Render Mode: " <<  ((hwaccel) ? "Direct Rendering" : "Software Rendering")   << "\n";
+	cerr << "Hardware Blit Acceleration: " << ((vidInfo->blit_hw) ? "Yes": "No") << "\n";
 }
 
 void GLWindow::resize()
@@ -48,7 +81,8 @@ void GLWindow::resize()
 		w_width = Settings::Instance()->getCVar("fsX");
 		w_height = Settings::Instance()->getCVar("fsY");
 
-		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );
+		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_FULLSCREEN );
+/*		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );*/
 	}
 	else
 	{
@@ -68,7 +102,8 @@ void GLWindow::resize()
 			surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF | SDL_ANYFORMAT );
 #else
 		SDL_FreeSurface(surface);
-		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF | SDL_ANYFORMAT );
+		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_RESIZABLE );
+// 		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF | SDL_ANYFORMAT );
 #endif
 	}
 
