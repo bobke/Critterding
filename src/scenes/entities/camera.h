@@ -2,7 +2,7 @@
 #define CAMERA_H
 
 #include "../../utils/settings.h"
-#include "vector3f.h"
+#include "../../math/vector3f.h"
 #include "GL/gl.h"
 #include "../../utils/bullet/btBulletDynamicsCommon.h"
 
