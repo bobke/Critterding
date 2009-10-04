@@ -9,7 +9,6 @@
 #include "../../brainz/brainz.h"
 #include "../../utils/settings.h"
 #include "../../utils/displaylists.h"
-#include "vector3f.h"
 #include "body.h"
 #include "food.h"
 // #include <cmath>
@@ -75,10 +74,8 @@ class CritterB
 		float			straal;
 		unsigned char		*retina;
 		unsigned int		items;
-		Vector3f		cameraposition;
 		void			place();
 		void			calcFramePos(unsigned int pos);
-		bool			isWithinSight(Vector3f& point);
 		void			printVision();
 		
 		bool			isPicked;

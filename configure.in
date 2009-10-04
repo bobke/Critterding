@@ -49,9 +49,11 @@ AC_SUBST(SDLMAIN)
 dnl AC_DEFINE(OS, $OS, [Operating System])
 
 AC_OUTPUT(Makefile src/Makefile src/brainz/Makefile \
+				src/math/Makefile \
 				src/gl/Makefile \
 				src/scenes/Makefile \
 				src/scenes/entities/Makefile \
+				src/gui/Makefile \
 				src/scenes/modes/Makefile \
 				src/utils/Makefile \
 				src/utils/ftgl/Makefile \

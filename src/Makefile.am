@@ -6,13 +6,15 @@ INCLUDES = $(all_includes) -I./utils/bullet -I/usr/include/freetype2
 # the library search path.
 
 
-SUBDIRS = utils brainz gl scenes
+SUBDIRS = utils math brainz gl scenes gui
 
 
 critterding_SOURCES = critterding.cpp
 critterding_LDADD =	$(top_builddir)/src/gl/libgl.la \
 			$(top_builddir)/src/scenes/libscenes.la \
 			$(top_builddir)/src/utils/libutils.la \
+			$(top_builddir)/src/math/libmath.la \
+			$(top_builddir)/src/gui/libgui.la \
 			$(HOST_LIBS)
 
 # -lGL -lfreetype -lSDL

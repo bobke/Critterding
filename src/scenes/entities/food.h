@@ -6,7 +6,6 @@
 
 #include "../../utils/settings.h"
 #include "../../utils/displaylists.h"
-#include "vector3f.h"
 #include "body.h"
 
 using namespace std;
