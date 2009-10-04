@@ -17,12 +17,14 @@ Settings::Settings()
 	registerCVar("race",							0, 0, 1, false, "enable race simulation");
 	registerCVar("testworld",						0, 0, 1, false, "enable race simulation");
 
-	registerCVar("worldsizeX",						12, 1, 5000, false, "size of the world along axis X");
-	registerCVar("worldsizeY",						8, 1, 5000, false, "size of the world along axis Y");
+	registerCVar("worldsizeX",						23, 1, 5000, false, "size of the world along axis X");
+	registerCVar("worldsizeY",						13, 1, 5000, false, "size of the world along axis Y");
 	registerCVar("worldwalls",						1, 0, 1, false, "enable walls around the world");
 
+	registerCVar("killhalfdecreaseenergybypct",				1, 0, 100, false, "decrease energy by n percent when killhalfat triggers");
+
 	registerCVar("energy",							300, 0, 1000000, false, "energy in the system by number of food cubes");
-	registerCVar("mincritters",						5, 0, 1000, false, "minimum number of critters");
+	registerCVar("mincritters",						10, 0, 1000, false, "minimum number of critters");
 
 	registerCVar("insertcritterevery",					0, 0, 1000, false, "inserts a random critter every n frames");
 	registerCVar("retinasperrow",						20, 1, 1000, false, "number of vision retinas to stack per row onscreen");
@@ -42,7 +44,7 @@ Settings::Settings()
 
 	registerCVar("critter_retinasize",					8, 1, 1000, false, "size of a critters eye retina");
 	registerCVar("critter_autosaveinterval",				0, 0, 1000000, false, "save critters every n seconds");
-	registerCVar("critter_killhalfat",					1000, 2, 1000000, false, "kill 50% of critters if population reaches n");
+	registerCVar("critter_killhalfat",					200, 2, 1000000, false, "kill 50% of critters if population reaches n");
 	registerCVar("critter_enableomnivores",					0, 0, 1, true, "enables critters to eat each other");
 	
 	registerCVar("food_maxlifetime",					10000, 1, 1000000, false, "maximum number of frames a food unit exists");

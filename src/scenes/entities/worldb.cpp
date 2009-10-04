@@ -123,6 +123,7 @@ void WorldB::calcMouseDirection(const int& x, const int& y)
 
 void WorldB::pickBody(const int& x, const int& y)
 {
+// 	castMouseRay();
 	if ( mouseRayHit )
 	{
 		mousepicker->attach( mouseRay.hitBody, mouseRay.hitPosition, -camera.position, mouseRayTo );
@@ -276,11 +277,14 @@ void WorldB::killHalf()
 		killHalfOfCritters();
 		
 		// reduce energy :)
-		if ( (settings->freeEnergyInfo - *food_maxenergy) / *food_maxenergy >= 0.0f )
+		if ( settings->getCVar("killhalfdecreaseenergybypct") > 0 )
 		{
-			int dec = ((settings->freeEnergyInfo / settings->getCVar("food_maxenergy")) / 100);
-			settings->freeEnergyInfo -= dec * settings->getCVar("food_maxenergy");
-			freeEnergy -= dec * settings->getCVar("food_maxenergy");
+			if ( (settings->freeEnergyInfo - *food_maxenergy) / *food_maxenergy >= 0.0f )
+			{
+				int dec = ((settings->freeEnergyInfo / settings->getCVar("food_maxenergy")) / 100) * settings->getCVar("killhalfdecreaseenergybypct");
+				settings->freeEnergyInfo -= dec * settings->getCVar("food_maxenergy");
+				freeEnergy -= dec * settings->getCVar("food_maxenergy");
+			}
 		}
 	}
 }
@@ -321,7 +325,7 @@ void WorldB::autosaveCritters()
 
 void WorldB::autoinsertFood()
 {
-	while ( freeEnergy >= *food_maxenergy )
+	if ( freeEnergy >= *food_maxenergy )
 	{
 		insertRandomFood(1, *food_maxenergy);
 		freeEnergy -= *food_maxenergy;

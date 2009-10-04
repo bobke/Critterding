@@ -142,14 +142,16 @@ class WorldB
 		File			fileH;
 
 		string			loaddir;
-	private:
-		Raycast*		raycast;
 
-		castResult		mouseRay;
 		bool			mouseRayHit;
 		unsigned int		mouseRayHitType;
 		CritterB*		mouseRayHitC;
 		Food*			mouseRayHitF;
+
+	private:
+		Raycast*		raycast;
+
+		castResult		mouseRay;
 		btVector3		mouseRayTo;
 
 		unsigned int		insertCritterCounter;

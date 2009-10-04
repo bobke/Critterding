@@ -10,11 +10,11 @@ void TestWorld1::init()
 
 	// extra Ground Floor
 
-	float WallWidth = 0.2f;
+	float WallWidth = 0.1f;
 	float WallHalfWidth = WallWidth/2.0f;
 
 	decSizeFactor = 0.5f;
-	elevations = 5;
+	elevations = 10;
 
 	insertHight = 1.0f + (WallWidth*elevations);
 
