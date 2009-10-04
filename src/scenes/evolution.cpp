@@ -75,9 +75,9 @@ void Evolution::draw()
 		return;
 	}
 
-	handleEvents();
 	if (!mouselook)
 		world->castMouseRay();
+	handleEvents();
 
 	Timer::Instance()->mark();
 	sleeper.mark();
@@ -153,6 +153,27 @@ void Evolution::draw()
 			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height()+statsGraph.height());
 			helpinfo.draw();
 			Textmessage::Instance()->draw();
+
+			// hover test
+			if ( world->mouseRayHit )
+			{
+				unsigned int margin = 20;
+				unsigned int rmargindistance = 100;
+				unsigned int vspacer = 12;
+				if ( world->mouseRayHitType == 1 )
+				{
+					Textprinter::Instance()->print( oldx+margin, oldy,    "food");
+					Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
+					Textprinter::Instance()->printR(oldx+rmargindistance, oldy+vspacer, "%1.1f", world->mouseRayHitF->energyLevel);
+				}
+				else if ( world->mouseRayHitType == 0 )
+				{
+					Textprinter::Instance()->print( oldx+margin, oldy,    "critter");
+					Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
+					Textprinter::Instance()->printR(oldx+rmargindistance, oldy+vspacer, "%1.1f", world->mouseRayHitC->energyLevel);
+				}
+			}
+
 
 		glPopMatrix();
 

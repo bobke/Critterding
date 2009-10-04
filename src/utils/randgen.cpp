@@ -16,11 +16,11 @@ RandGen::RandGen()
 	usleep(10000);
 	Timer::Instance()->mark();
 
-	unsigned int n3 = Timer::Instance()->lasttime.tv_usec;
+	unsigned int startseed = (n1*n2)-Timer::Instance()->lasttime.tv_usec;
 
-// 	cerr << (n1*n2)-n3 << endl;
+	cerr << "start seed: " << startseed << endl;
 
-	srand( (n1*n2)-n3 );
+	srand( startseed );
 	count = 0;
 }
 
