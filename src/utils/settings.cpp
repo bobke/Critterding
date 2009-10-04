@@ -49,7 +49,7 @@ Settings::Settings()
 	
 	registerCVar("food_maxlifetime",					10000, 1, 1000000, false, "maximum number of frames a food unit exists");
 	registerCVar("food_maxenergy",						1000, 1, 1000000, false, "maximum amount of energy a food unit has");
-	registerCVar("food_size",						100, 1, 1000000, false, "size of a food unit");
+	registerCVar("food_size",						150, 1, 1000000, false, "size of a food unit");
 
 	registerCVar("body_maxmutations",					5, 1, 1000000, false, "maximum mutations on a body mutant");
 	registerCVar("body_mutationrate",					10, 0, 100, false, "percentage of newborns that mutate bodies");
