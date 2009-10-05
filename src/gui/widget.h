@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../utils/textprinter.h"
+#include "textprinter.h"
 #include "../math/vector2i.h"
 
 using namespace std;
@@ -27,10 +27,11 @@ class Widget
 		Vector2i		position;
 
 		void			drawChildren();
-	private:
+
 		// width and height
 		unsigned int		v_height;
 		unsigned int		v_width;
+	private:
 		
 		vector<Widget*>		children;
 		Widget*			parent;
