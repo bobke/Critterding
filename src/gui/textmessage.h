@@ -5,6 +5,7 @@
 #include <vector>
 #include "../utils/fps.h" // FIXME howso this is here?
 #include "textprinter.h"
+#include "panel.h"
 
 using namespace std;
 
@@ -14,21 +15,18 @@ struct msg
 	struct timeval	appeartime;
 };
 
-class Textmessage
+class Textmessage : public Panel
 {
 	public:
 		static Textmessage* Instance();
 
 		void		add(const stringstream& streamptr);
-/*		stringstream&	operator<<(stringstream& streamptr);
-		ostream& 	operator<<(ostream& streamptr);
-		stringstream&	operator<<(const char* streamptr);*/
 		void		draw();
 		unsigned int	maxMessages;
 		float		msgLifetime;
 
-		float		vpadding;
-		float		hpadding;
+		int		vpadding;
+		int		hpadding;
 
 	protected:
 		Textmessage();
@@ -36,7 +34,7 @@ class Textmessage
 		static Textmessage* _instance;
 		vector<msg*>	messages;
 
-		float		longestLength;
+		int		longestLength;
 		void		getLongestMsg();
 
 		void		deleteExpiredMsg();

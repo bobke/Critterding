@@ -11,8 +11,6 @@ Textverbosemessage::Textverbosemessage()
 	maxMessages = 5;
 	msgLifetime = 0.0f;
 	longestLength = 0;
-
-	active = false;
 }
 
 void Textverbosemessage::addBirth(stringstream& streamptr)
