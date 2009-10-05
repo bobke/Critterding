@@ -7,16 +7,18 @@
 #include "../utils/sleeper.h"
 #include "../utils/fps.h"
 #include "../utils/settings.h"
-#include "../utils/infobar.h"
-#include "../utils/infostats.h"
-#include "../utils/statsgraph.h"
-#include "../utils/helpinfo.h"
-#include "../utils/textmessage.h"
-#include "../utils/textverbosemessage.h"
 #include "../utils/events.h"
 #include "entities/worldb.h"
 #include "modes/race.h"
 #include "modes/testworld1.h"
+
+#include "../gui/infobar.h"
+#include "../gui/infostats.h"
+#include "../gui/statsgraph.h"
+#include "../gui/helpinfo.h"
+#include "../gui/textmessage.h"
+#include "../gui/textverbosemessage.h"
+#include "../gui/panel.h"
 
 #include <sstream>
 #include <stdio.h>

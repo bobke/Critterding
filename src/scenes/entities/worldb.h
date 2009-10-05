@@ -15,11 +15,13 @@
 #include "../../utils/parser.h"
 #include "../../utils/randgen.h"
 #include "../../utils/settings.h"
-#include "../../utils/textmessage.h"
-#include "../../utils/textverbosemessage.h"
 #include "../../utils/raycast.h"
 #include "../../utils/mousepicker.h"
 #include "../../utils/statsbuffer.h"
+
+#include "../../gui/textmessage.h"
+#include "../../gui/textverbosemessage.h"
+
 #include "food.h"
 #include "wall.h"
 #include "critterb.h"

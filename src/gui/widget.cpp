@@ -9,6 +9,13 @@ Widget::Widget()
 
 void Widget::draw()
 {
+	drawChildren();
+}
+
+void Widget::drawChildren()
+{
+	for ( unsigned int i=0; i < children.size(); i++ )
+		children[i]->draw();
 }
 
 void Widget::swap()
