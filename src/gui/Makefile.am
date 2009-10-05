@@ -3,6 +3,7 @@ METASOURCES = AUTO
 noinst_LTLIBRARIES = libgui.la
 noinst_HEADERS =	widget.h \
 			panel.h \
+			textprinter.h \
 			helpinfo.h \
 			textmessage.h \
 			textverbosemessage.h \
@@ -12,6 +13,7 @@ noinst_HEADERS =	widget.h \
 
 libgui_la_SOURCES = 	widget.cpp \
 			panel.cpp \
+			textprinter.cpp \
 			helpinfo.cpp \
 			textmessage.cpp \
 			textverbosemessage.cpp \

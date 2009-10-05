@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "../utils/fps.h" // FIXME howso this is here?
-#include "../utils/textprinter.h"
+#include "textprinter.h"
 
 using namespace std;
 
