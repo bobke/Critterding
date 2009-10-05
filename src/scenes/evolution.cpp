@@ -147,11 +147,11 @@ void Evolution::draw()
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
+			canvas.draw();
 			infobar.draw();
 			infostats.draw(infobar.height());
 			statsGraph.draw(infobar.height()+infostats.height());
 			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height()+statsGraph.height());
-			helpinfo.draw();
 			Textmessage::Instance()->draw();
 
 			// hover test
@@ -193,12 +193,8 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 
 	switch (key)
 	{
-		case SDL_BUTTON(SDL_BUTTON_LEFT):
-			helpinfo.swap();
-			break;
-
 		case SDLK_F1:
-			helpinfo.swap();
+			canvas.children["helpinfo"]->swap();
 			break;
 
 		case SDLK_F2:

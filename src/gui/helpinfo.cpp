@@ -16,14 +16,14 @@ void Helpinfo::draw()
 	if (active)
 	{
 		// deduce position from window width and height
-		position.x = *settings->winWidth/2 - halfboxwidth;
-		position.y = *settings->winHeight/2 - halfboxheight;
+		position.x = parent->width()/2 - halfboxwidth;
+		position.y = parent->height()/2 - halfboxheight;
 
 		drawBackground();
 		drawBorders();
 
 	// print text
-		glEnable(GL_TEXTURE_2D);
+// 		glEnable(GL_TEXTURE_2D);
 
 		float widthpos1 = position.x + 20.0f;
 		float widthpos2 = position.x + 100.0f;
@@ -157,7 +157,7 @@ void Helpinfo::draw()
 		printInfoLine(heightpos, widthpos1, widthpos2, "keypad *", "inc camera sensitivity");
 
 
-		glDisable(GL_TEXTURE_2D);
+// 		glDisable(GL_TEXTURE_2D);
 	}
 }
 

@@ -12,10 +12,10 @@
 #include "modes/race.h"
 #include "modes/testworld1.h"
 
+#include "../gui/maincanvas.h"
 #include "../gui/infobar.h"
 #include "../gui/infostats.h"
 #include "../gui/statsgraph.h"
-#include "../gui/helpinfo.h"
 #include "../gui/textmessage.h"
 #include "../gui/textverbosemessage.h"
 #include "../gui/panel.h"
@@ -53,10 +53,11 @@ class Evolution : public GLScene {
 		Settings *settings;
 		Events *events;
 		Sleeper sleeper;
+
+		Maincanvas canvas;
 		Infobar infobar;
 		Statsgraph statsGraph;
 		Infostats infostats;
-		Helpinfo helpinfo;
 
 		int mouse_x;
 		int mouse_y;
