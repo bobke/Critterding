@@ -4,7 +4,6 @@ noinst_LTLIBRARIES = libgui.la
 noinst_HEADERS =	widget.h \
 			panel.h \
 			helpinfo.h \
-			textprinter.h \
 			textmessage.h \
 			textverbosemessage.h \
 			infostats.h \
@@ -14,11 +13,10 @@ noinst_HEADERS =	widget.h \
 libgui_la_SOURCES = 	widget.cpp \
 			panel.cpp \
 			helpinfo.cpp \
-			textprinter.cpp \
 			textmessage.cpp \
 			textverbosemessage.cpp \
 			infostats.cpp \
 			infobar.cpp \
 			statsgraph.cpp
 
-libscenes_la_LIBADD =	$(top_builddir)/src/utils/ftgl/libftgl.la
+libgui_la_LIBADD =	$(top_builddir)/src/utils/libutils.la
