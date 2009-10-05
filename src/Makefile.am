@@ -1,7 +1,8 @@
 bin_PROGRAMS = critterding
 
 # set the include path found by configure
-INCLUDES = $(all_includes) -I./utils/bullet -I/usr/include/freetype2
+# INCLUDES = $(all_includes) -I./utils/bullet  -I./utils/ftgl -I/usr/include/freetype2
+INCLUDES = $(all_includes) -I/usr/include/freetype2 -I./utils/ftgl
 
 # the library search path.
 
