@@ -1,11 +1,11 @@
 #ifndef HELPINFO_H
 #define HELPINFO_H
 
-#include "textprinter.h"
+#include "panel.h"
 
 using namespace std;
 
-class Helpinfo
+class Helpinfo : public Panel
 {
 	public:
 		Helpinfo();

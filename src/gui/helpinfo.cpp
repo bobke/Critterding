@@ -4,6 +4,9 @@ Helpinfo::Helpinfo()
 {
 	active = false;
 
+	v_width = 420;
+	v_height = 520;
+	
 	halfboxwidth = 210;
 	halfboxheight = 260;
 }
@@ -12,42 +15,19 @@ void Helpinfo::draw()
 {
 	if (active)
 	{
-		unsigned int halfwidth = *Settings::Instance()->winWidth/2;
-		unsigned int halfheight = *Settings::Instance()->winHeight/2;
+		// deduce position from window width and height
+		position.x = *settings->winWidth/2 - halfboxwidth;
+		position.y = *settings->winHeight/2 - halfboxheight;
 
-	// draw background box and border
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glColor4f(0.05f, 0.05f, 0.05f, 0.9f);
-		glBegin(GL_QUADS);
-			glVertex2f(halfwidth-halfboxwidth, halfheight+halfboxheight);
-			glVertex2f(halfwidth-halfboxwidth, halfheight-halfboxheight);
-			glVertex2f(halfwidth+halfboxwidth, halfheight-halfboxheight);
-			glVertex2f(halfwidth+halfboxwidth, halfheight+halfboxheight);
-		glEnd();
-		glDisable(GL_BLEND);
-
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glBegin(GL_LINES);
-			glVertex2f(halfwidth-halfboxwidth, halfheight+halfboxheight);
-			glVertex2f(halfwidth-halfboxwidth, halfheight-halfboxheight);
-
-			glVertex2f(halfwidth-halfboxwidth, halfheight-halfboxheight);
-			glVertex2f(halfwidth+halfboxwidth, halfheight-halfboxheight);
-
-			glVertex2f(halfwidth+halfboxwidth, halfheight-halfboxheight);
-			glVertex2f(halfwidth+halfboxwidth, halfheight+halfboxheight);
-
-			glVertex2f(halfwidth+halfboxwidth, halfheight+halfboxheight);
-			glVertex2f(halfwidth-halfboxwidth, halfheight+halfboxheight);
-		glEnd();
+		drawBackground();
+		drawBorders();
 
 	// print text
 		glEnable(GL_TEXTURE_2D);
 
-		float widthpos1 = halfwidth-(halfboxwidth-20.0f);
-		float widthpos2 = halfwidth-(halfboxwidth-100.0f);
-		float heightpos = halfheight-(halfboxheight-25.0f);
+		float widthpos1 = position.x + 20.0f;
+		float widthpos2 = position.x + 100.0f;
+		float heightpos = position.y + 25;
 		float vspace = 13.0f;
 
 		printInfoLine(heightpos, widthpos1, widthpos2, "World / Engine operations", "");
