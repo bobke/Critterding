@@ -2,7 +2,6 @@
 
 Panel::Panel()
 {
-	cerr << "hey" << endl;
 }
 
 void Panel::draw()

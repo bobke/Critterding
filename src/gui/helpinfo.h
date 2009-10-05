@@ -12,11 +12,8 @@ class Helpinfo : public Panel
 		~Helpinfo();
 
 		void draw();
-		void swap();
-
 	private:
 		Textprinter *textprinter;
-		bool active;
 
 		unsigned int halfboxwidth;
 		unsigned int halfboxheight;
