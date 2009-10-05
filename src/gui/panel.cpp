@@ -28,6 +28,20 @@ void Panel::drawBackground()
 
 void Panel::drawBorders()
 {
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glBegin(GL_LINES);
+		glVertex2f(position.x,         position.y+v_height);
+		glVertex2f(position.x,         position.y);
+
+		glVertex2f(position.x,         position.y);
+		glVertex2f(position.x+v_width, position.y);
+
+		glVertex2f(position.x+v_width, position.y);
+		glVertex2f(position.x+v_width, position.y+v_height);
+
+		glVertex2f(position.x+v_width, position.y+v_height);
+		glVertex2f(position.x,         position.y+v_height);
+	glEnd();
 }
 
 Panel::~Panel()

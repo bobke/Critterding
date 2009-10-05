@@ -21,4 +21,5 @@ libgui_la_SOURCES = 	widget.cpp \
 			infobar.cpp \
 			statsgraph.cpp
 
-libgui_la_LIBADD =	$(top_builddir)/src/utils/libutils.la
+libgui_la_LIBADD =	$(top_builddir)/src/utils/libutils.la \
+			$(top_builddir)/src/math/libmath.la
