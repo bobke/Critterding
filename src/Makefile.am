@@ -1,13 +1,12 @@
 bin_PROGRAMS = critterding
 
 # set the include path found by configure
-# INCLUDES = $(all_includes) -I./utils/bullet  -I./utils/ftgl -I/usr/include/freetype2
-INCLUDES = $(all_includes) -I/usr/include/freetype2 -I./utils/ftgl
+INCLUDES = $(all_includes) -I./utils/bullet -I/usr/include/freetype2
 
 # the library search path.
 
 
-SUBDIRS = utils math brainz gl scenes gui
+SUBDIRS = utils math brainz gl gui scenes
 
 
 critterding_SOURCES = critterding.cpp

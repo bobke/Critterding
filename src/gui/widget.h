@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "textprinter.h"
+#include "../utils/textprinter.h"
 #include "../math/vector2i.h"
 
 using namespace std;
