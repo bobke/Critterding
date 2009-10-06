@@ -11,6 +11,8 @@ Helpinfo::Helpinfo()
 	halfboxwidth = 210;
 	halfboxheight = 260;
 
+	position.x = 30;
+	position.y = 30;
 }
 
 void Helpinfo::draw()
@@ -19,10 +21,6 @@ void Helpinfo::draw()
 	{
 		drawBackground();
 		drawBorders();
-
-// 	// deduce position from window width and height
-// 		position.x = parent->width()/2 - halfboxwidth;
-// 		position.y = parent->height()/2 - halfboxheight;
 
 	// print text
 // 		glEnable(GL_TEXTURE_2D);
