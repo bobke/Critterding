@@ -13,8 +13,6 @@ class Helpinfo : public Panel
 
 		void draw();
 	private:
-		Textprinter *textprinter;
-
 		unsigned int halfboxwidth;
 		unsigned int halfboxheight;
 

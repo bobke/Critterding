@@ -75,8 +75,6 @@ void Evolution::draw()
 		return;
 	}
 
-	if (!mouselook)
-		world->castMouseRay();
 	handleEvents();
 
 	Timer::Instance()->mark();
@@ -153,6 +151,10 @@ void Evolution::draw()
 			statsGraph.draw(infobar.height()+infostats.height());
 			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height()+statsGraph.height());
 			Textmessage::Instance()->draw();
+
+			world->mouseRayHit = false;
+			if (!mouselook && !canvas.mouseOverChild(oldx, oldy) )
+				world->castMouseRay();
 
 			// hover test
 			if ( world->mouseRayHit )
