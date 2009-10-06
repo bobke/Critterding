@@ -32,7 +32,7 @@ void Widget::registerWidget( const string& name, Widget* nwidget )
 
 bool Widget::mouseOver(int x, int y)
 {
-	if ( active && x > position.x && x < position.x+*v_widthP && y > position.y && y < position.y+*v_heightP )
+	if ( active && x > position.x && x < position.x+(int)*v_widthP && y > position.y && y < position.y+(int)*v_heightP )
 		return true;
 	return false;
 }
