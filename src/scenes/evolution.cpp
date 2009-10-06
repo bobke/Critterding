@@ -119,11 +119,11 @@ void Evolution::draw()
 		world->process();
 		world->getGeneralStats();
 
-// 			if (world->critters.size() > 10 )
+// 			if (world->critters.size() > 1 )
 // 			{
-// 				camera.follow( (btDefaultMotionState*)world->critters[5]->body.mouths[0]->body->getMotionState() );
+// 				world->camera.follow( (btDefaultMotionState*)world->critters[0]->body.mouths[0]->body->getMotionState() );
 // 				world->drawWithoutFaces();
-// 				world->critters[5]->printVision();
+// // 				world->critters[0]->printVision();
 // 			}
 
 		world->camera.place();
