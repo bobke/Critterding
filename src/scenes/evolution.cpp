@@ -146,11 +146,13 @@ void Evolution::draw()
 		glLoadIdentity();
 
 			canvas.draw();
+
 			infobar.draw();
 			infostats.draw(infobar.height());
 			statsGraph.draw(infobar.height()+infostats.height());
 			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height()+statsGraph.height());
-			Textmessage::Instance()->draw();
+
+// 			Textmessage::Instance()->draw();
 
 			world->mouseRayHit = false;
 			if (!mouselook && !canvas.mouseFocus )

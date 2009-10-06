@@ -12,8 +12,16 @@ Textmessage::Textmessage()
 	msgLifetime = 3.0f;
 	longestLength = 0;
 
-	vpadding = 10.0f;
-	hpadding = 10.0f;
+	isMovable = true;
+	
+	vpadding = 10;
+	hpadding = 10;
+
+	position.x = 10;
+	position.y = 50;
+
+	v_width = 200 + ( hpadding*2 );
+	v_height = (15 * (messages.size()-1)) + 20 + ( vpadding*2 );
 }
 
 void Textmessage::add(const stringstream& streamptr)
@@ -66,12 +74,11 @@ void Textmessage::draw()
 
 	if ( !messages.empty() )
 	{
+		active = true;
+		
 		FTPoint bbox = Textprinter::Instance()->getBBox(messages[0]->str);
 
-		position.x = 10;
 		v_width = longestLength + ( hpadding*2 );
-
-		position.y = 50;
 		v_height = (15 * (messages.size()-1)) + bbox.Y() + ( vpadding*2 );
 		
 	// draw background box and border
@@ -83,4 +90,6 @@ void Textmessage::draw()
 		for ( unsigned int i = 0; i < messages.size(); i++ )
 			Textprinter::Instance()->print(position.x + hpadding, position.y + bbox.Y() + (i*15.0f) + vpadding, messages[i]->str);
 	}
+	else
+		active = false;
 }

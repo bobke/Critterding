@@ -1,10 +1,8 @@
 #ifndef TEXTMESSAGE_H
 #define TEXTMESSAGE_H
 
-#include <string>
-#include <vector>
+
 #include "../utils/fps.h" // FIXME howso this is here?
-#include "textprinter.h"
 #include "panel.h"
 
 using namespace std;
@@ -20,8 +18,9 @@ class Textmessage : public Panel
 	public:
 		static Textmessage* Instance();
 
-		void		add(const stringstream& streamptr);
 		void		draw();
+
+		void		add(const stringstream& streamptr);
 		unsigned int	maxMessages;
 		float		msgLifetime;
 

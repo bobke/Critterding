@@ -9,42 +9,20 @@ Widget::Widget()
 	v_heightP = &v_height;
 	
 	isMovable = false;
+	isContainer = false;
 	active = false;
 }
 
 void Widget::draw()
 {
-	if ( active )
-		drawChildren();
-}
-
-void Widget::drawChildren()
-{
-	for( childit = children.begin(); childit != children.end(); childit++ )
-		childit->second->draw();
-}
-
-void Widget::registerWidget( const string& name, Widget* nwidget )
-{
-	children[name] = nwidget;
-	children[name]->parent = this;
+// 	if ( active )
+// 		drawChildren();
 }
 
 bool Widget::mouseOver(int x, int y)
 {
 	if ( active && x > position.x && x < position.x+(int)*v_widthP && y > position.y && y < position.y+(int)*v_heightP )
 		return true;
-	return false;
-}
-
-bool Widget::mouseOverChild(Widget** fWidget, int x, int y)
-{
-	for( childit = children.begin(); childit != children.end(); childit++ )
-		if ( childit->second->active && childit->second->mouseOver(x, y) )
-		{
-			*fWidget = childit->second;
-			return true;
-		}
 	return false;
 }
 
