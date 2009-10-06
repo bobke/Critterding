@@ -153,7 +153,7 @@ void Evolution::draw()
 			Textmessage::Instance()->draw();
 
 			world->mouseRayHit = false;
-			if (!mouselook && !canvas.mouseOverChild(oldx, oldy) )
+			if (!mouselook && !canvas.mouseFocus )
 				world->castMouseRay();
 
 			// hover test
@@ -307,6 +307,7 @@ void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 	{
 		if ( button == 1 )
 		{
+			canvas.buttonPress();
 			world->pickBody( x, y );
 		}
 	}
@@ -317,6 +318,7 @@ void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 // 	cerr << "button " << button << " released at " << x << "x" << y << endl;
 	if ( button == 1 )
 	{
+		canvas.buttonRelease();
 		world->mousepicker->detach();
 	}
 }
@@ -327,6 +329,11 @@ void Evolution::handleMouseMotionAbs(int x, int y)
 	{
 		oldx = x;
 		oldy = y;
+		
+		// gui mouse dynamics
+		canvas.moveMouse(x, y);
+
+		// world mouse dynamics
 		world->calcMouseDirection(x, y);
 		world->movePickedBodyTo();
 	}

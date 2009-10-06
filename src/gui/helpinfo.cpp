@@ -2,6 +2,7 @@
 
 Helpinfo::Helpinfo()
 {
+	isMovable = true;
 	active = false;
 
 	v_width = 420;
@@ -9,18 +10,19 @@ Helpinfo::Helpinfo()
 	
 	halfboxwidth = 210;
 	halfboxheight = 260;
+
 }
 
 void Helpinfo::draw()
 {
 	if (active)
 	{
-		// deduce position from window width and height
-		position.x = parent->width()/2 - halfboxwidth;
-		position.y = parent->height()/2 - halfboxheight;
-
 		drawBackground();
 		drawBorders();
+
+// 	// deduce position from window width and height
+// 		position.x = parent->width()/2 - halfboxwidth;
+// 		position.y = parent->height()/2 - halfboxheight;
 
 	// print text
 // 		glEnable(GL_TEXTURE_2D);
