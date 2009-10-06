@@ -215,6 +215,7 @@ void WorldB::procreate( CritterB* c )
 		btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.bodyparts[0]->body->getMotionState();
 		btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
 		np.setY(insertHight);
+		np.setX(np.getX()+0.6f);
 		CritterB *nc = new CritterB(*c, currentCritterID++, np, brainmutant, bodymutant);
 		//CritterB *nc = new CritterB(*c, currentCritterID++, findPosition(), mutant);
 
