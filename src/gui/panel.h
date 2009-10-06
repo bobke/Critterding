@@ -1,13 +1,11 @@
 #ifndef PANEL_H
 #define PANEL_H
 
-#include <vector>
-
-#include "widget.h"
+#include "container.h"
 
 using namespace std;
 
-class Panel : public Widget
+class Panel : public Container
 {
 	public:
 		Panel();

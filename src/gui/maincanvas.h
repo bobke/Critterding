@@ -1,12 +1,14 @@
 #ifndef MAINCANVAS_H
 #define MAINCANVAS_H
 
-#include "widget.h"
+#include "container.h"
+
 #include "helpinfo.h"
+#include "textmessage.h"
 
 using namespace std;
 
-class Maincanvas : public Widget
+class Maincanvas : public Container
 {
 	public:
 		Maincanvas();
