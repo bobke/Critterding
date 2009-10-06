@@ -26,8 +26,14 @@ class Widget
 		map<string, Widget*>	children;
 		// pointer to parent
 		Widget*			parent;
+
+		// is mouse over widget
+		bool			mouseOver(int x, int y);
+		bool			mouseOverChild(int x, int y);
+
 	protected:
 		Settings*		settings;
+		Textprinter*		textprinter;
 		bool			active;
 		Vector2i		position;
 

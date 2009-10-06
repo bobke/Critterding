@@ -16,9 +16,7 @@ Maincanvas::Maincanvas()
 void Maincanvas::draw()
 {
 	if ( active )
-	{
 		drawChildren();
-	}
 }
 
 Maincanvas::~Maincanvas()

@@ -3,6 +3,7 @@
 Widget::Widget()
 {
 	settings = Settings::Instance();
+	textprinter = Textprinter::Instance();
 
 	v_widthP = &v_width;
 	v_heightP = &v_height;
@@ -26,6 +27,21 @@ void Widget::registerWidget( const string& name, Widget* nwidget )
 {
 	children[name] = nwidget;
 	children[name]->parent = this;
+}
+
+bool Widget::mouseOver(int x, int y)
+{
+	if ( active && x > position.x && x < position.x+*v_widthP && y > position.y && y < position.y+*v_heightP )
+		return true;
+	return false;
+}
+
+bool Widget::mouseOverChild(int x, int y)
+{
+	for( childit = children.begin(); childit != children.end(); childit++ )
+		if ( childit->second->active && childit->second->mouseOver(x, y) )
+			return true;
+	return false;
 }
 
 void Widget::swap()
