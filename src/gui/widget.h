@@ -18,6 +18,9 @@ class Widget
 		virtual void		draw();
 		void			swap();
 
+		// movable (pickable) object
+		bool			isMovable;
+
 		// width/height accessors
 		unsigned int		height();
 		unsigned int		width();
@@ -28,8 +31,12 @@ class Widget
 		Widget*			parent;
 
 		// is mouse over widget
-		bool			mouseOver(int x, int y);
-		bool			mouseOverChild(int x, int y);
+		bool			mouseOver( int x, int y );
+		bool			mouseOverChild( Widget** fWidget, int x, int y );
+
+		// widget ops
+		void			translate( int x, int y );
+
 
 	protected:
 		Settings*		settings;

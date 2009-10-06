@@ -8,6 +8,7 @@ Widget::Widget()
 	v_widthP = &v_width;
 	v_heightP = &v_height;
 	
+	isMovable = false;
 	active = false;
 }
 
@@ -36,12 +37,21 @@ bool Widget::mouseOver(int x, int y)
 	return false;
 }
 
-bool Widget::mouseOverChild(int x, int y)
+bool Widget::mouseOverChild(Widget** fWidget, int x, int y)
 {
 	for( childit = children.begin(); childit != children.end(); childit++ )
 		if ( childit->second->active && childit->second->mouseOver(x, y) )
+		{
+			*fWidget = childit->second;
 			return true;
+		}
 	return false;
+}
+
+void Widget::translate(int x, int y)
+{
+	position.x += x;
+	position.y += y;
 }
 
 void Widget::swap()

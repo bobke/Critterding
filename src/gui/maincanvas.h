@@ -13,7 +13,20 @@ class Maincanvas : public Widget
 		~Maincanvas();
 
 		void draw();
+		void moveMouse(unsigned int x, unsigned int y);
+
+		bool mouseFocus;
+
+		void buttonPress();
+		void buttonRelease();
 	private:
+		unsigned int oldx;
+		unsigned int oldy;
+		
+		bool hasPickedWidget;
+		Widget* pickedwidget;
+
+		Widget* focussedWidget;
 };
 
 #endif
