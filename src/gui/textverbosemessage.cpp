@@ -11,7 +11,7 @@ Textverbosemessage::Textverbosemessage()
 	position.x = 10;
 	position.y = 50;
 	
-	v_width = 500;
+	v_width = 480;
 	v_height = 86;
 
 // 	active = false;

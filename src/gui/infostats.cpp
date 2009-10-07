@@ -11,7 +11,7 @@ Infostats::Infostats()
 	position.x = 10;
 	position.y = 50;
 	
-	v_width = 500;
+	v_width = 480;
 	v_height = 86;
 }
 
@@ -43,12 +43,14 @@ void Infostats::draw()
 		glEnd();
 
 
-		glEnable(GL_TEXTURE_2D);
+		glColor3f(1.0f, 1.0f, 1.0f);
+// 		glEnable(GL_TEXTURE_2D);
 
 		// row counter
 		unsigned int rc=1;
 
 		// HEADING
+
 
 	// COLUMN 1
 		Textprinter::Instance()->print(xstart+hsp,	ystart+vsp*rc,	"brain");
@@ -101,7 +103,7 @@ void Infostats::draw()
 			Textprinter::Instance()->printR(col4-hsp,	ystart+vsp*rc,	"%1.2f", 0);
 
 
-		glDisable(GL_TEXTURE_2D);
+// 		glDisable(GL_TEXTURE_2D);
 	}
 }
 
