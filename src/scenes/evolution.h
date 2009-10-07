@@ -15,7 +15,6 @@
 #include "../gui/maincanvas.h"
 #include "../gui/infobar.h"
 #include "../gui/infostats.h"
-#include "../gui/statsgraph.h"
 #include "../gui/textmessage.h"
 #include "../gui/textverbosemessage.h"
 #include "../gui/panel.h"
@@ -56,7 +55,6 @@ class Evolution : public GLScene {
 
 		Maincanvas canvas;
 		Infobar infobar;
-		Statsgraph statsGraph;
 		Infostats infostats;
 
 		int mouse_x;

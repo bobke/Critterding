@@ -15,6 +15,7 @@ Maincanvas::Maincanvas()
 	// register subwidgets of maincanvas
 	registerWidget( "helpinfo", new Helpinfo() );
 	registerWidget( "textmessage", Textmessage::Instance() );
+	registerWidget( "statsgraph", new Statsgraph() );
 
 	// point the widget width/height pointers to the window's width/height
 	v_widthP = settings->winWidth;

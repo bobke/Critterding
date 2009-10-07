@@ -15,7 +15,7 @@ void Panel::drawBackground()
 {
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
-	glColor4f(0.05f, 0.05f, 0.05f, 0.9f);
+	glColor4f(0.05f, 0.05f, 0.05f, 0.8f);
 	glBegin(GL_QUADS);
 		glVertex2f(position.x,         position.y+v_height);
 		glVertex2f(position.x,         position.y);
