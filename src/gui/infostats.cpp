@@ -5,7 +5,7 @@ Infostats::Infostats()
 	hsp = 10;
 	vsp = 13;
 
-	active = true;
+// 	active = true;
 	isMovable = true;
 	
 	position.x = 10;

@@ -6,7 +6,7 @@ Infobar::Infobar()
 	isMovable = true;
 	
 	position.x = 10;
-	position.y = 50;
+	position.y = 10;
 
 	v_width = 400;
 	v_height = 20;
@@ -24,7 +24,7 @@ void Infobar::draw()
 		drawBackground();
 		drawBorders();
 
-		float col1 = (v_width/4);
+		float col1 = (v_width/3);
 		float col2 = col1 * 2.0f;
 		float col3 = col1 * 3.0f;
 // 		float col4 = col1 * 4.0f;
@@ -38,8 +38,8 @@ void Infobar::draw()
  			glVertex2f(position.x+col1, position.y+v_height - linespacer);
  			glVertex2f(position.x+col2, position.y+linespacer);
  			glVertex2f(position.x+col2, position.y+v_height - linespacer);
- 			glVertex2f(position.x+col3, position.y+linespacer);
- 			glVertex2f(position.x+col3, position.y+v_height - linespacer);
+/* 			glVertex2f(position.x+col3, position.y+linespacer);
+ 			glVertex2f(position.x+col3, position.y+v_height - linespacer);*/
  		glEnd();
 
 
