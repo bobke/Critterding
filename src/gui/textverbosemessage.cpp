@@ -14,7 +14,7 @@ Textverbosemessage::Textverbosemessage()
 	v_width = 500;
 	v_height = 86;
 
-	active = false;
+// 	active = false;
 	isMovable = true;
 	
 	maxMessages = 5;
