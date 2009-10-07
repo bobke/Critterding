@@ -149,9 +149,9 @@ void Evolution::draw()
 
 			infobar.draw();
 			infostats.draw(infobar.height());
-			statsGraph.draw(infobar.height()+infostats.height());
-			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height()+statsGraph.height());
+			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height());
 
+// 			statsGraph.draw(infobar.height()+infostats.height());
 // 			Textmessage::Instance()->draw();
 
 			world->mouseRayHit = false;
@@ -221,7 +221,7 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			break;
 
 		case SDLK_g:
-			statsGraph.swap();
+			canvas.children["statsgraph"]->swap();
 			break;
 
 		case SDLK_i:

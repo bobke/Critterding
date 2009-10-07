@@ -5,6 +5,7 @@
 
 #include "helpinfo.h"
 #include "textmessage.h"
+#include "../gui/statsgraph.h"
 
 using namespace std;
 

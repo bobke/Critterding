@@ -20,8 +20,8 @@ Textmessage::Textmessage()
 	position.x = 10;
 	position.y = 50;
 
-	v_width = 200 + ( hpadding*2 );
-	v_height = (15 * (messages.size()-1)) + 20 + ( vpadding*2 );
+// 	v_width = 200 + ( hpadding*2 );
+// 	v_height = (15 * (messages.size()-1)) + 20 + ( vpadding*2 );
 }
 
 void Textmessage::add(const stringstream& streamptr)

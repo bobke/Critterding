@@ -3,63 +3,35 @@
 Statsgraph::Statsgraph()
 {
 	active = false;
+	isMovable = true;
 
 	statsBuffer = Statsbuffer::Instance();
-	settings = Settings::Instance();
 
-	barheight = 100;
+	v_width = 300;
+	v_height = 100;
+	
+	position.x = 10;
+	position.y = 50;
 }
 
-void Statsgraph::draw( unsigned int posY )
+void Statsgraph::draw()
 {
 	if (active)
 	{
-		boxwidth = *settings->winWidth;
-		boxheight = 100;
+		drawBackground();
+		drawBorders();
 
-		unsigned int x1 = 0;
-		unsigned int x2 = x1 + boxwidth;
-		unsigned int y1 = posY;
-		unsigned int y2 = y1 + barheight;
-
-	// draw background box and border
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glColor4f(0.05f, 0.05f, 0.05f, 0.9f);
-		glBegin(GL_QUADS);
-			glVertex2f(x1, y2);
-			glVertex2f(x1, y1);
-			glVertex2f(x2, y1);
-			glVertex2f(x2, y2);
-		glEnd();
-		glDisable(GL_BLEND);
-
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glBegin(GL_LINES);
-// 			glVertex2f(x1, y2);
-// 			glVertex2f(x1, y1);
-
-			glVertex2f(x1, y1);
-			glVertex2f(x2, y1);
-
-// 			glVertex2f(x2, y1);
-// 			glVertex2f(x2, y2);
-
-			glVertex2f(x2, y2);
-			glVertex2f(x1, y2);
-		glEnd();
-
-		unsigned int number = statsBuffer->snapshots.size();
+		int number = statsBuffer->snapshots.size();
 		
 		if ( number > 0 )
 		{
-			unsigned int start = 0;
-			if ( number > boxwidth )
-				start = number - boxwidth;
+			int start = 0;
+			if ( number > (int)v_width )
+				start = number - v_width;
 			
 		// find the highest value in the stats vector
 			unsigned int highest = 0;
-			for ( unsigned int i=start; i < number; i++ )
+			for ( int i=start; i < number; i++ )
 			{
 				unsigned int sum = statsBuffer->snapshots[i].food + statsBuffer->snapshots[i].critters;
 				if ( sum > highest )
@@ -69,45 +41,44 @@ void Statsgraph::draw( unsigned int posY )
 
 			if ( highest > 0 )
 			{
-
-				// so,  highest ~ boxheight
+				// so,  highest ~ v_height
 				// and, number ~ boxwidth
-			
-				float heightratio = ((float)boxheight/highest);
+				float heightratio = ((float)v_height/highest);
 			
 			// draw the number of critters graph
-
 				glColor3f(0.0f, 1.0f, 0.0f);
-				glBegin(GL_POINTS);
-					for ( unsigned int i=start; i < number; i++ )
+				glBegin(GL_LINES);
+					for ( int i=start; i < number-1; i++ )
 					{
-						glVertex2f( x1+i-start, y2-(heightratio*statsBuffer->snapshots[i].food) );
+/*						if ( position.x <= 0 )
+						{
+							cerr << position.x+i-start << endl;
+						}*/
+						glVertex2f( position.x+i-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i].food) );
+						glVertex2f( position.x+i+1-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i+1].food) );
 					}
 				glEnd();
+
 				glColor3f(1.0f, 0.0f, 0.0f);
+				glBegin(GL_LINES);
+					for ( int i=start; i < number-1; i++ )
+					{
+						glVertex2f( position.x+i-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i].critters) );
+						glVertex2f( position.x+i+1-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i+1].critters) );
+					}
+				glEnd();
+
+/*				glColor3f(1.0f, 0.0f, 0.0f);
 				glBegin(GL_POINTS);
 					for ( unsigned int i=start; i < number; i++ )
 					{
-						glVertex2f( x1+i-start, y2-(heightratio*statsBuffer->snapshots[i].critters) );
+						glVertex2f( position.x+i-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i].critters) );
 					}
-				glEnd();
+				glEnd();*/
 			}
 		}
 		
 	}
-}
-
-void Statsgraph::swap()
-{
-	active = !active;
-}
-
-unsigned int Statsgraph::height()
-{
-	if ( active )
-		return barheight;
-	else
-		return 0;
 }
 
 Statsgraph::~Statsgraph()
