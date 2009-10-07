@@ -1,32 +1,21 @@
 #ifndef INFOSTATS_H
 #define INFOSTATS_H
 
-#include "textprinter.h"
+#include "panel.h"
 
 using namespace std;
 
-class Infostats
+class Infostats : public Panel
 {
 	public:
 		Infostats();
 		~Infostats();
 
-		void draw( unsigned int posY );
-		void swap();
-		unsigned int height();
-
+		void draw();
 	private:
-		Settings*		settings;
 		// horizontal/vertical spacers (padding)
 		unsigned int hsp;
 		unsigned int vsp;
-
-		unsigned int barheight;
-
-// 		unsigned int halfboxwidth;
-// 		unsigned int halfboxheight;
-
-		bool active;
 };
 
 #endif

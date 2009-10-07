@@ -1,10 +1,10 @@
 #ifndef TEXTVERBOSEMESSAGE_H
 #define TEXTVERBOSEMESSAGE_H
 
-#include <string>
-#include <vector>
+/*#include <string>
+#include <vector>*/
 #include "../utils/fps.h" // FIXME howso this is here?
-#include "textprinter.h"
+#include "panel.h"
 
 using namespace std;
 
@@ -14,14 +14,15 @@ struct vmsg
 	struct timeval	appeartime;
 };
 
-class Textverbosemessage
+class Textverbosemessage : public Panel
 {
 	public:
 		static Textverbosemessage* Instance();
 
+		void		draw();
+
 		void		addBirth(stringstream& streamptr);
 		void		addDeath(stringstream& streamptr);
-		void		draw(unsigned int posY);
 		unsigned int	maxMessages;
 		float		msgLifetime;
 
@@ -31,6 +32,7 @@ class Textverbosemessage
 		Textverbosemessage();
 	private:
 		static Textverbosemessage* _instance;
+
 		vector<vmsg*>	births;
 		vector<vmsg*>	deaths;
 
@@ -38,8 +40,6 @@ class Textverbosemessage
 		void		getLongestMsg();
 
 		void		deleteExpiredMsg();
-		bool		active;
-
 };
 
 #endif
