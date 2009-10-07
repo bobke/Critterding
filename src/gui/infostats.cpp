@@ -2,41 +2,33 @@
 
 Infostats::Infostats()
 {
-	settings = Settings::Instance();
-
 	hsp = 10;
 	vsp = 13;
 
-	barheight = 86;
-
-	active = false;
+	active = true;
+	isMovable = true;
+	
+	position.x = 10;
+	position.y = 50;
+	
+	v_width = 500;
+	v_height = 86;
 }
 
-void Infostats::draw( unsigned int posY )
+void Infostats::draw()
 {
 	if (active)
 	{
-		unsigned int xstart = 0;
-		unsigned int xstop = *settings->winWidth;
+		drawBackground();
+		drawBorders();
 
-		unsigned int ystart = posY+0;
-		unsigned int ystop = posY + barheight;
+		int xstart = position.x;
+		int xstop = xstart + v_width;
 
-
-	// draw background box and border
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glColor4f(0.05f, 0.05f, 0.05f, 0.9f);
-		glBegin(GL_QUADS);
-			glVertex2f(xstart, ystop);
-			glVertex2f(xstart, ystart);
-			glVertex2f(xstop, ystart);
-			glVertex2f(xstop, ystop);
-		glEnd();
-		glDisable(GL_BLEND);
+		int ystart = position.y;
+		int ystop = ystart + v_height;
 
 		unsigned int colWidth = (xstop-xstart) / 4;
-
 		unsigned int col1 = xstart + colWidth;
 		unsigned int col2 = col1 + colWidth;
 		unsigned int col3 = col2 + colWidth;
@@ -44,17 +36,10 @@ void Infostats::draw( unsigned int posY )
 
 		float linespacer = 0.0f;
 
-		glColor3f(1.0f, 1.0f, 1.0f);
+		glColor3f(0.7f, 0.7f, 0.7f);
 		glBegin(GL_LINES);
-			glVertex2f(xstop, ystop);
-			glVertex2f(xstart, ystop);
-
-//  			glVertex2f(col1, ystart + linespacer);
-//  			glVertex2f(col1, ystop - linespacer);
  			glVertex2f(col2, ystart + linespacer);
  			glVertex2f(col2, ystop - linespacer);
-//  			glVertex2f(col3, ystart + linespacer);
-//  			glVertex2f(col3, ystop - linespacer);
 		glEnd();
 
 
@@ -118,19 +103,6 @@ void Infostats::draw( unsigned int posY )
 
 		glDisable(GL_TEXTURE_2D);
 	}
-}
-
-void Infostats::swap()
-{
-	active = !active;
-}
-
-unsigned int Infostats::height()
-{
-	if ( active )
-		return barheight;
-	else
-		return 0;
 }
 
 Infostats::~Infostats()

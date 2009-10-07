@@ -12,18 +12,13 @@
 #include "modes/race.h"
 #include "modes/testworld1.h"
 
-#include "../gui/maincanvas.h"
-#include "../gui/infobar.h"
-#include "../gui/infostats.h"
-#include "../gui/textmessage.h"
-#include "../gui/textverbosemessage.h"
-#include "../gui/panel.h"
+// #include <sstream>
+// #include <stdio.h>
+// #include <stdarg.h>
+// #include <math.h>
+// #include <GL/gl.h>
 
-#include <sstream>
-#include <stdio.h>
-#include <stdarg.h>
-#include <math.h>
-#include <GL/gl.h>
+#include "../gui/maincanvas.h"
 
 using std::cerr;
 using std::endl;
@@ -54,8 +49,6 @@ class Evolution : public GLScene {
 		Sleeper sleeper;
 
 		Maincanvas canvas;
-		Infobar infobar;
-		Infostats infostats;
 
 		int mouse_x;
 		int mouse_y;

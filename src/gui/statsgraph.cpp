@@ -50,31 +50,19 @@ void Statsgraph::draw()
 				glBegin(GL_LINES);
 					for ( int i=start; i < number-1; i++ )
 					{
-/*						if ( position.x <= 0 )
-						{
-							cerr << position.x+i-start << endl;
-						}*/
 						glVertex2f( position.x+i-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i].food) );
 						glVertex2f( position.x+i+1-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i+1].food) );
 					}
-				glEnd();
+// 				glEnd();
 
 				glColor3f(1.0f, 0.0f, 0.0f);
-				glBegin(GL_LINES);
+// 				glBegin(GL_LINES);
 					for ( int i=start; i < number-1; i++ )
 					{
 						glVertex2f( position.x+i-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i].critters) );
 						glVertex2f( position.x+i+1-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i+1].critters) );
 					}
 				glEnd();
-
-/*				glColor3f(1.0f, 0.0f, 0.0f);
-				glBegin(GL_POINTS);
-					for ( unsigned int i=start; i < number; i++ )
-					{
-						glVertex2f( position.x+i-start, position.y+v_height-(heightratio*statsBuffer->snapshots[i].critters) );
-					}
-				glEnd();*/
 			}
 		}
 		

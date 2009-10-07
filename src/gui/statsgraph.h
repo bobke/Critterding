@@ -13,7 +13,6 @@ class Statsgraph : public Panel
 		~Statsgraph();
 
 		void draw();
-		void swap();
 
 	private:
 		Settings* settings;

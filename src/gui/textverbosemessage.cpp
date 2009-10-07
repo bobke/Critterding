@@ -8,6 +8,15 @@ Textverbosemessage* Textverbosemessage::Instance ()
 
 Textverbosemessage::Textverbosemessage()
 {
+	position.x = 10;
+	position.y = 50;
+	
+	v_width = 500;
+	v_height = 86;
+
+	active = false;
+	isMovable = true;
+	
 	maxMessages = 5;
 	msgLifetime = 0.0f;
 	longestLength = 0;
@@ -61,67 +70,45 @@ void Textverbosemessage::deleteExpiredMsg()
 	}
 }
 
-void Textverbosemessage::draw( unsigned int posY )
+void Textverbosemessage::draw()
 {
 	if ( active )
 	{
 		deleteExpiredMsg();
 
-		unsigned int xstart = 0.0f;
-		unsigned int xstop = *Settings::Instance()->winWidth;
+		drawBackground();
+		drawBorders();
 
-		unsigned int ystart = posY + 13;
-		unsigned int ystop = posY + (13 * (maxMessages) + 10);
-
-		// draw background box and border
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glColor4f(0.05f, 0.05f, 0.05f, 0.9f);
-		glBegin(GL_QUADS);
-			glVertex2f(xstart, ystop);
-			glVertex2f(xstart, posY);
-			glVertex2f(xstop, posY);
-			glVertex2f(xstop, ystop);
-		glEnd();
-		glDisable(GL_BLEND);
-
-		glColor3f(1.0f, 1.0f, 1.0f);
+		glColor3f(0.7f, 0.7f, 0.7f);
 		glBegin(GL_LINES);
-			glVertex2f(xstop, ystop);
-			glVertex2f(xstart, ystop);
-
-			glVertex2f((*Settings::Instance()->winWidth/4)*3, posY);
-			glVertex2f((*Settings::Instance()->winWidth/4)*3, ystop);
+			glVertex2f(position.x+((float)v_width/4)*3, position.y);
+			glVertex2f(position.x+((float)v_width/4)*3, position.y+v_height);
 		glEnd();
 
 		if ( !births.empty() )
 		{
 		// render text
-			glEnable(GL_TEXTURE_2D);
+// 			glEnable(GL_TEXTURE_2D);
 
 			glColor3f(1.0f, 1.0f, 1.0f);
 
 			for ( unsigned int i = 0; i < births.size(); i++ )
-			{
-				Textprinter::Instance()->print(10.0f, ystart + 1 + (i*13), births[i]->str);
-			}
+				Textprinter::Instance()->print(position.x+10, position.y + 13 + 1 + (i*13), births[i]->str);
 
-			glDisable(GL_TEXTURE_2D);
+// 			glDisable(GL_TEXTURE_2D);
 		}
 
 		if ( !deaths.empty() )
 		{
 		// render text
-			glEnable(GL_TEXTURE_2D);
+// 			glEnable(GL_TEXTURE_2D);
 
 			glColor3f(1.0f, 1.0f, 1.0f);
 
 			for ( unsigned int i = 0; i < deaths.size(); i++ )
-			{
-				Textprinter::Instance()->print(((float)*Settings::Instance()->winWidth/4)*3 + 10, ystart + 1 + (i*13), deaths[i]->str);
-			}
+				Textprinter::Instance()->print(position.x+((float)v_width/4)*3 + 10, (position.y + 13) + 1 + (i*13), deaths[i]->str);
 
-			glDisable(GL_TEXTURE_2D);
+// 			glDisable(GL_TEXTURE_2D);
 		}
 	}
 }

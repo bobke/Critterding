@@ -147,13 +147,6 @@ void Evolution::draw()
 
 			canvas.draw();
 
-			infobar.draw();
-			infostats.draw(infobar.height());
-			Textverbosemessage::Instance()->draw(infobar.height()+infostats.height());
-
-// 			statsGraph.draw(infobar.height()+infostats.height());
-// 			Textmessage::Instance()->draw();
-
 			world->mouseRayHit = false;
 			if (!mouselook && !canvas.mouseFocus )
 				world->castMouseRay();
@@ -164,6 +157,7 @@ void Evolution::draw()
 				unsigned int margin = 20;
 				unsigned int rmargindistance = 100;
 				unsigned int vspacer = 12;
+				glColor3f(1.0f, 1.0f, 1.0f);
 				if ( world->mouseRayHitType == 1 )
 				{
 					Textprinter::Instance()->print( oldx+margin, oldy,    "food");
@@ -202,15 +196,15 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			break;
 
 		case SDLK_F2:
-			infobar.swap();
+			canvas.children["infobar"]->swap();
 			break;
 
 		case SDLK_F3:
-			infostats.swap();
+			canvas.children["infostats"]->swap();
 			break;
 
 		case SDLK_F4:
-			Textverbosemessage::Instance()->swap();
+			canvas.children["textverbosemessage"]->swap();
 			break;
 
 		case SDLK_PAGEUP:
