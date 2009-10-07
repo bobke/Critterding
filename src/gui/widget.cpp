@@ -15,8 +15,6 @@ Widget::Widget()
 
 void Widget::draw()
 {
-// 	if ( active )
-// 		drawChildren();
 }
 
 bool Widget::mouseOver(int x, int y)
@@ -30,6 +28,17 @@ void Widget::translate(int x, int y)
 {
 	position.x += x;
 	position.y += y;
+}
+
+void Widget::updateAbsPosition()
+{
+	absPosition.x = position.x;
+	absPosition.y = position.y;
+	if ( parent )
+	{
+		absPosition.x += parent->absPosition.x;
+		absPosition.y += parent->absPosition.y;
+	}
 }
 
 void Widget::swap()

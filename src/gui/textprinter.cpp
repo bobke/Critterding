@@ -71,12 +71,24 @@ FTPoint Textprinter::getBBox(const string& str)
 	return test.Upper();
 }
 
-
 void Textprinter::print(float x, float y, const string& str)
 {
 	glPushMatrix();
 
 		glTranslatef(x, y, 0);
+		glRotatef(180, 1.0f, 0.0f, 0.0f);
+
+		const char *text = str.c_str();
+		fonts[0]->Render(text);
+
+	glPopMatrix();
+}
+
+void Textprinter::print(const Vector2i& pos, const string& str)
+{
+	glPushMatrix();
+
+		glTranslatef(pos.x, pos.y, 0);
 		glRotatef(180, 1.0f, 0.0f, 0.0f);
 
 		const char *text = str.c_str();

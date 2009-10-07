@@ -47,8 +47,8 @@ Settings::Settings()
 	registerCVar("critter_killhalfat",					100, 2, 1000000, false, "kill 50% of critters if population reaches n");
 	registerCVar("critter_enableomnivores",					0, 0, 1, true, "enables critters to eat each other");
 	
-	registerCVar("food_maxlifetime",					10000, 1, 1000000, false, "maximum number of frames a food unit exists");
-	registerCVar("food_maxenergy",						2500, 1, 1000000, false, "maximum amount of energy a food unit has");
+	registerCVar("food_maxlifetime",					7000, 1, 1000000, false, "maximum number of frames a food unit exists");
+	registerCVar("food_maxenergy",						3000, 1, 1000000, false, "maximum amount of energy a food unit has");
 	registerCVar("food_size",						150, 1, 1000000, false, "size of a food unit");
 
 	registerCVar("body_maxmutations",					5, 1, 1000000, false, "maximum mutations on a body mutant");

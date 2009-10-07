@@ -18,7 +18,10 @@ class Container : public Widget
 
 	protected:
 		void		drawChildren();
-		void		registerWidget( const string& name, Widget* nwidget );
+
+		void		addWidgetPanel( const string& name, Widget* nwidget );
+		void		addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring );
+		void		addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring );
 	
 	private:
 		// children map iterator

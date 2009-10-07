@@ -9,6 +9,7 @@
 #include "infobar.h"
 #include "infostats.h"
 #include "textverbosemessage.h"
+#include "exitpanel.h"
 
 using namespace std;
 
@@ -25,6 +26,9 @@ class Maincanvas : public Container
 
 		void buttonPress();
 		void buttonRelease();
+		
+		void swapChild(const string& child);
+
 	private:
 		unsigned int oldx;
 		unsigned int oldy;

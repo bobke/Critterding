@@ -13,12 +13,13 @@ Maincanvas::Maincanvas()
 	pickedwidget = 0;
 
 	// register subwidgets of maincanvas
-	registerWidget( "helpinfo", new Helpinfo() );
-	registerWidget( "textmessage", Textmessage::Instance() );
-	registerWidget( "statsgraph", new Statsgraph() );
-	registerWidget( "infobar", new Infobar() );
-	registerWidget( "infostats", new Infostats() );
-	registerWidget( "textverbosemessage", Textverbosemessage::Instance() );
+	addWidgetPanel( "helpinfo", new Helpinfo() );
+	addWidgetPanel( "textmessage", Textmessage::Instance() );
+	addWidgetPanel( "statsgraph", new Statsgraph() );
+	addWidgetPanel( "infobar", new Infobar() );
+	addWidgetPanel( "infostats", new Infostats() );
+	addWidgetPanel( "textverbosemessage", Textverbosemessage::Instance() );
+	addWidgetPanel( "exitpanel", new Exitpanel() );
 
 	// point the widget width/height pointers to the window's width/height
 	v_widthP = settings->winWidth;
@@ -50,8 +51,8 @@ void Maincanvas::buttonPress()
 	{
 		if ( focussedWidget->isMovable )
 		{
-			hasPickedWidget = true;
 			pickedwidget = focussedWidget;
+			hasPickedWidget = true;
 		}
 // 		focussedWidget->click();
 	}
@@ -60,13 +61,23 @@ void Maincanvas::buttonPress()
 void Maincanvas::buttonRelease()
 {
 	hasPickedWidget = false;
-	pickedwidget = 0;
 }
 
 void Maincanvas::draw()
 {
 	if ( active )
 		drawChildren();
+}
+
+void Maincanvas::swapChild(const string& child)
+{
+	children[child]->swap();
+
+	if ( children[child]->isMovable )
+	{
+		if ( children[child] == pickedwidget )
+			hasPickedWidget = false;
+	}
 }
 
 Maincanvas::~Maincanvas()

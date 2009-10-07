@@ -191,20 +191,23 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 
 	switch (key)
 	{
+		case SDLK_ESCAPE:
+			canvas.swapChild("exitpanel");
+		break;
 		case SDLK_F1:
-			canvas.children["helpinfo"]->swap();
+			canvas.swapChild("helpinfo");
 			break;
 
 		case SDLK_F2:
-			canvas.children["infobar"]->swap();
+			canvas.swapChild("infobar");
 			break;
 
 		case SDLK_F3:
-			canvas.children["infostats"]->swap();
+			canvas.swapChild("infostats");
 			break;
 
 		case SDLK_F4:
-			canvas.children["textverbosemessage"]->swap();
+			canvas.swapChild("textverbosemessage");
 			break;
 
 		case SDLK_PAGEUP:
@@ -215,7 +218,7 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			break;
 
 		case SDLK_g:
-			canvas.children["statsgraph"]->swap();
+			canvas.swapChild("statsgraph");
 			break;
 
 		case SDLK_i:

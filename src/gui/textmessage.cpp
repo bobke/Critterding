@@ -82,6 +82,7 @@ void Textmessage::draw()
 		v_height = (15 * (messages.size()-1)) + bbox.Y() + ( vpadding*2 );
 		
 	// draw background box and border
+		updateAbsPosition();
 		drawBackground();
 		drawBorders();
 

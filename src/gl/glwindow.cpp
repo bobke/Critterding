@@ -132,15 +132,15 @@ void GLWindow::runGLScene(GLScene* glscene)
 
 			else if(event.type == SDL_KEYDOWN)
 			{
-				switch( event.key.keysym.sym )
-				{
-					case SDLK_ESCAPE:
-						stop = true;
-					break;
-					default:
+// 				switch( event.key.keysym.sym )
+// 				{
+// 					case SDLK_ESCAPE:
+// 						stop = true;
+// 					break;
+// 					default:
 						glscene->handlekeyPressed( event.key.keysym.sym );
-					break;
-				}
+// 					break;
+// 				}
 
 				// fullscreen change
 				if ( fs != *settingsfs )

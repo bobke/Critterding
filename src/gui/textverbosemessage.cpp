@@ -74,6 +74,8 @@ void Textverbosemessage::draw()
 {
 	if ( active )
 	{
+		updateAbsPosition();
+
 		deleteExpiredMsg();
 
 		drawBackground();
