@@ -3,7 +3,9 @@ METASOURCES = AUTO
 noinst_LTLIBRARIES = libgui.la
 noinst_HEADERS =	widget.h \
 			container.h \
+			text.h \
 			panel.h \
+			button.h \
 			textprinter.h \
 			maincanvas.h \
 			helpinfo.h \
@@ -11,11 +13,14 @@ noinst_HEADERS =	widget.h \
 			textverbosemessage.h \
 			infostats.h \
 			infobar.h \
-			statsgraph.h
+			statsgraph.h \
+			exitpanel.h
 
 libgui_la_SOURCES = 	widget.cpp \
-			panel.cpp \
 			container.cpp \
+			text.cpp \
+			panel.cpp \
+			button.cpp \
 			textprinter.cpp \
 			maincanvas.cpp \
 			helpinfo.cpp \
@@ -23,7 +28,8 @@ libgui_la_SOURCES = 	widget.cpp \
 			textverbosemessage.cpp \
 			infostats.cpp \
 			infobar.cpp \
-			statsgraph.cpp
+			statsgraph.cpp \
+			exitpanel.cpp
 
 libgui_la_LIBADD =	$(top_builddir)/src/utils/libutils.la \
 			$(top_builddir)/src/math/libmath.la

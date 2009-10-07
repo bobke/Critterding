@@ -6,6 +6,7 @@
 
 #include "../utils/settings.h"
 #include "../utils/file.h"
+#include "../math/vector2i.h"
 
 #define FTGL_TEXTURE 5
 #include "../utils/ftgl/FTGL/ftgl.h"
@@ -27,6 +28,7 @@ class Textprinter
 		// print left aligned
 		void print(float x, float y, const char *fmt, ...);
 		void print(float x, float y, const string& str);
+		void print(const Vector2i& pos, const string& str);
 		// print right aligned
 		void printR(float x, float y, const char *fmt, ...);
 

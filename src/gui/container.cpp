@@ -1,3 +1,6 @@
+#include "text.h"
+#include "button.h"
+
 #include "container.h"
 
 Container::Container()
@@ -17,10 +20,34 @@ void Container::drawChildren()
 		childit->second->draw();
 }
 
-void Container::registerWidget( const string& name, Widget* nwidget )
+void Container::addWidgetPanel( const string& name, Widget* nwidget )
 {
 	children[name] = nwidget;
 	children[name]->parent = this;
+}
+
+void Container::addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring )
+{
+	Text* t = new Text();
+	t->parent = this;
+	t->position.x = posx;
+	t->position.y = posy;
+	t->v_string = textstring;
+	t->active = true;
+	children[name] = t;
+}
+
+void Container::addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring )
+{
+	Button* t = new Button();
+	t->parent = this;
+	t->position.x = posx;
+	t->position.y = posy;
+	t->addWidgetText( textstring, 10, 20, textstring );
+	t->active = true;
+	
+// 	t->v_string = textstring;
+	children[name] = t;
 }
 
 bool Container::mouseOverChild(Widget** fWidget, int x, int y)

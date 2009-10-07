@@ -14,7 +14,6 @@ class Panel : public Container
 	protected:
 		void		drawBackground();
 		void		drawBorders();
-	
 	private:
 
 };

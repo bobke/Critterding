@@ -1,12 +1,12 @@
 race 1
 
-mincritters 21
+mincritters 33
 
 worldsizeX 130
 worldsizeY 15
 
 food_maxenergy 3000
-food_size 1000
+food_size 500
 
 critter_maxlifetime 1000
 critter_maxenergy 50000

@@ -19,23 +19,24 @@ void Helpinfo::draw()
 {
 	if (active)
 	{
+		updateAbsPosition();
 		drawBackground();
 		drawBorders();
 
 	// print text
 // 		glEnable(GL_TEXTURE_2D);
 
-		float widthpos1 = position.x + 20.0f;
-		float widthpos2 = position.x + 100.0f;
-		float heightpos = position.y + 25;
-		float vspace = 13.0f;
+		int widthpos1 = position.x + 20;
+		int widthpos2 = position.x + 100;
+		int heightpos = position.y + 25;
+		int vspace = 13;
 
 		printInfoLine(heightpos, widthpos1, widthpos2, "World / Engine operations", "");
 
 		//glColor4f(0.7f, 0.7f, 0.7f, 0.0f);
 		glColor3f(0.7f, 0.7f, 0.7f);
 
-		heightpos += vspace + 5.0f;
+		heightpos += vspace + 5;
 		printInfoLine(heightpos, widthpos1, widthpos2, "F1", "show/hide this screen");
 
 		heightpos += vspace;
@@ -121,12 +122,12 @@ void Helpinfo::draw()
 
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		heightpos += vspace + 5.0f;
+		heightpos += vspace + 5;
 		printInfoLine(heightpos, widthpos1, widthpos2, "Camera Operations", "");
 
 		glColor3f(0.7f, 0.7f, 0.7f);
 
-		heightpos += vspace + 5.0f;
+		heightpos += vspace + 5;
 		printInfoLine(heightpos, widthpos1, widthpos2, "backspace", "reset camera");
 
 		heightpos += vspace;

@@ -15,6 +15,8 @@ class Widget
 		Widget();
 		~Widget();
 
+		Vector2i		position;
+
 		virtual void		draw();
 		void			swap();
 
@@ -37,16 +39,18 @@ class Widget
 		// widget ops
 		void			translate( int x, int y );
 
+		unsigned int*		v_heightP;
+		unsigned int*		v_widthP;
 	protected:
 		Settings*		settings;
 		Textprinter*		textprinter;
-		Vector2i		position;
 
 		// width and height
 		unsigned int		v_height;
 		unsigned int		v_width;
-		unsigned int*		v_heightP;
-		unsigned int*		v_widthP;
+
+		void			updateAbsPosition();
+		Vector2i		absPosition;
 
 	private:
 		

@@ -18,6 +18,7 @@ void Statsgraph::draw()
 {
 	if (active)
 	{
+		updateAbsPosition();
 		drawBackground();
 		drawBorders();
 
