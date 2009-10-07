@@ -43,7 +43,8 @@ void Infobar::draw()
  		glEnd();
 
 
-		glEnable(GL_TEXTURE_2D);
+		glColor3f(1.0f, 1.0f, 1.0f);
+// 		glEnable(GL_TEXTURE_2D);
 
 	// Row 1
 		Textprinter::Instance()->print(position.x+hsp,		position.y+vsp,	"fps:");
@@ -72,7 +73,7 @@ void Infobar::draw()
 // 		Textprinter::Instance()->printR(col4-hsp,	vsp*2,	"%1u",		Settings::Instance()->info_bullets);
 
 
-		glDisable(GL_TEXTURE_2D);
+// 		glDisable(GL_TEXTURE_2D);
 	}
 }
 

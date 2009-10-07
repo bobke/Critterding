@@ -23,7 +23,7 @@ Settings::Settings()
 
 	registerCVar("killhalfdecreaseenergybypct",				1, 0, 100, false, "decrease energy by n percent when killhalfat triggers");
 
-	registerCVar("energy",							300, 0, 1000000, false, "energy in the system by number of food cubes");
+	registerCVar("energy",							400, 0, 1000000, false, "energy in the system by number of food cubes");
 	registerCVar("mincritters",						10, 0, 1000, false, "minimum number of critters");
 
 	registerCVar("insertcritterevery",					0, 0, 1000, false, "inserts a random critter every n frames");
@@ -44,11 +44,11 @@ Settings::Settings()
 
 	registerCVar("critter_retinasize",					8, 1, 1000, false, "size of a critters eye retina");
 	registerCVar("critter_autosaveinterval",				0, 0, 1000000, false, "save critters every n seconds");
-	registerCVar("critter_killhalfat",					200, 2, 1000000, false, "kill 50% of critters if population reaches n");
+	registerCVar("critter_killhalfat",					100, 2, 1000000, false, "kill 50% of critters if population reaches n");
 	registerCVar("critter_enableomnivores",					0, 0, 1, true, "enables critters to eat each other");
 	
 	registerCVar("food_maxlifetime",					10000, 1, 1000000, false, "maximum number of frames a food unit exists");
-	registerCVar("food_maxenergy",						1000, 1, 1000000, false, "maximum amount of energy a food unit has");
+	registerCVar("food_maxenergy",						2500, 1, 1000000, false, "maximum amount of energy a food unit has");
 	registerCVar("food_size",						150, 1, 1000000, false, "size of a food unit");
 
 	registerCVar("body_maxmutations",					5, 1, 1000000, false, "maximum mutations on a body mutant");
