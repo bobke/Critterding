@@ -14,6 +14,7 @@ class Button : public Panel
 
 		void draw();
 		void click();
+		string command;
 	private:
 		Commands* cmd;
 };

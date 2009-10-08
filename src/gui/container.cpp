@@ -50,6 +50,20 @@ void Container::addWidgetButton( const string& name, unsigned int posx, unsigned
 	children[name] = t;
 }
 
+void Container::addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring, const string& command )
+{
+	Button* t = new Button();
+	t->parent = this;
+	t->position.x = posx;
+	t->position.y = posy;
+	t->addWidgetText( "btext", 10, 20, textstring );
+	t->command = command;
+	t->active = true;
+	
+// 	t->v_string = textstring;
+	children[name] = t;
+}
+
 bool Container::mouseOverChild(Widget** fWidget, int x, int y)
 {
 	for( childit = children.begin(); childit != children.end(); childit++ )
