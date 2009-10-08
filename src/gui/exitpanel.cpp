@@ -6,7 +6,7 @@ Exitpanel::Exitpanel()
 	v_height = 86;
 
 	addWidgetText( "askexit", 10, 20, "Are you sure you want to exit?" );
-	addWidgetButton( "yes", 100, 40, "Yes" );
+	addWidgetButton( "yes", 100, 40, "Yes", "quit" );
 	addWidgetButton( "no", 200, 40, "No" );
 }
 

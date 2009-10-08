@@ -5,6 +5,7 @@ Button::Button()
 	cmd = Commands::Instance();
 	v_width = 60;
 	v_height = 40;
+	command = "";
 }
 
 void Button::draw()
@@ -20,7 +21,7 @@ void Button::draw()
 
 void Button::click()
 {
-// 	cmd->execCmd("loadcritters");
+	cmd->execCmd(command);
 // 	cerr << "clicked a button yeah" << endl;
 }
 
