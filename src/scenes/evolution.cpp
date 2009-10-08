@@ -5,6 +5,7 @@
 
 Evolution::Evolution()
 {
+	cmd = Commands::Instance();
 	settings = Settings::Instance();
 	events = Events::Instance();
 
@@ -18,6 +19,8 @@ Evolution::Evolution()
 	else
 		world = new WorldB();
 
+	cmd->world = world;
+	
 	pause = false;
 // 	drawCVNeurons = false;
 
@@ -188,6 +191,14 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 {
 	if ( pause && key != SDLK_p )
 		return;
+
+// 	void (*pt2Function)(int i) = NULL; 
+// 	pt2Function = &exit;
+// 	pt2Function(0);
+
+// 	void (Maincanvas::*pt2Member)(const string&) = NULL;
+// 	pt2Member = &Maincanvas::swapChild;
+// 	(canvas.*pt2Member)("infobar");
 
 	switch (key)
 	{

@@ -315,7 +315,7 @@ void WorldB::autosaveCritters()
 {
 	if ( *critter_autosaveinterval > 0 )
 	{
-		autosaveCounter += (Timer::Instance()->elapsed/1000);
+		autosaveCounter += ((float)Timer::Instance()->elapsed/1000);
 		if ( autosaveCounter > *critter_autosaveinterval )
 		{
 			autosaveCounter = 0.0f;

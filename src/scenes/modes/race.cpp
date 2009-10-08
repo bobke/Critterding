@@ -33,6 +33,8 @@ void WorldRace::init()
 
 void WorldRace::process()
 {
+	autosaveCritters();
+
 	// do a bullet step
 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
 

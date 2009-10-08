@@ -17,9 +17,13 @@ void Widget::draw()
 {
 }
 
+void Widget::click()
+{
+}
+
 bool Widget::mouseOver(int x, int y)
 {
-	if ( active && x > position.x && x < position.x+(int)*v_widthP && y > position.y && y < position.y+(int)*v_heightP )
+	if ( active && x > absPosition.x && x < absPosition.x+(int)*v_widthP && y > absPosition.y && y < absPosition.y+(int)*v_heightP )
 		return true;
 	return false;
 }
