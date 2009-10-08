@@ -54,7 +54,7 @@ void Maincanvas::buttonPress()
 			pickedwidget = focussedWidget;
 			hasPickedWidget = true;
 		}
-// 		focussedWidget->click();
+		focussedWidget->click();
 	}
 }
 

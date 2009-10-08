@@ -18,6 +18,7 @@ class Widget
 		Vector2i		position;
 
 		virtual void		draw();
+		virtual void		click();
 		void			swap();
 
 		bool			active;

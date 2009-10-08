@@ -43,7 +43,7 @@ void Container::addWidgetButton( const string& name, unsigned int posx, unsigned
 	t->parent = this;
 	t->position.x = posx;
 	t->position.y = posy;
-	t->addWidgetText( textstring, 10, 20, textstring );
+	t->addWidgetText( "btext", 10, 20, textstring );
 	t->active = true;
 	
 // 	t->v_string = textstring;
@@ -53,12 +53,30 @@ void Container::addWidgetButton( const string& name, unsigned int posx, unsigned
 bool Container::mouseOverChild(Widget** fWidget, int x, int y)
 {
 	for( childit = children.begin(); childit != children.end(); childit++ )
+	{
 		if ( childit->second->active && childit->second->mouseOver(x, y) )
 		{
-			// FIXME RECURSIVE SUBCONTAINERS
-			*fWidget = childit->second;
-			return true;
+			// RECURSIVE INTO CONTAINERS
+			if ( childit->second->isContainer )
+			{
+				Container* c = static_cast<Container*>(childit->second);
+				if ( c->mouseOverChild( fWidget, x, y ) )
+				{
+					return true;
+				}
+				else
+				{
+					*fWidget = childit->second;
+					return true;
+				}
+			}
+			else
+			{
+				*fWidget = childit->second;
+				return true;
+			}
 		}
+	}
 	return false;
 }
 

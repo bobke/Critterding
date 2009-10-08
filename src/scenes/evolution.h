@@ -19,6 +19,7 @@
 // #include <GL/gl.h>
 
 #include "../gui/maincanvas.h"
+#include "../utils/commands.h"
 
 using std::cerr;
 using std::endl;
@@ -45,6 +46,7 @@ class Evolution : public GLScene {
 
 	private:
 		Settings *settings;
+		Commands *cmd;
 		Events *events;
 		Sleeper sleeper;
 
