@@ -20,8 +20,10 @@ class Textprinter
 		void printTextprinter();
 
 		// get bounding boxes
-		FTPoint getBBox(const string& str);
-		FTPoint getBBox(const char *fmt, ...);
+// 		FTPoint getBBox(const string& str);
+// 		FTPoint getBBox(const char *fmt, ...);
+		unsigned int getWidth(const char *fmt, ...);
+		unsigned int getWidth(const string& str);
 
 		string getFormattedString(const char *fmt, ...);
 

@@ -48,7 +48,7 @@ string Textprinter::getFormattedString(const char *fmt, ...)
 	return a;
 }
 
-FTPoint Textprinter::getBBox(const char *fmt, ...)
+unsigned int Textprinter::getWidth(const char *fmt, ...)
 {
 		va_list ap;     /* our argument pointer */
 		char text[256];
@@ -59,18 +59,41 @@ FTPoint Textprinter::getBBox(const char *fmt, ...)
 		vsprintf(text, fmt, ap);
 
 		FTBBox test = fonts[0]->BBox(text);
-		return test.Upper();
+		return test.Upper().X();
 }
-
-
-FTPoint Textprinter::getBBox(const string& str)
+unsigned int Textprinter::getWidth(const string& str)
 {
 	const char *text = str.c_str();
 
 	FTBBox test = fonts[0]->BBox(text);
-	return test.Upper();
+	return test.Upper().X();
 }
 
+
+// FTPoint Textprinter::getBBox(const char *fmt, ...)
+// {
+// 		va_list ap;     /* our argument pointer */
+// 		char text[256];
+// 		va_start(ap, fmt);  /* make ap point to first unnamed arg */
+// 		/* FIXME: we *should* do boundschecking or something to prevent buffer
+// 		* overflows/segmentations faults
+// 		*/
+// 		vsprintf(text, fmt, ap);
+// 
+// 		FTBBox test = fonts[0]->BBox(text);
+// 		return test.Upper();
+// }
+
+// // FIXME if we get rid of this ftbbox shit here, we can cleanup the makefile
+// FTPoint Textprinter::getBBox(const string& str)
+// {
+// 	const char *text = str.c_str();
+// 
+// 	FTBBox test = fonts[0]->BBox(text);
+// 	return test.Upper();
+// }
+
+// FIXME get rid of this
 void Textprinter::print(float x, float y, const string& str)
 {
 	glPushMatrix();
@@ -109,8 +132,8 @@ void Textprinter::printR(float x, float y, const char *fmt, ...)
 
 	string str(text);
 
-	FTPoint bbox = getBBox(str);
-	print(x - bbox.X(), y, str);
+// 	FTPoint bbox = ;
+	print(x - getWidth(str), y, str);
 }
 
 void Textprinter::setUpFonts()
