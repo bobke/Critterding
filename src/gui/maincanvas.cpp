@@ -20,6 +20,7 @@ Maincanvas::Maincanvas()
 	addWidgetPanel( "infostats", new Infostats() );
 	addWidgetPanel( "textverbosemessage", Textverbosemessage::Instance() );
 	addWidgetPanel( "exitpanel", new Exitpanel() );
+	addWidgetPanel( "settingspanel", new Settingspanel() );
 
 	// point the widget width/height pointers to the window's width/height
 	v_widthP = settings->winWidth;

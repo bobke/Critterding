@@ -2,7 +2,7 @@
 
 Exitpanel::Exitpanel()
 {
-	v_width = 480;
+	v_width = 400;
 	v_height = 86;
 
 	addWidgetText( "askexit", 10, 20, "Are you sure you want to exit?" );

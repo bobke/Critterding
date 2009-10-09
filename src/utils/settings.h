@@ -49,6 +49,9 @@ class Settings
 		void			decreaseCVar(const string& name, const unsigned int& value);
 		void			increaseCVar(const string& name, const unsigned int& value);
 
+		void			decreaseCVar(const string& name);
+		void			increaseCVar(const string& name);
+
 		string profileName;
 
 		// info data
@@ -62,8 +65,8 @@ class Settings
 		unsigned int info_totalBodyparts;
 		unsigned int info_totalWeight;
 
-		unsigned int *winWidth;
-		unsigned int *winHeight;
+		int *winWidth;
+		int *winHeight;
 
 		// other vars
 		float freeEnergyInfo;

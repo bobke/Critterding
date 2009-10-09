@@ -18,8 +18,9 @@ class Commands
 		cmdargtype argtype;
 		void (WorldB::*worldMember)();
 		void (Commands::*commandsMember)();
-		void (Maincanvas::*canvasMember)();
+// 		void (Maincanvas::*canvasMember)();
 		void (Maincanvas::*canvasMember_string)(const string&);
+		void (Settings::*settingsMember_string)(const string&);
 		void (*member)(int);
 	};
 
@@ -37,10 +38,12 @@ class Commands
 		Commands();
 	private:
 		static Commands* _instance;
+		Settings*		settings;
 
 		void registerCmd(string name, void (Commands::*pt2Func)());
 		void registerCmd(string name, void (WorldB::*pt2Func)());
 		void registerCmd(string name, void (Maincanvas::*pt2Func)(const string&));
+		void registerCmd(string name, void (Settings::*pt2Func)(const string&));
 
 		void quit();
 		

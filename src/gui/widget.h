@@ -40,15 +40,15 @@ class Widget
 		// widget ops
 		void			translate( int x, int y );
 
-		unsigned int*		v_heightP;
-		unsigned int*		v_widthP;
+		int*			v_heightP;
+		int*			v_widthP;
 	protected:
 		Settings*		settings;
 		Textprinter*		textprinter;
 
 		// width and height
-		unsigned int		v_height;
-		unsigned int		v_width;
+		int			v_height;
+		int			v_width;
 
 		void			updateAbsPosition();
 		Vector2i		absPosition;

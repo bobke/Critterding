@@ -14,7 +14,8 @@ noinst_HEADERS =	widget.h \
 			infostats.h \
 			infobar.h \
 			statsgraph.h \
-			exitpanel.h
+			exitpanel.h \
+			settingspanel.h
 
 libgui_la_SOURCES = 	widget.cpp \
 			container.cpp \
@@ -29,7 +30,8 @@ libgui_la_SOURCES = 	widget.cpp \
 			infostats.cpp \
 			infobar.cpp \
 			statsgraph.cpp \
-			exitpanel.cpp
+			exitpanel.cpp \
+			settingspanel.cpp
 
 libgui_la_LIBADD =	$(top_builddir)/src/utils/libutils.la \
 			$(top_builddir)/src/math/libmath.la

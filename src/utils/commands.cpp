@@ -8,9 +8,12 @@ Commands* Commands::Instance ()
 
 Commands::Commands()
 {
+	settings = Settings::Instance();
 	registerCmd("quit", &Commands::quit);
 	registerCmd("loadcritters", &WorldB::loadAllCritters);
 	registerCmd("gui_togglepanel", &Maincanvas::swapChild);
+	registerCmd("settings_increase", &Settings::increaseCVar);
+	registerCmd("settings_decrease", &Settings::decreaseCVar);
 }
 
 void Commands::registerCmd(string name, void (Commands::*pt2Func)())
@@ -40,28 +43,45 @@ void Commands::registerCmd(string name, void (Maincanvas::*pt2Func)(const string
 	cmdlist[name]		= c;
 }
 
+void Commands::registerCmd(string name, void (Settings::*pt2Func)(const string&))
+{
+	cmd* c = new cmd();
+	c->commandtype		= T_SETTINGS;
+	c->argtype		= A_STRING;
+	c->settingsMember_string= pt2Func;
+	cmdlist[name]		= c;
+}
+
 // fixme private
 void Commands::execCmd(const string& name)
 {
-	if ( cmdlist[name]->commandtype == 1 )
+	if ( cmdlist[name]->commandtype == T_COMMAND )
 	{
 		(this->*cmdlist[name]->commandsMember)();
 	}
-	else if ( cmdlist[name]->commandtype == 2 )
+	else if ( cmdlist[name]->commandtype == T_WORLD )
 	{
 		(world->*cmdlist[name]->worldMember)();
 	}
-	else if ( cmdlist[name]->commandtype == 3 )
+/*	else if ( cmdlist[name]->commandtype == T_CANVAS )
 	{
 		(canvas->*cmdlist[name]->canvasMember)();
 	}
+	else if ( cmdlist[name]->commandtype == T_SETTINGS )
+	{
+		(settings->*cmdlist[name]->settingsMember)();
+	}*/
 }
 
 void Commands::execCmd(const string& name, const string& str)
 {
-	if ( cmdlist[name]->commandtype == 3 )
+	if ( cmdlist[name]->commandtype == T_CANVAS )
 	{
 		(canvas->*cmdlist[name]->canvasMember_string)(str);
+	}
+	else if ( cmdlist[name]->commandtype == T_SETTINGS )
+	{
+		(settings->*cmdlist[name]->settingsMember_string)(str);
 	}
 }
 

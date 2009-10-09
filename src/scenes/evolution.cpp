@@ -229,6 +229,10 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			world->saveAllCritters();
 			break;
 
+		case SDLK_e:
+			canvas.swapChild("settingspanel");
+			break;
+
 		case SDLK_g:
 			canvas.swapChild("statsgraph");
 			break;

@@ -202,6 +202,7 @@ bool Settings::setCVar(const string& name, const unsigned int& value)
 	}
 }
 
+// FIXME private
 void Settings::increaseCVar(const string& name, const unsigned int& value)
 {
 	unsigned int diff = cvarlist[name]->int_val + value;
@@ -213,12 +214,32 @@ void Settings::increaseCVar(const string& name, const unsigned int& value)
 	}
 }
 
+// FIXME private
 void Settings::decreaseCVar(const string& name, const unsigned int& value)
 {
 	unsigned int diff = cvarlist[name]->int_val - value;
 	if ( diff >= cvarlist[name]->int_min && diff <= cvarlist[name]->int_max )
 		cvarlist[name]->int_val -= value;
 }
+
+void Settings::increaseCVar(const string& name)
+{
+	unsigned int diff = cvarlist[name]->int_val + 1;
+	if ( diff >= cvarlist[name]->int_min && diff <= cvarlist[name]->int_max )
+		cvarlist[name]->int_val = diff;
+	else if ( cvarlist[name]->loop )
+	{
+		cvarlist[name]->int_val = cvarlist[name]->int_min;
+	}
+}
+
+void Settings::decreaseCVar(const string& name)
+{
+	int diff = -1 + cvarlist[name]->int_val;
+	if ( diff >= (int)cvarlist[name]->int_min && diff <= (int)cvarlist[name]->int_max )
+		cvarlist[name]->int_val = (unsigned int)diff;
+}
+
 
 void Settings::unregisterCVar(const string& name)
 {
