@@ -25,10 +25,10 @@ class GLWindow {
 		//	Resize Window
 		void resize();
 		unsigned int w_bpp;		// Bits Per Pixel. With XFree86, highest = 24
-		unsigned int w_width;
-		unsigned int w_height;
-		unsigned int n_width;
-		unsigned int n_height;
+		int w_width;
+		int w_height;
+		int n_width;
+		int n_height;
 		unsigned int fs;
 		SDL_Surface* surface;
 		const SDL_VideoInfo* vidInfo;

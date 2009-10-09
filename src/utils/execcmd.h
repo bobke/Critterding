@@ -8,7 +8,8 @@ using namespace std;
 	enum cmdtype {
 		T_COMMAND = 1,
 		T_WORLD,
-		T_CANVAS
+		T_CANVAS,
+		T_SETTINGS
 	};
 
 	enum cmdargtype {

@@ -10,6 +10,7 @@
 #include "infostats.h"
 #include "textverbosemessage.h"
 #include "exitpanel.h"
+#include "settingspanel.h"
 
 using namespace std;
 
