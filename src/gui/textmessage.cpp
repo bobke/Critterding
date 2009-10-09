@@ -32,9 +32,9 @@ void Textmessage::add(const stringstream& streamptr)
 	messages.push_back(Msg);
 
 	//getLongestMsg();
-	FTPoint bbox = Textprinter::Instance()->getBBox( messages[messages.size()-1]->str );
-	if ( bbox.X() > longestLength )
-		longestLength = bbox.X();
+	int width = Textprinter::Instance()->getWidth( messages[messages.size()-1]->str );
+	if ( width > longestLength )
+		longestLength = width;
 
 	// to prevent overfilling:
 	deleteExpiredMsg();
@@ -45,9 +45,9 @@ void Textmessage::getLongestMsg()
 	longestLength = 0;
 	for ( unsigned int i = 0; i < messages.size(); i++ )
 	{
-		FTPoint bbox = Textprinter::Instance()->getBBox(messages[i]->str);
-		if ( bbox.X() > longestLength )
-			longestLength = bbox.X();
+		int width = Textprinter::Instance()->getWidth(messages[i]->str);
+		if ( width > longestLength )
+			longestLength = width;
 	}
 }
 
@@ -76,10 +76,10 @@ void Textmessage::draw()
 	{
 		active = true;
 		
-		FTPoint bbox = Textprinter::Instance()->getBBox(messages[0]->str);
+		unsigned int height = 5;
 
 		v_width = longestLength + ( hpadding*2 );
-		v_height = (15 * (messages.size()-1)) + bbox.Y() + ( vpadding*2 );
+		v_height = (15 * (messages.size()-1)) + height + ( vpadding*2 );
 		
 	// draw background box and border
 		updateAbsPosition();
@@ -89,7 +89,7 @@ void Textmessage::draw()
 	// render text
 		glColor3f(1.0f, 1.0f, 1.0f);
 		for ( unsigned int i = 0; i < messages.size(); i++ )
-			Textprinter::Instance()->print(position.x + hpadding, position.y + bbox.Y() + (i*15.0f) + vpadding, messages[i]->str);
+			Textprinter::Instance()->print(position.x + hpadding, position.y + height + (i*15.0f) + vpadding, messages[i]->str);
 	}
 	else
 		active = false;
