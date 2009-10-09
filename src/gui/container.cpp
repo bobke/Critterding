@@ -37,30 +37,15 @@ void Container::addWidgetText( const string& name, unsigned int posx, unsigned i
 	children[name] = t;
 }
 
-void Container::addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring )
+void Container::addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring, const cmdsettings& cmds )
 {
 	Button* t = new Button();
 	t->parent = this;
 	t->position.x = posx;
 	t->position.y = posy;
 	t->addWidgetText( "btext", 10, 20, textstring );
+	t->command = cmds;
 	t->active = true;
-	
-// 	t->v_string = textstring;
-	children[name] = t;
-}
-
-void Container::addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring, const string& command )
-{
-	Button* t = new Button();
-	t->parent = this;
-	t->position.x = posx;
-	t->position.y = posy;
-	t->addWidgetText( "btext", 10, 20, textstring );
-	t->command = command;
-	t->active = true;
-	
-// 	t->v_string = textstring;
 	children[name] = t;
 }
 

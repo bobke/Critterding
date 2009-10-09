@@ -1,6 +1,7 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
 
+#include "../utils/execcmd.h"
 #include "widget.h"
 
 using namespace std;
@@ -16,13 +17,13 @@ class Container : public Widget
 		map<string, Widget*>	children;
 		bool			mouseOverChild( Widget** fWidget, int x, int y );
 
+		Execcmd		cmd;
 	protected:
 		void		drawChildren();
 
 		void		addWidgetPanel( const string& name, Widget* nwidget );
 		void		addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring );
-		void		addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring );
-		void		addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring, const string& command );
+		void		addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring, const cmdsettings& cmds );
 	
 	private:
 		// children map iterator

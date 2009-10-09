@@ -14,7 +14,7 @@ class Button : public Panel
 
 		void draw();
 		void click();
-		string command;
+		cmdsettings command;
 	private:
 		Commands* cmd;
 };

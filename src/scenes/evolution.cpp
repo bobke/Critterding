@@ -20,6 +20,7 @@ Evolution::Evolution()
 		world = new WorldB();
 
 	cmd->world = world;
+	cmd->canvas = &canvas;
 	
 	pause = false;
 // 	drawCVNeurons = false;

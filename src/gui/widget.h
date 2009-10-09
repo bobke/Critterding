@@ -54,8 +54,6 @@ class Widget
 		Vector2i		absPosition;
 
 	private:
-		
-// 		vector<Widget*>		children;
 };
 
 #endif
