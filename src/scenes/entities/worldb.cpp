@@ -214,8 +214,11 @@ void WorldB::procreate( CritterB* c )
 
 		btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.bodyparts[0]->body->getMotionState();
 		btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
+
+		// position offset
 		np.setY(insertHight);
 		np.setX(np.getX()+0.6f);
+
 		CritterB *nc = new CritterB(*c, currentCritterID++, np, brainmutant, bodymutant);
 		//CritterB *nc = new CritterB(*c, currentCritterID++, findPosition(), mutant);
 
@@ -225,8 +228,15 @@ void WorldB::procreate( CritterB* c )
 			buf << " ad: " << setw(4) << nc->adamdist;
 			buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
 
-			if ( brainmutant ) buf << " brain mutant";
-			if ( bodymutant ) buf << " body mutant";
+			if ( brainmutant || bodymutant )
+			{
+				buf << " ";
+				if ( brainmutant ) buf << "brain";
+				if ( brainmutant && bodymutant ) buf << "+";
+				if ( bodymutant ) buf << "body";
+				buf << " mutant";
+			}
+
 			Textverbosemessage::Instance()->addBirth(buf);
 
 		// split energies in half
