@@ -19,7 +19,7 @@ void Infostats::draw()
 {
 	if (active)
 	{
-		updateAbsPosition();
+// 		updateAbsPosition();
 		drawBackground();
 		drawBorders();
 

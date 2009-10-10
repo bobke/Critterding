@@ -32,6 +32,7 @@ void Widget::translate(int x, int y)
 {
 	position.x += x;
 	position.y += y;
+	updateAbsPosition();
 }
 
 void Widget::updateAbsPosition()

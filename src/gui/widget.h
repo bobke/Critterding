@@ -30,7 +30,9 @@ class Widget
 		// width/height accessors
 		unsigned int		height();
 		unsigned int		width();
-		
+
+		Vector2i		absPosition;
+
 		// pointer to parent
 		Widget*			parent;
 
@@ -38,10 +40,12 @@ class Widget
 		bool			mouseOver( int x, int y );
 
 		// widget ops
-		void			translate( int x, int y );
+		virtual void		translate( int x, int y );
 
 		int*			v_heightP;
 		int*			v_widthP;
+
+		virtual void		updateAbsPosition();
 	protected:
 		Settings*		settings;
 		Textprinter*		textprinter;
@@ -50,8 +54,6 @@ class Widget
 		int			v_height;
 		int			v_width;
 
-		void			updateAbsPosition();
-		Vector2i		absPosition;
 
 	private:
 };
