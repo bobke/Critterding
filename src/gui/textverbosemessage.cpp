@@ -74,7 +74,7 @@ void Textverbosemessage::draw()
 {
 	if ( active )
 	{
-		updateAbsPosition();
+// 		updateAbsPosition();
 
 		deleteExpiredMsg();
 

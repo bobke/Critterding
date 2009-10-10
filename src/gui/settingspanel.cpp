@@ -9,6 +9,7 @@ Settingspanel::Settingspanel()
 
 	position.x = 50;
 	position.y = 50;
+// 	updateAbsPosition();
 
 	vspace = 13;
 	addWidgetText( "critter_maxlifetime", 10, 20, "mincritters" );
@@ -22,7 +23,6 @@ void Settingspanel::draw()
 {
 	if (active)
 	{
-		updateAbsPosition();
 		drawBackground();
 		drawBorders();
 		drawChildren();

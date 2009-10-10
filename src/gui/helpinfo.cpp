@@ -19,7 +19,7 @@ void Helpinfo::draw()
 {
 	if (active)
 	{
-		updateAbsPosition();
+// 		updateAbsPosition();
 		drawBackground();
 		drawBorders();
 

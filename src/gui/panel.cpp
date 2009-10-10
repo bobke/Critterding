@@ -6,7 +6,7 @@ Panel::Panel()
 
 void Panel::draw()
 {
-	updateAbsPosition();
+// 	updateAbsPosition();
 	drawBackground();
 	drawBorders();
 	drawChildren();

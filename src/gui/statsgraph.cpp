@@ -18,7 +18,10 @@ void Statsgraph::draw()
 {
 	if (active)
 	{
-		updateAbsPosition();
+		// hack
+		v_width = *parent->v_widthP - 20;
+
+// 		updateAbsPosition();
 		drawBackground();
 		drawBorders();
 

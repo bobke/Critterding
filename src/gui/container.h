@@ -24,6 +24,8 @@ class Container : public Widget
 		void		addWidgetPanel( const string& name, Widget* nwidget );
 		void		addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring );
 		void		addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring, const cmdsettings& cmds );
+		
+		void		updateAbsPosition();
 	
 	private:
 		// children map iterator
