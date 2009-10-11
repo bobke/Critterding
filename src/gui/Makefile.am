@@ -4,6 +4,7 @@ noinst_LTLIBRARIES = libgui.la
 noinst_HEADERS =	widget.h \
 			container.h \
 			text.h \
+			text_uintp.h \
 			panel.h \
 			button.h \
 			textprinter.h \
@@ -20,6 +21,7 @@ noinst_HEADERS =	widget.h \
 libgui_la_SOURCES = 	widget.cpp \
 			container.cpp \
 			text.cpp \
+			text_uintp.cpp \
 			panel.cpp \
 			button.cpp \
 			textprinter.cpp \

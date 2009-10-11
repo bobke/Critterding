@@ -20,6 +20,7 @@
 
 #include "../gui/maincanvas.h"
 #include "../utils/commands.h"
+#include "../utils/execcmd.h"
 
 using std::cerr;
 using std::endl;
@@ -43,6 +44,7 @@ class Evolution : public GLScene {
 		void handleMouseMotionAbs(int x, int y);
 
 		WorldB* world;
+		Execcmd execcmd;
 
 	private:
 		Settings *settings;

@@ -5,6 +5,7 @@ class Vector2i {
 
 	public:
 		Vector2i();
+		Vector2i(const int xv, const int yv);
 		~Vector2i();
 	
 		int	x;

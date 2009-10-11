@@ -1,4 +1,5 @@
 #include "text.h"
+#include "text_uintp.h"
 #include "button.h"
 
 #include "container.h"
@@ -37,13 +38,26 @@ void Container::addWidgetText( const string& name, unsigned int posx, unsigned i
 	children[name] = t;
 }
 
-void Container::addWidgetButton( const string& name, unsigned int posx, unsigned int posy, const string& textstring, const cmdsettings& cmds )
+void Container::addWidgetText( const string& name, unsigned int posx, unsigned int posy, const unsigned int* uintp )
+{
+	Text_uintp* t = new Text_uintp();
+	t->parent = this;
+	t->translate(posx, posy);
+	t->content = uintp;
+	t->active = true;
+	children[name] = t;
+}
+
+void Container::addWidgetButton( const string& name, const Vector2i& pos, const Vector2i& dimensions, const string& textstring, const Vector2i& textpos, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval )
 {
 	Button* t = new Button();
 	t->parent = this;
-	t->translate(posx, posy);
-	t->addWidgetText( "btext", 10, 20, textstring );
-	t->command = cmds;
+	t->translate(pos.x, pos.y);
+	t->v_width = dimensions.x;
+	t->v_height = dimensions.y;
+	t->addWidgetText( "btext", textpos.x, textpos.y, textstring );
+// 	t->command = cmds;
+	t->genEvent(name, cmds, responsetime, minfresponsetime, fresponseinterval);
 	t->active = true;
 	children[name] = t;
 }

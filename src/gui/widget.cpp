@@ -21,6 +21,10 @@ void Widget::click()
 {
 }
 
+void Widget::release()
+{
+}
+
 bool Widget::mouseOver(int x, int y)
 {
 	if ( active && x > absPosition.x && x < absPosition.x+(int)*v_widthP && y > absPosition.y && y < absPosition.y+(int)*v_heightP )

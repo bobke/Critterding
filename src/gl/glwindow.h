@@ -35,6 +35,10 @@ class GLWindow {
 		int vidFlags;
 		bool hwaccel;
 		const unsigned int*	settingsfs;
+		int mousex;
+		int mousey;
+		SDL_Event event;
+
 };
 
 #endif	// GLWINDOW_H
