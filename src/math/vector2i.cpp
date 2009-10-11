@@ -6,6 +6,12 @@ Vector2i::Vector2i()
 	y = 0;
 }
 
+Vector2i::Vector2i(const int xv, const int yv)
+{
+	x = xv;
+	y = yv;
+}
+
 Vector2i::~Vector2i()
 {
 }

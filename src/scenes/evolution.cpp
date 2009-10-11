@@ -32,23 +32,31 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_RSHIFT,	"rshift", 			0,	0, 	0 );
 
 	// events
-	events->registerEvent(SDLK_F5,		"dec_critters", 		delay,	0, 	speedup );
-	events->registerEvent(SDLK_F6,		"inc_critters", 		delay,	0, 	speedup );
+	events->registerEvent(SDLK_F5,		"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
+	events->registerEvent(SDLK_F6,		"inc_critters", execcmd.gen("settings_increase", "mincritters"), delay, 0, speedup );
+	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", execcmd.gen("settings_decrease", "critter_killhalfat"), delay, 0, speedup );
+	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", execcmd.gen("settings_increase", "critter_killhalfat"), delay, 0, speedup );
+	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", execcmd.gen("settings_decrease", "camerasensitivity"), delay, 0, speedup );
+	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", execcmd.gen("settings_increase", "camerasensitivity"), delay, 0, speedup );
+	events->registerEvent(SDLK_c,		"inc_colormode", execcmd.gen("settings_increase", "colormode"), 0, 0, 0 );
+	events->registerEvent(SDLK_BACKSPACE,	"resetcamera", execcmd.gen("camera_resetposition"), 0, 0, 0 );
+	
+// 	events->registerEvent(SDLK_F5,		"dec_critters", 		delay,	0, 	speedup );
+// 	events->registerEvent(SDLK_F6,		"inc_critters", 		delay,	0, 	speedup );
+// 	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", 		delay,	0, 	speedup );
+// 	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", 		delay,	0, 	speedup );
+// 	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	delay,	0, 	speedup );
+// 	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	delay,	0, 	speedup );
 
-	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", 			delay,	0, 	speedup );
-	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", 			delay,	0, 	speedup );
-
-	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", 		delay,	0, 	speedup );
-	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", 		delay,	0, 	speedup );
-
+	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", delay, 0, speedup );
+	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", delay, 0, speedup );
 	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		delay,	0, 	speedup );
 	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		delay,	0, 	speedup );
 
 	events->registerEvent(SDLK_F11,		"dec_mutationrate", 		delay,	0, 	speedup );
 	events->registerEvent(SDLK_F12,		"inc_mutationrate", 		delay,	0, 	speedup );
 
-	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	delay,	0, 	speedup );
-	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	delay,	0, 	speedup );
+	
 
 	sharedTimer* t = events->registerSharedtimer( 20 );
 
@@ -62,7 +70,11 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP8,		"camera_lookdown", 		t );
 	events->registerEvent(SDLK_KP4,		"camera_lookleft",		t );
 	events->registerEvent(SDLK_KP6,		"camera_lookright",		t );
+
 	
+#ifndef _WIN32
+	events->registerEvent(SDLK_f, "inc_fullscreen", execcmd.gen("settings_increase", "fullscreen"), 0, 0, 0 );
+#endif	
 	mouselook = false;
 
 	oldx = 0;
@@ -285,27 +297,28 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			world->resetCamera();
 			break;
 
-		case SDLK_c:
-		{
-			settings->increaseCVar("colormode", 1);
-			stringstream buf;
-			buf << "Colormode: "<< settings->getCVar("colormode");
-			Textmessage::Instance()->add(buf);
-		}
-		break;
+// 		case SDLK_c:
+// 		{
+// 			settings->increaseCVar("colormode", 1);
+// 			stringstream buf;
+// 			buf << "Colormode: "<< settings->getCVar("colormode");
+// 			Textmessage::Instance()->add(buf);
+// 		}
+// 		break;
 
 #ifndef _WIN32
-		case SDLK_f:
+/*		case SDLK_f:
 		{
 			settings->increaseCVar("fullscreen", 1);
 			stringstream buf;
 			buf << "Fullscreen: "<< settings->getCVar("fullscreen");
 			Textmessage::Instance()->add(buf);
 		}
-		break;
+		break;*/
 #endif
 		default:
 			events->activateEvent(key);
+			cerr << "activating event" << endl;
 			break;
 	}
 }
@@ -374,26 +387,27 @@ void Evolution::handleEvents()
 {
 
 	events->processSharedTimers();
+	events->handlecommands();
 	
-	if ( events->isActive("dec_critters") )
-	{
-		settings->decreaseCVar("mincritters", 1);
-// 		if ( settings->mincritters > settings->mincrittersMin )
-// 			settings->mincritters--;
-		stringstream buf;
-		buf << "mincritters: "<< settings->getCVar("mincritters");
-// 		cerr << buf << endl;
-		Textmessage::Instance()->add(buf);
-	}
-	if ( events->isActive("inc_critters") )
-	{
-		settings->increaseCVar("mincritters", 1);
-// 		if ( settings->mincritters < settings->mincrittersMax )
-// 			settings->mincritters++;
-		stringstream buf;
-		buf << "mincritters: "<< settings->getCVar("mincritters");
-		Textmessage::Instance()->add(buf);
-	}
+// 	if ( events->isActive("dec_critters") )
+// 	{
+// 		settings->decreaseCVar("mincritters", 1);
+// // 		if ( settings->mincritters > settings->mincrittersMin )
+// // 			settings->mincritters--;
+// 		stringstream buf;
+// 		buf << "mincritters: "<< settings->getCVar("mincritters");
+// // 		cerr << buf << endl;
+// 		Textmessage::Instance()->add(buf);
+// 	}
+// 	if ( events->isActive("inc_critters") )
+// 	{
+// 		settings->increaseCVar("mincritters", 1);
+// // 		if ( settings->mincritters < settings->mincrittersMax )
+// // 			settings->mincritters++;
+// 		stringstream buf;
+// 		buf << "mincritters: "<< settings->getCVar("mincritters");
+// 		Textmessage::Instance()->add(buf);
+// 	}
 
 	if ( events->isActive("dec_energy") )
 	{
@@ -415,20 +429,20 @@ void Evolution::handleEvents()
 		Textmessage::Instance()->add(buf);
 	}
 
-	if ( events->isActive("dec_killhalftrigger") )
-	{
-		settings->decreaseCVar("critter_killhalfat", 1);
-		stringstream buf;
-		buf << "Kill half of critters at: "<< settings->getCVar("critter_killhalfat");
-		Textmessage::Instance()->add(buf);
-	}
-	if ( events->isActive("inc_killhalftrigger") )
-	{
-		settings->increaseCVar("critter_killhalfat", 1);
-		stringstream buf;
-		buf << "Kill half of critters at: "<< settings->getCVar("critter_killhalfat");
-		Textmessage::Instance()->add(buf);
-	}
+// 	if ( events->isActive("dec_killhalftrigger") )
+// 	{
+// 		settings->decreaseCVar("critter_killhalfat", 1);
+// 		stringstream buf;
+// 		buf << "Kill half of critters at: "<< settings->getCVar("critter_killhalfat");
+// 		Textmessage::Instance()->add(buf);
+// 	}
+// 	if ( events->isActive("inc_killhalftrigger") )
+// 	{
+// 		settings->increaseCVar("critter_killhalfat", 1);
+// 		stringstream buf;
+// 		buf << "Kill half of critters at: "<< settings->getCVar("critter_killhalfat");
+// 		Textmessage::Instance()->add(buf);
+// 	}
 
 	// mutation settings
 	if ( events->isActive("lshift") || events->isActive("rshift") )
@@ -494,21 +508,21 @@ void Evolution::handleEvents()
 		}
 	}
 
-	// Camera sensitivity
-	if ( events->isActive("inc_camerasensitivity") )
-	{
-		settings->increaseCVar("camerasensitivity", 1);
-		stringstream buf;
-		buf << "Camera Sensitivity: "<< settings->getCVar("camerasensitivity");
-		Textmessage::Instance()->add(buf);
-	}
-	if ( events->isActive("dec_camerasensitivity") )
-	{
-		settings->decreaseCVar("camerasensitivity", 1);
-		stringstream buf;
-		buf << "Camera Sensitivity: "<< settings->getCVar("camerasensitivity");
-		Textmessage::Instance()->add(buf);
-	}
+// 	// Camera sensitivity
+// 	if ( events->isActive("inc_camerasensitivity") )
+// 	{
+// 		settings->increaseCVar("camerasensitivity", 1);
+// 		stringstream buf;
+// 		buf << "Camera Sensitivity: "<< settings->getCVar("camerasensitivity");
+// 		Textmessage::Instance()->add(buf);
+// 	}
+// 	if ( events->isActive("dec_camerasensitivity") )
+// 	{
+// 		settings->decreaseCVar("camerasensitivity", 1);
+// 		stringstream buf;
+// 		buf << "Camera Sensitivity: "<< settings->getCVar("camerasensitivity");
+// 		Textmessage::Instance()->add(buf);
+// 	}
 
 	// Camera
 

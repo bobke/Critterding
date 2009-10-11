@@ -112,12 +112,22 @@ void GLWindow::resize()
 
 void GLWindow::runGLScene(GLScene* glscene)
 {
-	SDL_Event event;
 	bool stop = false;
 
 	while(!stop)
 	{
-		int x, y;
+		if ( fs != *settingsfs )
+		{
+			fs = *settingsfs;
+			
+			if ( !fs )
+			{
+				w_width = n_width;
+				w_height = n_height;
+			}
+			resize();
+		}
+
 		while(SDL_PollEvent(&event))
 		{
                         if(event.type == SDL_VIDEORESIZE)
@@ -131,43 +141,20 @@ void GLWindow::runGLScene(GLScene* glscene)
 				stop = true;
 
 			else if(event.type == SDL_KEYDOWN)
-			{
-// 				switch( event.key.keysym.sym )
-// 				{
-// 					case SDLK_ESCAPE:
-// 						stop = true;
-// 					break;
-// 					default:
-						glscene->handlekeyPressed( event.key.keysym.sym );
-// 					break;
-// 				}
+				glscene->handlekeyPressed( event.key.keysym.sym );
 
-				// fullscreen change
-				if ( fs != *settingsfs )
-				{
-					fs = *settingsfs;
-					
-					if ( !fs )
-					{
-						w_width = n_width;
-						w_height = n_height;
-					}
-					resize();
-				}
-
-			}
 			else if(event.type == SDL_KEYUP)
 				glscene->handlekeyReleased( event.key.keysym.sym );
 
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
 			{
-				SDL_GetMouseState(&x, &y);
-				glscene->handlemousebuttonPressed( x, y, event.button.button );
+				SDL_GetMouseState(&mousex, &mousex);
+				glscene->handlemousebuttonPressed( mousex, mousex, event.button.button );
 			}
 			else if (event.type == SDL_MOUSEBUTTONUP)
 			{
-				SDL_GetMouseState(&x, &y);
-				glscene->handlemousebuttonReleased( x, y, event.button.button );
+				SDL_GetMouseState(&mousex, &mousex);
+				glscene->handlemousebuttonReleased( mousex, mousex, event.button.button );
 			}
 			else if(event.type == SDL_MOUSEMOTION)
 			{

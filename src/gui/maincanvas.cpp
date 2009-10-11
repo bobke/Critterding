@@ -32,7 +32,7 @@ Maincanvas::Maincanvas()
 
 void Maincanvas::moveMouse(unsigned int x, unsigned int y)
 {
-	if ( hasPickedWidget )
+	if ( hasPickedWidget && pickedwidget->isMovable )
 	{
 		pickedwidget->translate( (int)x-oldx, (int)y-oldy );
 	}
@@ -50,18 +50,19 @@ void Maincanvas::buttonPress()
 {
 	if ( mouseFocus )
 	{
-		if ( focussedWidget->isMovable )
-		{
-			pickedwidget = focussedWidget;
-			hasPickedWidget = true;
-		}
-		focussedWidget->click();
+		pickedwidget = focussedWidget;
+		pickedwidget->click();
+		hasPickedWidget = true;
 	}
 }
 
 void Maincanvas::buttonRelease()
 {
-	hasPickedWidget = false;
+	if ( hasPickedWidget )
+	{
+		pickedwidget->release();
+		hasPickedWidget = false;
+	}
 }
 
 void Maincanvas::draw()
@@ -72,6 +73,7 @@ void Maincanvas::draw()
 
 void Maincanvas::swapChild(const string& child)
 {
+// 	cerr << "swapping child" << endl;
 	children[child]->swap();
 
 	if ( children[child]->isMovable )
@@ -79,6 +81,7 @@ void Maincanvas::swapChild(const string& child)
 		if ( children[child] == pickedwidget )
 			hasPickedWidget = false;
 	}
+	moveMouse(oldx, oldy);
 }
 
 Maincanvas::~Maincanvas()

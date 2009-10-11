@@ -120,19 +120,25 @@ void Textprinter::print(const Vector2i& pos, const string& str)
 	glPopMatrix();
 }
 
+void Textprinter::print(const Vector2i& pos, const unsigned int* num)
+{
+	glPushMatrix();
+
+		glTranslatef(pos.x, pos.y, 0);
+		glRotatef(180, 1.0f, 0.0f, 0.0f);
+
+		stringstream str;
+		str << *num;
+		fonts[0]->Render(str.str().c_str());
+
+	glPopMatrix();
+}
+
 void Textprinter::printR(float x, float y, const char *fmt, ...)
 {
-	va_list ap;     /* our argument pointer */
-	char text[256];
-	va_start(ap, fmt);  /* make ap point to first unnamed arg */
-	/* FIXME: we *should* do boundschecking or something to prevent buffer
-	* overflows/segmentations faults
-	*/
+	va_start(ap, fmt);
 	vsprintf(text, fmt, ap);
-
 	string str(text);
-
-// 	FTPoint bbox = ;
 	print(x - getWidth(str), y, str);
 }
 

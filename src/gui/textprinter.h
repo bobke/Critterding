@@ -31,6 +31,7 @@ class Textprinter
 		void print(float x, float y, const char *fmt, ...);
 		void print(float x, float y, const string& str);
 		void print(const Vector2i& pos, const string& str);
+		void print(const Vector2i& pos, const unsigned int* num);
 		// print right aligned
 		void printR(float x, float y, const char *fmt, ...);
 
@@ -40,6 +41,10 @@ class Textprinter
 		FTFont** fonts;
 		void setUpFonts();
 		File file;
+		
+		va_list ap;     /* our argument pointer */
+		char text[256];
+
 };
 
 #endif

@@ -19,6 +19,7 @@ class Widget
 
 		virtual void		draw();
 		virtual void		click();
+		virtual void		release();
 		void			swap();
 
 		bool			active;

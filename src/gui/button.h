@@ -2,7 +2,9 @@
 #define BUTTON_H
 
 #include "panel.h"
-#include "../utils/commands.h"
+#include "../utils/events.h"
+
+// #include "../utils/commands.h"
 
 using namespace std;
 
@@ -14,9 +16,13 @@ class Button : public Panel
 
 		void draw();
 		void click();
-		cmdsettings command;
+		void release();
+		void genEvent(const string& name, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
+// 		cmdsettings command;
 	private:
-		Commands* cmd;
+// 		Commands* cmd;
+		Events *events;
+		string eventname;
 };
 
 #endif
