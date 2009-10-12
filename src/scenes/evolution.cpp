@@ -318,7 +318,7 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 #endif
 		default:
 			events->activateEvent(key);
-			cerr << "activating event" << endl;
+// 			cerr << "activating event" << endl;
 			break;
 	}
 }
