@@ -37,9 +37,14 @@ void Statsgraph::draw()
 			unsigned int highest = 0;
 			for ( int i=start; i < number; i++ )
 			{
-				unsigned int sum = statsBuffer->snapshots[i].food + statsBuffer->snapshots[i].critters;
+/*				unsigned int sum = statsBuffer->snapshots[i].food + statsBuffer->snapshots[i].critters;
 				if ( sum > highest )
-					highest = sum;
+					highest = sum;*/
+// 				unsigned int sum = statsBuffer->snapshots[i].food + statsBuffer->snapshots[i].critters;
+				if ( statsBuffer->snapshots[i].food > highest )
+					highest = statsBuffer->snapshots[i].food;
+				if ( statsBuffer->snapshots[i].critters > highest )
+					highest = statsBuffer->snapshots[i].critters;
 			}
 // 			cerr << highest << endl;
 
