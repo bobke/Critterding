@@ -2,7 +2,7 @@
 
 Settingspanel::Settingspanel()
 {
-	v_width = 250;
+	v_width = 300;
 	v_height = 300;
 
 	isMovable = true;
@@ -45,8 +45,8 @@ void Settingspanel::draw()
 void Settingspanel::loadWidgets(const string& svalue, const Vector2i& posoffset)
 {
 	unsigned int col1 = 10;
-	unsigned int col2 = 150;
-	unsigned int col3 = 190;
+	unsigned int col2 = 180;
+	unsigned int col3 = 230;
 	
 	string str(svalue);
 	string strval = str; string strdec = str; string strinc = str;
