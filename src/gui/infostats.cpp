@@ -55,28 +55,28 @@ void Infostats::draw()
 		if ( settings->info_critters > 0 )
 			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalNeurons / settings->info_critters);
 		else
-			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0);
+			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(position.x+hsp,	position.y+vsp*rc,	"avg synapses:");
 		if ( settings->info_critters > 0 )
 			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalSynapses / settings->info_critters);
 		else
-			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0);
+			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(position.x+hsp,	position.y+vsp*rc,	"avg synapses/neuron:");
 		if ( settings->info_totalNeurons > 0 )
 			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalSynapses / settings->info_totalNeurons);
 		else
-			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0);
+			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(position.x+hsp,	position.y+vsp*rc,	"avg adam distance:");
 		if ( settings->info_critters > 0 )
 			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalAdamDistance / settings->info_critters);
 		else
-			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0);
+			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 	// COLUMN 2
 		rc = 1;
@@ -88,14 +88,14 @@ void Infostats::draw()
 		if ( settings->info_critters > 0 )
 			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalBodyparts / settings->info_critters);
 		else
-			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", 0);
+			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(col2+hsp,	position.y+vsp*rc,	"avg weight:");
 		if ( settings->info_critters > 0 )
 			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalWeight / settings->info_critters);
 		else
-			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", 0);
+			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 
 // 		glDisable(GL_TEXTURE_2D);
