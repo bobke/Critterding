@@ -3,23 +3,18 @@
 Helpinfo::Helpinfo()
 {
 	isMovable = true;
-	active = false;
-
-	v_width = 420;
-	v_height = 520;
-	
-	halfboxwidth = 210;
-	halfboxheight = 260;
-
 	position.x = 30;
 	position.y = 30;
+	v_width = 420;
+	v_height = 520;
+	halfboxwidth = 210;
+	halfboxheight = 260;
 }
 
 void Helpinfo::draw()
 {
 	if (active)
 	{
-// 		updateAbsPosition();
 		drawBackground();
 		drawBorders();
 
@@ -31,11 +26,10 @@ void Helpinfo::draw()
 		int heightpos = position.y + 25;
 		int vspace = 13;
 
+		glColor3f(1.0f, 1.0f, 1.0f);
 		printInfoLine(heightpos, widthpos1, widthpos2, "World / Engine operations", "");
 
-		//glColor4f(0.7f, 0.7f, 0.7f, 0.0f);
 		glColor3f(0.7f, 0.7f, 0.7f);
-
 		heightpos += vspace + 5;
 		printInfoLine(heightpos, widthpos1, widthpos2, "F1", "show/hide this screen");
 
@@ -51,14 +45,8 @@ void Helpinfo::draw()
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "F5/F6", "dec/inc minimum critters");
 
-//		heightpos += vspace;
-//		printInfoLine(heightpos, widthpos1, widthpos2, "F5/F6", "adjust energy in the system (by 25 units)");
-
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "F7/F8", "dec/inc kill half of population trigger");
-
-// 		heightpos += vspace;
-// 		printInfoLine(heightpos, widthpos1, widthpos2, "F8", "toggle timed food inserts");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "F9/F10", "dec/inc max mutations per brain mutant");
@@ -72,12 +60,6 @@ void Helpinfo::draw()
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "shift F11/F12", "dec/inc body mutation rate (%)");
 
-// 		heightpos += vspace;
-// 		printInfoLine(heightpos, widthpos1, widthpos2, "tab", "show/hide critter statistics");
-
-/*		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "insert", "insert adam");
-*/
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "keypad +/-", "dec/inc energy in the system by 1 food unit");
 
@@ -104,15 +86,6 @@ void Helpinfo::draw()
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "k", "kill half of critters");
-
-// 		heightpos += vspace;
-// 		printInfoLine(heightpos, widthpos1, widthpos2, "w", "activate/toggle wall types");
-
-// 		heightpos += vspace;
-// 		printInfoLine(heightpos, widthpos1, widthpos2, "x", "deactivate wall");
-
-// 		heightpos += vspace;
-// 		printInfoLine(heightpos, widthpos1, widthpos2, "v", "toggle verbosity");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "PgUp", "load all critters from \"~/.critterding/load\"");
@@ -156,7 +129,6 @@ void Helpinfo::draw()
 		printInfoLine(heightpos, widthpos1, widthpos2, "keypad /", "dec camera sensitivity");
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "keypad *", "inc camera sensitivity");
-
 
 // 		glDisable(GL_TEXTURE_2D);
 	}

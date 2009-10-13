@@ -10,8 +10,6 @@ class Exitpanel : public Panel
 	public:
 		Exitpanel();
 		~Exitpanel();
-
-		void draw();
 	private:
 };
 
