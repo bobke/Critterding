@@ -37,7 +37,7 @@ Settings::Settings()
 	registerCVar("critter_maxlifetime",					6000, 1, 1000000, false, "maximum number of frames a critter lives");
 	registerCVar("critter_maxenergy",					5000, 1, 1000000, false, "maximum amount of energy a critter has");
 
-	registerCVar("critter_startenergy",					2500, 1, 1000000, false, "energy a new critter starts with");
+	registerCVar("critter_startenergy",					3000, 1, 1000000, false, "energy a new critter starts with");
 	registerCVar("critter_procinterval",					20, 1, 1000000, false, "minimum frames between procreations");
 	registerCVar("critter_minenergyproc",					3000, 1, 1000000, false, "energy a critters needs to procreate");
 	registerCVar("critter_sightrange",					70, 1, 1000000, false, "distance a critter can see (10 = 1 worldsize)");
@@ -48,7 +48,7 @@ Settings::Settings()
 	registerCVar("critter_enableomnivores",					0, 0, 1, true, "enables critters to eat each other");
 	
 	registerCVar("food_maxlifetime",					7000, 1, 1000000, false, "maximum number of frames a food unit exists");
-	registerCVar("food_maxenergy",						3000, 1, 1000000, false, "maximum amount of energy a food unit has");
+	registerCVar("food_maxenergy",						2500, 1, 1000000, false, "maximum amount of energy a food unit has");
 	registerCVar("food_size",						150, 1, 1000000, false, "size of a food unit");
 
 	registerCVar("body_maxmutations",					5, 1, 1000000, false, "maximum mutations on a body mutant");

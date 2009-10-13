@@ -25,6 +25,8 @@ class Widget
 		bool			active;
 		// movable (pickable) object
 		bool			isMovable;
+		// touchable object (allows ignoring containers as clickable)
+		bool			isTouchable;
 		// types
 		bool			isContainer;
 

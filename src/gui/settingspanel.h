@@ -11,10 +11,9 @@ class Settingspanel : public Panel
 		Settingspanel();
 		~Settingspanel();
 
-		void draw();
 	private:
 		unsigned int vspace;
-		void loadWidgets(const string& svalue, const Vector2i& posoffset);
+		unsigned int hspace;
 };
 
 #endif

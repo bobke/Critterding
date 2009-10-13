@@ -2,62 +2,58 @@
 
 Settingspanel::Settingspanel()
 {
-	v_width = 300;
-	v_height = 300;
+	v_width = 510;
+	v_height = 470;
 
 	isMovable = true;
 
 	position.x = 50;
 	position.y = 50;
-// 	updateAbsPosition();
 
-	vspace = 15;
-	Vector2i offset(10, vspace);
-	loadWidgets("mincritters" , offset);
+	unsigned int vint = 6;
+	hspace = 10;
+	vspace = vint;
+	addSettingmutator("mincritters", 10, vspace);
 
-	offset.y += vspace;
-	offset.y += vspace; loadWidgets("critter_maxlifetime" , offset);
-	offset.y += vspace; loadWidgets("critter_maxenergy" , offset);
-	offset.y += vspace; loadWidgets("critter_startenergy" , offset);
-	offset.y += vspace; loadWidgets("critter_procinterval" , offset);
-	offset.y += vspace; loadWidgets("critter_minenergyproc" , offset);
-	offset.y += vspace; loadWidgets("critter_sightrange" , offset);
-	offset.y += vspace; loadWidgets("critter_autosaveinterval" , offset);
-	offset.y += vspace; loadWidgets("critter_killhalfat" , offset);
-	offset.y += vspace; loadWidgets("critter_enableomnivores" , offset);
+	vspace += vint;
+	vspace += vint; addSettingmutator("critter_maxlifetime", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_maxenergy", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_startenergy", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_procinterval", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_minenergyproc", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_sightrange", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_autosaveinterval", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_killhalfat", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_enableomnivores", hspace, vspace);
 
-	offset.y += vspace;
-	offset.y += vspace; loadWidgets("food_maxlifetime" , offset);
-	offset.y += vspace; loadWidgets("food_maxenergy" , offset);
-	offset.y += vspace; loadWidgets("food_size" , offset);
+	vspace += vint;
+	vspace += vint; addSettingmutator("food_maxlifetime", hspace, vspace);
+	vspace += vint; addSettingmutator("food_maxenergy", hspace, vspace);
+	vspace += vint; addSettingmutator("food_size", hspace, vspace);
+
+	vspace += vint;
+	vspace += vint; addSettingmutator("body_maxmutations", hspace, vspace);
+	vspace += vint; addSettingmutator("body_mutationrate", hspace, vspace);
+	vspace += vint; addSettingmutator("body_maxbodyparts", hspace, vspace);
+	vspace += vint; addSettingmutator("body_maxbodypartsatbuildtime", hspace, vspace);
+	vspace += vint; addSettingmutator("body_minbodypartsize", hspace, vspace);
+	vspace += vint; addSettingmutator("body_maxbodypartsize", hspace, vspace);
+	vspace += vint; addSettingmutator("body_minheadsize", hspace, vspace);
+	vspace += vint; addSettingmutator("body_maxheadsize", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectaddbodypart", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectremovebodypart", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectresizebodypart", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectresizebodypart_slightly", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectchangeconstraintlimits", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectchangeconstraintlimits_slightly", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectchangeconstraintangles", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectchangeconstraintangles_slightly", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectchangeconstraintposition", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectchangeconstraintposition_slightly", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectresizehead", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectresizehead_slightly", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectrepositionhead", hspace, vspace);
 }
-
-void Settingspanel::draw()
-{
-	if (active)
-	{
-		drawBackground();
-		drawBorders();
-		drawChildren();
-	}
-}
-
-void Settingspanel::loadWidgets(const string& svalue, const Vector2i& posoffset)
-{
-	unsigned int col1 = 10;
-	unsigned int col2 = 180;
-	unsigned int col3 = 230;
-	
-	string str(svalue);
-	string strval = str; string strdec = str; string strinc = str;
-	strval.append("val"); strdec.append("dec"); strinc.append("inc");
-
-	addWidgetText( svalue, posoffset.x+col1, posoffset.y+20, svalue );
-	addWidgetText( strval, posoffset.x+col2, posoffset.y+20, settings->getCVarPtr(svalue) );
-	addWidgetButton( strdec, Vector2i(posoffset.x+col3, posoffset.y+10), Vector2i(10, 10), "-", Vector2i(3, 8), cmd.gen("settings_decrease", svalue), 150, 0, 2 );
-	addWidgetButton( strinc, Vector2i(posoffset.x+col3+18, posoffset.y+10), Vector2i(10, 10), "+", Vector2i(1, 8), cmd.gen("settings_increase", svalue), 150, 0, 2 );
-}
-
 
 Settingspanel::~Settingspanel()
 {

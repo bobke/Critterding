@@ -2,14 +2,17 @@
 
 Panel::Panel()
 {
+	isTouchable = true;
 }
 
 void Panel::draw()
 {
-// 	updateAbsPosition();
-	drawBackground();
-	drawBorders();
-	drawChildren();
+	if (active)
+	{
+		drawBackground();
+		drawBorders();
+		drawChildren();
+	}
 }
 
 void Panel::drawBackground()

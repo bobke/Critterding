@@ -1,6 +1,7 @@
 #include "text.h"
 #include "text_uintp.h"
 #include "button.h"
+#include "settingmutator.h"
 
 #include "container.h"
 
@@ -62,11 +63,21 @@ void Container::addWidgetButton( const string& name, const Vector2i& pos, const 
 	children[name] = t;
 }
 
+void Container::addSettingmutator( const string& name, unsigned int posx, unsigned int posy )
+{
+	Settingmutator* t = new Settingmutator();
+	t->parent = this;
+	t->translate(posx, posy);
+	t->active = true;
+	t->load(name);
+	children[name] = t;
+}
+
 bool Container::mouseOverChild(Widget** fWidget, int x, int y)
 {
 	for( childit = children.begin(); childit != children.end(); childit++ )
 	{
-		if ( childit->second->active && childit->second->mouseOver(x, y) )
+		if ( (childit->second->isTouchable && childit->second->active && childit->second->mouseOver(x, y)) || !childit->second->isTouchable )
 		{
 			// RECURSIVE INTO CONTAINERS
 			if ( childit->second->isContainer )
@@ -76,13 +87,13 @@ bool Container::mouseOverChild(Widget** fWidget, int x, int y)
 				{
 					return true;
 				}
-				else
+				else if ( childit->second->isTouchable )
 				{
 					*fWidget = childit->second;
 					return true;
 				}
 			}
-			else
+			else if ( childit->second->isTouchable )
 			{
 				*fWidget = childit->second;
 				return true;

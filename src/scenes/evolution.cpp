@@ -40,7 +40,18 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", execcmd.gen("settings_increase", "camerasensitivity"), delay, 0, speedup );
 	events->registerEvent(SDLK_c,		"inc_colormode", execcmd.gen("settings_increase", "colormode"), 0, 0, 0 );
 	events->registerEvent(SDLK_BACKSPACE,	"resetcamera", execcmd.gen("camera_resetposition"), 0, 0, 0 );
-	
+
+	events->registerEvent(SDLK_ESCAPE,	"swapexitpanel", execcmd.gen("gui_togglepanel", "exitpanel"), 0, 0, 0 );
+	events->registerEvent(SDLK_F1,		"swaphelpinfo", execcmd.gen("gui_togglepanel", "helpinfo"), 0, 0, 0 );
+	events->registerEvent(SDLK_F2,		"swapinfobar", execcmd.gen("gui_togglepanel", "infobar"), 0, 0, 0 );
+	events->registerEvent(SDLK_F3,		"swapinfostats", execcmd.gen("gui_togglepanel", "infostats"), 0, 0, 0 );
+	events->registerEvent(SDLK_F4,		"swaptextverbosemessage", execcmd.gen("gui_togglepanel", "textverbosemessage"), 0, 0, 0 );
+	events->registerEvent(SDLK_b,		"swapsettingsbrainpanel", execcmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
+	events->registerEvent(SDLK_e,		"swapsettingspanel", execcmd.gen("gui_togglepanel", "settingspanel"), 0, 0, 0 );
+	events->registerEvent(SDLK_g,		"swapstatsgraph", execcmd.gen("gui_togglepanel", "statsgraph"), 0, 0, 0 );
+
+
+
 // 	events->registerEvent(SDLK_F5,		"dec_critters", 		delay,	0, 	speedup );
 // 	events->registerEvent(SDLK_F6,		"inc_critters", 		delay,	0, 	speedup );
 // 	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", 		delay,	0, 	speedup );
@@ -205,48 +216,13 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 	if ( pause && key != SDLK_p )
 		return;
 
-// 	void (*pt2Function)(int i) = NULL; 
-// 	pt2Function = &exit;
-// 	pt2Function(0);
-
-// 	void (Maincanvas::*pt2Member)(const string&) = NULL;
-// 	pt2Member = &Maincanvas::swapChild;
-// 	(canvas.*pt2Member)("infobar");
-
 	switch (key)
 	{
-		case SDLK_ESCAPE:
-			canvas.swapChild("exitpanel");
-		break;
-		case SDLK_F1:
-			canvas.swapChild("helpinfo");
-			break;
-
-		case SDLK_F2:
-			canvas.swapChild("infobar");
-			break;
-
-		case SDLK_F3:
-			canvas.swapChild("infostats");
-			break;
-
-		case SDLK_F4:
-			canvas.swapChild("textverbosemessage");
-			break;
-
 		case SDLK_PAGEUP:
 			world->loadAllCritters();
 			break;
 		case SDLK_PAGEDOWN:
 			world->saveAllCritters();
-			break;
-
-		case SDLK_e:
-			canvas.swapChild("settingspanel");
-			break;
-
-		case SDLK_g:
-			canvas.swapChild("statsgraph");
 			break;
 
 		case SDLK_i:

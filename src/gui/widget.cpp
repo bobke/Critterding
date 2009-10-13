@@ -9,6 +9,7 @@ Widget::Widget()
 	v_heightP = &v_height;
 	
 	isMovable = false;
+	isTouchable = false;
 	isContainer = false;
 	active = false;
 }
