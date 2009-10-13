@@ -116,14 +116,10 @@ void Commands::execCmd(const cmdsettings& cmds)
 				execCmd(cmds.name, cmds.args);
 		}
 		else
-		{
 			cerr << "command '" << cmds.name << "'s args do not match: got " << cmds.argtype << " but expected " << cmdlist[cmds.name]->argtype << endl;
-		}
 	}
-	else
-	{
-		cerr << "command '" << cmds.name << "' does not exist" << endl;
-	}
+// 	else
+// 		cerr << "command '" << cmds.name << "' does not exist" << endl;
 }
 
 void Commands::quit()
