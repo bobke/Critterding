@@ -111,7 +111,7 @@ void Events::activateEvent(const long unsigned int key)
 		if ( !events[i].bindbystring && events[i].bindkey == key )
 		{
 			cmd->execCmd( events[i].command );
-			if ( events[i].responsetime > 0 )
+			if ( events[i].responsetime > 0 || events[i].bindkey == SDLK_LSHIFT || events[i].bindkey == SDLK_RSHIFT )
 			{
 				events[i].active = true;
 	// 			events[i].elapsed = events[i].responsetime;
@@ -133,11 +133,11 @@ void Events::activateEvent(const string& key)
 			cmd->execCmd( events[i].command );
 			if ( events[i].responsetime > 0 )
 			{
-			events[i].active = true;
-// 			events[i].elapsed = events[i].responsetime;
-			events[i].elapsed = 0;
-			events[i].fresponsetime = events[i].responsetime;
-// 			cerr << "activated " << events[i].name << " rt: " << events[i].elapsed << endl;
+				events[i].active = true;
+	// 			events[i].elapsed = events[i].responsetime;
+				events[i].elapsed = 0;
+				events[i].fresponsetime = events[i].responsetime;
+	// 			cerr << "activated " << events[i].name << " rt: " << events[i].elapsed << endl;
 			}
 			return;
 		}

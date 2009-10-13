@@ -28,9 +28,6 @@ Evolution::Evolution()
 	unsigned int delay = 150;
 	unsigned int speedup = 2;
 
-	events->registerEvent(SDLK_LSHIFT,	"lshift", 			0,	0, 	0 );
-	events->registerEvent(SDLK_RSHIFT,	"rshift", 			0,	0, 	0 );
-
 	// events
 	events->registerEvent(SDLK_F5,		"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
 	events->registerEvent(SDLK_F6,		"inc_critters", execcmd.gen("settings_increase", "mincritters"), delay, 0, speedup );
@@ -60,6 +57,10 @@ Evolution::Evolution()
 
 	sharedTimer* t = events->registerSharedtimer( 20 );
 	// FIXME : THESE USE THE OLD METHOD, CONVERT THESE, THEN CLEAN UP EVENTS.CPP (massive cleanup required, no struct)
+
+	events->registerEvent(SDLK_LSHIFT,	"lshift", 			0,	0, 	0 );
+	events->registerEvent(SDLK_RSHIFT,	"rshift", 			0,	0, 	0 );
+
 	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		delay,	0, 	speedup );
 	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		delay,	0, 	speedup );
 	events->registerEvent(SDLK_F11,		"dec_mutationrate", 		delay,	0, 	speedup );
