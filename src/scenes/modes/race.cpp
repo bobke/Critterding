@@ -192,9 +192,15 @@ void WorldRace::process()
 						if ( count == best.size() && count > 0 )
 							count = 0;
 
+						if ( brainmutant || bodymutant )
+						{
+							buf << " ";
+							if ( brainmutant ) buf << "brain";
+							if ( brainmutant && bodymutant ) buf << "+";
+							if ( bodymutant ) buf << "body";
+							buf << " mutant";
+						}
 
-						if ( brainmutant ) buf << " brain mutant";
-						if ( bodymutant ) buf << " body mutant";
 						Textverbosemessage::Instance()->addBirth(buf);
 					}
 					else
