@@ -1,5 +1,13 @@
 #include "commands.h"
 
+// 	void (*pt2Function)(int i) = NULL; 
+// 	pt2Function = &exit;
+// 	pt2Function(0);
+
+// 	void (Maincanvas::*pt2Member)(const string&) = NULL;
+// 	pt2Member = &Maincanvas::swapChild;
+// 	(canvas.*pt2Member)("infobar");
+
 Commands* Commands::Instance () 
 {
 	static Commands t;
@@ -106,7 +114,7 @@ void Commands::execCmd(const cmdsettings& cmds)
 	}
 	else
 	{
-		cerr << "command '" << cmds.name << "does not exist" << endl;
+		cerr << "command '" << cmds.name << "' does not exist" << endl;
 	}
 }
 

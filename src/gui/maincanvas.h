@@ -11,6 +11,7 @@
 #include "textverbosemessage.h"
 #include "exitpanel.h"
 #include "settingspanel.h"
+#include "settingsbrainpanel.h"
 
 using namespace std;
 
