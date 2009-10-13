@@ -58,7 +58,6 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP_MINUS,	"keydecreaseenergy", execcmd.gen("decreaseenergy"), delay, 0, speedup );
 	events->registerEvent(SDLK_KP_PLUS,	"keyincreaseenergy", execcmd.gen("increaseenergy"), delay, 0, speedup );
 
-
 	sharedTimer* t = events->registerSharedtimer( 20 );
 	// FIXME : THESE USE THE OLD METHOD, CONVERT THESE, THEN CLEAN UP EVENTS.CPP (massive cleanup required, no struct)
 	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		delay,	0, 	speedup );

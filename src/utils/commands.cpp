@@ -25,7 +25,8 @@ Commands::Commands()
 	registerCmd("saveallcritters", &WorldB::saveAllCritters);
 	registerCmd("insertcritter", &WorldB::insertCritter);
 	registerCmd("killhalfofcritters", &WorldB::killHalfOfCritters);
-	
+	registerCmd("camera_resetposition", &WorldB::resetCamera);
+
 	registerCmd("gui_togglepanel", &Maincanvas::swapChild);
 	registerCmd("settings_increase", &Settings::increaseCVar);
 	registerCmd("settings_decrease", &Settings::decreaseCVar);
