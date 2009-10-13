@@ -57,7 +57,6 @@ Settingsbrainpanel::Settingsbrainpanel()
 	vspace += vint; addSettingmutator("brain_costfiringneuron", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_costfiringmotorneuron", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_costhavingsynapse", hspace, vspace);
-	cerr << "!!!!!!! " << vspace << endl;
 }
 
 Settingsbrainpanel::~Settingsbrainpanel()
