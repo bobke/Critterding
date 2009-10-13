@@ -46,7 +46,9 @@ class Commands
 		void registerCmd(string name, void (Settings::*pt2Func)(const string&));
 
 		void quit();
-		
+		void decreaseenergy();
+		void increaseenergy();
+
 		map<string, cmd*> cmdlist;
 		typedef map <string, cmd*>::const_iterator cmdlist_iterator;
 		cmdlist_iterator cmdit;

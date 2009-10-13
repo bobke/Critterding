@@ -14,6 +14,7 @@ Settingspanel::Settingspanel()
 	hspace = 10;
 	vspace = vint;
 	addSettingmutator("mincritters", 10, vspace);
+// 	vspace += vint; addSettingmutator("energy", hspace, vspace); // FIXME cannot compute
 
 	vspace += vint;
 	vspace += vint; addSettingmutator("critter_maxlifetime", hspace, vspace);

@@ -18,7 +18,14 @@ Commands::Commands()
 {
 	settings = Settings::Instance();
 	registerCmd("quit", &Commands::quit);
-	registerCmd("loadcritters", &WorldB::loadAllCritters);
+	registerCmd("increaseenergy", &Commands::increaseenergy);
+	registerCmd("decreaseenergy", &Commands::decreaseenergy);
+	
+	registerCmd("loadallcritters", &WorldB::loadAllCritters);
+	registerCmd("saveallcritters", &WorldB::saveAllCritters);
+	registerCmd("insertcritter", &WorldB::insertCritter);
+	registerCmd("killhalfofcritters", &WorldB::killHalfOfCritters);
+	
 	registerCmd("gui_togglepanel", &Maincanvas::swapChild);
 	registerCmd("settings_increase", &Settings::increaseCVar);
 	registerCmd("settings_decrease", &Settings::decreaseCVar);
@@ -122,6 +129,22 @@ void Commands::quit()
 {
 	exit(0);
 }
+
+void Commands::decreaseenergy()
+{
+	if ( ( settings->freeEnergyInfo - settings->getCVar("food_maxenergy") ) / settings->getCVar("food_maxenergy") >= 0.0f )
+	{
+		settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
+		world->freeEnergy -= settings->getCVar("food_maxenergy");
+	}
+}
+
+void Commands::increaseenergy()
+{
+	settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
+	world->freeEnergy += settings->getCVar("food_maxenergy");
+}
+
 
 Commands::~Commands()
 {

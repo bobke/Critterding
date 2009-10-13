@@ -50,6 +50,36 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_e,		"swapsettingspanel", execcmd.gen("gui_togglepanel", "settingspanel"), 0, 0, 0 );
 	events->registerEvent(SDLK_g,		"swapstatsgraph", execcmd.gen("gui_togglepanel", "statsgraph"), 0, 0, 0 );
 
+	events->registerEvent(SDLK_PAGEUP,	"keyloadAllCritters", execcmd.gen("loadallcritters"), 0, 0, 0 );
+	events->registerEvent(SDLK_PAGEDOWN,	"keysaveAllCritters", execcmd.gen("saveallcritters"), 0, 0, 0 );
+	events->registerEvent(SDLK_i,		"keyinsertCritter", execcmd.gen("insertcritter"), 0, 0, 0 );
+	events->registerEvent(SDLK_k,		"keykillhalfOfcritters", execcmd.gen("killhalfofcritters"), 0, 0, 0 );
+
+	events->registerEvent(SDLK_KP_MINUS,	"keydecreaseenergy", execcmd.gen("decreaseenergy"), delay, 0, speedup );
+	events->registerEvent(SDLK_KP_PLUS,	"keyincreaseenergy", execcmd.gen("increaseenergy"), delay, 0, speedup );
+
+// 	if ( events->isActive("dec_energy") )
+// 	{
+// 		if ( ( settings->freeEnergyInfo - settings->getCVar("food_maxenergy") ) / settings->getCVar("food_maxenergy") >= 0.0f )
+// 		{
+// 			settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
+// 			world->freeEnergy -= settings->getCVar("food_maxenergy");
+// 		}
+// 		stringstream buf;
+// 		buf << "Energy in system: " << ( settings->freeEnergyInfo / settings->getCVar("food_maxenergy") );
+// 		Textmessage::Instance()->add(buf);
+// 	}
+// 	if ( events->isActive("inc_energy") )
+// 	{
+// 		settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
+// 		world->freeEnergy += settings->getCVar("food_maxenergy");
+// 		stringstream buf;
+// 		buf << "Energy in system: " << (settings->freeEnergyInfo / settings->getCVar("food_maxenergy"));
+// 		Textmessage::Instance()->add(buf);
+// 	}
+// 	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", delay, 0, speedup );
+// 	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", delay, 0, speedup );
+
 
 
 // 	events->registerEvent(SDLK_F5,		"dec_critters", 		delay,	0, 	speedup );
@@ -59,8 +89,8 @@ Evolution::Evolution()
 // 	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	delay,	0, 	speedup );
 // 	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	delay,	0, 	speedup );
 
-	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", delay, 0, speedup );
-	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", delay, 0, speedup );
+/*	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", delay, 0, speedup );
+	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", delay, 0, speedup );*/
 	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		delay,	0, 	speedup );
 	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		delay,	0, 	speedup );
 
@@ -218,21 +248,6 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 
 	switch (key)
 	{
-		case SDLK_PAGEUP:
-			world->loadAllCritters();
-			break;
-		case SDLK_PAGEDOWN:
-			world->saveAllCritters();
-			break;
-
-		case SDLK_i:
-			world->insertCritter();
-			break;
-
-		case SDLK_k:
-			world->killHalfOfCritters();
-			break;
-
 		case SDLK_m:
 		{
 			mouselook = !mouselook;
@@ -269,9 +284,9 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			sleeper.swap();
 			break;
 
-		case SDLK_BACKSPACE:
-			world->resetCamera();
-			break;
+// 		case SDLK_BACKSPACE:
+// 			world->resetCamera();
+// 			break;
 
 // 		case SDLK_c:
 // 		{
@@ -294,6 +309,7 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 #endif
 		default:
 			events->activateEvent(key);
+			events->handlecommands();
 // 			cerr << "activating event" << endl;
 			break;
 	}
@@ -364,28 +380,8 @@ void Evolution::handleEvents()
 
 	events->processSharedTimers();
 	events->handlecommands();
-	
-// 	if ( events->isActive("dec_critters") )
-// 	{
-// 		settings->decreaseCVar("mincritters", 1);
-// // 		if ( settings->mincritters > settings->mincrittersMin )
-// // 			settings->mincritters--;
-// 		stringstream buf;
-// 		buf << "mincritters: "<< settings->getCVar("mincritters");
-// // 		cerr << buf << endl;
-// 		Textmessage::Instance()->add(buf);
-// 	}
-// 	if ( events->isActive("inc_critters") )
-// 	{
-// 		settings->increaseCVar("mincritters", 1);
-// // 		if ( settings->mincritters < settings->mincrittersMax )
-// // 			settings->mincritters++;
-// 		stringstream buf;
-// 		buf << "mincritters: "<< settings->getCVar("mincritters");
-// 		Textmessage::Instance()->add(buf);
-// 	}
 
-	if ( events->isActive("dec_energy") )
+/*	if ( events->isActive("dec_energy") )
 	{
 		if ( ( settings->freeEnergyInfo - settings->getCVar("food_maxenergy") ) / settings->getCVar("food_maxenergy") >= 0.0f )
 		{
@@ -404,22 +400,7 @@ void Evolution::handleEvents()
 		buf << "Energy in system: " << (settings->freeEnergyInfo / settings->getCVar("food_maxenergy"));
 		Textmessage::Instance()->add(buf);
 	}
-
-// 	if ( events->isActive("dec_killhalftrigger") )
-// 	{
-// 		settings->decreaseCVar("critter_killhalfat", 1);
-// 		stringstream buf;
-// 		buf << "Kill half of critters at: "<< settings->getCVar("critter_killhalfat");
-// 		Textmessage::Instance()->add(buf);
-// 	}
-// 	if ( events->isActive("inc_killhalftrigger") )
-// 	{
-// 		settings->increaseCVar("critter_killhalfat", 1);
-// 		stringstream buf;
-// 		buf << "Kill half of critters at: "<< settings->getCVar("critter_killhalfat");
-// 		Textmessage::Instance()->add(buf);
-// 	}
-
+*/
 	// mutation settings
 	if ( events->isActive("lshift") || events->isActive("rshift") )
 	{
@@ -484,24 +465,7 @@ void Evolution::handleEvents()
 		}
 	}
 
-// 	// Camera sensitivity
-// 	if ( events->isActive("inc_camerasensitivity") )
-// 	{
-// 		settings->increaseCVar("camerasensitivity", 1);
-// 		stringstream buf;
-// 		buf << "Camera Sensitivity: "<< settings->getCVar("camerasensitivity");
-// 		Textmessage::Instance()->add(buf);
-// 	}
-// 	if ( events->isActive("dec_camerasensitivity") )
-// 	{
-// 		settings->decreaseCVar("camerasensitivity", 1);
-// 		stringstream buf;
-// 		buf << "Camera Sensitivity: "<< settings->getCVar("camerasensitivity");
-// 		Textmessage::Instance()->add(buf);
-// 	}
-
 	// Camera
-
 	if ( events->isActive("camera_moveup") )
 	{
 		world->camera.moveUpXZ(0.01f);
