@@ -58,49 +58,13 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP_MINUS,	"keydecreaseenergy", execcmd.gen("decreaseenergy"), delay, 0, speedup );
 	events->registerEvent(SDLK_KP_PLUS,	"keyincreaseenergy", execcmd.gen("increaseenergy"), delay, 0, speedup );
 
-// 	if ( events->isActive("dec_energy") )
-// 	{
-// 		if ( ( settings->freeEnergyInfo - settings->getCVar("food_maxenergy") ) / settings->getCVar("food_maxenergy") >= 0.0f )
-// 		{
-// 			settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
-// 			world->freeEnergy -= settings->getCVar("food_maxenergy");
-// 		}
-// 		stringstream buf;
-// 		buf << "Energy in system: " << ( settings->freeEnergyInfo / settings->getCVar("food_maxenergy") );
-// 		Textmessage::Instance()->add(buf);
-// 	}
-// 	if ( events->isActive("inc_energy") )
-// 	{
-// 		settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
-// 		world->freeEnergy += settings->getCVar("food_maxenergy");
-// 		stringstream buf;
-// 		buf << "Energy in system: " << (settings->freeEnergyInfo / settings->getCVar("food_maxenergy"));
-// 		Textmessage::Instance()->add(buf);
-// 	}
-// 	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", delay, 0, speedup );
-// 	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", delay, 0, speedup );
-
-
-
-// 	events->registerEvent(SDLK_F5,		"dec_critters", 		delay,	0, 	speedup );
-// 	events->registerEvent(SDLK_F6,		"inc_critters", 		delay,	0, 	speedup );
-// 	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", 		delay,	0, 	speedup );
-// 	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", 		delay,	0, 	speedup );
-// 	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", 	delay,	0, 	speedup );
-// 	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", 	delay,	0, 	speedup );
-
-/*	events->registerEvent(SDLK_KP_MINUS,	"dec_energy", delay, 0, speedup );
-	events->registerEvent(SDLK_KP_PLUS,	"inc_energy", delay, 0, speedup );*/
-	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		delay,	0, 	speedup );
-	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		delay,	0, 	speedup );
-
-	events->registerEvent(SDLK_F11,		"dec_mutationrate", 		delay,	0, 	speedup );
-	events->registerEvent(SDLK_F12,		"inc_mutationrate", 		delay,	0, 	speedup );
-
-	
 
 	sharedTimer* t = events->registerSharedtimer( 20 );
-
+	// FIXME : THESE USE THE OLD METHOD, CONVERT THESE, THEN CLEAN UP EVENTS.CPP (massive cleanup required, no struct)
+	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		delay,	0, 	speedup );
+	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		delay,	0, 	speedup );
+	events->registerEvent(SDLK_F11,		"dec_mutationrate", 		delay,	0, 	speedup );
+	events->registerEvent(SDLK_F12,		"inc_mutationrate", 		delay,	0, 	speedup );
 	events->registerEvent(SDLK_HOME,	"camera_moveup", 		t );
 	events->registerEvent(SDLK_END,		"camera_movedown", 		t );
 	events->registerEvent(SDLK_UP,		"camera_moveforward", 		t );
@@ -111,6 +75,7 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP8,		"camera_lookdown", 		t );
 	events->registerEvent(SDLK_KP4,		"camera_lookleft",		t );
 	events->registerEvent(SDLK_KP6,		"camera_lookright",		t );
+
 
 	
 #ifndef _WIN32
