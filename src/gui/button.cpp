@@ -12,8 +12,6 @@ void Button::draw()
 {
 	if (active)
 	{
-// 		updateAbsPosition();
-// 		drawBackground();
 		drawBorders();
 		drawChildren();
 	}
