@@ -3,8 +3,8 @@
 Exitpanel::Exitpanel()
 {
 	isMovable = true;
-	position.x = 100;
-	position.y = 100;
+	position.x = 200;
+	position.y = 557;
 	v_width = 400;
 	v_height = 86;
 
