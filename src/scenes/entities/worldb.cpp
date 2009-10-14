@@ -17,11 +17,11 @@ WorldB::WorldB()
 		critter_sightrange = settings->getCVarPtr("critter_sightrange");
 		food_maxlifetime = settings->getCVarPtr("food_maxlifetime");
 		food_maxenergy = settings->getCVarPtr("food_maxenergy");
+		energy = settings->getCVarPtr("energy");
 
 	statsBuffer = Statsbuffer::Instance();
 
-	freeEnergy = *food_maxenergy * settings->getCVar("energy");
-	settings->freeEnergyInfo = freeEnergy;
+	freeEnergy = *food_maxenergy * *energy;
 		
 	currentCritterID	= 1;
 	insertCritterCounter	= 0;
@@ -290,11 +290,13 @@ void WorldB::killHalf()
 		// reduce energy :)
 		if ( settings->getCVar("killhalfdecreaseenergybypct") > 0 )
 		{
-			if ( (settings->freeEnergyInfo - *food_maxenergy) / *food_maxenergy >= 0.0f )
+			float dec_amount = ((*food_maxenergy * *energy) - *food_maxenergy) / *food_maxenergy;
+			if ( dec_amount >= 0.0f )
 			{
-				int dec = ((settings->freeEnergyInfo / settings->getCVar("food_maxenergy")) / 100) * settings->getCVar("killhalfdecreaseenergybypct");
-				settings->freeEnergyInfo -= dec * settings->getCVar("food_maxenergy");
-				freeEnergy -= dec * settings->getCVar("food_maxenergy");
+				int dec = (dec_amount / 100) * settings->getCVar("killhalfdecreaseenergybypct");
+				settings->setCVar("energy", settings->getCVar("energy")-dec );
+				//*energy -= dec;
+				freeEnergy -= dec * *food_maxenergy;
 			}
 		}
 	}

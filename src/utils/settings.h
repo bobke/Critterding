@@ -69,7 +69,7 @@ class Settings
 		int *winHeight;
 
 		// other vars
-		float freeEnergyInfo;
+// 		float freeEnergyInfo;
 
 		void doCommandLineOptions(int argc, char *argv[]);
 		void loadProfile(char* filename);
