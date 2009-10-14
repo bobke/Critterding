@@ -176,6 +176,7 @@ class WorldB
 
 		const unsigned int*	food_maxlifetime;
 		const unsigned int*	food_maxenergy;
+		const unsigned int*	energy;
 
 		// vision opts
 		unsigned int picwidth;

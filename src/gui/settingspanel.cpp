@@ -13,7 +13,18 @@ Settingspanel::Settingspanel()
 	unsigned int vint = 6;
 	hspace = 10;
 	vspace = vint;
-	addSettingmutator("mincritters", 10, vspace);
+	addSettingmutator("mincritters", hspace, vspace);
+
+	// Special energy widgets
+		unsigned int col1 = 10; unsigned int col2 = 350; unsigned int col3 = 430;
+		string str("energy"); string strval = str; string strdec = str; string strinc = str;
+		strval.append("val"); strdec.append("dec"); strinc.append("inc");
+
+		addWidgetText( str, 20+col1, 33, "energy" );
+		addWidgetText( strval, 20+col2, 33, settings->getCVarPtr("energy") );
+		addWidgetButton( strdec, Vector2i(20+col3, 24), Vector2i(11, 10), "-", Vector2i(3, 8), cmd.gen("decreaseenergy"), 150, 0, 2 );
+		addWidgetButton( strinc, Vector2i(20+col3+18, 24), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("increaseenergy"), 150, 0, 2 );
+
 // 	vspace += vint; addSettingmutator("energy", hspace, vspace); // FIXME cannot compute
 
 	vspace += vint;

@@ -55,7 +55,7 @@ void Infobar::draw()
 		Textprinter::Instance()->printR(position.x+col2-hsp,	position.y+vsp,	"%1u",		settings->info_critters);
 
 		Textprinter::Instance()->print(position.x+col2+hsp,	position.y+vsp,	"food:");
-		Textprinter::Instance()->printR(position.x+col3-hsp,	position.y+vsp,	"%1u/%1u",	settings->info_food, (unsigned int)(settings->freeEnergyInfo/settings->getCVar("food_maxenergy")));
+		Textprinter::Instance()->printR(position.x+col3-hsp,	position.y+vsp,	"%1u/%1u",	settings->info_food, settings->getCVar("energy"));
 
 // 		Textprinter::Instance()->print(col3+hsp,	vsp,	"corpses:");
 // 		Textprinter::Instance()->printR(col4-hsp,	vsp,	"%1u",		Settings::Instance()->info_corpses);

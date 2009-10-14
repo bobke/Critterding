@@ -129,16 +129,18 @@ void Commands::quit()
 
 void Commands::decreaseenergy()
 {
-	if ( ( settings->freeEnergyInfo - settings->getCVar("food_maxenergy") ) / settings->getCVar("food_maxenergy") >= 0.0f )
+	if ( ( (int)settings->getCVar("energy") - 1 ) >= 0 )
 	{
-		settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
+		settings->setCVar("energy", settings->getCVar("energy")-1 );
+// 		settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
 		world->freeEnergy -= settings->getCVar("food_maxenergy");
 	}
 }
 
 void Commands::increaseenergy()
 {
-	settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
+	settings->setCVar("energy", settings->getCVar("energy")+1 );
+// 	settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
 	world->freeEnergy += settings->getCVar("food_maxenergy");
 }
 
