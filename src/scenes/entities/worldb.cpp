@@ -217,7 +217,10 @@ void WorldB::procreate( CritterB* c )
 
 		// position offset
 		np.setY(insertHight);
-		np.setX(np.getX()+0.6f);
+		if ( np.getX() > settings->getCVar("worldsizeX")/2 )
+			np.setX(np.getX()-1.0f);
+		else
+			np.setX(np.getX()+1.0f);
 
 		CritterB *nc = new CritterB(*c, currentCritterID++, np, brainmutant, bodymutant);
 		//CritterB *nc = new CritterB(*c, currentCritterID++, findPosition(), mutant);

@@ -25,8 +25,8 @@ Evolution::Evolution()
 	pause = false;
 // 	drawCVNeurons = false;
 
-	unsigned int delay = 333;
-	unsigned int speedup = 20;
+	unsigned int delay = 200;
+	unsigned int speedup = 2;
 
 	// events
 	events->registerEvent(SDLK_F5,		"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
