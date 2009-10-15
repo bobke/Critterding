@@ -26,7 +26,7 @@ Settings::Settings()
 	registerCVar("energy",							400, 0, 1000000, false, "energy in the system by number of food cubes");
 	registerCVar("mincritters",						10, 0, 1000, false, "minimum number of critters");
 
-	registerCVar("insertcritterevery",					0, 0, 1000, false, "inserts a random critter every n frames");
+	registerCVar("insertcritterevery",					0, 0, 1000000, false, "inserts a random critter every n frames");
 	registerCVar("retinasperrow",						20, 1, 1000, false, "number of vision retinas to stack per row onscreen");
 	registerCVar("camerasensitivity",					20, 1, 1000, false, "sensitivity of the camera");
 
