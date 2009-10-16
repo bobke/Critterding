@@ -27,9 +27,22 @@ Commands::Commands()
 	registerCmd("killhalfofcritters", &WorldB::killHalfOfCritters);
 	registerCmd("camera_resetposition", &WorldB::resetCamera);
 
+	registerCmd("camera_moveup", &WorldB::camera_moveup);
+	registerCmd("camera_movedown", &WorldB::camera_movedown);
+	registerCmd("camera_moveforward", &WorldB::camera_moveforward);
+	registerCmd("camera_movebackward", &WorldB::camera_movebackward);
+	registerCmd("camera_moveleft", &WorldB::camera_moveleft);
+	registerCmd("camera_moveright", &WorldB::camera_moveright);
+	registerCmd("camera_lookup", &WorldB::camera_lookup);
+	registerCmd("camera_lookdown", &WorldB::camera_lookdown);
+	registerCmd("camera_lookleft", &WorldB::camera_lookleft);
+	registerCmd("camera_lookright", &WorldB::camera_lookright);
+
+
 	registerCmd("gui_togglepanel", &Maincanvas::swapChild);
 	registerCmd("settings_increase", &Settings::increaseCVar);
 	registerCmd("settings_decrease", &Settings::decreaseCVar);
+
 }
 
 void Commands::registerCmd(string name, void (Commands::*pt2Func)())

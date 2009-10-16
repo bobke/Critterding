@@ -27,8 +27,6 @@ struct event
 	long unsigned int 	bindkey;
 	string			bindstring;
 
-	bool			isNewEvent;
-
 	cmdsettings		command;
 
 	// private timer
@@ -50,10 +48,9 @@ class Events
 
 		sharedTimer*		registerSharedtimer(unsigned int responsetime);
 
-		void			registerEvent(SDLKey key, const string& name, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
+		void			registerEvent(SDLKey key, const string& name, const cmdsettings& cmd, sharedTimer* stimer);
 		void			registerEvent(SDLKey key, const string& name, const cmdsettings& cmd, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
 		void			registerEvent(const string& name, const cmdsettings& cmd, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
-		void			registerEvent(SDLKey key, const string& name, sharedTimer* stimer);
 
 		void			activateEvent(const long unsigned int key);
 		void			activateEvent(const string& key);
@@ -62,8 +59,6 @@ class Events
 
 		void			processSharedTimers();
 		void			handlecommands();
-
-		bool			isActive(const string& name);
 	protected:
 		Events();
 	private:

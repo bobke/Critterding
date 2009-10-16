@@ -115,10 +115,10 @@ void WorldB::castMouseRay()
 	}
 }
 
-void WorldB::calcMouseDirection(const int& x, const int& y)
+void WorldB::calcMouseDirection()
 {
 // 	cerr << "updating mouserayto" << endl;
-	mouseRayTo = camera.getScreenDirection(x, y);
+	mouseRayTo = camera.getScreenDirection(*mousex, *mousey);
 }
 
 void WorldB::pickBody(const int& x, const int& y)
@@ -863,12 +863,23 @@ void WorldB::makeFloor()
 	}
 }
 
+// camera ops
+void WorldB::camera_moveup() { camera.moveUpXZ(0.01f); movePickedBodyFrom(); }
+void WorldB::camera_movedown() { camera.moveDownXZ(0.01f); movePickedBodyFrom(); }
+void WorldB::camera_moveforward() { camera.moveForwardXZ(0.01f); movePickedBodyFrom(); }
+void WorldB::camera_movebackward() { camera.moveBackwardXZ(0.01f); movePickedBodyFrom(); }
+void WorldB::camera_moveleft() { camera.moveLeft(0.01f); movePickedBodyFrom(); }
+void WorldB::camera_moveright() { camera.moveRight(0.01f); movePickedBodyFrom(); }
+
+void WorldB::camera_lookup() { camera.lookUp(0.03f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_lookdown() { camera.lookDown(0.03f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_lookleft() { camera.lookLeft(0.03f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_lookright() { camera.lookRight(0.03f); calcMouseDirection(); movePickedBodyTo(); }
+
 
 WorldB::~WorldB()
 {
 	for ( unsigned int i=0; i < food.size(); i++ )		delete food[i];
-// 	for ( unsigned int i=0; i < corpses.size(); i++ )	delete corpses[i];
-// 	for ( unsigned int i=0; i < bullets.size(); i++ )	delete bullets[i];
 	for ( unsigned int i=0; i < critters.size(); i++ )	delete critters[i];
 	for ( unsigned int i=0; i < walls.size(); i++ )		delete walls[i];
 
