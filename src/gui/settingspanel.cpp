@@ -3,7 +3,7 @@
 Settingspanel::Settingspanel()
 {
 	v_width = 510;
-	v_height = 550;
+	v_height = 560;
 
 	isMovable = true;
 
@@ -27,7 +27,26 @@ Settingspanel::Settingspanel()
 		addWidgetButton( strdec, Vector2i(20+col3, 36), Vector2i(11, 10), "-", Vector2i(3, 8), cmd.gen("decreaseenergy"), 150, 0, 2 );
 		addWidgetButton( strinc, Vector2i(20+col3+18, 36), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("increaseenergy"), 150, 0, 2 );
 
-	vspace += vint; 
+	// Special worldsize widgets
+		vspace += vint;
+		str = "worldsizex"; strval = str; strdec = str; strinc = str;
+		strval.append("val"); strdec.append("dec"); strinc.append("inc");
+
+		addWidgetText( str, 20+col1, vspace+33, "worldsizeX" );
+		addWidgetText( strval, 20+col2, vspace+33, settings->getCVarPtr("worldsizeX") );
+		addWidgetButton( strdec, Vector2i(20+col3, vspace+24), Vector2i(11, 10), "-", Vector2i(3, 8), cmd.gen("dec_worldsizex"), 150, 0, 2 );
+		addWidgetButton( strinc, Vector2i(20+col3+18, vspace+24), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("inc_worldsizex"), 150, 0, 2 );
+
+		vspace += vint;
+		str = "worldsizey"; strval = str; strdec = str; strinc = str;
+		strval.append("val"); strdec.append("dec"); strinc.append("inc");
+
+		addWidgetText( str, 20+col1, vspace+39, "worldsizeY" );
+		addWidgetText( strval, 20+col2, vspace+39, settings->getCVarPtr("worldsizeY") );
+		addWidgetButton( strdec, Vector2i(20+col3, vspace+30), Vector2i(11, 10), "-", Vector2i(3, 8), cmd.gen("dec_worldsizey"), 150, 0, 2 );
+		addWidgetButton( strinc, Vector2i(20+col3+18, vspace+30), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("inc_worldsizey"), 150, 0, 2 );
+
+// 	vspace += vint; 
 	vspace += vint; addSettingmutator("fsX", hspace, vspace);
 	vspace += vint; addSettingmutator("fsY", hspace, vspace);
 	vspace += vint; addSettingmutator("fullscreen", hspace, vspace);

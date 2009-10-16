@@ -20,7 +20,12 @@ Commands::Commands()
 	registerCmd("quit", &Commands::quit);
 	registerCmd("increaseenergy", &Commands::increaseenergy);
 	registerCmd("decreaseenergy", &Commands::decreaseenergy);
-	
+
+	registerCmd("dec_worldsizex", &Commands::dec_worldsizex);
+	registerCmd("inc_worldsizex", &Commands::inc_worldsizex);
+	registerCmd("dec_worldsizey", &Commands::dec_worldsizey);
+	registerCmd("inc_worldsizey", &Commands::inc_worldsizey);
+
 	registerCmd("loadallcritters", &WorldB::loadAllCritters);
 	registerCmd("saveallcritters", &WorldB::saveAllCritters);
 	registerCmd("insertcritter", &WorldB::insertCritter);
@@ -158,6 +163,10 @@ void Commands::increaseenergy()
 	world->freeEnergy += settings->getCVar("food_maxenergy");
 }
 
+void Commands::dec_worldsizex() { settings->decreaseCVar("worldsizeX"); world->makeFloor(); }
+void Commands::inc_worldsizex() { settings->increaseCVar("worldsizeX"); world->makeFloor(); }
+void Commands::dec_worldsizey() { settings->decreaseCVar("worldsizeY"); world->makeFloor(); }
+void Commands::inc_worldsizey() { settings->increaseCVar("worldsizeY"); world->makeFloor(); }
 
 Commands::~Commands()
 {
