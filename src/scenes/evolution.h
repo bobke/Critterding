@@ -56,13 +56,13 @@ class Evolution : public GLScene {
 
 		int mouse_x;
 		int mouse_y;
+		int oldx;
+		int oldy;
+
 		bool mouselook;
 		
 		// events
 		void		handleEvents();
-		
-		int		oldx;
-		int		oldy;
 };
 
 #endif

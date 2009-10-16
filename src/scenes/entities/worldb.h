@@ -137,7 +137,7 @@ class WorldB
 			}
 		}
 
-		void			calcMouseDirection(const int& x, const int& y);
+		void			calcMouseDirection();
 
 		Dir			dirH;
 		Parser*			parseH;
@@ -149,6 +149,22 @@ class WorldB
 		unsigned int		mouseRayHitType;
 		CritterB*		mouseRayHitC;
 		Food*			mouseRayHitF;
+
+		// camera operations (needed for commands)
+		void 			camera_moveup();
+		void 			camera_movedown();
+		void 			camera_moveforward();
+		void 			camera_movebackward();
+		void 			camera_moveleft();
+		void 			camera_moveright();
+		void 			camera_lookup();
+		void 			camera_lookdown();
+		void 			camera_lookleft();
+		void 			camera_lookright();
+
+		// pointers to parents (evolution) mousepos
+		int* mousex;
+		int* mousey;
 
 	private:
 		Raycast*		raycast;

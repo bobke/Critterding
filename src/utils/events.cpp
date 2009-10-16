@@ -21,7 +21,7 @@ sharedTimer* Events::registerSharedtimer(unsigned int responsetime)
 	return t;
 }
 
-void Events::registerEvent(SDLKey key, const string& name, sharedTimer* stimer)
+void Events::registerEvent(SDLKey key, const string& name, const cmdsettings& cmd, sharedTimer* stimer)
 {
 	// create a new event and a pointer to it
 	events.push_back(event());
@@ -32,32 +32,10 @@ void Events::registerEvent(SDLKey key, const string& name, sharedTimer* stimer)
 	e->name = name;
 	e->bindkey = key;
 	e->bindbystring = false;
-
-	e->isNewEvent = false;
+	e->command = cmd;
 
 	e->timerisshared = true;
 	e->stimer = stimer;
-}
-
-void Events::registerEvent(SDLKey key, const string& name, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval)
-{
-	// create a new event and a pointer to it
-	events.push_back(event());
-	event* e = &events[events.size() - 1];
-
-	// set up default values of event
-	e->active = false;
-	e->name = name;
-	e->bindkey = key;
-	e->bindbystring = false;
-
-	e->isNewEvent = false;
-
-	e->responsetime = responsetime;
-	e->minfresponsetime = minfresponsetime;
-	e->fresponseinterval = fresponseinterval;
-
-	e->timerisshared = false;
 }
 
 void Events::registerEvent(SDLKey key, const string& name, const cmdsettings& cmd, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval)
@@ -72,8 +50,6 @@ void Events::registerEvent(SDLKey key, const string& name, const cmdsettings& cm
 	e->bindkey = key;
 	e->bindbystring = false;
 	e->command = cmd;
-
-	e->isNewEvent = true;
 
 	e->responsetime = responsetime;
 	e->minfresponsetime = minfresponsetime;
@@ -94,8 +70,6 @@ void Events::registerEvent(const string& name, const cmdsettings& cmd, unsigned 
 	e->bindstring = name;
 	e->bindbystring = true;
 	e->command = cmd;
-
-	e->isNewEvent = true;
 
 	e->responsetime = responsetime;
 	e->minfresponsetime = minfresponsetime;
@@ -191,7 +165,7 @@ void Events::handlecommands()
 	for ( unsigned int i=0; i < events.size(); i++ )
 	{
 		event* e = &events[i];
-		if ( e->active && e->isNewEvent)
+		if ( e->active )
 		{
 			// event uses a shared timer
 				if ( e->timerisshared )
@@ -228,47 +202,5 @@ void Events::handlecommands()
 				}
 		}
 	}
-}
-
-// FIXME Get rid of this?
-bool Events::isActive(const string& name)
-{
-	bool notfound = true;
-	for ( unsigned int i=0; notfound && i < events.size(); i++ )
-	{
-		if ( events[i].name == name )
-		{
-			notfound = false;
-
-			event* e = &events[i];
-			if ( e->active )
-			{
-				// event uses a shared timer
-					if ( e->timerisshared )
-					{
-						if ( e->stimer->active )
-							return true;
-					}
-				// event does not use a timer
-					else if ( e->responsetime == 0 )
-						return true;
-
-				// event has it's own timer
-					e->elapsed += Timer::Instance()->elapsed;
-					if ( (int)e->elapsed >= e->fresponsetime )
-					{
-						if ( e->responsetime > e->minfresponsetime )
-						{
-							e->fresponsetime -= e->fresponseinterval;
-							if ( e->fresponsetime < (int)e->minfresponsetime )
-								e->fresponsetime = e->minfresponsetime;
-						}
-						e->elapsed = 0;
-						return true;
-					}
-			}
-		}
-	}
-	return false;
 }
 

@@ -14,11 +14,14 @@ Evolution::Evolution()
 	else if ( settings->getCVar("testworld") == 1 )
 	{
 		world = new TestWorld1();
-		cerr << "test world yeah" << endl;
+// 		cerr << "test world yeah" << endl;
 	}
 	else
 		world = new WorldB();
 
+	world->mousex = &oldx;
+	world->mousey = &oldy;
+	
 	cmd->world = world;
 	cmd->canvas = &canvas;
 	
@@ -36,6 +39,12 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", execcmd.gen("settings_decrease", "camerasensitivity"), delay, 0, speedup );
 	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", execcmd.gen("settings_increase", "camerasensitivity"), delay, 0, speedup );
 	events->registerEvent(SDLK_c,		"inc_colormode", execcmd.gen("settings_increase", "colormode"), 0, 0, 0 );
+
+	events->registerEvent(SDLK_F9,		"dec_body_mutationrate", execcmd.gen("settings_decrease", "body_mutationrate"), delay, 0, speedup );
+	events->registerEvent(SDLK_F10,		"inc_body_mutationrate", execcmd.gen("settings_increase", "body_mutationrate"), delay, 0, speedup );
+	events->registerEvent(SDLK_F11,		"dec_brain_mutationrate", execcmd.gen("settings_decrease", "brain_mutationrate"), delay, 0, speedup );
+	events->registerEvent(SDLK_F12,		"inc_brain_mutationrate", execcmd.gen("settings_increase", "brain_mutationrate"), delay, 0, speedup );
+	
 	events->registerEvent(SDLK_BACKSPACE,	"resetcamera", execcmd.gen("camera_resetposition"), 0, 0, 0 );
 
 	events->registerEvent(SDLK_ESCAPE,	"swapexitpanel", execcmd.gen("gui_togglepanel", "exitpanel"), 0, 0, 0 );
@@ -56,31 +65,23 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP_PLUS,	"keyincreaseenergy", execcmd.gen("increaseenergy"), delay, 0, speedup );
 
 	sharedTimer* t = events->registerSharedtimer( 20 );
-	// FIXME : THESE USE THE OLD METHOD, CONVERT THESE, THEN CLEAN UP EVENTS.CPP (massive cleanup required, no struct)
-
-	events->registerEvent(SDLK_LSHIFT,	"lshift", 			0,	0, 	0 );
-	events->registerEvent(SDLK_RSHIFT,	"rshift", 			0,	0, 	0 );
-
-	events->registerEvent(SDLK_F9,		"dec_maxmutations", 		delay,	0, 	speedup );
-	events->registerEvent(SDLK_F10,		"inc_maxmutations", 		delay,	0, 	speedup );
-	events->registerEvent(SDLK_F11,		"dec_mutationrate", 		delay,	0, 	speedup );
-	events->registerEvent(SDLK_F12,		"inc_mutationrate", 		delay,	0, 	speedup );
-	events->registerEvent(SDLK_HOME,	"camera_moveup", 		t );
-	events->registerEvent(SDLK_END,		"camera_movedown", 		t );
-	events->registerEvent(SDLK_UP,		"camera_moveforward", 		t );
-	events->registerEvent(SDLK_DOWN,	"camera_movebackward", 		t );
-	events->registerEvent(SDLK_LEFT,	"camera_moveleft", 		t );
-	events->registerEvent(SDLK_RIGHT,	"camera_moveright", 		t );
-	events->registerEvent(SDLK_KP2,		"camera_lookup", 		t );
-	events->registerEvent(SDLK_KP8,		"camera_lookdown", 		t );
-	events->registerEvent(SDLK_KP4,		"camera_lookleft",		t );
-	events->registerEvent(SDLK_KP6,		"camera_lookright",		t );
-
-
 	
+	events->registerEvent(SDLK_HOME,	"keycamera_moveup", execcmd.gen("camera_moveup"), t );
+	events->registerEvent(SDLK_END,		"keycamera_movedown", execcmd.gen("camera_movedown"), t );
+	events->registerEvent(SDLK_UP,		"keycamera_moveforward", execcmd.gen("camera_moveforward"), t );
+	events->registerEvent(SDLK_DOWN,	"keycamera_movebackward", execcmd.gen("camera_movebackward"), t );
+	events->registerEvent(SDLK_LEFT,	"keycamera_moveleft", execcmd.gen("camera_moveleft"), t );
+	events->registerEvent(SDLK_RIGHT,	"keycamera_moveright", execcmd.gen("camera_moveright"), t );
+
+	events->registerEvent(SDLK_KP2,		"keycamera_lookup", execcmd.gen("camera_lookup"), t );
+	events->registerEvent(SDLK_KP8,		"keycamera_lookdown", execcmd.gen("camera_lookdown"), t );
+	events->registerEvent(SDLK_KP4,		"keycamera_lookleft", execcmd.gen("camera_lookleft"), t );
+	events->registerEvent(SDLK_KP6,		"keycamera_lookright", execcmd.gen("camera_lookright"), t );
+
 #ifndef _WIN32
 	events->registerEvent(SDLK_f, "inc_fullscreen", execcmd.gen("settings_increase", "fullscreen"), 0, 0, 0 );
-#endif	
+#endif
+
 	mouselook = false;
 
 	oldx = 0;
@@ -249,33 +250,9 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			sleeper.swap();
 			break;
 
-// 		case SDLK_BACKSPACE:
-// 			world->resetCamera();
-// 			break;
-
-// 		case SDLK_c:
-// 		{
-// 			settings->increaseCVar("colormode", 1);
-// 			stringstream buf;
-// 			buf << "Colormode: "<< settings->getCVar("colormode");
-// 			Textmessage::Instance()->add(buf);
-// 		}
-// 		break;
-
-#ifndef _WIN32
-/*		case SDLK_f:
-		{
-			settings->increaseCVar("fullscreen", 1);
-			stringstream buf;
-			buf << "Fullscreen: "<< settings->getCVar("fullscreen");
-			Textmessage::Instance()->add(buf);
-		}
-		break;*/
-#endif
 		default:
 			events->activateEvent(key);
 			events->handlecommands();
-// 			cerr << "activating event" << endl;
 			break;
 	}
 }
@@ -319,7 +296,7 @@ void Evolution::handleMouseMotionAbs(int x, int y)
 		canvas.moveMouse(x, y);
 
 		// world mouse dynamics
-		world->calcMouseDirection(x, y);
+		world->calcMouseDirection();
 		world->movePickedBodyTo();
 	}
 }
@@ -346,27 +323,7 @@ void Evolution::handleEvents()
 	events->processSharedTimers();
 	events->handlecommands();
 
-/*	if ( events->isActive("dec_energy") )
-	{
-		if ( ( settings->freeEnergyInfo - settings->getCVar("food_maxenergy") ) / settings->getCVar("food_maxenergy") >= 0.0f )
-		{
-			settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
-			world->freeEnergy -= settings->getCVar("food_maxenergy");
-		}
-		stringstream buf;
-		buf << "Energy in system: " << ( settings->freeEnergyInfo / settings->getCVar("food_maxenergy") );
-		Textmessage::Instance()->add(buf);
-	}
-	if ( events->isActive("inc_energy") )
-	{
-		settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
-		world->freeEnergy += settings->getCVar("food_maxenergy");
-		stringstream buf;
-		buf << "Energy in system: " << (settings->freeEnergyInfo / settings->getCVar("food_maxenergy"));
-		Textmessage::Instance()->add(buf);
-	}
-*/
-	// mutation settings
+/*	// mutation settings
 	if ( events->isActive("lshift") || events->isActive("rshift") )
 	{
 		if ( events->isActive("dec_mutationrate") )
@@ -428,72 +385,7 @@ void Evolution::handleEvents()
 			buf << "Brain: Max Mutations: "<< settings->getCVar("brain_maxmutations");
 			Textmessage::Instance()->add(buf);
 		}
-	}
-
-	// Camera
-	if ( events->isActive("camera_moveup") )
-	{
-		world->camera.moveUpXZ(0.01f);
-		world->movePickedBodyFrom();
-	}
-
-	if ( events->isActive("camera_movedown") )
-	{
-		world->camera.moveDownXZ(0.01f);
-		world->movePickedBodyFrom();
-	}
-
-	if ( events->isActive("camera_moveforward") )
-	{
-		world->camera.moveForwardXZ(0.01f);
-		world->movePickedBodyFrom();
-	}
-
-	if ( events->isActive("camera_movebackward") )
-	{
-		world->camera.moveBackwardXZ(0.01f);
-		world->movePickedBodyFrom();
-	}
-
-	if ( events->isActive("camera_moveleft") )
-	{
-		world->camera.moveLeft(0.01f);
-		world->movePickedBodyFrom();
-	}
-
-	if ( events->isActive("camera_moveright") )
-	{
-		world->camera.moveRight(0.01f);
-		world->movePickedBodyFrom();
-	}
-
-	if ( events->isActive("camera_lookup") )
-	{
-		world->camera.lookUp(0.03f);
-		world->calcMouseDirection(oldx, oldy);
-		world->movePickedBodyTo();
-	}
-
-	if ( events->isActive("camera_lookdown") )
-	{
-		world->camera.lookDown(0.03f);
-		world->calcMouseDirection(oldx, oldy);
-		world->movePickedBodyTo();
-	}
-
-	if ( events->isActive("camera_lookleft") )
-	{
-		world->camera.lookLeft(0.03f);
-		world->calcMouseDirection(oldx, oldy);
-		world->movePickedBodyTo();
-	}
-
-	if ( events->isActive("camera_lookright") )
-	{
-		world->camera.lookRight(0.03f);
-		world->calcMouseDirection(oldx, oldy);
-		world->movePickedBodyTo();
-	}
+	}*/
 }
 
 Evolution::~Evolution()
