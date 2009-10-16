@@ -46,8 +46,6 @@ class Events
 	public:
 		static Events*		Instance();
 
-		sharedTimer*		registerSharedtimer(unsigned int responsetime);
-
 		void			registerEvent(SDLKey key, const string& name, const cmdsettings& cmd, sharedTimer* stimer);
 		void			registerEvent(SDLKey key, const string& name, const cmdsettings& cmd, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
 		void			registerEvent(const string& name, const cmdsettings& cmd, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
@@ -57,6 +55,7 @@ class Events
 		void			deactivateEvent(const long unsigned int key);
 		void			deactivateEvent(const string& key);
 
+		sharedTimer*		registerSharedtimer(unsigned int responsetime);
 		void			processSharedTimers();
 		void			handlecommands();
 	protected:

@@ -48,6 +48,10 @@ class Commands
 		void quit();
 		void decreaseenergy();
 		void increaseenergy();
+		void dec_worldsizex();
+		void inc_worldsizex();
+		void dec_worldsizey();
+		void inc_worldsizey();
 
 		map<string, cmd*> cmdlist;
 		typedef map <string, cmd*>::const_iterator cmdlist_iterator;

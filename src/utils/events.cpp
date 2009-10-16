@@ -176,14 +176,6 @@ void Events::handlecommands()
 						continue;
 					}
 				}
-			// event does not use a timer
-// 				else if ( e->responsetime == 0 )
-// 				{
-// // 					cerr << "executing command" << endl;
-// 					cmd->execCmd( e->command );
-// 					e->active = false;
-// 					continue;
-// 				}
 
 			// event has it's own timer
 				e->elapsed += Timer::Instance()->elapsed;

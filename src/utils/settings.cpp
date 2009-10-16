@@ -23,7 +23,7 @@ Settings::Settings()
 
 	registerCVar("killhalfdecreaseenergybypct",				1, 0, 100, false, "decrease energy by n percent when killhalfat triggers");
 
-	registerCVar("energy",							500, 0, 1000000, false, "energy in the system by number of food cubes");
+	registerCVar("energy",							600, 0, 1000000, false, "energy in the system by number of food cubes");
 	registerCVar("mincritters",						10, 0, 1000, false, "minimum number of critters");
 
 	registerCVar("insertcritterevery",					0, 0, 1000000, false, "inserts a random critter every n frames");
