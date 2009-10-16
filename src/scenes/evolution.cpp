@@ -203,7 +203,9 @@ void Evolution::draw()
 	if ( world->critters.size() == 0 && settings->getCVar("exit_if_empty") )
 	{
 		cerr << "world is empty, exiting..." << endl;
-		exit(0);
+		cmd->quit();
+// 		SDL_Quit();
+// 		exit(0);
 	}
 }
 

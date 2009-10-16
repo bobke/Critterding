@@ -50,9 +50,10 @@ Settingspanel::Settingspanel()
 	vspace += vint; addSettingmutator("fsX", hspace, vspace);
 	vspace += vint; addSettingmutator("fsY", hspace, vspace);
 	vspace += vint; addSettingmutator("fullscreen", hspace, vspace);
+	vspace += vint; addSettingmutator("exit_if_empty", hspace, vspace);
 	vspace += vint; addSettingmutator("killhalfdecreaseenergybypct", hspace, vspace);
 
-	vspace += vint; 
+// 	vspace += vint; 
 	vspace += vint; addSettingmutator("critter_maxlifetime", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_maxenergy", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_startenergy", hspace, vspace);
@@ -63,7 +64,7 @@ Settingspanel::Settingspanel()
 	vspace += vint; addSettingmutator("critter_killhalfat", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_enableomnivores", hspace, vspace);
 
-	vspace += vint;
+// 	vspace += vint;
 	vspace += vint; addSettingmutator("food_maxlifetime", hspace, vspace);
 	vspace += vint; addSettingmutator("food_maxenergy", hspace, vspace);
 	vspace += vint; addSettingmutator("food_size", hspace, vspace);

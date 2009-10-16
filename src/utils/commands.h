@@ -34,6 +34,8 @@ class Commands
 		void execCmd(const string& name);
 		void execCmd(const string& name, const string& str);
 		void execCmd(const cmdsettings& cmds);
+
+		void quit();
 	protected:
 		Commands();
 	private:
@@ -45,7 +47,6 @@ class Commands
 		void registerCmd(string name, void (Maincanvas::*pt2Func)(const string&));
 		void registerCmd(string name, void (Settings::*pt2Func)(const string&));
 
-		void quit();
 		void decreaseenergy();
 		void increaseenergy();
 		void dec_worldsizex();
