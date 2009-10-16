@@ -124,6 +124,7 @@ void Commands::execCmd(const cmdsettings& cmds)
 
 void Commands::quit()
 {
+	SDL_Quit();
 	exit(0);
 }
 
