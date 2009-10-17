@@ -23,7 +23,7 @@ Settings::Settings()
 
 	registerCVar("killhalfdecreaseenergybypct",				1, 0, 100, false, "decrease energy by n percent when killhalfat triggers");
 
-	registerCVar("energy",							600, 0, 1000000, false, "energy in the system by number of food cubes");
+	registerCVar("energy",							400, 0, 1000000, false, "energy in the system by number of food cubes");
 	registerCVar("mincritters",						10, 0, 1000, false, "minimum number of critters");
 
 	registerCVar("insertcritterevery",					0, 0, 1000000, false, "inserts a random critter every n frames");
@@ -34,7 +34,7 @@ Settings::Settings()
 	registerCVar("exit_if_empty",						0, 0, 1, true, "exit simulation if there are no critters");
 	registerCVar("autoload",						0, 0, 1, true, "autoload critters from ~/.critterding/load");
 
-	registerCVar("critter_maxlifetime",					6000, 1, 1000000, false, "maximum number of frames a critter lives");
+	registerCVar("critter_maxlifetime",					8000, 1, 1000000, false, "maximum number of frames a critter lives");
 	registerCVar("critter_maxenergy",					5000, 1, 1000000, false, "maximum amount of energy a critter has");
 
 	registerCVar("critter_startenergy",					3000, 1, 1000000, false, "energy a new critter starts with");

@@ -11,7 +11,7 @@ void WorldRace::init()
 	cerr << endl << "Initializing run " << testcounter << " ... " << endl;
 
 	// insert Floor
-		makeRaceFloor();
+		makeFloor();
 
 	// autoload critters
 	if ( settings->getCVar("autoload") )
@@ -159,7 +159,7 @@ void WorldRace::process()
 				food.clear();
 
 			// clear floor and remake it
-				makeRaceFloor();
+				makeFloor();
 
 			// reinsert the best critters
 				for ( unsigned int i=0; i < best.size() && i < settings->getCVar("mincritters"); i++  )
@@ -222,7 +222,7 @@ void WorldRace::process()
 	}
 }
 
-void WorldRace::makeRaceFloor()
+void WorldRace::makeFloor()
 {
 	for ( unsigned int i=0; i < walls.size(); i++ )	
 		delete walls[i];
@@ -230,7 +230,7 @@ void WorldRace::makeRaceFloor()
 
 	critterspacing = (float)settings->getCVar("worldsizeX") / settings->getCVar("mincritters");
 
-	makeFloor();
+	makeDefaultFloor();
 
 	// seperator walls
 		float WallWidth = 0.2f;
@@ -249,7 +249,7 @@ void WorldRace::makeRaceFloor()
 
 void WorldRace::insRandomCritter(int nr)
 {
-	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), retina);
+	CritterB *c = new CritterB(m_dynamicsWorld, currentCritterID++, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-2.0f ), retina);
 	c->energyLevel = settings->getCVar("critter_maxenergy") / 2;
 	critters.push_back( c );
 	c->calcFramePos(critters.size()-1);
@@ -257,7 +257,7 @@ void WorldRace::insRandomCritter(int nr)
 
 void WorldRace::insMutatedCritter(CritterB& other, int nr, unsigned int id, bool mutateBrain, bool mutateBody)
 {
-	CritterB *nc = new CritterB(other, id, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), mutateBrain, mutateBody);
+	CritterB *nc = new CritterB(other, id, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")-2.0f ), mutateBrain, mutateBody);
 	nc->energyLevel = settings->getCVar("critter_maxenergy") / 2;
 	critters.push_back( nc );
 	nc->calcFramePos(critters.size()-1);
@@ -267,7 +267,7 @@ void WorldRace::insFood(int nr)
 {
 	Food *f = new Food;
 	f->energyLevel = settings->getCVar("food_maxenergy");
-	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, settings->getCVar("worldsizeY")/4 ) );
+	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, 2.0f ) );
 	food.push_back( f );
 }
 

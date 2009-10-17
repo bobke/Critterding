@@ -822,6 +822,11 @@ void WorldB::resetCamera()
 
 void WorldB::makeFloor()
 {
+	makeDefaultFloor();
+}
+
+void WorldB::makeDefaultFloor()
+{
 	for ( unsigned int i=0; i < walls.size(); i++ )	
 		delete walls[i];
 	walls.clear();
