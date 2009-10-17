@@ -1,3 +1,6 @@
+#ifdef _WIN32
+	#include <unistd.h>
+#endif
 #include "randgen.h"
 
 RandGen* RandGen::Instance () 
