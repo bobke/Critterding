@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
 
 	Evolution* mainscene = new Evolution();
 
-	glwindow.runGLScene(mainscene);
-	
+		glwindow.runGLScene(mainscene);
+
 	delete mainscene;
 
 }
