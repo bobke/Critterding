@@ -396,4 +396,5 @@ void Evolution::handleEvents()
 
 Evolution::~Evolution()
 {
+	delete world;
 }
