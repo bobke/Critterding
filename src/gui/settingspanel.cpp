@@ -3,12 +3,12 @@
 Settingspanel::Settingspanel()
 {
 	v_width = 510;
-	v_height = 560;
+	v_height = 558;
 
 	isMovable = true;
 
 	position.x = 50;
-	position.y = 32;
+	position.y = 35;
 
 	unsigned int vint = 6;
 	hspace = 10;
