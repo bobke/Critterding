@@ -84,14 +84,14 @@ void Events::activateEvent(const long unsigned int key)
 	{
 		if ( !events[i].bindbystring && events[i].bindkey == key )
 		{
-			cmd->execCmd( events[i].command );
-			if ( events[i].responsetime > 0 || events[i].bindkey == SDLK_LSHIFT || events[i].bindkey == SDLK_RSHIFT )
-			{
+// 			cmd->execCmd( events[i].command );
+// 			if ( events[i].responsetime > 0 || events[i].bindkey == SDLK_LSHIFT || events[i].bindkey == SDLK_RSHIFT )
+// 			{
 				events[i].active = true;
-	// 			events[i].elapsed = events[i].responsetime;
-				events[i].elapsed = 0;
+				events[i].elapsed = events[i].responsetime;
+// 				events[i].elapsed = 0;
 				events[i].fresponsetime = events[i].responsetime;
-			}
+// 			}
 // 			cerr << "activated " << events[i].name << " rt: " << events[i].elapsed << endl;
 			return;
 		}
@@ -104,15 +104,15 @@ void Events::activateEvent(const string& key)
 	{
 		if ( events[i].bindbystring && events[i].bindstring == key )
 		{
-			cmd->execCmd( events[i].command );
-			if ( events[i].responsetime > 0 )
-			{
+// 			cmd->execCmd( events[i].command );
+// 			if ( events[i].responsetime > 0 )
+// 			{
 				events[i].active = true;
-	// 			events[i].elapsed = events[i].responsetime;
-				events[i].elapsed = 0;
+				events[i].elapsed = events[i].responsetime;
+// 				events[i].elapsed = 0;
 				events[i].fresponsetime = events[i].responsetime;
 	// 			cerr << "activated " << events[i].name << " rt: " << events[i].elapsed << endl;
-			}
+// 			}
 			return;
 		}
 	}
@@ -175,6 +175,14 @@ void Events::handlecommands()
 						cmd->execCmd( e->command );
 						continue;
 					}
+				}
+
+			// event does not use a timer
+				if ( e->responsetime == 0 )
+				{
+					cmd->execCmd( e->command );
+					e->active = false;
+					continue;
 				}
 
 			// event has it's own timer
