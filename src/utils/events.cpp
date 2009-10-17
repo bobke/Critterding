@@ -204,3 +204,6 @@ void Events::handlecommands()
 	}
 }
 
+Events::~Events()
+{
+}

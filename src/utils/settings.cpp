@@ -450,9 +450,5 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 Settings::~Settings()
 {
 	for( cvarit = cvarlist.begin(); cvarit != cvarlist.end(); cvarit++ )
-	{
-// 		cout << cvarit->first <<'\t' << cvarit->second->int_val << endl;
 		delete cvarit->second;
-		cvarlist.erase(cvarit->first);
-	}
 }

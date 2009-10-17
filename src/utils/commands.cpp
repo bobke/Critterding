@@ -171,8 +171,5 @@ void Commands::inc_worldsizey() { settings->increaseCVar("worldsizeY"); world->m
 Commands::~Commands()
 {
 	for( cmdit = cmdlist.begin(); cmdit != cmdlist.end(); cmdit++ )
-	{
 		delete cmdit->second;
-		cmdlist.erase(cmdit->first);
-	}
 }
