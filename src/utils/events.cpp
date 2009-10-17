@@ -1,6 +1,6 @@
 #include "events.h"
 
-Events* Events::Instance () 
+Events* Events::Instance() 
 {
 	static Events t;
 	return &t;
