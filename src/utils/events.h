@@ -45,6 +45,7 @@ class Events
 {
 	public:
 		static Events*		Instance();
+		~Events();
 
 		void			registerEvent(SDLKey key, const string& name, const cmdsettings& cmd, sharedTimer* stimer);
 		void			registerEvent(SDLKey key, const string& name, const cmdsettings& cmd, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
