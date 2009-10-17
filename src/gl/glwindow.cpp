@@ -161,6 +161,7 @@ void GLWindow::runGLScene(GLScene* glscene)
 		glscene->draw();
 	}
         SDL_Quit();
+	exit(0);
 }
 
 
