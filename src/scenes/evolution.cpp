@@ -32,10 +32,20 @@ Evolution::Evolution()
 	unsigned int speedup = 2;
 
 	// events
-	events->registerEvent(SDLK_F5,		"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
-	events->registerEvent(SDLK_F6,		"inc_critters", execcmd.gen("settings_increase", "mincritters"), delay, 0, speedup );
-	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", execcmd.gen("settings_decrease", "critter_killhalfat"), delay, 0, speedup );
-	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", execcmd.gen("settings_increase", "critter_killhalfat"), delay, 0, speedup );
+	events->registerEvent(SDLK_ESCAPE,	"swapexitpanel", execcmd.gen("gui_togglepanel", "exitpanel"), 0, 0, 0 );
+	events->registerEvent(SDLK_F1,		"swaphelpinfo", execcmd.gen("gui_togglepanel", "helpinfo"), 0, 0, 0 );
+	events->registerEvent(SDLK_F2,		"swapinfobar", execcmd.gen("gui_togglepanel", "infobar"), 0, 0, 0 );
+	events->registerEvent(SDLK_F3,		"swapinfostats", execcmd.gen("gui_togglepanel", "infostats"), 0, 0, 0 );
+	events->registerEvent(SDLK_F4,		"swaptextverbosemessage", execcmd.gen("gui_togglepanel", "textverbosemessage"), 0, 0, 0 );
+
+	events->registerEvent(SDLK_F5,		"swapstatsgraph", execcmd.gen("gui_togglepanel", "statsgraph"), 0, 0, 0 );
+	events->registerEvent(SDLK_F6,		"swapsettingspanel", execcmd.gen("gui_togglepanel", "settingspanel"), 0, 0, 0 );
+	events->registerEvent(SDLK_F7,		"swapsettingsbrainpanel", execcmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
+	
+// 	events->registerEvent(SDLK_F5,		"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
+// 	events->registerEvent(SDLK_F6,		"inc_critters", execcmd.gen("settings_increase", "mincritters"), delay, 0, speedup );
+// 	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", execcmd.gen("settings_decrease", "critter_killhalfat"), delay, 0, speedup );
+// 	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", execcmd.gen("settings_increase", "critter_killhalfat"), delay, 0, speedup );
 	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", execcmd.gen("settings_decrease", "camerasensitivity"), delay, 0, speedup );
 	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", execcmd.gen("settings_increase", "camerasensitivity"), delay, 0, speedup );
 	events->registerEvent(SDLK_c,		"inc_colormode", execcmd.gen("settings_increase", "colormode"), 0, 0, 0 );
@@ -46,15 +56,6 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_F12,		"inc_brain_mutationrate", execcmd.gen("settings_increase", "brain_mutationrate"), delay, 0, speedup );
 	
 	events->registerEvent(SDLK_BACKSPACE,	"resetcamera", execcmd.gen("camera_resetposition"), 0, 0, 0 );
-
-	events->registerEvent(SDLK_ESCAPE,	"swapexitpanel", execcmd.gen("gui_togglepanel", "exitpanel"), 0, 0, 0 );
-	events->registerEvent(SDLK_F1,		"swaphelpinfo", execcmd.gen("gui_togglepanel", "helpinfo"), 0, 0, 0 );
-	events->registerEvent(SDLK_F2,		"swapinfobar", execcmd.gen("gui_togglepanel", "infobar"), 0, 0, 0 );
-	events->registerEvent(SDLK_F3,		"swapinfostats", execcmd.gen("gui_togglepanel", "infostats"), 0, 0, 0 );
-	events->registerEvent(SDLK_F4,		"swaptextverbosemessage", execcmd.gen("gui_togglepanel", "textverbosemessage"), 0, 0, 0 );
-	events->registerEvent(SDLK_b,		"swapsettingsbrainpanel", execcmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
-	events->registerEvent(SDLK_e,		"swapsettingspanel", execcmd.gen("gui_togglepanel", "settingspanel"), 0, 0, 0 );
-	events->registerEvent(SDLK_g,		"swapstatsgraph", execcmd.gen("gui_togglepanel", "statsgraph"), 0, 0, 0 );
 
 	events->registerEvent(SDLK_PAGEUP,	"keyloadAllCritters", execcmd.gen("loadallcritters"), 0, 0, 0 );
 	events->registerEvent(SDLK_PAGEDOWN,	"keysaveAllCritters", execcmd.gen("saveallcritters"), 0, 0, 0 );
