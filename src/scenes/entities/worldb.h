@@ -37,6 +37,7 @@ class WorldB
 		virtual void		init();
 		virtual void		process();
 		virtual btVector3	findPosition();
+		virtual			void makeFloor();
 		float			insertHight;
 		void			getGeneralStats();
 		void			killHalf();
@@ -47,7 +48,7 @@ class WorldB
 		void			autoinsertCritters();
 		void			eat( CritterB* c );
 		void			procreate( CritterB* c );
-		void			makeFloor();
+		void			makeDefaultFloor();
 		
 		Settings*		settings;
 		Statsbuffer*		statsBuffer;
