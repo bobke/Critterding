@@ -144,6 +144,13 @@ void Textprinter::printR(float x, float y, const char *fmt, ...)
 
 void Textprinter::setUpFonts()
 {
+	// clear if exists
+	if ( fonts )
+	{
+		delete fonts[0];
+		delete fonts;
+	}
+	
 	char const *fontFilePath;
 	//fontFilePath = "fonts/helvetica_3.ttf";
 	fontFilePath = "fonts/verdana.ttf";

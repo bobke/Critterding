@@ -18,7 +18,8 @@ void Displaylists::call(unsigned int index)
 
 void Displaylists::generateList()
 {
-	cerr << "generating displaylists" << endl;
+// 	cerr << "generating displaylists" << endl;
+	glDeleteLists(displayLists, 2);
 	displayLists = glGenLists(2);
 
 	// 0 = cube with the bottom missing
