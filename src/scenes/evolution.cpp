@@ -79,9 +79,7 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP4,		"keycamera_lookleft", execcmd.gen("camera_lookleft"), t );
 	events->registerEvent(SDLK_KP6,		"keycamera_lookright", execcmd.gen("camera_lookright"), t );
 
-#ifndef _WIN32
 	events->registerEvent(SDLK_f, "inc_fullscreen", execcmd.gen("settings_increase", "fullscreen"), 0, 0, 0 );
-#endif
 
 	mouselook = false;
 
