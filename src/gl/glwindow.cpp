@@ -82,7 +82,6 @@ void GLWindow::resize()
 		w_height = Settings::Instance()->getCVar("fsY");
 
 		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_FULLSCREEN );
-/*		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_DOUBLEBUF | SDL_ANYFORMAT | SDL_FULLSCREEN );*/
 	}
 	else
 	{
@@ -95,7 +94,7 @@ void GLWindow::resize()
 			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
 			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 4);
 			SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
-			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+// 			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		}
 		else
@@ -103,11 +102,38 @@ void GLWindow::resize()
 #else
 		SDL_FreeSurface(surface);
 		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_RESIZABLE );
-// 		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF | SDL_ANYFORMAT );
 #endif
 	}
+}
 
+void GLWindow::toggleFs()
+{
+	if ( w_height == 0 ) w_height = 1;
+	if ( w_width == 0 ) w_width = 1;
 
+	if ( fs )
+	{
+		SDL_FreeSurface(surface);
+		n_width = w_width;
+		n_height = w_height;
+		w_width = Settings::Instance()->getCVar("fsX");
+		w_height = Settings::Instance()->getCVar("fsY");
+
+		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_FULLSCREEN );
+		Displaylists::Instance()->generateList();
+		Textprinter::Instance()->setUpFonts();
+	}
+	else
+	{
+		SDL_FreeSurface(surface);
+		w_width = n_width;
+		w_height = n_height;
+
+		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_RESIZABLE );
+
+		Displaylists::Instance()->generateList();
+		Textprinter::Instance()->setUpFonts();
+	}
 }
 
 void GLWindow::runGLScene(GLScene* glscene)
@@ -119,13 +145,7 @@ void GLWindow::runGLScene(GLScene* glscene)
 		if ( fs != *settingsfs )
 		{
 			fs = *settingsfs;
-			
-			if ( !fs )
-			{
-				w_width = n_width;
-				w_height = n_height;
-			}
-			resize();
+			toggleFs();
 		}
 
 		while(SDL_PollEvent(&event))

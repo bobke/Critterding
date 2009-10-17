@@ -35,11 +35,12 @@ class Textprinter
 		// print right aligned
 		void printR(float x, float y, const char *fmt, ...);
 
+		void setUpFonts();
+
 	protected:
 		Textprinter();
 	private:
 		FTFont** fonts;
-		void setUpFonts();
 		File file;
 		
 		va_list ap;     /* our argument pointer */

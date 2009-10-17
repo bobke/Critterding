@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I../utils/bullet -I/usr/include/freetype2
 METASOURCES = AUTO
 libgl_la_LDFLAGS = -avoid-version -no-undefined
 noinst_LTLIBRARIES = libgl.la

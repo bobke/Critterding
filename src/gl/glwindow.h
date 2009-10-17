@@ -5,6 +5,8 @@
 // #include <SDL/SDL_opengl.h>
 // #include <GL/glx.h>
 
+#include "../gui/textprinter.h"
+#include "../utils/displaylists.h"
 #include "../utils/settings.h"
 #include "glscene.h"
 
@@ -24,6 +26,7 @@ class GLWindow {
 	private:
 		//	Resize Window
 		void resize();
+		void toggleFs();
 		unsigned int w_bpp;		// Bits Per Pixel. With XFree86, highest = 24
 		int w_width;
 		int w_height;
