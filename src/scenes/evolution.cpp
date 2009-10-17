@@ -220,15 +220,23 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			mouselook = !mouselook;
 			if ( mouselook )
 			{
+// these os' want it this way
+#ifdef _WIN32
+				SDL_ShowCursor(SDL_DISABLE);
 				SDL_WM_GrabInput(SDL_GRAB_ON);
-				SDL_ShowCursor(0);
+#else
+				SDL_WM_GrabInput(SDL_GRAB_ON);
+				SDL_ShowCursor(SDL_DISABLE);
+#endif
 				// clear remaining poll events
 				{ SDL_Event e; while (SDL_PollEvent(&e)) {} };
+				
+				// release picked objects
 				world->mousepicker->detach();
 			}
 			else
 			{
-				SDL_ShowCursor(1);
+				SDL_ShowCursor(SDL_ENABLE);
 				SDL_WM_GrabInput(SDL_GRAB_OFF);
 			}
 		}
