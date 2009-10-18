@@ -19,7 +19,8 @@
 #include "../../utils/mousepicker.h"
 #include "../../utils/statsbuffer.h"
 
-#include "../../gui/textmessage.h"
+#include "../../utils/logbuffer.h"
+
 #include "../../gui/textverbosemessage.h"
 
 #include "food.h"

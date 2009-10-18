@@ -14,7 +14,7 @@ Maincanvas::Maincanvas()
 
 	// register subwidgets of maincanvas
 	addWidgetPanel( "helpinfo", new Helpinfo() );
-	addWidgetPanel( "textmessage", Textmessage::Instance() );
+	addWidgetPanel( "textmessage", new Textmessage() );
 	addWidgetPanel( "statsgraph", new Statsgraph() );
 	addWidgetPanel( "infobar", new Infobar() );
 	addWidgetPanel( "infostats", new Infostats() );

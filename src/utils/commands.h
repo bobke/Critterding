@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include "execcmd.h"
+#include "logbuffer.h"
 #include "../scenes/entities/worldb.h"
 #include "settings.h"
 #include "../gui/maincanvas.h"

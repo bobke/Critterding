@@ -4,7 +4,7 @@ GLWindow::GLWindow()
 {
 }
 
-void GLWindow::create(const char* title, int width, int height, int bpp)
+void GLWindow::create(const char* title, int width, int height)
 {
 
 	if( SDL_Init(SDL_INIT_VIDEO) < 0 )
@@ -15,7 +15,6 @@ void GLWindow::create(const char* title, int width, int height, int bpp)
 	vidInfo = SDL_GetVideoInfo();
 	
 	w_bpp = vidInfo->vfmt->BitsPerPixel;
-// 	w_bpp = 8;
 	
 	if ( !vidInfo )
 	{
@@ -146,11 +145,13 @@ void GLWindow::runGLScene(GLScene* glscene)
 				SDL_GetMouseState(&mousex, &mousex);
 				glscene->handlemousebuttonPressed( mousex, mousex, event.button.button );
 			}
+
 			else if (event.type == SDL_MOUSEBUTTONUP)
 			{
 				SDL_GetMouseState(&mousex, &mousex);
 				glscene->handlemousebuttonReleased( mousex, mousex, event.button.button );
 			}
+
 			else if(event.type == SDL_MOUSEMOTION)
 			{
 				glscene->handleMouseMotionRel( event.motion.xrel, event.motion.yrel );

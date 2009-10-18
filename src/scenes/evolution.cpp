@@ -248,7 +248,7 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 			settings->saveProfile();
 			stringstream buf;
 			buf << "Profile written: ./" << settings->profileName;
-			Textmessage::Instance()->add(buf);
+			Logbuffer::Instance()->add(buf);
 		}
 		break;
 

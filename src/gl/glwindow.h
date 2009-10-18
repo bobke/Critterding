@@ -17,7 +17,7 @@ class GLWindow {
 		~GLWindow();
 
 		//	create the XFree86 window, with a GLX context.
-		void create(const char* title, int width, int height, int bpp);
+		void create(const char* title, int width, int height);
 		//	Destroy window and OpenGL Context, close the Display
 		void destroy();
 		//	Main loop for the program.
@@ -37,11 +37,10 @@ class GLWindow {
 		const SDL_VideoInfo* vidInfo;
 		int vidFlags;
 		bool hwaccel;
-		const unsigned int*	settingsfs;
+		const unsigned int* settingsfs;
 		int mousex;
 		int mousey;
 		SDL_Event event;
-
 };
 
 #endif	// GLWINDOW_H

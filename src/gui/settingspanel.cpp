@@ -10,6 +10,7 @@ Settingspanel::Settingspanel()
 	position.x = 50;
 	position.y = 35;
 
+	// FIXME camera sensitivity is missing
 	unsigned int vint = 6;
 	hspace = 10;
 	vspace = vint;
