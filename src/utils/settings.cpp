@@ -231,6 +231,9 @@ void Settings::increaseCVar(const string& name)
 	{
 		cvarlist[name]->int_val = cvarlist[name]->int_min;
 	}
+	stringstream buf;
+	buf << name << ": " << getCVar(name);
+	Logbuffer::Instance()->add(buf);
 }
 
 void Settings::decreaseCVar(const string& name)
@@ -238,8 +241,10 @@ void Settings::decreaseCVar(const string& name)
 	int diff = -1 + cvarlist[name]->int_val;
 	if ( diff >= (int)cvarlist[name]->int_min && diff <= (int)cvarlist[name]->int_max )
 		cvarlist[name]->int_val = (unsigned int)diff;
+	stringstream buf;
+	buf << name << ": " << getCVar(name);
+	Logbuffer::Instance()->add(buf);
 }
-
 
 void Settings::unregisterCVar(const string& name)
 {
