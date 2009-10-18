@@ -1,8 +1,6 @@
 #ifndef TEXTVERBOSEMESSAGE_H
 #define TEXTVERBOSEMESSAGE_H
 
-/*#include <string>
-#include <vector>*/
 #include "../utils/fps.h" // FIXME howso this is here?
 #include "panel.h"
 

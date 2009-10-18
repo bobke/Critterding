@@ -24,15 +24,18 @@ void Timer::mark()
 
 	// calc diff between now and lasttime
 	elapsed = sdl_now - sdl_lasttime;
-	while ( elapsed == 0)
-	{
-		usleep(100);
-		sdl_now = SDL_GetTicks();
-		elapsed = sdl_now - sdl_lasttime;
-		// cerr << sdl_now << " frame missed" << endl;
-	}
+// 	while ( elapsed == 0)
+// 	{
+// 		usleep(100);
+// 		sdl_now = SDL_GetTicks();
+// 		elapsed = sdl_now - sdl_lasttime;
+// 		// cerr << sdl_now << " frame missed" << endl;
+// 	}
 
-	bullet_ms = 1000.f / elapsed;
+	if ( elapsed > 0 )
+		bullet_ms = 1000.f / elapsed;
+	else
+		bullet_ms = 0;
 
 	sdl_lasttime = sdl_now;
 }

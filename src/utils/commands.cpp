@@ -153,6 +153,10 @@ void Commands::decreaseenergy()
 		settings->setCVar("energy", settings->getCVar("energy")-1 );
 // 		settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
 		world->freeEnergy -= settings->getCVar("food_maxenergy");
+		
+		stringstream buf;
+		buf << "energy: " << settings->getCVar("energy");
+		Logbuffer::Instance()->add(buf);
 	}
 }
 
@@ -161,6 +165,10 @@ void Commands::increaseenergy()
 	settings->setCVar("energy", settings->getCVar("energy")+1 );
 // 	settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
 	world->freeEnergy += settings->getCVar("food_maxenergy");
+
+	stringstream buf;
+	buf << "energy: " << settings->getCVar("energy");
+	Logbuffer::Instance()->add(buf);
 }
 
 void Commands::dec_worldsizex() { settings->decreaseCVar("worldsizeX"); world->makeFloor(); }

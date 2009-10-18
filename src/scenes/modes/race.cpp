@@ -282,7 +282,7 @@ void WorldRace::loadAllCritters()
 	{
 		stringstream buf;
 		buf << "use --autoload 1 at commandline to autoload critters into a race";
-		Textmessage::Instance()->add(buf);
+		Logbuffer::Instance()->add(buf);
 		cerr << "use --autoload 1 at commandline to autoload critters into a race" << endl;
 	}
 	else
@@ -297,7 +297,7 @@ void WorldRace::loadAllCritters()
 			{
 				stringstream buf;
 				buf << "loading " << files[i];
-				Textmessage::Instance()->add(buf);
+				Logbuffer::Instance()->add(buf);
 
 				string content;
 				fileH.open( files[i], content ); 
@@ -324,7 +324,7 @@ void WorldRace::loadAllCritters()
 					{
 						stringstream buf;
 						buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
-						Textmessage::Instance()->add(buf);
+						Logbuffer::Instance()->add(buf);
 
 						cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
 					}
@@ -333,7 +333,7 @@ void WorldRace::loadAllCritters()
 		}
 		stringstream buf;
 		buf << "Loaded critters from " << loaddir;
-		Textmessage::Instance()->add(buf);
+		Logbuffer::Instance()->add(buf);
 		//cerr << endl << "Loaded critters from " << loaddir << endl << endl;
 	}
 }

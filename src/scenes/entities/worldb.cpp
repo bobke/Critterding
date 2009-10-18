@@ -711,7 +711,7 @@ void WorldB::loadAllCritters()
 		{
 			stringstream buf;
 			buf << "loading " << files[i];
-			Textmessage::Instance()->add(buf);
+			Logbuffer::Instance()->add(buf);
 
 			string content;
 			fileH.open( files[i], content ); 
@@ -738,7 +738,7 @@ void WorldB::loadAllCritters()
 				{
 					stringstream buf;
 					buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
-					Textmessage::Instance()->add(buf);
+					Logbuffer::Instance()->add(buf);
 
 					cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
 				}
@@ -747,7 +747,7 @@ void WorldB::loadAllCritters()
 	}
 	stringstream buf;
 	buf << "Loaded critters from " << loaddir;
-	Textmessage::Instance()->add(buf);
+	Logbuffer::Instance()->add(buf);
 	//cerr << endl << "Loaded critters from " << loaddir << endl << endl;
 }
 
@@ -778,7 +778,7 @@ void WorldB::saveAllCritters()
  	//cerr << endl << "Saved critters to " << subsavedir << endl << endl;
 	stringstream buf2;
 	buf2 << "Saved critters to " << subsavedir;
-	Textmessage::Instance()->add(buf2);
+	Logbuffer::Instance()->add(buf2);
 
 }
 
