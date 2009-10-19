@@ -25,7 +25,6 @@ class Container : public Widget
 		void	addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring );
 		void	addWidgetText( const string& name, unsigned int posx, unsigned int posy, const unsigned int* uintp );
 		void	addWidgetButton( const string& name, const Vector2i& pos, const Vector2i& dimensions, const string& textstring, const Vector2i& textpos, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval );
-		void	addSettingmutator( const string& name, unsigned int posx, unsigned int posy );
 		
 		void	updateAbsPosition();
 	

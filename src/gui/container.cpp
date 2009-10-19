@@ -1,7 +1,6 @@
 #include "text.h"
 #include "text_uintp.h"
 #include "button.h"
-#include "settingmutator.h"
 
 #include "container.h"
 
@@ -60,16 +59,6 @@ void Container::addWidgetButton( const string& name, const Vector2i& pos, const 
 // 	t->command = cmds;
 	t->genEvent(name, cmds, responsetime, minfresponsetime, fresponseinterval);
 	t->active = true;
-	children[name] = t;
-}
-
-void Container::addSettingmutator( const string& name, unsigned int posx, unsigned int posy )
-{
-	Settingmutator* t = new Settingmutator();
-	t->parent = this;
-	t->translate(posx, posy);
-	t->active = true;
-	t->load(name);
 	children[name] = t;
 }
 
