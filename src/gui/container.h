@@ -29,10 +29,11 @@ class Container : public Widget
 		
 		void	updateAbsPosition();
 	
-	private:
 		// children map iterator
 		typedef map <string, Widget*>::const_iterator children_iterator;
 		children_iterator	childit;
+
+	private:
 
 };
 

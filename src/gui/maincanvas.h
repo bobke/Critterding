@@ -35,10 +35,16 @@ class Maincanvas : public Container
 		unsigned int oldx;
 		unsigned int oldy;
 		
-		bool hasPickedWidget;
+		bool hasPickedwidget;
 		Widget* pickedwidget;
 
-		Widget* focussedWidget;
+		Widget* focussedwidget;
+
+		vector<string> sortedindices;
+
+		void	drawChildren();
+		bool	mouseOverChild( Widget** fWidget, int x, int y );
+		void	raisePanel(Widget* w);
 };
 
 #endif
