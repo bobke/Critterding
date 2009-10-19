@@ -14,6 +14,7 @@ class Settingsbrainpanel : public Panel
 	private:
 		unsigned int vspace;
 		unsigned int hspace;
+		void addSettingmutator( const string& name, unsigned int posx, unsigned int posy );
 };
 
 #endif

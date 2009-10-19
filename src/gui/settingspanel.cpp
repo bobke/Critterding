@@ -2,8 +2,8 @@
 
 Settingspanel::Settingspanel()
 {
-	v_width = 510;
-	v_height = 558;
+	v_width = 490;
+	v_height = 540;
 
 	isMovable = true;
 
@@ -11,41 +11,16 @@ Settingspanel::Settingspanel()
 	position.y = 35;
 
 	// FIXME camera sensitivity is missing
-	unsigned int vint = 6;
+	unsigned int vint = 12;
 	hspace = 10;
-	vspace = vint;
+	vspace = 0;
 	addSettingmutator("mincritters", hspace, vspace);
 	vspace += vint; addSettingmutator("insertcritterevery", hspace, vspace);
 
 	// Special energy widgets
-		vspace += vint;
-		unsigned int col1 = 10; unsigned int col2 = 350; unsigned int col3 = 430;
-		string str("energy"); string strval = str; string strdec = str; string strinc = str;
-		strval.append("val"); strdec.append("dec"); strinc.append("inc");
-
-		addWidgetText( str, 20+col1, 45, "energy" );
-		addWidgetText( strval, 20+col2, 45, settings->getCVarPtr("energy") );
-		addWidgetButton( strdec, Vector2i(20+col3, 36), Vector2i(11, 10), "-", Vector2i(3, 8), cmd.gen("decreaseenergy"), 150, 0, 2 );
-		addWidgetButton( strinc, Vector2i(20+col3+18, 36), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("increaseenergy"), 150, 0, 2 );
-
-	// Special worldsize widgets
-		vspace += vint;
-		str = "worldsizex"; strval = str; strdec = str; strinc = str;
-		strval.append("val"); strdec.append("dec"); strinc.append("inc");
-
-		addWidgetText( str, 20+col1, vspace+33, "worldsizeX" );
-		addWidgetText( strval, 20+col2, vspace+33, settings->getCVarPtr("worldsizeX") );
-		addWidgetButton( strdec, Vector2i(20+col3, vspace+24), Vector2i(11, 10), "-", Vector2i(3, 8), cmd.gen("dec_worldsizex"), 150, 0, 2 );
-		addWidgetButton( strinc, Vector2i(20+col3+18, vspace+24), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("inc_worldsizex"), 150, 0, 2 );
-
-		vspace += vint;
-		str = "worldsizey"; strval = str; strdec = str; strinc = str;
-		strval.append("val"); strdec.append("dec"); strinc.append("inc");
-
-		addWidgetText( str, 20+col1, vspace+39, "worldsizeY" );
-		addWidgetText( strval, 20+col2, vspace+39, settings->getCVarPtr("worldsizeY") );
-		addWidgetButton( strdec, Vector2i(20+col3, vspace+30), Vector2i(11, 10), "-", Vector2i(3, 8), cmd.gen("dec_worldsizey"), 150, 0, 2 );
-		addWidgetButton( strinc, Vector2i(20+col3+18, vspace+30), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("inc_worldsizey"), 150, 0, 2 );
+	vspace += vint; addMutator("mincritters", cmd.gen("decreaseenergy"), cmd.gen("increaseenergy"), hspace, vspace);
+	vspace += vint; addMutator("worldsizeX", cmd.gen("dec_worldsizex"), cmd.gen("inc_worldsizex"), hspace, vspace);
+	vspace += vint; addMutator("worldsizeY", cmd.gen("dec_worldsizey"), cmd.gen("inc_worldsizey"), hspace, vspace);
 
 // 	vspace += vint; 
 	vspace += vint; addSettingmutator("fsX", hspace, vspace);
@@ -92,6 +67,30 @@ Settingspanel::Settingspanel()
 	vspace += vint; addSettingmutator("body_percentmutateeffectresizehead", hspace, vspace);
 	vspace += vint; addSettingmutator("body_percentmutateeffectresizehead_slightly", hspace, vspace);
 	vspace += vint; addSettingmutator("body_percentmutateeffectrepositionhead", hspace, vspace);
+}
+
+void Settingspanel::addMutator(  const string& name, const cmdsettings& cmd1, const cmdsettings& cmd2, unsigned int posx, unsigned int posy  )
+{
+	unsigned int col1 = 10; unsigned int col2 = 350; unsigned int col3 = 430;
+	string str(name); string strval = str; string strdec = str; string strinc = str;
+	strval.append("val"); strdec.append("dec"); strinc.append("inc");
+
+	addWidgetText( str, posx+col1, posy+9, name );
+	addWidgetText( strval, posx+col2, posy+9, settings->getCVarPtr(name) );
+	addWidgetButton( strdec, Vector2i(posx+col3, posy), Vector2i(11, 10), "-", Vector2i(3, 8), cmd1, 150, 0, 2 );
+	addWidgetButton( strinc, Vector2i(posx+col3+18, posy), Vector2i(11, 10), "+", Vector2i(1, 8), cmd2, 150, 0, 2 );
+}
+
+void Settingspanel::addSettingmutator( const string& name, unsigned int posx, unsigned int posy )
+{
+	unsigned int col1 = 10; unsigned int col2 = 350; unsigned int col3 = 430;
+	string str(name); string strval = str; string strdec = str; string strinc = str;
+	strval.append("val"); strdec.append("dec"); strinc.append("inc");
+
+	addWidgetText( str, posx+col1, posy+9, name );
+	addWidgetText( strval, posx+col2, posy+9, settings->getCVarPtr(name) );
+	addWidgetButton( strdec, Vector2i(posx+col3, posy), Vector2i(11, 10), "-", Vector2i(3, 8), cmd.gen("settings_decrease", name), 150, 0, 2 );
+	addWidgetButton( strinc, Vector2i(posx+col3+18, posy), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("settings_increase", name), 150, 0, 2 );
 }
 
 Settingspanel::~Settingspanel()

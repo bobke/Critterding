@@ -16,7 +16,6 @@ noinst_HEADERS =	widget.h \
 			infobar.h \
 			statsgraph.h \
 			exitpanel.h \
-			settingmutator.h \
 			settingspanel.h \
 			settingsbrainpanel.h
 
@@ -35,7 +34,6 @@ libgui_la_SOURCES = 	widget.cpp \
 			infobar.cpp \
 			statsgraph.cpp \
 			exitpanel.cpp \
-			settingmutator.cpp \
 			settingspanel.cpp \
 			settingsbrainpanel.cpp
 
