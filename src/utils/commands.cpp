@@ -150,9 +150,11 @@ void Commands::decreaseenergy()
 {
 	if ( ( (int)settings->getCVar("energy") - 1 ) >= 0 )
 	{
+		world->freeEnergy -= settings->getCVar("food_maxenergy") * settings->getCVar("energy");
+
 		settings->setCVar("energy", settings->getCVar("energy")-1 );
 // 		settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
-		world->freeEnergy -= settings->getCVar("food_maxenergy");
+		world->freeEnergy += settings->getCVar("food_maxenergy") * settings->getCVar("energy");
 		
 		stringstream buf;
 		buf << "energy: " << settings->getCVar("energy");

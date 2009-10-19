@@ -3,6 +3,7 @@
 Panel::Panel()
 {
 	isTouchable = true;
+	zaxis = 0;
 }
 
 void Panel::draw()
