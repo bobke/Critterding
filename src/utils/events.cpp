@@ -18,6 +18,7 @@ sharedTimer* Events::registerSharedtimer(unsigned int responsetime)
 	sharedTimer* t = &sharedtimers[sharedtimers.size() - 1];
 
 	t->responsetime = responsetime;
+	t->elapsed = 0;
 	return t;
 }
 
@@ -84,7 +85,8 @@ void Events::activateEvent(const long unsigned int key)
 	{
 		if ( !events[i].bindbystring && events[i].bindkey == key )
 		{
-			cmd->execCmd( events[i].command );
+			if ( !events[i].timerisshared )
+				cmd->execCmd( events[i].command );
 			if ( events[i].responsetime > 0 || events[i].timerisshared )
 			{
 				events[i].active = true;
@@ -104,7 +106,8 @@ void Events::activateEvent(const string& key)
 	{
 		if ( events[i].bindbystring && events[i].bindstring == key )
 		{
-			cmd->execCmd( events[i].command );
+			if ( !events[i].timerisshared )
+				cmd->execCmd( events[i].command );
 			if ( events[i].responsetime > 0 || events[i].timerisshared )
 			{
 				events[i].active = true;
