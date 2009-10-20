@@ -13,8 +13,6 @@ Settingsbrainpanel::Settingsbrainpanel()
 	unsigned int vint = 12;
 	
 	hspace = 10;
-	vspace = 0;
-	
 	vspace = vint;  addSettingmutator("brain_maxmutations", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_mutationrate", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_maxneurons", hspace, vspace);
