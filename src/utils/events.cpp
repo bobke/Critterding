@@ -179,29 +179,23 @@ void Events::handlecommands()
 						continue;
 					}
 				}
-
-// 			// event does not use a timer
-// 				if ( e->responsetime == 0 )
-// 				{
-// 					cmd->execCmd( e->command );
-// 					e->active = false;
-// 					continue;
-// 				}
-
 			// event has it's own timer
-				e->elapsed += Timer::Instance()->elapsed;
-				if ( (int)e->elapsed >= e->fresponsetime )
+				else
 				{
-					if ( e->responsetime > e->minfresponsetime )
+					e->elapsed += Timer::Instance()->elapsed;
+					if ( (int)e->elapsed >= e->fresponsetime )
 					{
-						e->fresponsetime -= e->fresponseinterval;
-						if ( e->fresponsetime < (int)e->minfresponsetime )
-							e->fresponsetime = e->minfresponsetime;
+						if ( e->responsetime > e->minfresponsetime )
+						{
+							e->fresponsetime -= e->fresponseinterval;
+							if ( e->fresponsetime < (int)e->minfresponsetime )
+								e->fresponsetime = e->minfresponsetime;
+						}
+						e->elapsed = 0;
+	// 					cerr << "executing command" << endl;
+						cmd->execCmd( e->command );
+						continue;
 					}
-					e->elapsed = 0;
-// 					cerr << "executing command" << endl;
-					cmd->execCmd( e->command );
-					continue;
 				}
 		}
 	}
