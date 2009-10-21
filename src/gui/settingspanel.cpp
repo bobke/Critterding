@@ -13,10 +13,7 @@ Settingspanel::Settingspanel()
 	// FIXME camera sensitivity is missing
 	unsigned int vint = 12;
 	hspace = 10;
-	vspace = 12;
-	addSettingmutator("mincritters", hspace, vspace);
-
-	// Special energy widgets
+	vspace = vint; addSettingmutator("mincritters", hspace, vspace);
 	vspace += vint; addMutator("energy", cmd.gen("decreaseenergy"), cmd.gen("increaseenergy"), hspace, vspace);
 	vspace += vint; addSettingmutator("insertcritterevery", hspace, vspace);
 	vspace += vint; addMutator("worldsizeX", cmd.gen("dec_worldsizex"), cmd.gen("inc_worldsizex"), hspace, vspace);
@@ -26,6 +23,7 @@ Settingspanel::Settingspanel()
 	vspace += vint; addSettingmutator("fsX", hspace, vspace);
 	vspace += vint; addSettingmutator("fsY", hspace, vspace);
 	vspace += vint; addSettingmutator("fullscreen", hspace, vspace);
+	vspace += vint; addSettingmutator("colormode", hspace, vspace);
 	vspace += vint; addSettingmutator("exit_if_empty", hspace, vspace);
 	vspace += vint; addSettingmutator("killhalfdecreaseenergybypct", hspace, vspace);
 
@@ -47,7 +45,7 @@ Settingspanel::Settingspanel()
 // 	vspace += vint; addSettingmutator("food_maxenergy", hspace, vspace);
 	vspace += vint; addSettingmutator("food_size", hspace, vspace);
 
-	vspace += vint;
+// 	vspace += vint;
 	vspace += vint; addSettingmutator("body_maxmutations", hspace, vspace);
 	vspace += vint; addSettingmutator("body_mutationrate", hspace, vspace);
 	vspace += vint; addSettingmutator("body_maxbodyparts", hspace, vspace);

@@ -277,17 +277,17 @@ void Settings::createHelpInfo()
 		buf << "  --" << cvarit->first;
 // 		buf << " " << buf.str().size();
 		
-		for ( unsigned int i=buf.str().size(); i < 60; i++ )
+		for ( unsigned int i=buf.str().size(); i < 62; i++ )
 			buf << " ";
 		
 		buf << cvarit->second->int_val;
 
-		for ( unsigned int i=buf.str().size(); i < 70; i++ )
+		for ( unsigned int i=buf.str().size(); i < 72; i++ )
 			buf << " ";
 
 		buf << cvarit->second->int_min << "-" << cvarit->second->int_max;
 
-		for ( unsigned int i=buf.str().size(); i < 83; i++ )
+		for ( unsigned int i=buf.str().size(); i < 85; i++ )
 			buf << " ";
 
 		buf << cvarit->second->comment;
