@@ -50,6 +50,8 @@ class Commands
 
 		void decreaseenergy();
 		void increaseenergy();
+		void decreasefoodmaxenergy();
+		void increasefoodmaxenergy();
 		void dec_worldsizex();
 		void inc_worldsizex();
 		void dec_worldsizey();

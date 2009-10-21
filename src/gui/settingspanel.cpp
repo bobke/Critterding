@@ -42,7 +42,9 @@ Settingspanel::Settingspanel()
 
 // 	vspace += vint;
 	vspace += vint; addSettingmutator("food_maxlifetime", hspace, vspace);
-	vspace += vint; addSettingmutator("food_maxenergy", hspace, vspace);
+	vspace += vint; addMutator("food_maxenergy", cmd.gen("dec_foodmaxenergy"), cmd.gen("inc_foodmaxenergy"), hspace, vspace);
+	
+// 	vspace += vint; addSettingmutator("food_maxenergy", hspace, vspace);
 	vspace += vint; addSettingmutator("food_size", hspace, vspace);
 
 	vspace += vint;

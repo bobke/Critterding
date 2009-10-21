@@ -4,12 +4,14 @@
 #include <sstream>
 #include <vector>
 #include "timer.h"
+#include "../gui/textprinter.h"
 
 using namespace std;
 
 struct msg
 {
 	string str;
+	unsigned int len;
 	struct timeval	appeartime;
 };
 
@@ -22,8 +24,7 @@ class Logbuffer
 		unsigned int	maxMessages;
 		float		msgLifetime;
 
-		int		vpadding;
-		int		hpadding;
+		unsigned int	longestLength;
 
 		vector<msg*>	messages;
 		void		deleteExpiredMsg();
@@ -32,6 +33,7 @@ class Logbuffer
 
 	private:
 		static Logbuffer* _instance;
+		void getLongest();
 
 };
 
