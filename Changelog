@@ -1,5 +1,13 @@
 1.0-beta11
 ---------
+improved keyboard / mouse input handling
+improved gui with panels for realtime setting manipulation,
+critters vs food graph,
+exit panel (esc no longer exits)
+a few more body mutations
+fix: critter autosaving timer
+fix: crashes on exit
+many more fixes and cleanups
 
 1.0-beta10
 ---------
