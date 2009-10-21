@@ -18,9 +18,12 @@ Commands::Commands()
 {
 	settings = Settings::Instance();
 	registerCmd("quit", &Commands::quit);
-	registerCmd("increaseenergy", &Commands::increaseenergy);
 	registerCmd("decreaseenergy", &Commands::decreaseenergy);
+	registerCmd("increaseenergy", &Commands::increaseenergy);
+	registerCmd("dec_foodmaxenergy", &Commands::decreasefoodmaxenergy);
+	registerCmd("inc_foodmaxenergy", &Commands::increasefoodmaxenergy);
 
+	
 	registerCmd("dec_worldsizex", &Commands::dec_worldsizex);
 	registerCmd("inc_worldsizex", &Commands::inc_worldsizex);
 	registerCmd("dec_worldsizey", &Commands::dec_worldsizey);
@@ -150,11 +153,8 @@ void Commands::decreaseenergy()
 {
 	if ( ( (int)settings->getCVar("energy") - 1 ) >= 0 )
 	{
-		world->freeEnergy -= settings->getCVar("food_maxenergy") * settings->getCVar("energy");
-
 		settings->setCVar("energy", settings->getCVar("energy")-1 );
-// 		settings->freeEnergyInfo -= settings->getCVar("food_maxenergy");
-		world->freeEnergy += settings->getCVar("food_maxenergy") * settings->getCVar("energy");
+		world->freeEnergy -= settings->getCVar("food_maxenergy");
 		
 		stringstream buf;
 		buf << "energy: " << settings->getCVar("energy");
@@ -165,12 +165,26 @@ void Commands::decreaseenergy()
 void Commands::increaseenergy()
 {
 	settings->setCVar("energy", settings->getCVar("energy")+1 );
-// 	settings->freeEnergyInfo += settings->getCVar("food_maxenergy");
 	world->freeEnergy += settings->getCVar("food_maxenergy");
 
 	stringstream buf;
 	buf << "energy: " << settings->getCVar("energy");
 	Logbuffer::Instance()->add(buf);
+}
+
+void Commands::decreasefoodmaxenergy()
+{
+	if ( ( (int)settings->getCVar("food_maxenergy") - 1 ) >= 0 )
+	{
+		world->freeEnergy -= settings->getCVar("energy");
+		settings->setCVar("food_maxenergy", settings->getCVar("food_maxenergy")-1 );
+	}
+}
+
+void Commands::increasefoodmaxenergy()
+{
+	world->freeEnergy += settings->getCVar("energy");
+	settings->setCVar("food_maxenergy", settings->getCVar("food_maxenergy")+1 );
 }
 
 void Commands::dec_worldsizex() { settings->decreaseCVar("worldsizeX"); world->makeFloor(); }

@@ -10,7 +10,7 @@ Textmessage::Textmessage()
 	position.x = 10;
 	position.y = 50;
 
-	v_width = 300;
+// 	v_width = 300;
 
 // 	v_width = 200 + ( hpadding*2 );
 // 	v_height = (15 * (messages.size()-1)) + 20 + ( vpadding*2 );
@@ -25,7 +25,7 @@ void Textmessage::draw()
 		
 		unsigned int height = 5;
 
-// 		v_width = longestLength + ( hpadding*2 );
+		v_width = Logbuffer::Instance()->longestLength + ( hpadding*2 );
 		v_height = (15 * (Logbuffer::Instance()->messages.size()-1)) + height + ( vpadding*2 );
 		
 	// draw background box and border

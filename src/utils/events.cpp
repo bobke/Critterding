@@ -174,10 +174,7 @@ void Events::handlecommands()
 				if ( e->timerisshared )
 				{
 					if ( e->stimer->active )
-					{
 						cmd->execCmd( e->command );
-						continue;
-					}
 				}
 			// event has it's own timer
 				else
@@ -192,9 +189,7 @@ void Events::handlecommands()
 								e->fresponsetime = e->minfresponsetime;
 						}
 						e->elapsed = 0;
-	// 					cerr << "executing command" << endl;
 						cmd->execCmd( e->command );
-						continue;
 					}
 				}
 		}

@@ -17,10 +17,12 @@ void Logbuffer::add(const stringstream& streamptr)
 	msg *Msg = new msg;
 	Msg->str = streamptr.str();
 	Msg->appeartime = Timer::Instance()->lasttime;
+	Msg->len = Textprinter::Instance()->getWidth(Msg->str);
 	messages.push_back(Msg);
 
 	// to prevent overfilling:
 	deleteExpiredMsg();
+	getLongest();
 }
 
 void Logbuffer::deleteExpiredMsg()
@@ -37,3 +39,14 @@ void Logbuffer::deleteExpiredMsg()
 		}
 	}
 }
+
+void Logbuffer::getLongest()
+{
+	longestLength = 0;
+	for ( unsigned int i=0; i < messages.size(); i++ )
+	{
+		if ( messages[i]->len > longestLength )
+			longestLength = messages[i]->len;
+	}
+}
+
