@@ -3,8 +3,8 @@
 Helpinfo::Helpinfo()
 {
 	isMovable = true;
-	position.x = 30;
-	position.y = 30;
+	position.x = 50;
+	position.y = 35;
 	v_width = 420;
 	v_height = 510;
 	halfboxwidth = 210;

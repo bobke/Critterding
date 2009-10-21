@@ -12,7 +12,7 @@ Infostats::Infostats()
 	position.y = 50;
 	
 	v_width = 480;
-	v_height = 86;
+	v_height = 75;
 }
 
 void Infostats::draw()

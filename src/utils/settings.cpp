@@ -132,7 +132,7 @@ Settings::Settings()
 
 	registerCVar("brain_costhavingneuron",					50, 0, 1000000, false, "cost of having a neuron (1/100000 energy)");
 	registerCVar("brain_costfiringneuron",					10, 0, 1000000, false, "cost of firing a neuron");
-	registerCVar("brain_costfiringmotorneuron",				1000, 0, 1000000, false, "cost of firing a motor neuron");
+	registerCVar("brain_costfiringmotorneuron",				100, 0, 1000000, false, "cost of firing a motor neuron");
 	registerCVar("brain_costhavingsynapse",					1, 0, 1000000, false, "cost of having a synapse");
 
 	info_critters = 0;
