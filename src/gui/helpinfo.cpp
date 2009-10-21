@@ -6,7 +6,7 @@ Helpinfo::Helpinfo()
 	position.x = 30;
 	position.y = 30;
 	v_width = 420;
-	v_height = 520;
+	v_height = 510;
 	halfboxwidth = 210;
 	halfboxheight = 260;
 }
@@ -31,34 +31,31 @@ void Helpinfo::draw()
 
 		glColor3f(0.7f, 0.7f, 0.7f);
 		heightpos += vspace + 5;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F1", "show/hide this screen");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F1", "toggle this help panel");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F2", "show/hide information bar");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F2", "toggle small infobar");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F3", "show/hide critter statistics");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F3", "toggle critter statistics");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F4", "show/hide birth and death events");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F4", "toggle birth and death events panel");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F5/F6", "dec/inc minimum critters");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F5", "toggle critters vs food graph");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F7/F8", "dec/inc kill half of population trigger");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F6", "toggle main settings panel");
 
 		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "F9/F10", "dec/inc max mutations per brain mutant");
+		printInfoLine(heightpos, widthpos1, widthpos2, "F7", "toggle brain settings panel");
+
+		heightpos += vspace;
+		printInfoLine(heightpos, widthpos1, widthpos2, "F9/F10", "dec/inc body mutation rate (%)");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "F11/F12", "dec/inc brain mutation rate (%)");
-
-		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "shift F9/F10", "dec/inc max mutations per body mutant");
-
-		heightpos += vspace;
-		printInfoLine(heightpos, widthpos1, widthpos2, "shift F11/F12", "dec/inc body mutation rate (%)");
 
 		heightpos += vspace;
 		printInfoLine(heightpos, widthpos1, widthpos2, "keypad +/-", "dec/inc energy in the system by 1 food unit");

@@ -13,92 +13,100 @@ OPTIONS
 
   option                                                    [default] [range]      [comment]
 
-  --autoload                                                0         0-1          autoload critters from ~/.critterding/load
-  --body_maxbodyparts                                       30        0-1000000    maximum body parts per critter            
-  --body_maxbodypartsatbuildtime                            6         1-1000000    maximum body parts for a new critter      
-  --body_maxbodypartsize                                    200       1-1000000    maximum size of a critters body part      
-  --body_maxheadsize                                        80        1-1000000    maximum size of a critters head           
-  --body_maxmutations                                       5         1-1000000    maximum mutations on a body mutant        
-  --body_minbodypartsize                                    20        1-1000000    minimum size of a critters body part      
-  --body_minheadsize                                        30        1-1000000    minimum size of a critters head           
-  --body_mutationrate                                       10        0-100        percentage of newborns that mutate bodies 
-  --body_percentmutateeffectaddbodypart                     10        0-100        chance of adding a body part              
-  --body_percentmutateeffectchangeconstraintangles          10        0-100        chance of changing a joints position angles
-  --body_percentmutateeffectchangeconstraintlimits          10        0-100        chance of changing a joints motion limits  
-  --body_percentmutateeffectchangeconstraintposition        10        0-100        chance of changing a joints position       
-  --body_percentmutateeffectremovebodypart                  10        0-100        chance of removing a body part             
-  --body_percentmutateeffectrepositionmouth                 10        0-100        chance of repositioning head               
-  --body_percentmutateeffectresizebodypart                  10        0-100        chance of resizing a body part             
-  --body_percentmutateeffectresizebodypart_slightly         10        0-100        chance of slightly resizing a body part    
-  --brain_costfiringmotorneuron                             1000      0-1000000    cost of firing a motor neuron              
-  --brain_costfiringneuron                                  10        0-1000000    cost of firing a neuron                    
-  --brain_costhavingneuron                                  50        0-1000000    cost of having a neuron (1/100000 energy)  
-  --brain_costhavingsynapse                                 1         0-1000000    cost of having a synapse                   
-  --brain_maxdendridicbranches                              3         1-1000000    maximum number of dendrites per neuron     
-  --brain_maxfiringthreshold                                10        1-1000000    maximum firingthreshold of a neuron        
-  --brain_maxmutations                                      10        1-1000000    maximum mutations on a brain mutant        
-  --brain_maxneurons                                        1000      1-1000000    maximum neurons per critter                
-  --brain_maxneuronsatbuildtime                             200       1-1000000    maximum neurons for a new critter
-  --brain_maxplasticitystrengthen                           1000      1-1000000    maximum weight by which plastic synapses strengthen
-  --brain_maxplasticityweaken                               10000     1-1000000    maximum weight by which plastic synapses weaken
-  --brain_maxsynapses                                       100       1-1000000    maximum synapses per neuron
-  --brain_maxsynapsesatbuildtime                            40        1-1000000    maximum synapses for a new neuron of a new critter
-  --brain_minfiringthreshold                                2         1-1000000    minimum firingthreshold of a neuron
-  --brain_minneuronsatbuildtime                             50        1-1000000    minimum neurons for a new critter
-  --brain_minplasticitystrengthen                           100       1-1000000    minimum weight by which plastic synapses strengthen
-  --brain_minplasticityweaken                               1000      1-1000000    minimum weight by which plastic synapses weaken
-  --brain_minsynapses                                       1         1-1000000    minimum synapses per neuron
-  --brain_minsynapsesatbuildtime                            1         1-1000000    minimum synapses for a new neuron
-  --brain_mutate_maxdendridicbranches                       0         0-1          mutate this value
-  --brain_mutate_maxfiringthreshold                         0         0-1          mutate this value
-  --brain_mutate_minfiringthreshold                         0         0-1          mutate this value
-  --brain_mutate_mutateeffects                              0         0-1          mutate mutation effects
-  --brain_mutate_percentchanceconsistentsynapses            0         0-1          mutate this value
-  --brain_mutate_percentchanceinhibitoryneuron              0         0-1          mutate this value
-  --brain_mutate_percentchanceinhibitorysynapses            0         0-1          mutate this value
-  --brain_mutate_percentchancemotorneuron                   0         0-1          mutate this value
-  --brain_mutate_percentchanceplasticneuron                 0         0-1          mutate this value
-  --brain_mutate_percentchancesensorysynapse                0         0-1          mutate this value
-  --brain_mutate_plasticityfactors                          0         0-1          mutate min/max plasticity values
-  --brain_mutationrate                                      10        0-100        percentage of newborns that mutate brains
-  --brain_percentchanceconsistentsynapses                   0         0-100        percent chance a neurons synapses are all inhibitory or excititatory
-  --brain_percentchanceinhibitoryneuron                     50        0-100        percent chance a neuron is inhibotory
-  --brain_percentchanceinhibitorysynapses                   50        0-100        percent chance a synapse is inhibitory
-  --brain_percentchancemotorneuron                          50        0-100        percent chance a neuron is a motor neuron
-  --brain_percentchanceplasticneuron                        20        0-100        percent chance a neuron has plastic synapses
-  --brain_percentchancesensorysynapse                       20        0-100        percent change a synapse connects to an input
-  --brain_percentmutateeffectaddneuron                      10        0-100        chance of adding a neuron
-  --brain_percentmutateeffectaddsynapse                     29        0-100        chance of adding a synapse
-  --brain_percentmutateeffectaltermutable                   1         0-100        mutate value of a mutatable option
-  --brain_percentmutateeffectalterneuron                    20        0-100        chance of altering a neuron
-  --brain_percentmutateeffectremoveneuron                   10        0-100        chance of removing a neuron
-  --brain_percentmutateeffectremovesynapse                  29        0-100        chance of removing a synapse
-  --camerasensitivity                                       20        1-1000       sensitivity of the camera
-  --colormode                                               0         0-1          colors genetically exact critters identically
-  --critter_autosaveinterval                                0         0-1000000    save critters every n seconds
-  --critter_enableomnivores                                 0         0-1          enables critters to eat each other
-  --critter_killhalfat                                      1000      2-1000000    kill 50% of critters if population reaches n
-  --critter_maxenergy                                       5000      1-1000000    maximum amount of energy a critter has
-  --critter_maxlifetime                                     10000     1-1000000    maximum number of frames a critter lives
-  --critter_minenergyproc                                   3000      1-1000000    energy a critters needs to procreate
-  --critter_procinterval                                    20        1-1000000    minimum frames between procreations
-  --critter_retinasize                                      8         1-1000       size of a critters eye retina
-  --critter_sightrange                                      70        1-1000000    distance a critter can see (10 = 1 worldsize)
-  --critter_startenergy                                     2500      1-1000000    energy a new critter starts with
-  --energy                                                  300       0-1000000    energy in the system by number of food cubes
-  --exit_if_empty                                           0         0-1          exit simulation if there are no critters
-  --food_maxenergy                                          1000      1-1000000    maximum amount of energy a food unit has
-  --food_maxlifetime                                        10000     1-1000000    maximum number of frames a food unit exists
-  --food_size                                               100       1-1000000    size of a food unit
-  --fsX                                                     800       1-1000000    fullscreen resolution X
-  --fsY                                                     600       1-1000000    fullscreen resolution Y
-  --fullscreen                                              0         0-1          enable fullscreen mode
-  --insertcritterevery                                      0         0-1000       inserts a random critter every n frames
-  --mincritters                                             5         0-1000       minimum number of critters
-  --race                                                    0         0-1          enable race simulation
-  --retinasperrow                                           20        1-1000       number of vision retinas to stack per row onscreen
-  --worldsizeX                                              12        1-5000       size of the world along axis X
-  --worldsizeY                                              8         1-5000       size of the world along axis Y
+  --autoload                                                  0         0-1          autoload critters from ~/.critterding/load
+  --body_maxbodyparts                                         30        0-1000000    maximum body parts per critter            
+  --body_maxbodypartsatbuildtime                              6         1-1000000    maximum body parts for a new critter      
+  --body_maxbodypartsize                                      200       1-1000000    maximum size of a critters body part      
+  --body_maxheadsize                                          80        1-1000000    maximum size of a critters head           
+  --body_maxmutations                                         10        1-1000000    maximum mutations on a body mutant        
+  --body_minbodypartsize                                      20        1-1000000    minimum size of a critters body part      
+  --body_minheadsize                                          30        1-1000000    minimum size of a critters head           
+  --body_mutationrate                                         10        0-100        percentage of newborns that mutate bodies 
+  --body_percentmutateeffectaddbodypart                       1         0-100        chance of adding a body part              
+  --body_percentmutateeffectchangeconstraintangles            1         0-100        chance of changing a joints position angles
+  --body_percentmutateeffectchangeconstraintangles_slightly   5         0-100        chance of changing a joints position angles
+  --body_percentmutateeffectchangeconstraintlimits            1         0-100        chance of changing a joints motion limits  
+  --body_percentmutateeffectchangeconstraintlimits_slightly   5         0-100        chance of slightly changing a joints motion limits
+  --body_percentmutateeffectchangeconstraintposition          1         0-100        chance of changing a joints position              
+  --body_percentmutateeffectchangeconstraintposition_slightly 5         0-100        chance of slightly changing a joints position     
+  --body_percentmutateeffectremovebodypart                    1         0-100        chance of removing a body part                    
+  --body_percentmutateeffectrepositionhead                    1         0-100        chance of repositioning head                      
+  --body_percentmutateeffectresizebodypart                    1         0-100        chance of resizing a body part                    
+  --body_percentmutateeffectresizebodypart_slightly           5         0-100        chance of slightly resizing a body part           
+  --body_percentmutateeffectresizehead                        1         0-100        chance of resizing a head                         
+  --body_percentmutateeffectresizehead_slightly               5         0-100        chance of slightly resizing a head                
+  --brain_costfiringmotorneuron                               1000      0-1000000    cost of firing a motor neuron                     
+  --brain_costfiringneuron                                    10        0-1000000    cost of firing a neuron                           
+  --brain_costhavingneuron                                    50        0-1000000    cost of having a neuron (1/100000 energy)         
+  --brain_costhavingsynapse                                   1         0-1000000    cost of having a synapse                          
+  --brain_maxdendridicbranches                                3         1-1000000    maximum number of dendrites per neuron            
+  --brain_maxfiringthreshold                                  10        1-1000000    maximum firingthreshold of a neuron               
+  --brain_maxmutations                                        10        1-1000000    maximum mutations on a brain mutant               
+  --brain_maxneurons                                          1000      1-1000000    maximum neurons per critter
+  --brain_maxneuronsatbuildtime                               200       1-1000000    maximum neurons for a new critter
+  --brain_maxplasticitystrengthen                             1000      1-1000000    maximum weight by which plastic synapses strengthen
+  --brain_maxplasticityweaken                                 10000     1-1000000    maximum weight by which plastic synapses weaken
+  --brain_maxsynapses                                         100       1-1000000    maximum synapses per neuron
+  --brain_maxsynapsesatbuildtime                              40        1-1000000    maximum synapses for a new neuron of a new critter
+  --brain_minfiringthreshold                                  2         1-1000000    minimum firingthreshold of a neuron
+  --brain_minneuronsatbuildtime                               50        1-1000000    minimum neurons for a new critter
+  --brain_minplasticitystrengthen                             100       1-1000000    minimum weight by which plastic synapses strengthen
+  --brain_minplasticityweaken                                 1000      1-1000000    minimum weight by which plastic synapses weaken
+  --brain_minsynapses                                         1         1-1000000    minimum synapses per neuron
+  --brain_minsynapsesatbuildtime                              1         1-1000000    minimum synapses for a new neuron
+  --brain_mutate_maxdendridicbranches                         0         0-1          mutate this value
+  --brain_mutate_maxfiringthreshold                           0         0-1          mutate this value
+  --brain_mutate_minfiringthreshold                           0         0-1          mutate this value
+  --brain_mutate_mutateeffects                                0         0-1          mutate mutation effects
+  --brain_mutate_percentchanceconsistentsynapses              0         0-1          mutate this value
+  --brain_mutate_percentchanceinhibitoryneuron                0         0-1          mutate this value
+  --brain_mutate_percentchanceinhibitorysynapses              0         0-1          mutate this value
+  --brain_mutate_percentchancemotorneuron                     0         0-1          mutate this value
+  --brain_mutate_percentchanceplasticneuron                   0         0-1          mutate this value
+  --brain_mutate_percentchancesensorysynapse                  0         0-1          mutate this value
+  --brain_mutate_plasticityfactors                            0         0-1          mutate min/max plasticity values
+  --brain_mutationrate                                        10        0-100        percentage of newborns that mutate brains
+  --brain_percentchanceconsistentsynapses                     0         0-100        percent chance a neurons synapses are all inhibitory or excitatory
+  --brain_percentchanceinhibitoryneuron                       50        0-100        percent chance a neuron is inhibotory
+  --brain_percentchanceinhibitorysynapses                     50        0-100        percent chance a synapse is inhibitory
+  --brain_percentchancemotorneuron                            50        0-100        percent chance a neuron is a motor neuron
+  --brain_percentchanceplasticneuron                          20        0-100        percent chance a neuron has plastic synapses
+  --brain_percentchancesensorysynapse                         20        0-100        percent change a synapse connects to an input
+  --brain_percentmutateeffectaddneuron                        10        0-100        chance of adding a neuron
+  --brain_percentmutateeffectaddsynapse                       29        0-100        chance of adding a synapse
+  --brain_percentmutateeffectaltermutable                     1         0-100        mutate value of a mutatable option
+  --brain_percentmutateeffectalterneuron                      20        0-100        chance of altering a neuron
+  --brain_percentmutateeffectremoveneuron                     10        0-100        chance of removing a neuron
+  --brain_percentmutateeffectremovesynapse                    29        0-100        chance of removing a synapse
+  --camerasensitivity                                         20        1-1000       sensitivity of the camera
+  --colormode                                                 0         0-1          colors genetically exact critters identically
+  --critter_autosaveinterval                                  0         0-1000000    save critters every n seconds
+  --critter_enableomnivores                                   1         0-1          enables critters to eat each other
+  --critter_killhalfat                                        100       2-1000000    kill 50% of critters if population reaches n
+  --critter_maxenergy                                         5000      1-1000000    maximum amount of energy a critter has
+  --critter_maxlifetime                                       8000      1-1000000    maximum number of frames a critter lives
+  --critter_minenergyproc                                     3000      1-1000000    energy a critters needs to procreate
+  --critter_procinterval                                      20        1-1000000    minimum frames between procreations
+  --critter_retinasize                                        8         1-1000       size of a critters eye retina
+  --critter_sightrange                                        70        1-1000000    distance a critter can see (10 = 1 worldsize)
+  --critter_startenergy                                       3000      1-1000000    energy a new critter starts with
+  --energy                                                    400       0-1000000    energy in the system by number of food cubes
+  --exit_if_empty                                             0         0-1          exit simulation if there are no critters
+  --food_maxenergy                                            1500      1-1000000    maximum amount of energy a food unit has
+  --food_maxlifetime                                          4000      1-1000000    maximum number of frames a food unit exists
+  --food_size                                                 200       1-1000000    size of a food unit
+  --fsX                                                       800       1-1000000    fullscreen resolution X
+  --fsY                                                       600       1-1000000    fullscreen resolution Y
+  --fullscreen                                                0         0-1          enable fullscreen mode
+  --insertcritterevery                                        0         0-1000000    inserts a random critter every n frames
+  --killhalfdecreaseenergybypct                               1         0-100        decrease energy by n percent when killhalfat triggers
+  --mincritters                                               10        0-1000       minimum number of critters
+  --race                                                      0         0-1          enable race simulation
+  --retinasperrow                                             20        1-1000       number of vision retinas to stack per row onscreen
+  --testworld                                                 0         0-1          enable race simulation
+  --worldsizeX                                                23        1-5000       size of the world along axis X
+  --worldsizeY                                                13        1-5000       size of the world along axis Y
+  --worldwalls                                                1         0-1          enable walls around the world
 
  To save the default settings to a profile, press "s" in the simulation.
  It will be saved to ./default and can be loaded by using "--profile ./default"
