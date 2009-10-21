@@ -177,20 +177,21 @@ void Evolution::draw()
 			if ( world->mouseRayHit )
 			{
 				unsigned int margin = 20;
-				unsigned int rmargindistance = 100;
+				unsigned int rmargindistance = 70;
 				unsigned int vspacer = 12;
 				glColor3f(1.0f, 1.0f, 1.0f);
 				if ( world->mouseRayHitType == 1 )
 				{
 					Textprinter::Instance()->print( oldx+margin, oldy,    "food");
 					Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
-					Textprinter::Instance()->printR(oldx+rmargindistance, oldy+vspacer, "%1.1f", world->mouseRayHitF->energyLevel);
+					Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", world->mouseRayHitF->energyLevel);
 				}
 				else if ( world->mouseRayHitType == 0 )
 				{
 					Textprinter::Instance()->print( oldx+margin, oldy,    "critter");
+					Textprinter::Instance()->print(oldx+rmargindistance, oldy, "%1i", world->mouseRayHitC->critterID);
 					Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
-					Textprinter::Instance()->printR(oldx+rmargindistance, oldy+vspacer, "%1.1f", world->mouseRayHitC->energyLevel);
+					Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", world->mouseRayHitC->energyLevel);
 				}
 			}
 

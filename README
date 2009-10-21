@@ -35,7 +35,7 @@ OPTIONS
   --body_percentmutateeffectresizebodypart_slightly           5         0-100        chance of slightly resizing a body part           
   --body_percentmutateeffectresizehead                        1         0-100        chance of resizing a head                         
   --body_percentmutateeffectresizehead_slightly               5         0-100        chance of slightly resizing a head                
-  --brain_costfiringmotorneuron                               1000      0-1000000    cost of firing a motor neuron                     
+  --brain_costfiringmotorneuron                               100       0-1000000    cost of firing a motor neuron                     
   --brain_costfiringneuron                                    10        0-1000000    cost of firing a neuron                           
   --brain_costhavingneuron                                    50        0-1000000    cost of having a neuron (1/100000 energy)         
   --brain_costhavingsynapse                                   1         0-1000000    cost of having a synapse                          

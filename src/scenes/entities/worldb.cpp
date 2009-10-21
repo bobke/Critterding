@@ -217,10 +217,10 @@ void WorldB::procreate( CritterB* c )
 
 		// position offset
 		np.setY(insertHight);
-		if ( np.getX() > settings->getCVar("worldsizeX")/2 )
-			np.setX(np.getX()-1.0f);
-		else
-			np.setX(np.getX()+1.0f);
+// 		if ( np.getX() > settings->getCVar("worldsizeX")/2 )
+// 			np.setX(np.getX()-1.0f);
+// 		else
+// 			np.setX(np.getX()+1.0f);
 
 		CritterB *nc = new CritterB(*c, currentCritterID++, np, brainmutant, bodymutant);
 		//CritterB *nc = new CritterB(*c, currentCritterID++, findPosition(), mutant);
@@ -358,7 +358,7 @@ void WorldB::expireCritters()
 		{
 			stringstream buf;
 			if ( critters[i]->eaten )
-				buf << setw(4) << critters[i]->critterID << " eaten";
+				buf << setw(4) << critters[i]->critterID << " got eaten";
 			else
 				buf << setw(4) << critters[i]->critterID << " starved";
 			Textverbosemessage::Instance()->addDeath(buf);
@@ -370,7 +370,7 @@ void WorldB::expireCritters()
 		else if ( critters[i]->totalFrames > *critter_maxlifetime )
 		{
 			stringstream buf;
-			buf << setw(4) << critters[i]->critterID << " old";
+			buf << setw(4) << critters[i]->critterID << " died of age";
 			Textverbosemessage::Instance()->addDeath(buf);
 
 			removeCritter(i);
@@ -385,7 +385,7 @@ void WorldB::expireCritters()
 			if ( pos.getY() < -100.0f )
 			{
 				stringstream buf;
-				buf << setw(4) << critters[i]->critterID << " went offworld";
+				buf << setw(4) << critters[i]->critterID << " fell in the pit";
 				Textverbosemessage::Instance()->addDeath(buf);
 
 				removeCritter(i);
