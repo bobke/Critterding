@@ -61,6 +61,7 @@ unsigned int Textprinter::getWidth(const char *fmt, ...)
 		FTBBox test = fonts[0]->BBox(text);
 		return test.Upper().X();
 }
+
 unsigned int Textprinter::getWidth(const string& str)
 {
 	const char *text = str.c_str();
@@ -151,20 +152,22 @@ void Textprinter::setUpFonts()
 		delete fonts;
 	}
 	
-	char const *fontFilePath;
-	//fontFilePath = "fonts/helvetica_3.ttf";
-	fontFilePath = "fonts/verdana.ttf";
-
 	// Allocate an array to hold all fonts
 	fonts = new FTFont *[1];
+	char const *fontFilePath;
 
+	fontFilePath = "fonts/DejaVuSans.ttf";
 	if ( !file.exists(fontFilePath) )
 	{
-		fontFilePath = "../fonts/verdana.ttf";
+		fontFilePath = "../fonts/DejaVuSans.ttf";
 		if ( !file.exists(fontFilePath) )
 		{
-			cerr << "Count not find font " << fontFilePath << endl;
-			exit(1);
+			fontFilePath = "/usr/share/fonts/TTF/DejaVuSans.ttf";
+			if ( !file.exists(fontFilePath) )
+			{
+				cerr << "Count not find font " << fontFilePath << endl;
+				exit(1);
+			}
 		}
 	}
 
