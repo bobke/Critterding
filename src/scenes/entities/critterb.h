@@ -9,6 +9,7 @@
 #include "../../brainz/brainz.h"
 #include "../../utils/settings.h"
 #include "../../utils/displaylists.h"
+#include "entity.h"
 #include "body.h"
 #include "food.h"
 // #include <cmath>
@@ -18,7 +19,7 @@
 
 using namespace std;
 
-class CritterB
+class CritterB : public Entity
 {
 	public:
 		CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVector3& startPos, unsigned char* retinap);

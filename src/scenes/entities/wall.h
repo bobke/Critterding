@@ -6,9 +6,11 @@
 #include "../../utils/displaylists.h"
 #include <iostream>
 
+#include "entity.h"
+
 using namespace std;
 
-class Wall
+class Wall : public Entity
 {
 	public:
 		Wall(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dynamicsWorld);

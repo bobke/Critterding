@@ -6,11 +6,12 @@
 
 #include "../../utils/settings.h"
 #include "../../utils/displaylists.h"
+#include "entity.h"
 #include "body.h"
 
 using namespace std;
 
-class Food
+class Food : public Entity
 {
 	public:
 		Food();
@@ -33,6 +34,10 @@ class Food
 		bool			isPicked;
 	private:
 		Settings		*settings;
+
+		btDefaultMotionState* myMotionState;
+		btBoxShape* boxShape;
+		btVector3 halfExtent;
 };
 
 #endif
