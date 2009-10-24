@@ -17,40 +17,33 @@ Food::Food()
 
 void Food::draw()
 {
-	for( unsigned int j=0; j < body.bodyparts.size(); j++)
-	{
-		btRigidBody* bodypart = body.bodyparts[j]->body;
- 		btDefaultMotionState* myMotionState = (btDefaultMotionState*)bodypart->getMotionState();
- 		myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
+	myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
 
-		glPushMatrix(); 
-		glMultMatrixf(position);
+	glPushMatrix(); 
+	glMultMatrixf(position);
 
-				glColor4f( color[0], color[1], color[2], 1.0f );
+			glColor4f( color[0], color[1], color[2], 1.0f );
+			glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
+			Displaylists::Instance()->call(1);
 
-				const btBoxShape* boxShape = static_cast<const btBoxShape*>(body.bodyparts[j]->shape);
-				btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
-				glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
-
-				Displaylists::Instance()->call(1);
-
-		glPopMatrix();
-	}
+	glPopMatrix();
 }
 
 void Food::createBody(btDynamicsWorld* m_dynamicsWorld, const btVector3& startOffset)
 {
-//	body = new Body ();
 	body.m_ownerWorld = m_dynamicsWorld;
-	btTransform offset;
-	offset.setIdentity();
+
+	btTransform offset; offset.setIdentity();
 	offset.setOrigin(startOffset);
 
-	btTransform transform;
-	transform.setIdentity();
+	btTransform transform; transform.setIdentity();
 	transform.setOrigin( btVector3(0.0f, 0.10f, 0.0f) );
 
 	body.addBodyPart_Box((void*)this, (float)settings->getCVar("food_size")/1000, (float)settings->getCVar("food_size")/1000, (float)settings->getCVar("food_size")/1000, 1.0f, offset, transform);
+
+	myMotionState = (btDefaultMotionState*)body.bodyparts[0]->body->getMotionState();
+	boxShape = static_cast<btBoxShape*>(body.bodyparts[0]->shape);
+	halfExtent = boxShape->getHalfExtentsWithMargin();
 }
 
 Food::~Food()
