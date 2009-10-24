@@ -1474,12 +1474,12 @@ Body::~Body()
 // 		for ( unsigned int i=0; i < archBodyparts.size(); i++ )
 // 			delete archBodyparts[i];
 
+		for ( unsigned int i=0; i < constraints.size(); i++ )
+			delete constraints[i];
+
 		for ( unsigned int i=0; i < bodyparts.size(); i++ )
 			delete bodyparts[i];
 
 		for ( unsigned int i=0; i < mouths.size(); i++ )
 			delete mouths[i];
-
-		for ( unsigned int i=0; i < constraints.size(); i++ )
-			delete constraints[i];
 }
