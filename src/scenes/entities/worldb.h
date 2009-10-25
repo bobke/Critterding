@@ -198,6 +198,9 @@ class WorldB
 
 		// vision opts
 		unsigned int picwidth;
+		
+		btManifoldArray   manifoldArray;
+
 };
 
 #endif

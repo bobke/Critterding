@@ -48,6 +48,10 @@ WorldB::WorldB()
 	m_solver = new btSequentialImpulseConstraintSolver;
 
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
+	
+// 	btVector3 v = m_dynamicsWorld->getGravity();
+// 	cerr << v.y() << endl;
+// 	m_dynamicsWorld->setGravity( btVector3(0.0f, -50.0f, 0.0f) );
 
 // 	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_USE_WARMSTARTING + SOLVER_SIMD;
 	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_SIMD + SOLVER_USE_WARMSTARTING + SOLVER_CACHE_FRIENDLY;
@@ -258,7 +262,9 @@ void WorldB::eat( CritterB* c )
 	{
 		if ( c->touchingFood )
 		{
-			Food* f = c->touchedFoodID;
+			Food* f = static_cast<Food*>(c->touchedEntity);
+// 			cerr << "food: " << f->type << endl;
+// 			Food* f = c->touchedFoodID;
 			float eaten = *critter_maxenergy / 100.0f;
 			if ( c->energyLevel + eaten > *critter_maxenergy )
 				eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
@@ -268,9 +274,10 @@ void WorldB::eat( CritterB* c )
 			c->energyLevel += eaten;
 			f->energyLevel -= eaten;
 		}
-		else if ( settings->getCVar("critter_enableomnivores") && c->touchingCritter )
+		else if ( c->touchingCritter && settings->getCVar("critter_enableomnivores") )
 		{
-			CritterB* ct = c->touchedCritterID;
+			CritterB* ct = static_cast<CritterB*>(c->touchedEntity);
+// 			CritterB* ct = c->touchedCritterID;
 			float eaten = *critter_maxenergy / 100.0f;
 			if ( c->energyLevel + eaten > *critter_maxenergy )
 				eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
@@ -470,7 +477,6 @@ void WorldB::checkCollisions( CritterB* c )
 
 	if ( c->body.mouths.size() > 0 )
 	{
-		btManifoldArray   manifoldArray;
 		btBroadphasePairArray& pairArray = c->body.mouths[0]->ghostObject->getOverlappingPairCache()->getOverlappingPairArray();
 		int numPairs = pairArray.size();
 
@@ -488,8 +494,7 @@ void WorldB::checkCollisions( CritterB* c )
 			if (collisionPair->m_algorithm)
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
-			bool stop = false;
-			for ( int j = 0; j < manifoldArray.size() && !stop; j++ )
+			for ( int j = 0; j < manifoldArray.size(); j++ )
 			{
 				btPersistentManifold* manifold = manifoldArray[j];
 				
@@ -502,15 +507,35 @@ void WorldB::checkCollisions( CritterB* c )
 				for ( int p = 0; p < manifold->getNumContacts(); p++ )
 				{
 					const btManifoldPoint &pt = manifold->getContactPoint(p);
-					if ( pt.getDistance() < 0.f )
+					if ( pt.getDistance() < 0.0f )
 					{
 						void* Collidingobject;
 						if ( object1->getUserPointer() != c && object1->getUserPointer() != 0 )
 							Collidingobject = object1->getUserPointer();
-						else
+						else if ( object2->getUserPointer() != c && object2->getUserPointer() != 0 )
 							Collidingobject = object2->getUserPointer();
+						else 
+							continue;
 
 						// Touching Food
+						Entity* e = static_cast<Entity*>(Collidingobject);
+						if ( e->type == 1 )
+						{
+// 							cerr << "touches food" << endl;
+							c->touchingFood = true;
+							c->touchedEntity = e;
+							return;
+						}
+						// Touching Critter
+						else if ( e->type == 0 )
+						{
+// 							cerr << "touches critter" << endl;
+							c->touchingCritter = true;
+							c->touchedEntity = e;
+							return;
+						}
+
+/*						// Touching Food
 						Food* f = static_cast<Food*>(Collidingobject);
 						if ( f )
 						{
@@ -531,7 +556,7 @@ void WorldB::checkCollisions( CritterB* c )
 									c->touchedCritterID = b;
 								}
 							}
-						}
+						}*/
 					}
 				}
 			}
