@@ -38,6 +38,8 @@ class Textverbosemessage : public Panel
 		void		getLongestMsg();
 
 		void		deleteExpiredMsg();
+		
+		unsigned int	col2;
 };
 
 #endif
