@@ -27,7 +27,6 @@ class CritterB : public Entity
 		CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVector3& startPos, unsigned char* retinap);
 		~CritterB();
 
-		unsigned int		type;
 		Brainz			brain;
 		Body			body;
 		inline void		registerBrainInputOutputs();
@@ -53,9 +52,10 @@ class CritterB : public Entity
 		// Inputs
 		bool			canProcreate;
 		bool			touchingFood;
-		Food*			touchedFoodID;
+// 		Food*			touchedFoodID;
 		bool			touchingCritter;
-		CritterB*		touchedCritterID;
+// 		CritterB*		touchedCritterID;
+		Entity*			touchedEntity;
 
 		// Motor Func
  		bool			eat;

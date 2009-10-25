@@ -19,7 +19,6 @@ class Food : public Entity
 
 		Body			body;
 		void			createBody(btDynamicsWorld* m_dynamicsWorld, const btVector3& startOffset);
-		unsigned int		type;
 
 		void			draw();
 		

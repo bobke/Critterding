@@ -24,6 +24,8 @@ Wall::Wall(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dyn
 	m_ownerWorld->addCollisionObject(fixedGround);
 
 	fixedGround->getWorldTransform().getOpenGLMatrix(nposition);
+	
+	type = 2;
 }
 
 void Wall::draw()
