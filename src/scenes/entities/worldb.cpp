@@ -98,22 +98,18 @@ void WorldB::castMouseRay()
 	{
 		if ( !( mouseRay.hitBody->isStaticObject() || mouseRay.hitBody->isKinematicObject() ) )
 		{
-			Food* f = static_cast<Food*>(mouseRay.hitBody->getUserPointer());
-			if ( f->type == 1 )
+			Entity* e = static_cast<Entity*>(mouseRay.hitBody->getUserPointer());
+			if ( e->type == 1 )
 			{
 				mouseRayHit = true;
-				mouseRayHitF = f;
-				mouseRayHitType = f->type;
+				mouseRayHitF = static_cast<Food*>(e);
+				mouseRayHitType = 1;
 			}
-			else
+			else if ( e->type == 0 )
 			{
-				CritterB* b = static_cast<CritterB*>(mouseRay.hitBody->getUserPointer());
-				if ( b->type == 0 )
-				{
-					mouseRayHit = true;
-					mouseRayHitC = b;
-					mouseRayHitType = b->type;
-				}
+				mouseRayHit = true;
+				mouseRayHitC = static_cast<CritterB*>(e);
+				mouseRayHitType = 0;
 			}
 		}
 	}
@@ -697,7 +693,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 			CritterB *f = critters[j];
 			for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
 			{
-				btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)f->body.bodyparts[b]->body->getMotionState();
+				const btDefaultMotionState* fmyMotionState = static_cast<const btDefaultMotionState*>(f->body.bodyparts[b]->body->getMotionState());
 				if ( cposi.distance( fmyMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
 				{
 					fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
@@ -706,8 +702,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 
 							glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
 
-							const btBoxShape* boxShape = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape);
-							btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
+							btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape)->getHalfExtentsWithMargin();
 							glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
 
 							Displaylists::Instance()->call(0);
@@ -721,7 +716,6 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 				{
 					if ( cposi.distance( f->body.mouths[j]->ghostObject->getWorldTransform().getOrigin() ) < sightrange )
 					{
-
 						f->body.mouths[j]->ghostObject->getWorldTransform().getOpenGLMatrix(position);
 						
 						glPushMatrix(); 
@@ -729,8 +723,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 
 								glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
 
-								const btBoxShape* boxShape = static_cast<const btBoxShape*>(f->body.mouths[j]->shape);
-								btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
+								btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.mouths[j]->shape)->getHalfExtentsWithMargin();
 								glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
 
 								Displaylists::Instance()->call(1);
