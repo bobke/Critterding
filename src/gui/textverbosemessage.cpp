@@ -14,6 +14,8 @@ Textverbosemessage::Textverbosemessage()
 	v_width = 520;
 	v_height = 75;
 
+	col2 = (unsigned int)(((float)v_width/16)*11);
+	
 // 	active = false;
 	isMovable = true;
 	
@@ -83,8 +85,8 @@ void Textverbosemessage::draw()
 
 		glColor3f(0.7f, 0.7f, 0.7f);
 		glBegin(GL_LINES);
-			glVertex2f(position.x+((float)v_width/16)*11, position.y);
-			glVertex2f(position.x+((float)v_width/16)*11, position.y+v_height);
+			glVertex2f(position.x+col2, position.y);
+			glVertex2f(position.x+col2, position.y+v_height);
 		glEnd();
 
 		if ( !births.empty() )
@@ -108,7 +110,7 @@ void Textverbosemessage::draw()
 			glColor3f(1.0f, 1.0f, 1.0f);
 
 			for ( unsigned int i = 0; i < deaths.size(); i++ )
-				Textprinter::Instance()->print(position.x+((float)v_width/16)*11 + 10, (position.y + 13) + 1 + (i*13), deaths[i]->str);
+				Textprinter::Instance()->print(position.x + col2 + 10, (position.y + 13) + 1 + (i*13), deaths[i]->str);
 
 // 			glDisable(GL_TEXTURE_2D);
 		}
