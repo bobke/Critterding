@@ -67,7 +67,6 @@ void WorldRace::process()
 			if ( c->eat && c->touchingFood )
 			{
 				Food* f = static_cast<Food*>(c->touchedEntity);
-// 				Food* f = c->touchedFoodID;
 				float eaten = *critter_maxenergy / 100.0f;
 				if ( c->energyLevel + eaten > *critter_maxenergy )
 					eaten -= (c->energyLevel + eaten) - *critter_maxenergy;

@@ -259,8 +259,6 @@ void WorldB::eat( CritterB* c )
 		if ( c->touchingFood )
 		{
 			Food* f = static_cast<Food*>(c->touchedEntity);
-// 			cerr << "food: " << f->type << endl;
-// 			Food* f = c->touchedFoodID;
 			float eaten = *critter_maxenergy / 100.0f;
 			if ( c->energyLevel + eaten > *critter_maxenergy )
 				eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
@@ -273,7 +271,6 @@ void WorldB::eat( CritterB* c )
 		else if ( c->touchingCritter && settings->getCVar("critter_enableomnivores") )
 		{
 			CritterB* ct = static_cast<CritterB*>(c->touchedEntity);
-// 			CritterB* ct = c->touchedCritterID;
 			float eaten = *critter_maxenergy / 100.0f;
 			if ( c->energyLevel + eaten > *critter_maxenergy )
 				eaten -= (c->energyLevel + eaten) - *critter_maxenergy;

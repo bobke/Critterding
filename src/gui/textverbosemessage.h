@@ -1,7 +1,7 @@
 #ifndef TEXTVERBOSEMESSAGE_H
 #define TEXTVERBOSEMESSAGE_H
 
-#include "../utils/fps.h" // FIXME howso this is here?
+#include "../utils/timer.h" // FIXME howso this is here?
 #include "panel.h"
 
 using namespace std;
