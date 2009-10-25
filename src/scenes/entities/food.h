@@ -31,10 +31,10 @@ class Food : public Entity
 		unsigned int		totalFrames;
 
 		bool			isPicked;
+		btDefaultMotionState* myMotionState;
 	private:
 		Settings		*settings;
 
-		btDefaultMotionState* myMotionState;
 		btBoxShape* boxShape;
 		btVector3 halfExtent;
 };
