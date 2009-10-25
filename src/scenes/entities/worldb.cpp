@@ -647,7 +647,7 @@ void WorldB::drawWithGrid()
 	for( unsigned int i=0; i < walls.size(); i++)
 		walls[i]->draw();
 
-	m_dynamicsWorld->debugDrawWorld();
+// 	m_dynamicsWorld->debugDrawWorld();
 
 	// draw floor
 // 	grid.draw();
@@ -688,34 +688,52 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 		for( unsigned int i=0; i < food.size(); i++)
 		{
 			Food *f = food[i];
-			btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)f->body.bodyparts[0]->body->getMotionState();
-			btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
-			if ( cposi.distance(fposi) < sightrange )
+			if ( cposi.distance( f->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
 				f->draw();
 		}
 
 		for( unsigned int j=0; j < critters.size(); j++)
 		{
+			CritterB *f = critters[j];
+			for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
+			{
+				btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)f->body.bodyparts[b]->body->getMotionState();
+				if ( cposi.distance( fmyMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
+				{
+					fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
+					glPushMatrix(); 
+					glMultMatrixf(position);
+
+							glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
+
+							const btBoxShape* boxShape = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape);
+							btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
+							glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
+
+							Displaylists::Instance()->call(0);
+
+					glPopMatrix();
+				}
+			}
 			if ( cid != j )
 			{
-				CritterB *f = critters[j];
-				for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
+				for( unsigned int j=0; j < f->body.mouths.size(); j++)
 				{
-					btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)f->body.bodyparts[b]->body->getMotionState();
-					btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
-					if ( cposi.distance(fposi) < sightrange )
+					if ( cposi.distance( f->body.mouths[j]->ghostObject->getWorldTransform().getOrigin() ) < sightrange )
 					{
-						fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
+
+						f->body.mouths[j]->ghostObject->getWorldTransform().getOpenGLMatrix(position);
+						
 						glPushMatrix(); 
 						glMultMatrixf(position);
 
-								glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
+								glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
 
-								const btBoxShape* boxShape = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape);
+								const btBoxShape* boxShape = static_cast<const btBoxShape*>(f->body.mouths[j]->shape);
 								btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
 								glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
 
-								Displaylists::Instance()->call(0);
+								Displaylists::Instance()->call(1);
 
 						glPopMatrix();
 					}
