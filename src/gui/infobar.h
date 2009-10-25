@@ -1,7 +1,7 @@
 #ifndef INFOBAR_H
 #define INFOBAR_H
 
-#include "../utils/fps.h" // FIXME howso this is here?
+#include "../utils/fps.h"
 #include "panel.h"
 
 using namespace std;
