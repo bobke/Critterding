@@ -7,7 +7,6 @@ Raycast::Raycast(btDynamicsWorld* btWorld)
 
 castResult Raycast::cast(const btVector3& rayFrom, const btVector3& rayTo)
 {
-	castResult result;
 	result.hit = false;
 
 	btCollisionWorld::ClosestRayResultCallback resultCallback(rayFrom,rayTo);

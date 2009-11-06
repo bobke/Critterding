@@ -21,6 +21,7 @@ class Raycast
 		castResult cast(const btVector3& rayFrom, const btVector3& rayTo);
 	private:
 		btDynamicsWorld*	btDynWorld;
+		castResult result;
 };
 
 #endif
