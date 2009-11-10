@@ -24,7 +24,7 @@ class Food : public Entity
 		
 		btScalar		position[16];
 
-		float			color[3];
+// 		float			color[3];
 
 		unsigned int		lifetime;
 		float			energyLevel;

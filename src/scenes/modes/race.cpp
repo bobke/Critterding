@@ -39,17 +39,8 @@ void WorldRace::process()
 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
 
 	// render critter vision, optimized for this sim
-		for( unsigned int i=0; i < critters.size(); i++)
-			if ( critters[i]->body.mouths.size() > 0 )
-			{
-				critters[i]->place();
-				food[i]->draw();
-
-				for( unsigned int i=0; i < walls.size(); i++)
-					walls[i]->draw();
-			}
-
-		// Read pixels into retina
+		renderVision();
+	// Read pixels into retina
 		grabVision();
 
 	// process all critters

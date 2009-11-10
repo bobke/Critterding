@@ -45,6 +45,8 @@ Commands::Commands()
 	registerCmd("camera_lookdown", &WorldB::camera_lookdown);
 	registerCmd("camera_lookleft", &WorldB::camera_lookleft);
 	registerCmd("camera_lookright", &WorldB::camera_lookright);
+	registerCmd("camera_rollleft", &WorldB::camera_rollleft);
+	registerCmd("camera_rollright", &WorldB::camera_rollright);
 
 
 	registerCmd("gui_togglepanel", &Maincanvas::swapChild);

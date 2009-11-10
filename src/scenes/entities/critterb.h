@@ -9,6 +9,7 @@
 #include "../../brainz/brainz.h"
 #include "../../utils/settings.h"
 #include "../../utils/displaylists.h"
+#include "../../utils/raycast.h"
 #include "entity.h"
 #include "body.h"
 #include "food.h"
@@ -40,7 +41,7 @@ class CritterB : public Entity
 		unsigned int		adamdist;
 		btScalar		position[16];
 
-		float			color[3];
+/*		float			color[3];*/
 		float			speciescolor[3];
 		float			colorTrim;
 
@@ -86,11 +87,15 @@ class CritterB : public Entity
 	private:
 
 		Settings		*settings;
+		Raycast*		raycast;
+		castResult		mouseRay;
 
 // 		unsigned int		motorneuronsfired;
 		unsigned int		movementsmade;
 
 		btDynamicsWorld*	btDynWorld;
+
+		btVector3 getScreenDirection(const int& x, const int& y);
 
 		inline void		initConst();
 		inline void		procInputNeurons();
@@ -115,6 +120,7 @@ class CritterB : public Entity
 			const unsigned int*	critter_sightrange;
 			const unsigned int*	critter_procinterval;
 			const unsigned int*	critter_minenergyproc;
+			const unsigned int*	critter_raycastvision;
 
 			const unsigned int*	brain_costhavingneuron;
 			const unsigned int*	brain_costfiringneuron;

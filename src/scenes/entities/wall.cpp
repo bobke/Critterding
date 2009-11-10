@@ -19,6 +19,7 @@ Wall::Wall(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dyn
 	groundTransform.setOrigin( position );
 
 	fixedGround = new btCollisionObject();
+	fixedGround->setUserPointer(this);
 	fixedGround->setCollisionShape(groundShape);
 	fixedGround->setWorldTransform(groundTransform);
 	m_ownerWorld->addCollisionObject(fixedGround);

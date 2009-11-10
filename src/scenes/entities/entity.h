@@ -11,6 +11,7 @@ class Entity
 		~Entity();
 		
 		unsigned int type;
+		float			color[4];
 	private:
 };
 

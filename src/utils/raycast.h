@@ -8,7 +8,7 @@ using namespace std;
 struct castResult
 {
 	bool		hit;
-	btRigidBody*	hitBody;
+	btCollisionObject*	hitBody;
 	btVector3	hitPosition;
 };
 

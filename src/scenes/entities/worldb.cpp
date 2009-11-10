@@ -15,6 +15,8 @@ WorldB::WorldB()
 		critter_killhalfat = settings->getCVarPtr("critter_killhalfat");
 		critter_retinasize = settings->getCVarPtr("critter_retinasize");
 		critter_sightrange = settings->getCVarPtr("critter_sightrange");
+		critter_raycastvision = settings->getCVarPtr("critter_raycastvision");
+
 		food_maxlifetime = settings->getCVarPtr("food_maxlifetime");
 		food_maxenergy = settings->getCVarPtr("food_maxenergy");
 		energy = settings->getCVarPtr("energy");
@@ -126,14 +128,18 @@ void WorldB::pickBody(const int& x, const int& y)
 // 	castMouseRay();
 	if ( mouseRayHit )
 	{
-		mousepicker->attach( mouseRay.hitBody, mouseRay.hitPosition, -camera.position, mouseRayTo );
+		Entity* e = static_cast<Entity*>(mouseRay.hitBody->getUserPointer());
+		if ( e->type == 0 || e->type == 1 )
+		{
+			mousepicker->attach( static_cast<btRigidBody*>(mouseRay.hitBody), mouseRay.hitPosition, -camera.position, mouseRayTo );
 
-		if ( mouseRayHitType == 1 )
-			mousepicker->pickedBool = &mouseRayHitF->isPicked;
-		else if ( mouseRayHitType == 0 )
-			mousepicker->pickedBool = &mouseRayHitC->isPicked;
+			if ( mouseRayHitType == 1 )
+				mousepicker->pickedBool = &mouseRayHitF->isPicked;
+			else if ( mouseRayHitType == 0 )
+				mousepicker->pickedBool = &mouseRayHitC->isPicked;
 
-		*mousepicker->pickedBool = true;
+			*mousepicker->pickedBool = true;
+		}
 	}
 }
 
@@ -646,6 +652,38 @@ void WorldB::drawWithGrid()
 // 	grid.draw();
 }
 
+void WorldB::renderVision()
+{
+	// render critter vision
+	if ( !*critter_raycastvision )
+		for( unsigned int i=0; i < critters.size(); i++)
+			if ( critters[i]->body.mouths.size() > 0 )
+			{
+				critters[i]->place();
+				drawWithinCritterSight(i);
+			}
+}
+
+void WorldB::grabVision()
+{
+	// Read pixels into retina
+	if ( !*critter_raycastvision && critters.size() > 0 )
+	{
+		// determine height
+		unsigned int picheight = *critter_retinasize;
+		unsigned int rows = critters.size();
+		while ( rows > *retinasperrow )
+		{
+			picheight += *critter_retinasize;
+			rows -= *retinasperrow;
+		}
+		glReadBuffer(GL_BACK);
+		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
+	}
+}
+
+
 void WorldB::drawWithoutFaces()
 {
 	for( unsigned int i=0; i < critters.size(); i++)
@@ -913,6 +951,8 @@ void WorldB::camera_lookup() { camera.lookUp(0.03f); calcMouseDirection(); moveP
 void WorldB::camera_lookdown() { camera.lookDown(0.03f); calcMouseDirection(); movePickedBodyTo(); }
 void WorldB::camera_lookleft() { camera.lookLeft(0.03f); calcMouseDirection(); movePickedBodyTo(); }
 void WorldB::camera_lookright() { camera.lookRight(0.03f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_rollleft() { camera.rollLeft(0.03f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_rollright() { camera.rollRight(0.03f); calcMouseDirection(); movePickedBodyTo(); }
 
 
 WorldB::~WorldB()

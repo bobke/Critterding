@@ -37,6 +37,7 @@ Settingspanel::Settingspanel()
 	vspace += vint; addSettingmutator("critter_autosaveinterval", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_killhalfat", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_enableomnivores", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_raycastvision", hspace, vspace);
 
 // 	vspace += vint;
 	vspace += vint; addSettingmutator("food_maxlifetime", hspace, vspace);

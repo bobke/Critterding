@@ -14,12 +14,17 @@ castResult Raycast::cast(const btVector3& rayFrom, const btVector3& rayTo)
 
 	if (resultCallback.hasHit())
 	{
-		result.hitBody = btRigidBody::upcast(resultCallback.m_collisionObject);
-		if ( result.hitBody )
+// 		cerr << "1 true" << endl;
+		result.hitBody = resultCallback.m_collisionObject;
+		result.hit = true;
+		result.hitPosition = resultCallback.m_hitPointWorld;
+
+/*		if ( result.hitBody )
 		{
+			cerr << "2 true" << endl;
 			result.hit = true;
 			result.hitPosition = resultCallback.m_hitPointWorld;
-		}
+		}*/
 	}
 
 	return result;
