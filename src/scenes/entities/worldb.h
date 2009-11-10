@@ -2,7 +2,7 @@
 #define WORLDB_H
 
 #include "btBulletDynamicsCommon.h"
-#include "LinearMath/btIDebugDraw.h"
+// #include "LinearMath/btIDebugDraw.h"
 // #include "../../gl/gldebugdrawer.h"
 // #include <sstream>
 #include <iomanip>
@@ -107,37 +107,9 @@ class WorldB
 
 		void			checkCollisions( CritterB* c );
 
-		inline void grabVision()
-		{
-			// Read pixels into retina
-			if ( critters.size() > 0 )
-			{
-				// determine height
-				unsigned int picheight = *critter_retinasize;
-				unsigned int rows = critters.size();
-				while ( rows > *retinasperrow )
-				{
-					picheight += *critter_retinasize;
-					rows -= *retinasperrow;
-				}
-				glReadBuffer(GL_BACK);
-				glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-				glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
-			}
-		}
+		void grabVision();
 
-		inline void renderVision()
-		{
-			// render critter vision
-			for( unsigned int i=0; i < critters.size(); i++)
-			{
-				if ( critters[i]->body.mouths.size() > 0 )
-				{
-					critters[i]->place();
-					drawWithinCritterSight(i);
-				}
-			}
-		}
+		void renderVision();
 
 		void			calcMouseDirection();
 
@@ -163,6 +135,8 @@ class WorldB
 		void 			camera_lookdown();
 		void 			camera_lookleft();
 		void 			camera_lookright();
+		void 			camera_rollleft();
+		void 			camera_rollright();
 
 		// pointers to parents (evolution) mousepos
 		int* mousex;
@@ -191,6 +165,7 @@ class WorldB
 		const unsigned int*	critter_autosaveinterval;
 		const unsigned int*	critter_killhalfat;
 		const unsigned int*	critter_sightrange;
+		const unsigned int*	critter_raycastvision;
 
 		const unsigned int*	food_maxlifetime;
 		const unsigned int*	food_maxenergy;

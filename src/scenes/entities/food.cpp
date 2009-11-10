@@ -10,6 +10,7 @@ Food::Food()
 	color[0] = 0.0f;
 	color[1] = 0.5f;
 	color[2] = 0.0f;
+	color[3] = 1.0f;
 
 	type = 1;
 	isPicked = false;

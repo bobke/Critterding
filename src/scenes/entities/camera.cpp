@@ -179,16 +179,21 @@ btVector3 Camera::getScreenDirection(const int& x, const int& y)
 	btVector3 origin = position;
 
 	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
-	float reusedY = (rotation.y) * 0.0174532925f;
+	float reusedY = rotation.y * 0.0174532925f;
+	float reusedZ = rotation.z * 0.0174532925f;
 	
 	float sinX = sin(reusedX);
 	float sinY = sin(reusedY);
+// 	float sinZ = sin(reusedZ);
 	float cosX = cos(reusedX);
 	float cosY = cos(reusedY);
+// 	float cosZ = cos(reusedZ);
 
+// 	cerr << sinZ << endl;
+	
 	btVector3 forwardRay = btVector3( sinY * cosX, -sinX, cosY * cosX ) * directiondepth;
 	btVector3 upRay = btVector3( -sinY * sinX, -cosX, -cosY * sinX );
-
+	
 	btVector3 hor = forwardRay.cross(upRay);
 	hor.normalize();
 	hor *= directiondepth;
@@ -202,6 +207,7 @@ btVector3 Camera::getScreenDirection(const int& x, const int& y)
 	rayTo -= y * (upRay * (1.0f/((float)*settings->winHeight)));
 
 	// FIXME
+// 	rayTo.setX(-rayTo.getX());
 	rayTo.setY(-rayTo.getY());
 	rayTo.setZ(-rayTo.getZ());
 

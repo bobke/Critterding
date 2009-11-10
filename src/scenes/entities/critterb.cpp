@@ -10,6 +10,7 @@ void CritterB::initConst()
 	critter_sightrange = settings->getCVarPtr("critter_sightrange");
 	critter_procinterval = settings->getCVarPtr("critter_procinterval");
 	critter_minenergyproc = settings->getCVarPtr("critter_minenergyproc");
+	critter_raycastvision = settings->getCVarPtr("critter_raycastvision");
 
 	brain_costhavingneuron = settings->getCVarPtr("brain_costhavingneuron");
 	brain_costfiringneuron = settings->getCVarPtr("brain_costfiringneuron");
@@ -29,17 +30,20 @@ void CritterB::initConst()
 
 	eat			= false;
 	procreate		= false;
+
+	// raycast
+	raycast = new Raycast(btDynWorld);
 }
 
 CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVector3& startPos, unsigned char* retinap)
 {
-	initConst();
-	
 	// first things first
 	btDynWorld						= btWorld;
 	retina							= retinap;
 	critterID						= id;
-	
+
+	initConst();
+
 	adamdist						= 0;
 
 	energyLevel						= settings->getCVar("critter_startenergy");
@@ -102,10 +106,12 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 	color[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	color[3] = 0.0f;
 
 	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[3] = 0.0f;
 
 	// BODY
 	body.buildArch();
@@ -121,12 +127,13 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 
 CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& startPos, bool brainmutant, bool bodymutant)
 {
-	initConst();
 
 	// first things first
 	btDynWorld					= other.btDynWorld;
 	retina						= other.retina;
 	critterID					= id;
+
+	initConst();
 
 	adamdist					= other.adamdist;
 	retinasize					= other.retinasize;
@@ -135,10 +142,12 @@ CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& start
 	color[0]					= other.color[0];
 	color[1]					= other.color[1];
 	color[2]					= other.color[2];
+	color[3]					= other.color[3];
 
 	speciescolor[0]					= other.speciescolor[0];
 	speciescolor[1]					= other.speciescolor[1];
 	speciescolor[2]					= other.speciescolor[2];
+	speciescolor[3]					= other.speciescolor[3];
 
 	body.copyFrom(other.body);
 	brain.copyFrom(other.brain);
@@ -162,19 +171,20 @@ CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& start
 
 CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVector3& startPos, unsigned char* retinap)
 {
-	initConst();
-
 	// critterID is arranged in world, definite critter insertion is not determined yet
 
 	// first things first
 	btDynWorld		= btWorld;
 	retina			= retinap;
 
+	initConst();
+
 	energyLevel		= settings->getCVar("critter_startenergy");
 
 	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+	speciescolor[3] = 0.0f;
 
 	loadCritterB(critterstring);
 
@@ -249,7 +259,7 @@ void CritterB::draw(bool drawFaces)
 		glMultMatrixf(position);
 
 			if ( settings->getCVar("colormode") == 1 )
-				glColor4f( speciescolor[0], speciescolor[1], speciescolor[2], 0.0f );
+				glColor4f( speciescolor[0], speciescolor[1], speciescolor[2], speciescolor[3] );
 			else
 				glColor4f( color[0], color[1], color[2], 0.0f );
 
@@ -347,15 +357,11 @@ void CritterB::process()
 	// move
 		// motorate all constraints
 		for ( unsigned int i=0; i < body.constraints.size(); i++ )
-		{
 			body.constraints[i]->motorate();
-		}
 
 	// move ghostobject to mouth object position
 		for ( unsigned int i=0; i < body.mouths.size(); i++ )
-		{
 			body.mouths[i]->updateGhostObjectPosition();
-		}
 }
 
 void CritterB::procInputNeurons()
@@ -399,15 +405,72 @@ void CritterB::procInputNeurons()
 		}
 
 	// Vision
-		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
+		unsigned int vstart = overstep;
+
+		if ( *critter_raycastvision )
 		{
-			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
-			{
-				brain.Inputs[overstep++].output = (float)retina[w] / 256.0f;
-/*				cerr << (int)retina[w] << endl;*/
-// 				cerr << "brain.Inputs[" << overstep <<  "].output" << endl;
-			}
+			for ( int x = retinasize; x >= 0 ; x-- )
+				for ( unsigned int y = 0; y < retinasize; y++ )
+				{
+					mouseRay = raycast->cast( body.mouths[0]->ghostObject->getWorldTransform().getOrigin(), getScreenDirection(x, y) );
+					if ( mouseRay.hit )
+					{
+						Entity* e = static_cast<Entity*>(mouseRay.hitBody->getUserPointer());
+						brain.Inputs[overstep++].output = e->color[0];
+						brain.Inputs[overstep++].output = e->color[1];
+						brain.Inputs[overstep++].output = e->color[2];
+						brain.Inputs[overstep++].output = e->color[3];
+					}
+					else
+					{
+						brain.Inputs[overstep++].output = 0.0f;
+						brain.Inputs[overstep++].output = 0.0f;
+						brain.Inputs[overstep++].output = 0.0f;
+						brain.Inputs[overstep++].output = 0.0f;
+					}
+				}
 		}
+		else
+		{
+			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
+				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
+					brain.Inputs[overstep++].output = (float)retina[w] / 256.0f;
+		}
+
+// 		for ( unsigned int x = 0; x < retinasize; x++ )
+// 		{
+// 			for ( unsigned int y = vstart+(retinasize*4*x); y < vstart+(retinasize*4*x)+(retinasize*4); y+=4 )
+// 			{
+// // 				cerr << " now = " << y << endl;
+// 				if ( brain.Inputs[y].output ) cerr << "\033[1;34mB\033[0m";
+// 				else cerr << ".";
+// 				if ( brain.Inputs[y+1].output ) cerr << "\033[1;32mG\033[0m";
+// 				else cerr << ".";
+// 				if ( brain.Inputs[y+2].output ) cerr << "\033[1;31mR\033[0m";
+// 				else cerr << ".";
+// 				if ( brain.Inputs[y+3].output ) cerr << "\033[1;35mA\033[0m";
+// 				else cerr << ".";
+// 			}
+// 			cerr << endl;
+// 		}
+// 		cerr << endl;
+// 
+// 		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
+// 		{
+// 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=components )
+// 			{
+// 				if ( (int)retina[w] ) cerr << "\033[1;34mB\033[0m";
+// 				else cerr << ".";
+// 				if ( (int)retina[w+1] ) cerr << "\033[1;32mG\033[0m";
+// 				else cerr << ".";
+// 				if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
+// 				else cerr << ".";
+// 				if ( (int)retina[w+3] ) cerr << "\033[1;35mA\033[0m";
+// 				else cerr << ".";
+// 			}
+// 			cerr << endl;
+// 		}
+// 		cerr << endl;
 
 	// constraint angle neurons
 		for ( unsigned int i=0; i < body.constraints.size(); i++ )
@@ -422,6 +485,48 @@ void CritterB::procInputNeurons()
 // 			exit(0);
 // 		}
 }
+
+btVector3 CritterB::getScreenDirection(const int& x, const int& y)
+{
+	btTransform tr = body.mouths[0]->ghostObject->getWorldTransform ();
+	
+	btVector3 forwardRay ( 
+		tr.getBasis()[0][2], 
+		tr.getBasis()[1][2], 
+		tr.getBasis()[2][2]); 
+	btVector3 upRay ( 
+		tr.getBasis()[0][0], 
+		tr.getBasis()[1][0], 
+		tr.getBasis()[2][0]); 
+
+// 	btVector3 forwardRay = tr.getBasis()[2];
+// 	btVector3 upRay = tr.getBasis()[0];
+
+	forwardRay.normalize();
+	upRay.normalize();
+
+	forwardRay *=  *critter_sightrange;
+
+	btVector3 hor = forwardRay.cross(upRay);
+	hor.normalize();
+	hor *= *critter_sightrange;
+
+	upRay = hor.cross(forwardRay);
+	upRay.normalize();
+	upRay *= *critter_sightrange;
+
+	btVector3 rayTo = (tr.getOrigin() + forwardRay) - (0.5f * hor) + (0.5f * upRay);
+	rayTo += x * (hor * (1.0f/((float)retinasize)));
+	rayTo -= y * (upRay * (1.0f/((float)retinasize)));
+
+	// FIXME
+	rayTo.setX(-rayTo.getX());
+	rayTo.setY(-rayTo.getY());
+	rayTo.setZ(-rayTo.getZ());
+
+	return rayTo;
+}
+
 
 void CritterB::mutateBody()
 {
@@ -504,6 +609,7 @@ void CritterB::loadCritterB(string &content)
 				if(EOF == sscanf(R.c_str(), "%f", &color[0])) cerr << "ERROR INSERTING CRITTER (colorR)" << endl;
 				if(EOF == sscanf(G.c_str(), "%f", &color[1])) cerr << "ERROR INSERTING CRITTER (colorG)" << endl;
 				if(EOF == sscanf(B.c_str(), "%f", &color[2])) cerr << "ERROR INSERTING CRITTER (colorB)" << endl;
+				color[3] = 0.0f;
 			}
 
 		// adamdist=690;
@@ -573,7 +679,7 @@ string CritterB::saveCritterB()
 		glLoadIdentity();
 		glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, (float)*critter_sightrange/10);
 
-		btScalar position[16];
+// 		btScalar position[16];
 		btDefaultMotionState* myMotionState = (btDefaultMotionState*)body.mouths[0]->body->getMotionState();
 		btTransform tr = myMotionState->m_graphicsWorldTrans.inverse();
 		tr.getOpenGLMatrix(position);

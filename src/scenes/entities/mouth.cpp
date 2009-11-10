@@ -28,6 +28,7 @@ Mouth::Mouth(btDynamicsWorld* ownerWorld, void* owner, const btVector3& dimensio
 		ghostObject->setCollisionShape( new btBoxShape( btVector3( dimensions.getX()+0.01f, dimensions.getY()+0.01f, dimensions.getZ()+0.01f ) ) );
 		ghostObject->setCollisionFlags( btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE );
 		ghostObject->setWorldTransform(offset*transform);
+		ghostObject->setUserPointer(owner);
 
 		m_ownerWorld->addCollisionObject(ghostObject);
 
