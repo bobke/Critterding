@@ -22,14 +22,14 @@ void Critterselection::unregisterCritter(unsigned long critterID)
 
 void Critterselection::registerCritter(CritterB* critter)
 {
-	if ( clist[critter->critterID] )
-	{
-		unregisterCritter(critter->critterID);
-	}
-	else
+	if ( !clist[critter->critterID] )
 	{
 		clist[critter->critterID] = critter;
 		cerr << critter->critterID << " was added :)" << endl;
+	}
+	else
+	{
+		cerr << critter->critterID << " skipped" << endl;
 	}
 }
 
