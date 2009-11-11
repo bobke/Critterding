@@ -593,6 +593,8 @@ void WorldB::removeCritter(unsigned int cid)
 
 	if ( critters[cid]->isPicked )
 		mousepicker->detach();
+	
+	critterselection->unregisterCritter(critters[cid]->critterID);
 
 	delete critters[cid];
 	critters.erase(critters.begin()+cid);
@@ -604,31 +606,8 @@ void WorldB::removeCritter(unsigned int cid)
 
 void WorldB::killHalfOfCritters()
 {
-// 	unsigned int c = 0;
-// 	unsigned int halfc = critters.size()/2;
-// 	while ( c < halfc )
-// 	{
-// 		freeEnergy += critters[0]->energyLevel;
-// 
-// 		delete critters[0];
-// 		critters.erase(critters.begin());
-// 		c++;
-// 	}
-
 	for ( unsigned int c = 0; c < critters.size(); c++ )
-	{
-		freeEnergy += critters[c]->energyLevel;
-
-		if ( critters[c]->isPicked )
-			mousepicker->detach();
-
-		delete critters[c];
-		critters.erase(critters.begin()+c);
-	}
-
-	// update higher retina frame positions
-	for ( unsigned int c = 0; c < critters.size(); c++ )
-		critters[c]->calcFramePos(c);
+		removeCritter(c);
 }
 
 void WorldB::drawWithGrid()
