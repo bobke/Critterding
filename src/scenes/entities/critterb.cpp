@@ -18,6 +18,7 @@ void CritterB::initConst()
 	brain_costhavingsynapse = settings->getCVarPtr("brain_costhavingsynapse");
 
 	type = 0;
+	isPicked		= false;
 
 	totalFrames		= 0;
 	procreateTimeCount	= 0;
@@ -25,8 +26,6 @@ void CritterB::initConst()
 // 	sightrange = settings->critter_sightrange;
 	components		= 4;
 	colorTrim		= 0.15f;
-
-	isPicked		= false;
 
 	eat			= false;
 	procreate		= false;
@@ -481,7 +480,7 @@ void CritterB::procInputNeurons()
 
 btVector3 CritterB::getScreenDirection(const int& x, const int& y)
 {
-	float directionlength = (float)*critter_sightrange*10;
+	float directionlength = 100000.0f;
 	
 	btTransform tr = body.mouths[0]->ghostObject->getWorldTransform();
 	
@@ -510,7 +509,7 @@ btVector3 CritterB::getScreenDirection(const int& x, const int& y)
 	upRay.normalize();
 	upRay *= directionlength;
 
-	btVector3 rayTo = (tr.getOrigin() + forwardRay) - (0.5f * hor) + (0.5f * upRay);
+	btVector3 rayTo = (tr.getOrigin() + forwardRay) - (0.5f * hor) + (0.5f * upRay); // FIXME i'm not sure it's 100% ok here, fov wise
 	rayTo += x * (hor * (1.0f/((float)retinasize)));
 	rayTo -= y * (upRay * (1.0f/((float)retinasize)));
 

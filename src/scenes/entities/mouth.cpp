@@ -1,5 +1,4 @@
 #include "mouth.h"
-
 Mouth::Mouth(btDynamicsWorld* ownerWorld, void* owner, const btVector3& dimensions, float weight, btTransform& offset, btTransform& transform)
 {
 	m_ownerWorld = ownerWorld;

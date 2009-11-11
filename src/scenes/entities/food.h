@@ -30,7 +30,6 @@ class Food : public Entity
 		float			energyLevel;
 		unsigned int		totalFrames;
 
-		bool			isPicked;
 		btDefaultMotionState* myMotionState;
 	private:
 		Settings		*settings;

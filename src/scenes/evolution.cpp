@@ -183,18 +183,19 @@ void Evolution::draw()
 				unsigned int rmargindistance = 70;
 				unsigned int vspacer = 12;
 				glColor3f(1.0f, 1.0f, 1.0f);
-				if ( world->mouseRayHitType == 1 )
+				if ( world->mouseRayHitEntity->type == 1 )
 				{
 					Textprinter::Instance()->print( oldx+margin, oldy,    "food");
 					Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
-					Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", world->mouseRayHitF->energyLevel);
+					Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", static_cast<const Food*>(world->mouseRayHitEntity)->energyLevel);
 				}
-				else if ( world->mouseRayHitType == 0 )
+				else if ( world->mouseRayHitEntity->type == 0 )
 				{
+					CritterB* c = static_cast<const CritterB*>(world->mouseRayHitEntity);
 					Textprinter::Instance()->print( oldx+margin, oldy,    "critter");
-					Textprinter::Instance()->print(oldx+rmargindistance, oldy, "%1i", world->mouseRayHitC->critterID);
+					Textprinter::Instance()->print(oldx+rmargindistance, oldy, "%1i", c->critterID);
 					Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
-					Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", world->mouseRayHitC->energyLevel);
+					Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", c->energyLevel);
 				}
 			}
 
@@ -280,6 +281,10 @@ void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 		if ( button == 1 )
 		{
 			canvas.buttonPress();
+			world->selectBody( x, y );
+		}
+		else if ( button == 3 )
+		{
 			world->pickBody( x, y );
 		}
 	}
@@ -291,6 +296,9 @@ void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 	if ( button == 1 )
 	{
 		canvas.buttonRelease();
+	}
+	else if ( button == 3 )
+	{
 		world->mousepicker->detach();
 	}
 }
