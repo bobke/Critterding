@@ -12,6 +12,7 @@ class Entity
 		
 		unsigned int type;
 		float			color[4];
+		bool			isPicked;
 	private:
 };
 

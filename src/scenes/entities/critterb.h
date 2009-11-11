@@ -80,8 +80,6 @@ class CritterB : public Entity
 		void			calcFramePos(unsigned int pos);
 		void			printVision();
 		
-		bool			isPicked;
-
 		float			fitness_index;
 
 	private:

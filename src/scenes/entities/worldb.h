@@ -18,7 +18,7 @@
 #include "../../utils/raycast.h"
 #include "../../utils/mousepicker.h"
 #include "../../utils/statsbuffer.h"
-
+#include "../../utils/critterselection.h"
 #include "../../utils/logbuffer.h"
 
 #include "../../gui/textverbosemessage.h"
@@ -92,6 +92,7 @@ class WorldB
 		void			killHalfOfCritters();
 
 		void			pickBody(const int& x, const int& y);
+		void			selectBody(const int& x, const int& y);
 		void			castMouseRay();
 		void			movePickedBodyTo();
 		void			movePickedBodyFrom();
@@ -120,9 +121,7 @@ class WorldB
 		string			loaddir;
 
 		bool			mouseRayHit;
-		unsigned int		mouseRayHitType;
-		CritterB*		mouseRayHitC;
-		Food*			mouseRayHitF;
+		Entity*			mouseRayHitEntity;
 
 		// camera operations (needed for commands)
 		void 			camera_moveup();
@@ -144,6 +143,7 @@ class WorldB
 
 	private:
 		Raycast*		raycast;
+		Critterselection	*critterselection;
 
 		castResult		mouseRay;
 		btVector3		mouseRayTo;

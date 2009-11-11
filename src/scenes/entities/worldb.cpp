@@ -22,6 +22,7 @@ WorldB::WorldB()
 		energy = settings->getCVarPtr("energy");
 
 	statsBuffer = Statsbuffer::Instance();
+	critterselection = Critterselection::Instance();
 
 	freeEnergy = *food_maxenergy * *energy;
 		
@@ -98,22 +99,15 @@ void WorldB::castMouseRay()
 	mouseRayHit = false;
 	if ( mouseRay.hit )
 	{
-		if ( !( mouseRay.hitBody->isStaticObject() || mouseRay.hitBody->isKinematicObject() ) )
-		{
+// 		if ( !( mouseRay.hitBody->isStaticObject() || mouseRay.hitBody->isKinematicObject() ) )
+// 		{
 			Entity* e = static_cast<Entity*>(mouseRay.hitBody->getUserPointer());
-			if ( e->type == 1 )
+			if ( e->type == 1 || e->type == 0 )
 			{
 				mouseRayHit = true;
-				mouseRayHitF = static_cast<Food*>(e);
-				mouseRayHitType = 1;
+				mouseRayHitEntity = e;
 			}
-			else if ( e->type == 0 )
-			{
-				mouseRayHit = true;
-				mouseRayHitC = static_cast<CritterB*>(e);
-				mouseRayHitType = 0;
-			}
-		}
+// 		}
 	}
 }
 
@@ -125,22 +119,24 @@ void WorldB::calcMouseDirection()
 
 void WorldB::pickBody(const int& x, const int& y)
 {
-// 	castMouseRay();
 	if ( mouseRayHit )
 	{
-		Entity* e = static_cast<Entity*>(mouseRay.hitBody->getUserPointer());
-		if ( e->type == 0 || e->type == 1 )
+		if ( mouseRayHitEntity->type == 0 || mouseRayHitEntity->type == 1 )
 		{
 			mousepicker->attach( static_cast<btRigidBody*>(mouseRay.hitBody), mouseRay.hitPosition, -camera.position, mouseRayTo );
 
-			if ( mouseRayHitType == 1 )
-				mousepicker->pickedBool = &mouseRayHitF->isPicked;
-			else if ( mouseRayHitType == 0 )
-				mousepicker->pickedBool = &mouseRayHitC->isPicked;
+			mousepicker->pickedBool = &mouseRayHitEntity->isPicked;
 
 			*mousepicker->pickedBool = true;
 		}
 	}
+}
+
+void WorldB::selectBody(const int& x, const int& y)
+{
+	if ( mouseRayHit )
+		if ( mouseRayHitEntity->type == 0 )
+			critterselection->registerCritter(static_cast<CritterB*>(mouseRayHitEntity));
 }
 
 void WorldB::movePickedBodyTo()
