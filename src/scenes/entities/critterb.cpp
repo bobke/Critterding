@@ -366,7 +366,6 @@ void CritterB::process()
 
 void CritterB::procInputNeurons()
 {
-
 	// clear all inputs
 
 	brain.clearInputs();
@@ -408,8 +407,7 @@ void CritterB::procInputNeurons()
 		unsigned int vstart = overstep;
 
 		if ( *critter_raycastvision )
-		{
-			for ( int x = retinasize; x >= 0 ; x-- )
+			for ( int x = retinasize-1; x >= 0 ; x-- )
 				for ( unsigned int y = 0; y < retinasize; y++ )
 				{
 					mouseRay = raycast->cast( body.mouths[0]->ghostObject->getWorldTransform().getOrigin(), getScreenDirection(x, y) );
@@ -429,13 +427,10 @@ void CritterB::procInputNeurons()
 						brain.Inputs[overstep++].output = 0.0f;
 					}
 				}
-		}
 		else
-		{
 			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
 				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
 					brain.Inputs[overstep++].output = (float)retina[w] / 256.0f;
-		}
 
 // 		for ( unsigned int x = 0; x < retinasize; x++ )
 // 		{
@@ -474,9 +469,7 @@ void CritterB::procInputNeurons()
 
 	// constraint angle neurons
 		for ( unsigned int i=0; i < body.constraints.size(); i++ )
-		{
 			brain.Inputs[overstep++].output = body.constraints[i]->getAngle();
-		}
 
 	// debugging check
 // 		if ( overstep-1 != brain.Inputs.size()-1 )
@@ -488,7 +481,9 @@ void CritterB::procInputNeurons()
 
 btVector3 CritterB::getScreenDirection(const int& x, const int& y)
 {
-	btTransform tr = body.mouths[0]->ghostObject->getWorldTransform ();
+	float directionlength = (float)*critter_sightrange*10;
+	
+	btTransform tr = body.mouths[0]->ghostObject->getWorldTransform();
 	
 	btVector3 forwardRay ( 
 		tr.getBasis()[0][2], 
@@ -505,15 +500,15 @@ btVector3 CritterB::getScreenDirection(const int& x, const int& y)
 	forwardRay.normalize();
 	upRay.normalize();
 
-	forwardRay *=  *critter_sightrange;
+	forwardRay *=  directionlength;
 
 	btVector3 hor = forwardRay.cross(upRay);
 	hor.normalize();
-	hor *= *critter_sightrange;
+	hor *= directionlength;
 
 	upRay = hor.cross(forwardRay);
 	upRay.normalize();
-	upRay *= *critter_sightrange;
+	upRay *= directionlength;
 
 	btVector3 rayTo = (tr.getOrigin() + forwardRay) - (0.5f * hor) + (0.5f * upRay);
 	rayTo += x * (hor * (1.0f/((float)retinasize)));
@@ -680,9 +675,9 @@ string CritterB::saveCritterB()
 		glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, (float)*critter_sightrange/10);
 
 // 		btScalar position[16];
-		btDefaultMotionState* myMotionState = (btDefaultMotionState*)body.mouths[0]->body->getMotionState();
-		btTransform tr = myMotionState->m_graphicsWorldTrans.inverse();
-		tr.getOpenGLMatrix(position);
+// 		btDefaultMotionState* myMotionState = (btDefaultMotionState*)body.mouths[0]->body->getMotionState();
+// 		btTransform tr = myMotionState->m_graphicsWorldTrans.inverse();
+		body.mouths[0]->ghostObject->getWorldTransform().inverse().getOpenGLMatrix(position);
 		glMultMatrixf(position);
 
 		glMatrixMode(GL_MODELVIEW);
