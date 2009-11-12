@@ -23,6 +23,7 @@ Evolution::Evolution()
 	world->mousey = &oldy;
 	
 	cmd->world = world;
+	static_cast<Hud*>(canvas.children["hud"])->world = world;
 	cmd->canvas = &canvas;
 	
 	pause = false;
@@ -41,6 +42,7 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_F5,		"swapstatsgraph", execcmd.gen("gui_togglepanel", "statsgraph"), 0, 0, 0 );
 	events->registerEvent(SDLK_F6,		"swapsettingspanel", execcmd.gen("gui_togglepanel", "settingspanel"), 0, 0, 0 );
 	events->registerEvent(SDLK_F7,		"swapsettingsbrainpanel", execcmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
+	events->registerEvent(SDLK_F8,		"swaphud", execcmd.gen("gui_togglepanel", "hud"), 0, 0, 0 );
 	
 // 	events->registerEvent(SDLK_F5,		"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
 // 	events->registerEvent(SDLK_F6,		"inc_critters", execcmd.gen("settings_increase", "mincritters"), delay, 0, speedup );

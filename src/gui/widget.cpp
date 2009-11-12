@@ -14,17 +14,9 @@ Widget::Widget()
 	active = false;
 }
 
-void Widget::draw()
-{
-}
-
-void Widget::click()
-{
-}
-
-void Widget::release()
-{
-}
+void Widget::draw() {}
+void Widget::click() {}
+void Widget::release() {}
 
 bool Widget::mouseOver(int x, int y)
 {

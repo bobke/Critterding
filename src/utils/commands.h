@@ -7,6 +7,7 @@
 #include "logbuffer.h"
 #include "../scenes/entities/worldb.h"
 #include "settings.h"
+#include "critterselection.h"
 #include "../gui/maincanvas.h"
 
 using namespace std;
@@ -22,6 +23,7 @@ class Commands
 // 		void (Maincanvas::*canvasMember)();
 		void (Maincanvas::*canvasMember_string)(const string&);
 		void (Settings::*settingsMember_string)(const string&);
+		void (Critterselection::*critterselectionMember_uint)(const unsigned int&);
 		void (*member)(int);
 	};
 
@@ -32,8 +34,6 @@ class Commands
 
 		WorldB* world;
 		Maincanvas* canvas;
-		void execCmd(const string& name);
-		void execCmd(const string& name, const string& str);
 		void execCmd(const cmdsettings& cmds);
 
 		void quit();
@@ -42,11 +42,17 @@ class Commands
 	private:
 		static Commands* _instance;
 		Settings*		settings;
+		Critterselection*	critterselection;
+
+		void execCmd(const string& name);
+		void execCmd(const string& name, const string& str);
+		void execCmd(const string& name, const unsigned int& ui);
 
 		void registerCmd(string name, void (Commands::*pt2Func)());
 		void registerCmd(string name, void (WorldB::*pt2Func)());
 		void registerCmd(string name, void (Maincanvas::*pt2Func)(const string&));
 		void registerCmd(string name, void (Settings::*pt2Func)(const string&));
+		void registerCmd(string name, void (Critterselection::*pt2Func)(const unsigned int&));
 
 		void decreaseenergy();
 		void increaseenergy();

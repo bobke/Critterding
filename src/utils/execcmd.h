@@ -9,13 +9,15 @@ using namespace std;
 		T_COMMAND = 1,
 		T_WORLD,
 		T_CANVAS,
-		T_SETTINGS
+		T_SETTINGS,
+		T_CS
 	};
 
 	enum cmdargtype {
 		A_NOARG = 1,
 		A_INT,
-		A_STRING
+		A_STRING,
+		A_UINT
 	};
 	
 	struct cmdsettings
@@ -23,6 +25,7 @@ using namespace std;
 		string name;
 		cmdargtype argtype;
 		int argi;
+		unsigned int argui;
 		string args;
 	};
 
@@ -34,6 +37,7 @@ using namespace std;
 
 			cmdsettings gen(const string& name);
 			cmdsettings gen(const string& name, const string& str);
+			cmdsettings gen(const string& name, const unsigned int& ul);
 		private:
 	};
 

@@ -21,6 +21,15 @@ cmdsettings Execcmd::gen(const string& name, const string& str)
 	return c;
 }
 
+cmdsettings Execcmd::gen(const string& name, const unsigned int& ul)
+{
+	cmdsettings c;
+	c.name = name;
+	c.argtype = A_UINT;
+	c.argui = ul;
+	return c;
+}
+
 Execcmd::~Execcmd()
 {
 }

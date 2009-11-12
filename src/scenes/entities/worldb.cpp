@@ -594,7 +594,7 @@ void WorldB::removeCritter(unsigned int cid)
 	if ( critters[cid]->isPicked )
 		mousepicker->detach();
 	
-	critterselection->unregisterCritter(critters[cid]->critterID);
+	critterselection->unregisterCritterID(critters[cid]->critterID);
 
 	delete critters[cid];
 	critters.erase(critters.begin()+cid);
@@ -610,23 +610,6 @@ void WorldB::killHalfOfCritters()
 		removeCritter(c);
 }
 
-void WorldB::drawWithGrid()
-{
-	for( unsigned int i=0; i < critters.size(); i++)
-		critters[i]->draw(true);
-
-	for( unsigned int i=0; i < food.size(); i++)
-		food[i]->draw();
-
-	for( unsigned int i=0; i < walls.size(); i++)
-		walls[i]->draw();
-
-// 	m_dynamicsWorld->debugDrawWorld();
-
-	// draw floor
-// 	grid.draw();
-}
-
 void WorldB::renderVision()
 {
 	// render critter vision
@@ -635,7 +618,7 @@ void WorldB::renderVision()
 			if ( critters[i]->body.mouths.size() > 0 )
 			{
 				critters[i]->place();
-				drawWithinCritterSight(i);
+				drawWithinCritterSight(critters[i]);
 			}
 }
 
@@ -658,10 +641,9 @@ void WorldB::grabVision()
 	}
 }
 
-
 void WorldB::drawWithoutFaces()
 {
-	for( unsigned int i=0; i < critters.size(); i++)
+ 	for( unsigned int i=0; i < critters.size(); i++)
 		critters[i]->draw(false);
 
 	for( unsigned int i=0; i < food.size(); i++)
@@ -674,9 +656,28 @@ void WorldB::drawWithoutFaces()
 // 	grid.draw();
 }
 
-void WorldB::drawWithinCritterSight(unsigned int cid)
+
+void WorldB::drawWithGrid()
 {
-	CritterB *c = critters[cid];
+	for( unsigned int i=0; i < critters.size(); i++)
+		critters[i]->draw(true);
+
+	for( unsigned int i=0; i < food.size(); i++)
+		food[i]->draw();
+
+	for( unsigned int i=0; i < walls.size(); i++)
+		walls[i]->draw();
+
+// 	m_dynamicsWorld->debugDrawWorld();
+
+	// draw floor
+// 	grid.draw();
+}
+
+
+void WorldB::drawWithinCritterSight(CritterB *c)
+{
+// 	CritterB *c = critters[cid];
 
 	if ( c->body.mouths.size() > 0 )
 	{
@@ -720,7 +721,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 					glPopMatrix();
 				}
 			}
-			if ( cid != j )
+			if ( c->critterID != critters[j]->critterID )
 			{
 				for( unsigned int j=0; j < f->body.mouths.size(); j++)
 				{
