@@ -123,10 +123,20 @@ void WorldB::pickBody(const int& x, const int& y)
 	{
 		if ( mouseRayHitEntity->type == 0 || mouseRayHitEntity->type == 1 )
 		{
-			mousepicker->attach( static_cast<btRigidBody*>(mouseRay.hitBody), mouseRay.hitPosition, -camera.position, mouseRayTo );
+			btRigidBody* b = static_cast<btRigidBody*>(mouseRay.hitBody);
 
+			// if critter, and it's the head's ghostobject we touch, overwrite with head's body
+			if ( mouseRayHitEntity->type == 0 )
+			{
+				btCollisionObject* co = static_cast<btCollisionObject*>(mouseRay.hitBody);
+				CritterB* c = static_cast<CritterB*>(mouseRayHitEntity);
+				if ( co == c->body.mouths[0]->ghostObject )
+					cerr << "overwriting head body" << endl;
+					b = c->body.mouths[0]->body;
+			}
+			
+			mousepicker->attach( b, mouseRay.hitPosition, -camera.position, mouseRayTo );
 			mousepicker->pickedBool = &mouseRayHitEntity->isPicked;
-
 			*mousepicker->pickedBool = true;
 		}
 	}
