@@ -78,7 +78,7 @@ class WorldB
 		void			drawWithGrid();
 		void			drawWithoutFaces();
 		
-		void			drawWithinCritterSight(unsigned int cid);
+		void			drawWithinCritterSight(CritterB *c);
 
 		void			startfoodamount(unsigned int amount);
 

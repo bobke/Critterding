@@ -1,13 +1,5 @@
 #include "commands.h"
 
-// 	void (*pt2Function)(int i) = NULL; 
-// 	pt2Function = &exit;
-// 	pt2Function(0);
-
-// 	void (Maincanvas::*pt2Member)(const string&) = NULL;
-// 	pt2Member = &Maincanvas::swapChild;
-// 	(canvas.*pt2Member)("infobar");
-
 Commands* Commands::Instance () 
 {
 	static Commands t;
@@ -17,13 +9,14 @@ Commands* Commands::Instance ()
 Commands::Commands()
 {
 	settings = Settings::Instance();
+	critterselection = Critterselection::Instance();
 	registerCmd("quit", &Commands::quit);
+
 	registerCmd("decreaseenergy", &Commands::decreaseenergy);
 	registerCmd("increaseenergy", &Commands::increaseenergy);
 	registerCmd("dec_foodmaxenergy", &Commands::decreasefoodmaxenergy);
 	registerCmd("inc_foodmaxenergy", &Commands::increasefoodmaxenergy);
 
-	
 	registerCmd("dec_worldsizex", &Commands::dec_worldsizex);
 	registerCmd("inc_worldsizex", &Commands::inc_worldsizex);
 	registerCmd("dec_worldsizey", &Commands::dec_worldsizey);
@@ -48,11 +41,11 @@ Commands::Commands()
 	registerCmd("camera_rollleft", &WorldB::camera_rollleft);
 	registerCmd("camera_rollright", &WorldB::camera_rollright);
 
-
 	registerCmd("gui_togglepanel", &Maincanvas::swapChild);
 	registerCmd("settings_increase", &Settings::increaseCVar);
 	registerCmd("settings_decrease", &Settings::decreaseCVar);
 
+	registerCmd("cs_unregister", &Critterselection::unregisterCritterVID);
 }
 
 void Commands::registerCmd(string name, void (Commands::*pt2Func)())
@@ -91,6 +84,15 @@ void Commands::registerCmd(string name, void (Settings::*pt2Func)(const string&)
 	cmdlist[name]		= c;
 }
 
+void Commands::registerCmd(string name, void (Critterselection::*pt2Func)(const unsigned int&))
+{
+	cmd* c = new cmd();
+	c->commandtype		= T_CS;
+	c->argtype		= A_UINT;
+	c->critterselectionMember_uint= pt2Func;
+	cmdlist[name]		= c;
+}
+
 // fixme private
 void Commands::execCmd(const string& name)
 {
@@ -102,14 +104,6 @@ void Commands::execCmd(const string& name)
 	{
 		(world->*cmdlist[name]->worldMember)();
 	}
-/*	else if ( cmdlist[name]->commandtype == T_CANVAS )
-	{
-		(canvas->*cmdlist[name]->canvasMember)();
-	}
-	else if ( cmdlist[name]->commandtype == T_SETTINGS )
-	{
-		(settings->*cmdlist[name]->settingsMember)();
-	}*/
 }
 
 void Commands::execCmd(const string& name, const string& str)
@@ -121,6 +115,14 @@ void Commands::execCmd(const string& name, const string& str)
 	else if ( cmdlist[name]->commandtype == T_SETTINGS )
 	{
 		(settings->*cmdlist[name]->settingsMember_string)(str);
+	}
+}
+
+void Commands::execCmd(const string& name, const unsigned int& ui)
+{
+	if ( cmdlist[name]->commandtype == T_CS )
+	{
+		(critterselection->*cmdlist[name]->critterselectionMember_uint)(ui);
 	}
 }
 
@@ -137,6 +139,8 @@ void Commands::execCmd(const cmdsettings& cmds)
 				execCmd(cmds.name);
 			else if ( cmds.argtype == A_STRING )
 				execCmd(cmds.name, cmds.args);
+			else if ( cmds.argtype == A_UINT )
+				execCmd(cmds.name, cmds.argui);
 		}
 		else
 			cerr << "command '" << cmds.name << "'s args do not match: got " << cmds.argtype << " but expected " << cmdlist[cmds.name]->argtype << endl;

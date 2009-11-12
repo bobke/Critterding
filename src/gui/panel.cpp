@@ -32,7 +32,7 @@ void Panel::drawBackground()
 
 void Panel::drawBorders()
 {
-	glColor3f(0.7f, 0.7f, 0.7f);
+	glColor3f(0.5f, 0.5f, 0.5f);
 	glBegin(GL_LINES);
 		glVertex2f(absPosition.x,         absPosition.y+v_height);
 		glVertex2f(absPosition.x,         absPosition.y);

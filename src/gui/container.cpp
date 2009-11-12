@@ -48,7 +48,7 @@ void Container::addWidgetText( const string& name, unsigned int posx, unsigned i
 	children[name] = t;
 }
 
-void Container::addWidgetButton( const string& name, const Vector2i& pos, const Vector2i& dimensions, const string& textstring, const Vector2i& textpos, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval )
+Widget* Container::addWidgetButton( const string& name, const Vector2i& pos, const Vector2i& dimensions, const string& textstring, const Vector2i& textpos, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval )
 {
 	Button* t = new Button();
 	t->parent = this;
@@ -60,6 +60,8 @@ void Container::addWidgetButton( const string& name, const Vector2i& pos, const 
 	t->genEvent(name, cmds, responsetime, minfresponsetime, fresponseinterval);
 	t->active = true;
 	children[name] = t;
+	
+	return children[name];
 }
 
 bool Container::mouseOverChild(Widget** fWidget, int x, int y)

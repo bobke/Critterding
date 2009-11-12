@@ -12,6 +12,7 @@
 #include "exitpanel.h"
 #include "settingspanel.h"
 #include "settingsbrainpanel.h"
+#include "hud.h"
 
 using namespace std;
 

@@ -15,12 +15,12 @@ Camera::Camera()
 
 void Camera::place()
 {
-	glViewport(0,0,*Settings::Instance()->winWidth,*Settings::Instance()->winHeight);
+	glViewport(0,0,*settings->winWidth,*settings->winHeight);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	float nheight = 0.5f * ((float)(*Settings::Instance()->winHeight) / *Settings::Instance()->winWidth);
+	float nheight = 0.5f * ((float)(*settings->winHeight) / *settings->winWidth);
 	glFrustum(-0.5f,0.5f,-nheight,nheight,1.0f,10000.0f);
 
 	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
@@ -35,15 +35,15 @@ void Camera::place()
 void Camera::follow(btDefaultMotionState* myMotionState) const
 {
 	glViewport(
-		*Settings::Instance()->winWidth - *Settings::Instance()->winWidth/8,
+		*settings->winWidth - *settings->winWidth/8,
 		0,
-		*Settings::Instance()->winWidth/8,
-		*Settings::Instance()->winHeight/8
+		*settings->winWidth/8,
+		*settings->winHeight/8
 	);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	
-	float nheight = 0.05f * ((float)(*Settings::Instance()->winHeight) / *Settings::Instance()->winWidth);
+	float nheight = 0.05f * ((float)(*settings->winHeight) / *settings->winWidth);
 	glFrustum( -0.05f, 0.05f,-nheight,nheight, 0.1f, 10000.0f);
 
 	btScalar position[16];
