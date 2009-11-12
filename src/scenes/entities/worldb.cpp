@@ -131,7 +131,6 @@ void WorldB::pickBody(const int& x, const int& y)
 				btCollisionObject* co = static_cast<btCollisionObject*>(mouseRay.hitBody);
 				CritterB* c = static_cast<CritterB*>(mouseRayHitEntity);
 				if ( co == c->body.mouths[0]->ghostObject )
-					cerr << "overwriting head body" << endl;
 					b = c->body.mouths[0]->body;
 			}
 			
