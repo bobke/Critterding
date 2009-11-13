@@ -42,14 +42,14 @@ Hud::Hud()
 	bwidth = 28;
 	c_height = bspacing;
 	unsigned int tok = 0;
-	string s = "hud_cv1";
+	stringstream s;
+	s <<  "hud_cv1";
 	for ( unsigned int i=0; i < 20; i++ )
 	{
-		s.append("1");
-		cbuttons.push_back( addWidgetButton( s, Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "", Vector2i(16, 13), cmd.gen("cs_unregister", i), 0, 0, 0 ) );
-		s.append("2");
-		
-		static_cast<Button*>(cbuttons[i])->genEvent(3, s, cmd.gen("cs_unregister", i), 0, 0, 0);
+		s << i;
+		cbuttons.push_back( addWidgetButton( s.str(), Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "", Vector2i(16, 13), cmd.gen("cs_unregister", i), 0, 0, 0 ) );
+		s << "2";
+		static_cast<Button*>(cbuttons[i])->genEvent(3, s.str(), cmd.gen("cs_unregister", i), 0, 0, 0);
 		cbuttons[i]->swap();
 
 		if ( ++tok == 2 )
