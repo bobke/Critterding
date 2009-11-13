@@ -201,8 +201,43 @@ void Evolution::draw()
 				}
 			}
 
+/*
+		btScalar position[16];
+		for ( unsigned int i=0; i < world->critterselection->clist.size(); i++ )
+		{
+// 			cerr << world->critterselection->clist[0]->position;
+// 			world->critterselection->clist[0]->body.mouths[0]->ghostObject->getWorldTransform().getOpenGLMatrix(position);
+			glPushMatrix(); 
+// 			glMultMatrixf(position);
 
-		glPopMatrix();
+				glColor3f(1.5f, 1.5f, 1.5f);
+				glBegin(GL_LINES);
+					glVertex2f(-10,         10);
+					glVertex2f(-10,         -10);
+
+					glVertex2f(-10,         -10);
+					glVertex2f(10, -10);
+
+					glVertex2f(10, -10);
+					glVertex2f(10, 10);
+
+					glVertex2f(10, 10);
+					glVertex2f(-10,         10);
+				glEnd();
+
+			glPopMatrix();
+		}
+		glPopMatrix();*/
+
+		// ortho test
+// 		glPushMatrix();
+// 		glMatrixMode(GL_PROJECTION);
+// 		glLoadIdentity();
+// 		glOrtho(0,*Settings::Instance()->winWidth, *Settings::Instance()->winHeight,-100,100);
+// 		glMatrixMode(GL_MODELVIEW);
+// 		glPopMatrix();
+
+
 
 	SDL_GL_SwapBuffers();		
 
@@ -280,9 +315,9 @@ void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 //	cerr << "button " << button << " clicked at " << x << "x" << y << endl;
 	if ( !mouselook )
 	{
+		canvas.buttonPress(button);
 		if ( button == 1 )
 		{
-			canvas.buttonPress();
 			world->selectBody( x, y );
 		}
 		else if ( button == 3 )
@@ -295,9 +330,9 @@ void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 {
 // 	cerr << "button " << button << " released at " << x << "x" << y << endl;
+	canvas.buttonRelease(button);
 	if ( button == 1 )
 	{
-		canvas.buttonRelease();
 	}
 	else if ( button == 3 )
 	{

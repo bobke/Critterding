@@ -58,16 +58,25 @@ void Maincanvas::moveMouse(unsigned int x, unsigned int y)
 	oldy = y;
 }
 
-void Maincanvas::buttonPress()
+void Maincanvas::buttonPress(const unsigned int& button)
 {
 	if ( mouseFocus )
 	{
 		pickedwidget = focussedwidget;
-		pickedwidget->click();
+		pickedwidget->click(button);
 		hasPickedwidget = true;
 
 		// raise panel?
 		raisePanel(pickedwidget);
+	}
+}
+
+void Maincanvas::buttonRelease(const unsigned int& button)
+{
+	if ( hasPickedwidget )
+	{
+		pickedwidget->release(button);
+		hasPickedwidget = false;
 	}
 }
 
@@ -95,15 +104,6 @@ void Maincanvas::raisePanel(Widget* w)
 					sortedindices[j]	= sortedindices[j+1];
 					sortedindices[j+1]	= keepS;
 				}
-	}
-}
-
-void Maincanvas::buttonRelease()
-{
-	if ( hasPickedwidget )
-	{
-		pickedwidget->release();
-		hasPickedwidget = false;
 	}
 }
 

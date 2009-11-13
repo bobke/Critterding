@@ -27,8 +27,8 @@ class Maincanvas : public Container
 
 		bool mouseFocus;
 
-		void buttonPress();
-		void buttonRelease();
+		void buttonPress(const unsigned int& button);
+		void buttonRelease(const unsigned int& button);
 		
 		void swapChild(const string& child);
 

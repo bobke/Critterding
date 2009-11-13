@@ -18,8 +18,8 @@ class Widget
 		Vector2i		position;
 
 		virtual void		draw();
-		virtual void		click();
-		virtual void		release();
+		virtual void		click(const int& button);
+		virtual void		release(const int& button);
 		void			swap();
 
 		bool			active;
