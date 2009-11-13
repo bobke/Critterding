@@ -15,12 +15,18 @@ class Button : public Panel
 		~Button();
 
 		void draw();
-		void click();
-		void release();
-		void genEvent(const string& name, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval);
+		void click(const int& button);
+		void release(const int& button);
+		void genEvent( const int& button, const string& name, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval );
 // 		cmdsettings command;
 	private:
 // 		Commands* cmd;
+// 		vector<string> eventnames;
+
+		map<unsigned int, string> buttonlist;
+// 		typedef map <string, cmd*>::const_iterator cmdlist_iterator;
+// 		cmdlist_iterator cmdit;
+
 		Events *events;
 		string eventname;
 };

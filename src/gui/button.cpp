@@ -17,21 +17,22 @@ void Button::draw()
 	}
 }
 
-void Button::genEvent(const string& name, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval )
+void Button::genEvent(const int& button, const string& name, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval )
 {
 	eventname = name;
+	buttonlist[button] = eventname;
 	events->registerEvent(eventname, cmds, responsetime, minfresponsetime, fresponseinterval );
 }
 
-void Button::click()
+void Button::click(const int& button)
 {
-// 	cerr << "activating event " << endl;
-	events->activateEvent(eventname);
+// 	cerr << "activating event with button" << button << endl;
+	events->activateEvent( buttonlist[button] );
 }
 
-void Button::release()
+void Button::release(const int& button)
 {
-	events->deactivateEvent(eventname);
+	events->deactivateEvent( buttonlist[button] );
 }
 
 Button::~Button()

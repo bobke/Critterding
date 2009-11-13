@@ -1,4 +1,5 @@
 #include "hud.h"
+#include "button.h"
 
 Hud::Hud()
 {
@@ -46,6 +47,9 @@ Hud::Hud()
 	{
 		s.append("1");
 		cbuttons.push_back( addWidgetButton( s, Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "", Vector2i(16, 13), cmd.gen("cs_unregister", i), 0, 0, 0 ) );
+		s.append("2");
+		
+		static_cast<Button*>(cbuttons[i])->genEvent(3, s, cmd.gen("cs_unregister", i), 0, 0, 0);
 		cbuttons[i]->swap();
 
 		if ( ++tok == 2 )
@@ -64,7 +68,7 @@ void Hud::draw()
 	if (active)
 	{
 		position.y = *settings->winHeight - v_height;
-		updateAbsPositionReal();
+		updateAbsPosition();
 
 		drawBackground();
 		drawBorders();
@@ -83,12 +87,8 @@ void Hud::draw()
 		unsigned int bheight = 28;
 		float nheight = 0.05f * ((float)(*settings->winHeight) / *settings->winWidth);
 
- 		glEnable(GL_CULL_FACE);
-		
 		for (unsigned int i=0; i < critterselection->clist.size() && i < 20; i++ )
 		{
-// 			glViewport(c_width+1,c_height+1,bwidth-1,bheight-1);
-
 			glViewport(cbuttons[i]->absPosition. x+1, *settings->winHeight-bheight-(cbuttons[i]->absPosition.y-1), bwidth-1, bheight-1);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
@@ -104,13 +104,7 @@ void Hud::draw()
 
 		world->camera.place();
 
-// 		glDisable(GL_DEPTH_TEST);
-// 		glDisable (GL_LIGHTING);
-// 		glDisable(GL_LIGHT0);
-// 		glDisable(GL_COLOR_MATERIAL);
-// // 		glDisable(GL_DITHER);
- 		glDisable(GL_CULL_FACE);
-
+		// switch back to 2d 
 		glPushMatrix();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -118,25 +112,6 @@ void Hud::draw()
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
-}
-
-void Hud::updateAbsPosition()
-{
-}
-
-void Hud::updateAbsPositionReal()
-{
-	absPosition.x = position.x;
-	absPosition.y = position.y;
-	if ( parent )
-	{
-		absPosition.x += parent->absPosition.x;
-		absPosition.y += parent->absPosition.y;
-	}
-
-	// adjust children aswell
-	for( childit = children.begin(); childit != children.end(); childit++ )
-		childit->second->updateAbsPosition();
 }
 
 void Hud::drawBorders()

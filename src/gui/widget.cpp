@@ -15,8 +15,8 @@ Widget::Widget()
 }
 
 void Widget::draw() {}
-void Widget::click() {}
-void Widget::release() {}
+void Widget::click(const int& button) {}
+void Widget::release(const int& button) {}
 
 bool Widget::mouseOver(int x, int y)
 {

@@ -52,6 +52,7 @@ class WorldB
 		void			makeDefaultFloor();
 		
 		Settings*		settings;
+		Critterselection	*critterselection;
 		Statsbuffer*		statsBuffer;
 		RandGen*		randgen;
 		Mousepicker*		mousepicker;
@@ -143,7 +144,6 @@ class WorldB
 
 	private:
 		Raycast*		raycast;
-		Critterselection	*critterselection;
 
 		castResult		mouseRay;
 		btVector3		mouseRayTo;

@@ -57,7 +57,7 @@ Widget* Container::addWidgetButton( const string& name, const Vector2i& pos, con
 	t->v_height = dimensions.y;
 	t->addWidgetText( "btext", textpos.x, textpos.y, textstring );
 // 	t->command = cmds;
-	t->genEvent(name, cmds, responsetime, minfresponsetime, fresponseinterval);
+	t->genEvent(1, name, cmds, responsetime, minfresponsetime, fresponseinterval);
 	t->active = true;
 	children[name] = t;
 	

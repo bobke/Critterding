@@ -14,12 +14,10 @@ class Hud : public Panel
 		Hud();
 		~Hud();
 		void		draw();
-		void		updateAbsPosition();
 		WorldB*		world;
 		
 	private:
 		void		drawBorders();
-		void		updateAbsPositionReal();
 		Critterselection	*critterselection;
 		vector<Widget*>		cbuttons;
 };
