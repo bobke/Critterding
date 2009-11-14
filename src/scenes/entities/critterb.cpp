@@ -406,8 +406,8 @@ void CritterB::procInputNeurons()
 		unsigned int vstart = overstep;
 
 		if ( *critter_raycastvision )
-			for ( int x = retinasize-1; x >= 0 ; x-- )
-				for ( unsigned int y = 0; y < retinasize; y++ )
+			for ( int y = retinasize-1; y >= 0; y-- )
+				for ( unsigned int x = 0; x < retinasize; x++ )
 				{
 					mouseRay = raycast->cast( body.mouths[0]->ghostObject->getWorldTransform().getOrigin(), getScreenDirection(x, y) );
 					if ( mouseRay.hit )
@@ -480,7 +480,35 @@ void CritterB::procInputNeurons()
 
 btVector3 CritterB::getScreenDirection(const int& x, const int& y)
 {
-	float directionlength = 100000.0f;
+	float directionlength = 100.f;
+
+	btTransform tr = body.mouths[0]->ghostObject->getWorldTransform();
+	btVector3 forwardRay( 
+		-tr.getBasis()[0][2], 
+		-tr.getBasis()[1][2], 
+		-tr.getBasis()[2][2]); 
+	forwardRay *=  directionlength;
+
+	btVector3 upRay( 
+		tr.getBasis()[0][1], 
+		tr.getBasis()[1][1], 
+		tr.getBasis()[2][1]); 
+
+	btVector3 hor = forwardRay.cross(upRay);
+	hor.normalize();
+	hor *= directionlength;
+
+	upRay = hor.cross(forwardRay);
+	upRay.normalize();
+	upRay *= directionlength;
+
+	btVector3 rayTo = (tr.getOrigin() + forwardRay) - (0.5f * hor) + (0.5f * upRay);
+	rayTo += x * (hor * (1.0f/(retinasize)));
+	rayTo -= y * (upRay * (1.0f/(retinasize)));
+
+	return rayTo;
+
+/*	float directionlength = 100000.0f;
 	
 	btTransform tr = body.mouths[0]->ghostObject->getWorldTransform();
 	
@@ -518,7 +546,7 @@ btVector3 CritterB::getScreenDirection(const int& x, const int& y)
 	rayTo.setY(-rayTo.getY());
 	rayTo.setZ(-rayTo.getZ());
 
-	return rayTo;
+	return rayTo;*/
 }
 
 
