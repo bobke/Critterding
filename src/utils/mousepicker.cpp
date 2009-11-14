@@ -49,7 +49,7 @@ void Mousepicker::moveTo( const btVector3& origin, const btVector3& newdirection
 	btVector3 dir = ( origin + direction );
 	dir.normalize();
 
-	constraint->setPivotB( (dir * oldPickingDist) - origin);
+	constraint->setPivotB( (dir * oldPickingDist) + origin);
 }
 
 void Mousepicker::moveFrom( const btVector3& origin )
@@ -59,7 +59,7 @@ void Mousepicker::moveFrom( const btVector3& origin )
 	btVector3 dir = ( origin + direction );
 	dir.normalize();
 
-	constraint->setPivotB( (dir * oldPickingDist) - origin);
+	constraint->setPivotB( (dir * oldPickingDist) + origin);
 }
 
 Mousepicker::~Mousepicker()

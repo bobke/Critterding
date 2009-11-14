@@ -13,7 +13,8 @@ public:
 	~Camera();
 
 	// Position
-	btVector3 position;
+// 	btVector3 position;
+	btTransform position;
 
 	// Controls
 	Vector3f rotation;
@@ -29,16 +30,10 @@ public:
 	void lookRollLeft(const float& factor);
 	void moveForward(const float& factor);
 	void moveBackward(const float& factor);
-	void moveForwardXZ(const float& factor);
-	void moveBackwardXZ(const float& factor);
-	void moveForwardXYZ(const float& factor);
-	void moveBackwardXYZ(const float& factor);
 	void moveRight(const float& factor);
 	void moveLeft(const float& factor);
-	void moveUpXZ(const float& factor);
-	void moveDownXZ(const float& factor);
-	void moveUpXYZ(const float& factor);
-	void moveDownXYZ(const float& factor);
+	void moveUp(const float& factor);
+	void moveDown(const float& factor);
 	void moveRollLeft(const float& factor);
 	void rollRight(const float& factor);
 	void rollLeft(const float& factor);

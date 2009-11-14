@@ -201,33 +201,40 @@ void Evolution::draw()
 				}
 			}
 
-/*
-		btScalar position[16];
-		for ( unsigned int i=0; i < world->critterselection->clist.size(); i++ )
-		{
-// 			cerr << world->critterselection->clist[0]->position;
-// 			world->critterselection->clist[0]->body.mouths[0]->ghostObject->getWorldTransform().getOpenGLMatrix(position);
-			glPushMatrix(); 
-// 			glMultMatrixf(position);
 
-				glColor3f(1.5f, 1.5f, 1.5f);
-				glBegin(GL_LINES);
-					glVertex2f(-10,         10);
-					glVertex2f(-10,         -10);
-
-					glVertex2f(-10,         -10);
-					glVertex2f(10, -10);
-
-					glVertex2f(10, -10);
-					glVertex2f(10, 10);
-
-					glVertex2f(10, 10);
-					glVertex2f(-10,         10);
-				glEnd();
-
-			glPopMatrix();
-		}
-		glPopMatrix();*/
+// // 		btScalar position[16];
+// 		for ( unsigned int i=0; i < world->critterselection->clist.size(); i++ )
+// 		{
+// // 			cerr << world->critterselection->clist[0]->position;
+// 			btVector3 pos = world->critterselection->clist[0]->body.mouths[0]->ghostObject->getWorldTransform().getOrigin();
+// 	
+// 			int x = ((pos - world->camera.position.getOrigin()).dot( world->camera.position.getBasis()[1] ) / *settings->winWidth) + 0.5f; // right
+// 			int y = ((pos - world->camera.position.getOrigin()).dot( btVector3(0, 1, 0) ) / *settings->winHeight) + 0.5f; // up
+// 			int z = ((pos - world->camera.position.getOrigin()).dot( btVector3(0, -1, 0) )); // distance from camera
+// 
+// 			cerr << x << " : " << y << " : " << z << " : " << endl;
+// 			glPushMatrix(); 
+// // 			glMultMatrixf(position);
+// 			glTranslatef( 10+x, 10+y, 0 );
+// 
+// 				glColor3f(1.5f, 1.5f, 1.5f);
+// 				glBegin(GL_LINES);
+// 					glVertex2f(-10,         10);
+// 					glVertex2f(-10,         -10);
+// 
+// 					glVertex2f(-10,         -10);
+// 					glVertex2f(10, -10);
+// 
+// 					glVertex2f(10, -10);
+// 					glVertex2f(10, 10);
+// 
+// 					glVertex2f(10, 10);
+// 					glVertex2f(-10,         10);
+// 				glEnd();
+// 
+// 			glPopMatrix();
+// 		}
+// 		glPopMatrix();
 
 		// ortho test
 // 		glPushMatrix();

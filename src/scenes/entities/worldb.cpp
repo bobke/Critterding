@@ -94,7 +94,7 @@ void WorldB::init()
 void WorldB::castMouseRay()
 {
 // 	cerr << "casting" << endl;
-	mouseRay = raycast->cast( -camera.position, mouseRayTo );
+	mouseRay = raycast->cast( camera.position.getOrigin(), mouseRayTo );
 
 	mouseRayHit = false;
 	if ( mouseRay.hit )
@@ -134,7 +134,7 @@ void WorldB::pickBody(const int& x, const int& y)
 					b = c->body.mouths[0]->body;
 			}
 			
-			mousepicker->attach( b, mouseRay.hitPosition, -camera.position, mouseRayTo );
+			mousepicker->attach( b, mouseRay.hitPosition, camera.position.getOrigin(), mouseRayTo );
 			mousepicker->pickedBool = &mouseRayHitEntity->isPicked;
 			*mousepicker->pickedBool = true;
 		}
@@ -151,13 +151,13 @@ void WorldB::selectBody(const int& x, const int& y)
 void WorldB::movePickedBodyTo()
 {
 	if ( mousepicker->active )
-		mousepicker->moveTo( camera.position, mouseRayTo );
+		mousepicker->moveTo( camera.position.getOrigin(), mouseRayTo );
 }
 
 void WorldB::movePickedBodyFrom()
 {
 	if ( mousepicker->active )
-		mousepicker->moveFrom( camera.position );
+		mousepicker->moveFrom( camera.position.getOrigin() );
 }
 
 void WorldB::process()
@@ -872,8 +872,13 @@ void WorldB::resetCamera()
 	if ( settings->getCVar("worldsizeY") > biggest )
 		biggest = 1.4f*settings->getCVar("worldsizeY");
 
-	camera.position = btVector3( -0.5f*settings->getCVar("worldsizeX"), -1.3f*biggest, -0.5f*settings->getCVar("worldsizeY"));
-	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
+	camera.position.setOrigin( btVector3( 0.5f*settings->getCVar("worldsizeX"), 1.3f*biggest, 0.5f*settings->getCVar("worldsizeY")) );
+// 	camera.position.setRotation(btQuaternion(btVector3(1, 0, 0), btScalar(90)));
+	camera.position.getBasis().setEulerZYX( -1.5707f, 0.0f, 0.0f ); // 1.5707f  (float)settings->getCVar("energy")/10
+
+
+// 	camera.position = btVector3( -0.5f*settings->getCVar("worldsizeX"), -1.3f*biggest, -0.5f*settings->getCVar("worldsizeY"));
+// 	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
 }
 
 void WorldB::makeFloor()
@@ -925,19 +930,19 @@ void WorldB::makeDefaultFloor()
 }
 
 // camera ops
-void WorldB::camera_moveup() { camera.moveUpXZ(0.01f); movePickedBodyFrom(); }
-void WorldB::camera_movedown() { camera.moveDownXZ(0.01f); movePickedBodyFrom(); }
-void WorldB::camera_moveforward() { camera.moveForwardXZ(0.01f); movePickedBodyFrom(); }
-void WorldB::camera_movebackward() { camera.moveBackwardXZ(0.01f); movePickedBodyFrom(); }
+void WorldB::camera_moveup() { camera.moveUp(0.01f); movePickedBodyFrom(); }
+void WorldB::camera_movedown() { camera.moveDown(0.01f); movePickedBodyFrom(); }
+void WorldB::camera_moveforward() { camera.moveForward(0.01f); movePickedBodyFrom(); }
+void WorldB::camera_movebackward() { camera.moveBackward(0.01f); movePickedBodyFrom(); }
 void WorldB::camera_moveleft() { camera.moveLeft(0.01f); movePickedBodyFrom(); }
 void WorldB::camera_moveright() { camera.moveRight(0.01f); movePickedBodyFrom(); }
 
-void WorldB::camera_lookup() { camera.lookUp(0.03f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_lookdown() { camera.lookDown(0.03f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_lookleft() { camera.lookLeft(0.03f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_lookright() { camera.lookRight(0.03f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_rollleft() { camera.rollLeft(0.03f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_rollright() { camera.rollRight(0.03f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_lookup() { camera.lookUp(0.001f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_lookdown() { camera.lookDown(0.001f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_lookleft() { camera.lookLeft(0.001f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_lookright() { camera.lookRight(0.001f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_rollleft() { camera.rollLeft(0.001f); calcMouseDirection(); movePickedBodyTo(); }
+void WorldB::camera_rollright() { camera.rollRight(0.001f); calcMouseDirection(); movePickedBodyTo(); }
 
 
 WorldB::~WorldB()
