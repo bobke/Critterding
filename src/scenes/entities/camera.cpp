@@ -121,11 +121,21 @@ void Camera::moveDown(const float& factor)
 void Camera::rollLeft(const float& factor)
 {
 // 	rotation.z += factor * *camerasensitivity;
+	btTransform tr;
+	tr.setIdentity();
+	tr.setOrigin(btVector3(0,0,0));
+	tr.getBasis().setEulerZYX( 0.0f, 0.0f, factor * *camerasensitivity ); // 1.5707f  (float)settings->getCVar("energy")/10
+	position.getBasis() *= tr.getBasis();
 }
 
 void Camera::rollRight(const float& factor)
 {
 // 	rotation.z -= factor * *camerasensitivity;
+	btTransform tr;
+	tr.setIdentity();
+	tr.setOrigin(btVector3(0,0,0));
+	tr.getBasis().setEulerZYX( 0.0f, 0.0f, -factor * *camerasensitivity ); // 1.5707f  (float)settings->getCVar("energy")/10
+	position.getBasis() *= tr.getBasis();
 }
 
 // Looking
@@ -204,47 +214,6 @@ btVector3 Camera::getScreenDirection(const int& x, const int& y)
 	rayTo -= y * (upRay * (1.0f/((float)*settings->winHeight)));
 
 	return rayTo;
-
- 		
-	
-/*	float directiondepth = 1000000.f;
-	btVector3 origin = position;
-
-	float reusedX = (360.0f-rotation.x) * 0.0174532925f;
-	float reusedY = rotation.y * 0.0174532925f;
-	float reusedZ = rotation.z * 0.0174532925f;
-	
-	float sinX = sin(reusedX);
-	float sinY = sin(reusedY);
-// 	float sinZ = sin(reusedZ);
-	float cosX = cos(reusedX);
-	float cosY = cos(reusedY);
-// 	float cosZ = cos(reusedZ);
-
-// 	cerr << sinZ << endl;
-	
-	btVector3 forwardRay = btVector3( sinY * cosX, -sinX, cosY * cosX ) * directiondepth;
-	btVector3 upRay = btVector3( -sinY * sinX, -cosX, -cosY * sinX );
-	
-	btVector3 hor = forwardRay.cross(upRay);
-	hor.normalize();
-	hor *= directiondepth;
-
-	upRay = hor.cross(forwardRay);
-	upRay.normalize();
-	upRay *= directiondepth * ((float)*settings->winHeight / *settings->winWidth);
-
-	btVector3 rayTo = (origin + forwardRay) - (0.5f * hor) + (0.5f * upRay);
-	rayTo += x * (hor * (1.0f/((float)*settings->winWidth)));
-	rayTo -= y * (upRay * (1.0f/((float)*settings->winHeight)));
-
-	// FIXME
-// 	rayTo.setX(-rayTo.getX());
-	rayTo.setY(-rayTo.getY());
-	rayTo.setZ(-rayTo.getZ());
-
- 	return rayTo;
-*/
 }
 
 Camera::~Camera()

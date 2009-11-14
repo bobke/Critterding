@@ -507,46 +507,6 @@ btVector3 CritterB::getScreenDirection(const int& x, const int& y)
 	rayTo -= y * (upRay * (1.0f/(retinasize)));
 
 	return rayTo;
-
-/*	float directionlength = 100000.0f;
-	
-	btTransform tr = body.mouths[0]->ghostObject->getWorldTransform();
-	
-	btVector3 forwardRay ( 
-		tr.getBasis()[0][2], 
-		tr.getBasis()[1][2], 
-		tr.getBasis()[2][2]); 
-	btVector3 upRay ( 
-		tr.getBasis()[0][0], 
-		tr.getBasis()[1][0], 
-		tr.getBasis()[2][0]); 
-
-// 	btVector3 forwardRay = tr.getBasis()[2];
-// 	btVector3 upRay = tr.getBasis()[0];
-
-	forwardRay.normalize();
-	upRay.normalize();
-
-	forwardRay *=  directionlength;
-
-	btVector3 hor = forwardRay.cross(upRay);
-	hor.normalize();
-	hor *= directionlength;
-
-	upRay = hor.cross(forwardRay);
-	upRay.normalize();
-	upRay *= directionlength;
-
-	btVector3 rayTo = (tr.getOrigin() + forwardRay) - (0.5f * hor) + (0.5f * upRay); // FIXME i'm not sure it's 100% ok here, fov wise
-	rayTo += x * (hor * (1.0f/((float)retinasize)));
-	rayTo -= y * (upRay * (1.0f/((float)retinasize)));
-
-	// FIXME
-	rayTo.setX(-rayTo.getX());
-	rayTo.setY(-rayTo.getY());
-	rayTo.setZ(-rayTo.getZ());
-
-	return rayTo;*/
 }
 
 

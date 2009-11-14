@@ -81,8 +81,8 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP4,		"keycamera_lookleft", execcmd.gen("camera_lookleft"), t );
 	events->registerEvent(SDLK_KP6,		"keycamera_lookright", execcmd.gen("camera_lookright"), t );
 
-	events->registerEvent(SDLK_h,		"keycamera_rollleft", execcmd.gen("camera_rollleft"), t );
-	events->registerEvent(SDLK_j,		"keycamera_rollright", execcmd.gen("camera_rollright"), t );
+	events->registerEvent(SDLK_KP1,		"keycamera_rollleft", execcmd.gen("camera_rollleft"), t );
+	events->registerEvent(SDLK_KP3,		"keycamera_rollright", execcmd.gen("camera_rollright"), t );
 
 	events->registerEvent(SDLK_f, "inc_fullscreen", execcmd.gen("settings_increase", "fullscreen"), 0, 0, 0 );
 
@@ -368,14 +368,14 @@ void Evolution::handleMouseMotionRel(int x, int y)
 	if ( mouselook )
 	{
 		if ( x > 0 )
-			world->camera.lookRight( (float)x/100 );
+			world->camera.lookRight( (float)x/3000 );
 		else if ( x != 0 )
-			world->camera.lookLeft( (float)x/-100 );
+			world->camera.lookLeft( (float)x/-3000 );
 
 		if ( y > 0 )
-			world->camera.lookDown( (float)y/100 );
+			world->camera.lookDown( (float)y/3000 );
 		else if ( y != 0 )
-			world->camera.lookUp( (float)y/-100 );
+			world->camera.lookUp( (float)y/-3000 );
 	}
 }
 
