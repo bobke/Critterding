@@ -156,6 +156,44 @@ void Evolution::draw()
 		world->camera.place();
 		world->drawWithGrid();
 
+		// draw selected info
+		btScalar position[16];
+		btTransform trans;
+		trans.setIdentity();
+
+		btTransform up;
+		up.setIdentity();
+		up.setOrigin( btVector3(0.0f, 0.2f, 0.0f) );
+
+		for ( unsigned int i=0; i < world->critterselection->clist.size(); i++ )
+		{
+			trans.setOrigin(world->critterselection->clist[i]->body.mouths[0]->ghostObject->getWorldTransform().getOrigin());
+			trans.getOrigin().setY(trans.getOrigin().getY()+0.5f);
+			trans.setBasis(world->camera.position.getBasis());
+			trans *= up;
+			trans.getOpenGLMatrix(position);
+
+			glPushMatrix(); 
+			glMultMatrixf(position);
+
+				glColor3f(1.5f, 1.5f, 1.5f);
+				glBegin(GL_LINES);
+					glVertex2f(-0.2f, 0.05f);
+					glVertex2f(-0.2f,-0.05f);
+
+					glVertex2f(-0.2f,-0.05f);
+					glVertex2f(0.2f, -0.05f);
+
+					glVertex2f(0.2f, -0.05f);
+					glVertex2f(0.2f,  0.05f);
+
+					glVertex2f(0.2f,  0.05f);
+					glVertex2f(-0.2f, 0.05f);
+				glEnd();
+
+			glPopMatrix();
+		}
+
 	// 2D
 		glDisable(GL_DEPTH_TEST);
 		glDisable (GL_LIGHTING);
@@ -200,22 +238,30 @@ void Evolution::draw()
 					Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", c->energyLevel);
 				}
 			}
+		glPopMatrix();
 
-
-// // 		btScalar position[16];
+// 		glPushMatrix();
+// 		glMatrixMode(GL_PROJECTION);
+// 		glLoadIdentity();
+// 		glOrtho(0, *Settings::Instance()->winWidth, 0, *Settings::Instance()->winHeight, -1000, 1000);
+// 		glMatrixMode(GL_MODELVIEW);
+// 
+// 		btScalar position[16];
 // 		for ( unsigned int i=0; i < world->critterselection->clist.size(); i++ )
 // 		{
 // // 			cerr << world->critterselection->clist[0]->position;
-// 			btVector3 pos = world->critterselection->clist[0]->body.mouths[0]->ghostObject->getWorldTransform().getOrigin();
-// 	
-// 			int x = ((pos - world->camera.position.getOrigin()).dot( world->camera.position.getBasis()[1] ) / *settings->winWidth) + 0.5f; // right
-// 			int y = ((pos - world->camera.position.getOrigin()).dot( btVector3(0, 1, 0) ) / *settings->winHeight) + 0.5f; // up
-// 			int z = ((pos - world->camera.position.getOrigin()).dot( btVector3(0, -1, 0) )); // distance from camera
+// // 			btVector3 pos = world->critterselection->clist[0]->body.mouths[0]->ghostObject->getWorldTransform().getOrigin();
 // 
-// 			cerr << x << " : " << y << " : " << z << " : " << endl;
+// // 			float x = *settings->winWidth*(((pos - world->camera.position.getOrigin()).dot( btVector3( world->camera.position.getBasis()[0][1], world->camera.position.getBasis()[1][1], world->camera.position.getBasis()[2][1]) ) / (float)*settings->winWidth) + 0.5f); // right
+// // 			float y = *settings->winHeight*(((pos - world->camera.position.getOrigin()).dot( btVector3( -world->camera.position.getBasis()[0][2], -world->camera.position.getBasis()[1][2], -world->camera.position.getBasis()[2][2]) ) / (float)*settings->winHeight) + 0.5f); // up
+// // 			float z = ((pos - world->camera.position.getOrigin()).dot( btVector3(0, -1, 0) )); // distance from camera
+// // 			cerr << x << " : " << y << " : " << z << " : " << endl;
+// 
+// 			world->critterselection->clist[0]->body.mouths[0]->ghostObject->getWorldTransform().inverse().getOpenGLMatrix(position);
+// 
 // 			glPushMatrix(); 
-// // 			glMultMatrixf(position);
-// 			glTranslatef( 10+x, 10+y, 0 );
+// 			glMultMatrixf(position);
+// // 			glTranslatef( x, y, 0 );
 // 
 // 				glColor3f(1.5f, 1.5f, 1.5f);
 // 				glBegin(GL_LINES);
@@ -235,15 +281,6 @@ void Evolution::draw()
 // 			glPopMatrix();
 // 		}
 // 		glPopMatrix();
-
-		// ortho test
-// 		glPushMatrix();
-// 		glMatrixMode(GL_PROJECTION);
-// 		glLoadIdentity();
-// 		glOrtho(0,*Settings::Instance()->winWidth, *Settings::Instance()->winHeight,-100,100);
-// 		glMatrixMode(GL_MODELVIEW);
-// 		glPopMatrix();
-
 
 
 	SDL_GL_SwapBuffers();		
