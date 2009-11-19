@@ -102,12 +102,14 @@ void Evolution::draw()
 		return;
 	}
 
-	handleEvents();
-
 	Timer::Instance()->mark();
 	sleeper.mark();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if ( !settings->getCVar("headless") )
+	{
+
+		handleEvents();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// 3D
 // 		GLfloat ambientLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
@@ -142,9 +144,13 @@ void Evolution::draw()
 
 		glDisable(GL_DITHER);
 		glDisable(GL_POLYGON_SMOOTH);
+	}
 
 		world->process();
 		world->getGeneralStats();
+
+	if ( !settings->getCVar("headless") )
+	{
 
 // 			if (world->critters.size() > 1 )
 // 			{
@@ -206,7 +212,7 @@ void Evolution::draw()
 		glPushMatrix();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, *Settings::Instance()->winWidth, *Settings::Instance()->winHeight, 0, -1, 1);
+		glOrtho(0, *Settings::Instance()->winWidth, *Settings::Instance()->winHeight, 0, 0, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -240,57 +246,13 @@ void Evolution::draw()
 			}
 		glPopMatrix();
 
-// 		glPushMatrix();
-// 		glMatrixMode(GL_PROJECTION);
-// 		glLoadIdentity();
-// 		glOrtho(0, *Settings::Instance()->winWidth, 0, *Settings::Instance()->winHeight, -1000, 1000);
-// 		glMatrixMode(GL_MODELVIEW);
-// 
-// 		btScalar position[16];
-// 		for ( unsigned int i=0; i < world->critterselection->clist.size(); i++ )
-// 		{
-// // 			cerr << world->critterselection->clist[0]->position;
-// // 			btVector3 pos = world->critterselection->clist[0]->body.mouths[0]->ghostObject->getWorldTransform().getOrigin();
-// 
-// // 			float x = *settings->winWidth*(((pos - world->camera.position.getOrigin()).dot( btVector3( world->camera.position.getBasis()[0][1], world->camera.position.getBasis()[1][1], world->camera.position.getBasis()[2][1]) ) / (float)*settings->winWidth) + 0.5f); // right
-// // 			float y = *settings->winHeight*(((pos - world->camera.position.getOrigin()).dot( btVector3( -world->camera.position.getBasis()[0][2], -world->camera.position.getBasis()[1][2], -world->camera.position.getBasis()[2][2]) ) / (float)*settings->winHeight) + 0.5f); // up
-// // 			float z = ((pos - world->camera.position.getOrigin()).dot( btVector3(0, -1, 0) )); // distance from camera
-// // 			cerr << x << " : " << y << " : " << z << " : " << endl;
-// 
-// 			world->critterselection->clist[0]->body.mouths[0]->ghostObject->getWorldTransform().inverse().getOpenGLMatrix(position);
-// 
-// 			glPushMatrix(); 
-// 			glMultMatrixf(position);
-// // 			glTranslatef( x, y, 0 );
-// 
-// 				glColor3f(1.5f, 1.5f, 1.5f);
-// 				glBegin(GL_LINES);
-// 					glVertex2f(-10,         10);
-// 					glVertex2f(-10,         -10);
-// 
-// 					glVertex2f(-10,         -10);
-// 					glVertex2f(10, -10);
-// 
-// 					glVertex2f(10, -10);
-// 					glVertex2f(10, 10);
-// 
-// 					glVertex2f(10, 10);
-// 					glVertex2f(-10,         10);
-// 				glEnd();
-// 
-// 			glPopMatrix();
-// 		}
-// 		glPopMatrix();
-
-
-	SDL_GL_SwapBuffers();		
+		SDL_GL_SwapBuffers();		
+	}
 
 	if ( world->critters.size() == 0 && settings->getCVar("exit_if_empty") )
 	{
 		cerr << "world is empty, exiting..." << endl;
 		cmd->quit();
-// 		SDL_Quit();
-// 		exit(0);
 	}
 }
 
@@ -418,73 +380,8 @@ void Evolution::handleMouseMotionRel(int x, int y)
 
 void Evolution::handleEvents()
 {
-
 	events->processSharedTimers();
 	events->handlecommands();
-
-/*	// mutation settings
-	if ( events->isActive("lshift") || events->isActive("rshift") )
-	{
-		if ( events->isActive("dec_mutationrate") )
-		{
-			settings->decreaseCVar("body_mutationrate", 1);
-			stringstream buf;
-			buf << "Body: Mutation Rate: "<< settings->getCVar("body_mutationrate") << "%";
-			Textmessage::Instance()->add(buf);
-		}
-		if ( events->isActive("inc_mutationrate") )
-		{
-			settings->increaseCVar("body_mutationrate", 1);
-			stringstream buf;
-			buf << "Body: Mutation Rate: "<< settings->getCVar("body_mutationrate") << "%";
-			Textmessage::Instance()->add(buf);
-		}
-		if ( events->isActive("dec_maxmutations") )
-		{
-			settings->decreaseCVar("body_maxmutations", 1);
-			stringstream buf;
-			buf << "Body: Max Mutations: "<< settings->getCVar("body_maxmutations");
-			Textmessage::Instance()->add(buf);
-		}
-		if ( events->isActive("inc_maxmutations") )
-		{
-			settings->increaseCVar("body_maxmutations", 1);
-			stringstream buf;
-			buf << "Body: Max Mutations: "<< settings->getCVar("body_maxmutations");
-			Textmessage::Instance()->add(buf);
-		}
-	}
-	else	// BRAIN: without shift
-	{
-		if ( events->isActive("dec_mutationrate") )
-		{
-			settings->decreaseCVar("brain_mutationrate", 1);
-			stringstream buf;
-			buf << "Brain: Mutation Rate: "<< settings->getCVar("brain_mutationrate") << "%";
-			Textmessage::Instance()->add(buf);
-		}
-		if ( events->isActive("inc_mutationrate") )
-		{
-			settings->increaseCVar("brain_mutationrate", 1);
-			stringstream buf;
-			buf << "Brain: Mutation Rate: "<< settings->getCVar("brain_mutationrate") << "%";
-			Textmessage::Instance()->add(buf);
-		}
-		if ( events->isActive("dec_maxmutations") )
-		{
-			settings->decreaseCVar("brain_maxmutations", 1);
-			stringstream buf;
-			buf << "Brain: Max Mutations: "<< settings->getCVar("brain_maxmutations");
-			Textmessage::Instance()->add(buf);
-		}
-		if ( events->isActive("inc_maxmutations") )
-		{
-			settings->increaseCVar("brain_maxmutations", 1);
-			stringstream buf;
-			buf << "Brain: Max Mutations: "<< settings->getCVar("brain_maxmutations");
-			Textmessage::Instance()->add(buf);
-		}
-	}*/
 }
 
 Evolution::~Evolution()

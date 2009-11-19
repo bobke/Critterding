@@ -27,6 +27,7 @@ class File
 		void		save(const string &filename, string* content);
 		bool		open(const string &filename, string& content);
 		bool		open(const char* filename, string &content);
+		void		rm(const string &filename);
 };
 
 #endif

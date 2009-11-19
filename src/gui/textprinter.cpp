@@ -16,7 +16,8 @@ void Textprinter::print(float x, float y, const char *fmt, ...)
 	glPushMatrix();
 
 		glTranslatef(x, y, 0);
-		glRotatef(180, 1.0f, 0.0f, 0.0f);
+// 		glRotatef(180, 1.0f, 0.0f, 0.0f);
+		glScalef(1,-1,1);
 
 		va_list ap;     /* our argument pointer */
 		char text[256];
@@ -70,6 +71,14 @@ unsigned int Textprinter::getWidth(const string& str)
 	return test.Upper().X();
 }
 
+Vector2i Textprinter::getDimensions(const string& str)
+{
+	const char *text = str.c_str();
+
+	FTBBox test = fonts[0]->BBox(text);
+	Vector2i v(test.Upper().X(), test.Upper().Y());
+	return v;
+}
 
 // FTPoint Textprinter::getBBox(const char *fmt, ...)
 // {
@@ -100,7 +109,8 @@ void Textprinter::print(float x, float y, const string& str)
 	glPushMatrix();
 
 		glTranslatef(x, y, 0);
-		glRotatef(180, 1.0f, 0.0f, 0.0f);
+		glScalef(1,-1,1);
+// 		glRotatef(180, 1.0f, 0.0f, 0.0f);
 
 		const char *text = str.c_str();
 		fonts[0]->Render(text);
@@ -113,7 +123,8 @@ void Textprinter::print(const Vector2i& pos, const string& str)
 	glPushMatrix();
 
 		glTranslatef(pos.x, pos.y, 0);
-		glRotatef(180, 1.0f, 0.0f, 0.0f);
+		glScalef(1,-1,1);
+// 		glRotatef(180, 1.0f, 0.0f, 0.0f);
 
 		const char *text = str.c_str();
 		fonts[0]->Render(text);
@@ -126,7 +137,8 @@ void Textprinter::print(const Vector2i& pos, const unsigned int* num)
 	glPushMatrix();
 
 		glTranslatef(pos.x, pos.y, 0);
-		glRotatef(180, 1.0f, 0.0f, 0.0f);
+		glScalef(1,-1,1);
+// 		glRotatef(180, 1.0f, 0.0f, 0.0f);
 
 		stringstream str;
 		str << *num;
@@ -172,6 +184,7 @@ void Textprinter::setUpFonts()
 	}
 
 	fonts[0] = new FTTextureFont(fontFilePath);
+	fonts[0]->UseDisplayList(true);
 
 	if(!fonts[0]->FaceSize(11))
 	{
@@ -179,6 +192,6 @@ void Textprinter::setUpFonts()
 		exit(1);
 	}
 
-	fonts[0]->Depth(20);
+// 	fonts[0]->Depth(32);
 	fonts[0]->CharMap(ft_encoding_unicode);
 }

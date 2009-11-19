@@ -20,6 +20,14 @@ bool File::exists(const char* file)
 	else return false;
 }
 
+void File::rm(const string &filename)
+{
+	if( remove( filename.c_str() ) != 0 )
+		cerr << "Error deleting file" << endl;
+// 	else
+// 		cerr << "file succesfully deleted" << endl;
+}
+
 void File::save(const string &filename, const string& content)
 {
 	fstream file_op(filename.c_str(),ios::out);

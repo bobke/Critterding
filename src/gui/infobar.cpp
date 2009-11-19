@@ -21,7 +21,6 @@ void Infobar::draw()
 	{
 		fps.mark();
 
-// 		updateAbsPosition();
 		drawBackground();
 		drawBorders();
 

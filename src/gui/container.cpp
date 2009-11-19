@@ -21,24 +21,42 @@ void Container::drawChildren()
 		childit->second->draw();
 }
 
-void Container::addWidgetPanel( const string& name, Widget* nwidget )
+Widget* Container::addWidgetPanel( const string& name, Widget* nwidget )
 {
 	children[name] = nwidget;
 	children[name]->parent = this;
 	children[name]->translate(0, 0);
+
+	return children[name];
 }
 
-void Container::addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring )
+Widget* Container::addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring )
 {
 	Text* t = new Text();
 	t->parent = this;
 	t->translate(posx, posy);
-	t->v_string = textstring;
+	t->set(textstring);
 	t->active = true;
 	children[name] = t;
+
+	return children[name];
 }
 
-void Container::addWidgetText( const string& name, unsigned int posx, unsigned int posy, const unsigned int* uintp )
+Widget* Container::addWidgetText( const string& name, const string& textstring )
+{
+	Text* t = new Text();
+	t->parent = this;
+// 	t->translate(posx, posy);
+	t->hcenter = true;
+	t->vcenter = true;
+	t->set(textstring);
+	t->active = true;
+	children[name] = t;
+
+	return children[name];
+}
+
+Widget* Container::addWidgetText( const string& name, unsigned int posx, unsigned int posy, const unsigned int* uintp )
 {
 	Text_uintp* t = new Text_uintp();
 	t->parent = this;
@@ -46,6 +64,8 @@ void Container::addWidgetText( const string& name, unsigned int posx, unsigned i
 	t->content = uintp;
 	t->active = true;
 	children[name] = t;
+
+	return children[name];
 }
 
 Widget* Container::addWidgetButton( const string& name, const Vector2i& pos, const Vector2i& dimensions, const string& textstring, const Vector2i& textpos, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval )
@@ -56,11 +76,25 @@ Widget* Container::addWidgetButton( const string& name, const Vector2i& pos, con
 	t->v_width = dimensions.x;
 	t->v_height = dimensions.y;
 	t->addWidgetText( "btext", textpos.x, textpos.y, textstring );
-// 	t->command = cmds;
 	t->genEvent(1, name, cmds, responsetime, minfresponsetime, fresponseinterval);
 	t->active = true;
 	children[name] = t;
-	
+
+	return children[name];
+}
+
+Widget* Container::addWidgetButton( const string& name, const Vector2i& pos, const Vector2i& dimensions, const string& textstring, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval )
+{
+	Button* t = new Button();
+	t->parent = this;
+	t->translate(pos.x, pos.y);
+	t->v_width = dimensions.x;
+	t->v_height = dimensions.y;
+	t->addWidgetText( "btext", textstring );
+	t->genEvent(1, name, cmds, responsetime, minfresponsetime, fresponseinterval);
+	t->active = true;
+	children[name] = t;
+
 	return children[name];
 }
 

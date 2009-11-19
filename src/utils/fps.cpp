@@ -19,7 +19,7 @@ void Fps::mark()
 		if ( ++dispcounter == dispevery )
 		{
 			currentfps = dispsum/dispevery;
-	//		cerr << "FPS: " << currentfps << endl;
+/*			cerr << "FPS: " << currentfps << endl;*/
 			dispcounter = 0;
 			dispsum = 0.0f;
 		}

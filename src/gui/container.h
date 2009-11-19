@@ -21,11 +21,13 @@ class Container : public Widget
 	protected:
 		void	drawChildren();
 
-		void	addWidgetPanel( const string& name, Widget* nwidget );
-		void	addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring );
-		void	addWidgetText( const string& name, unsigned int posx, unsigned int posy, const unsigned int* uintp );
+		Widget* addWidgetPanel( const string& name, Widget* nwidget );
+		Widget* addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring );
+		Widget* addWidgetText( const string& name, const string& textstring );
+		Widget* addWidgetText( const string& name, unsigned int posx, unsigned int posy, const unsigned int* uintp );
 		Widget*	addWidgetButton( const string& name, const Vector2i& pos, const Vector2i& dimensions, const string& textstring, const Vector2i& textpos, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval );
-		
+		Widget*	addWidgetButton( const string& name, const Vector2i& pos, const Vector2i& dimensions, const string& textstring, const cmdsettings& cmds, unsigned int responsetime, unsigned int minfresponsetime, unsigned int fresponseinterval );
+
 		void	updateAbsPosition();
 	
 		// children map iterator
