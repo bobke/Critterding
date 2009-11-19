@@ -12,29 +12,29 @@ Hud::Hud()
 
 	critterselection = Critterselection::Instance();
 
-	unsigned int bwidth = 50;
+	unsigned int bwidth = 60;
 	unsigned int bheight = 18;
 	unsigned int bspacing = 2;
 	
 	unsigned int c_width = bspacing;
 	unsigned int c_height = bspacing;
-	addWidgetButton( "hud_exit", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "exit", Vector2i(16, 13), cmd.gen("gui_togglepanel", "exitpanel"), 0, 0, 0 );
+	addWidgetButton( "hud_exit", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "exit", cmd.gen("gui_togglepanel", "exitpanel"), 0, 0, 0 );
 
 	c_height += bspacing + bheight;
-	addWidgetButton( "hud_graph", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "graph", Vector2i(10, 13), cmd.gen("gui_togglepanel", "statsgraph"), 0, 0, 0 );
+	addWidgetButton( "hud_graph", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "graph", cmd.gen("gui_togglepanel", "statsgraph"), 0, 0, 0 );
 
 	c_height += bspacing + bheight;
-	addWidgetButton( "hud_stats", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "stats", Vector2i(13, 13), cmd.gen("gui_togglepanel", "infostats"), 0, 0, 0 );
+	addWidgetButton( "hud_stats", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "stats", cmd.gen("gui_togglepanel", "infostats"), 0, 0, 0 );
 
 	c_width += bspacing + bwidth;
 	c_height = bspacing;
-	addWidgetButton( "hud_events", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "events", Vector2i(8, 13), cmd.gen("gui_togglepanel", "textverbosemessage"), 0, 0, 0 );
+	addWidgetButton( "hud_events", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "events", cmd.gen("gui_togglepanel", "textverbosemessage"), 0, 0, 0 );
 
 	c_height += bspacing + bheight;
-	addWidgetButton( "hud_settings1", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "settings1", Vector2i(1, 13), cmd.gen("gui_togglepanel", "settingspanel"), 0, 0, 0 );
+	addWidgetButton( "hud_settings1", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "settings1", cmd.gen("gui_togglepanel", "settingspanel"), 0, 0, 0 );
 
 	c_height += bspacing + bheight;
-	addWidgetButton( "hud_settings2", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "settings2", Vector2i(1, 13), cmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
+	addWidgetButton( "hud_settings2", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "settings2", cmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
 
 	// init critter selection buttons
 	c_width += bspacing + bwidth;
@@ -108,7 +108,7 @@ void Hud::draw()
 		glPushMatrix();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, *settings->winWidth, *settings->winHeight, 0, -1, 1);
+		glOrtho(0, *settings->winWidth, *settings->winHeight, 0, 0, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}

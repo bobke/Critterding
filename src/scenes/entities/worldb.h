@@ -46,6 +46,7 @@ class WorldB
 		void			expireCritters();
 		void			autoinsertFood();
 		void			autosaveCritters();
+		void			autoexchangeCritters();
 		void			autoinsertCritters();
 		void			eat( CritterB* c );
 		void			procreate( CritterB* c );
@@ -98,6 +99,7 @@ class WorldB
 		void			movePickedBodyTo();
 		void			movePickedBodyFrom();
 		float			autosaveCounter;
+		float			autoexchangeCounter;
 
 		// vision
 		unsigned char		*retina;
@@ -163,6 +165,7 @@ class WorldB
 		// Settings pointers.. performance
 		const unsigned int*	critter_maxlifetime;
 		const unsigned int*	critter_autosaveinterval;
+		const unsigned int*	critter_autoexchangeinterval;
 		const unsigned int*	critter_killhalfat;
 		const unsigned int*	critter_sightrange;
 		const unsigned int*	critter_raycastvision;

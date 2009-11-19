@@ -19,7 +19,7 @@ class GLWindow {
 		//	create the XFree86 window, with a GLX context.
 		void create(const char* title, int width, int height);
 		//	Destroy window and OpenGL Context, close the Display
-		void destroy();
+// 		void destroy();
 		//	Main loop for the program.
 		void runGLScene(GLScene* glscene);
 

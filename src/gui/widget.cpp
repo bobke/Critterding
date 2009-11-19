@@ -8,6 +8,9 @@ Widget::Widget()
 	v_widthP = &v_width;
 	v_heightP = &v_height;
 	
+	hcenter = false;
+	vcenter = false;
+	
 	isMovable = false;
 	isTouchable = false;
 	isContainer = false;

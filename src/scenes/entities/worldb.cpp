@@ -12,6 +12,7 @@ WorldB::WorldB()
 		critter_maxlifetime = settings->getCVarPtr("critter_maxlifetime");
 		critter_maxenergy = settings->getCVarPtr("critter_maxenergy");
 		critter_autosaveinterval = settings->getCVarPtr("critter_autosaveinterval");
+		critter_autoexchangeinterval = settings->getCVarPtr("critter_autoexchangeinterval");
 		critter_killhalfat = settings->getCVarPtr("critter_killhalfat");
 		critter_retinasize = settings->getCVarPtr("critter_retinasize");
 		critter_sightrange = settings->getCVarPtr("critter_sightrange");
@@ -29,6 +30,7 @@ WorldB::WorldB()
 	currentCritterID	= 1;
 	insertCritterCounter	= 0;
 	autosaveCounter		= 0.0f;
+	autoexchangeCounter	= 0.0f;
 	insertHight		= 1.0f;
 	
 	// vision retina allocation
@@ -177,6 +179,9 @@ void WorldB::process()
 	// Autosave Critters?
 		autosaveCritters();
 
+	// Autoexchange Critters?
+		autoexchangeCritters();
+
 	// Autoinsert Critters?
 		autoinsertCritters();
 
@@ -252,6 +257,8 @@ void WorldB::procreate( CritterB* c )
 			}
 
 			Textverbosemessage::Instance()->addBirth(buf);
+			if (settings->getCVar("headless"))
+				cerr << buf.str()<< endl;
 
 		// split energies in half
 			nc->energyLevel = c->energyLevel/2.0f;
@@ -350,6 +357,103 @@ void WorldB::autosaveCritters()
 	}
 }
 
+void WorldB::autoexchangeCritters()
+{
+	if ( *critter_autoexchangeinterval > 0 )
+	{
+		autoexchangeCounter += ((float)Timer::Instance()->elapsed/1000);
+		if ( autoexchangeCounter > *critter_autoexchangeinterval )
+		{
+			autoexchangeCounter = 0.0f;
+
+			// determine exchange directory
+			stringstream buf;
+			buf << savedir << "/exchange";
+			string exchangedir = buf.str();
+			
+			// save or load? :)
+			unsigned int mode = randgen->Instance()->get( 0, 1 );
+			
+			// always load if critters == 0
+			if ( critters.size() == 0 || mode )
+			{
+				vector<string> files;
+				dirH.listContentsFull(exchangedir, files);
+
+				// FIXME same routine as load all critters
+				for ( unsigned int i = 0; i < files.size(); i++ )
+				{
+					if ( parseH->Instance()->endMatches( ".cr", files[i] ) )
+					{
+						stringstream buf;
+						buf << "loading " << files[i];
+						Logbuffer::Instance()->add(buf);
+
+						string content;
+						fileH.open( files[i], content ); 
+						fileH.rm( files[i] );
+
+						CritterB *c = new CritterB(content, m_dynamicsWorld, findPosition(), retina);
+
+						unsigned int error = 0;
+						if ( c->retinasize != *critter_retinasize ) error = 1;
+
+						if ( !error)
+						{
+							critters.push_back( c );
+
+							c->critterID = currentCritterID++;
+							c->calcFramePos(critters.size()-1);
+
+							// start energy
+							freeEnergy -= c->energyLevel;
+						}
+						else
+						{
+							delete c;
+							if ( error == 1 )
+							{
+								stringstream buf;
+								buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
+								Logbuffer::Instance()->add(buf);
+
+								cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
+							}
+						}
+					}
+				}
+				stringstream buf;
+				buf << "Loaded critters from " << exchangedir;
+				Logbuffer::Instance()->add(buf);
+				if (settings->getCVar("headless"))
+					cerr << buf.str()<< endl;
+			}
+			else
+			{
+				// pick one to save
+				unsigned int savec = randgen->Instance()->get( 0, critters.size()-1 );
+
+				buf << "/" << time(0) << ".cr";
+				string filename = buf.str();
+
+				// makde dirs
+				if ( !dirH.exists(savedir) )		dirH.make(savedir);
+				if ( !dirH.exists(exchangedir) )	dirH.make(exchangedir);
+
+				// save critter
+				fileH.save(filename, critters[savec]->saveCritterB());
+
+				//cerr << endl << "Saved critters to " << subsavedir << endl << endl;
+				stringstream buf2;
+				buf2 << "Autoexchange: Saved critter to " << filename;
+				Logbuffer::Instance()->add(buf2);
+				if (settings->getCVar("headless"))
+					cerr << buf2.str()<< endl;
+			}
+		}
+	}
+}
+
 void WorldB::autoinsertFood()
 {
 	if ( freeEnergy >= *food_maxenergy )
@@ -373,6 +477,8 @@ void WorldB::expireCritters()
 			else
 				buf << setw(4) << critters[i]->critterID << " starved";
 			Textverbosemessage::Instance()->addDeath(buf);
+			if (settings->getCVar("headless"))
+				cerr << buf.str()<< endl;
 
 			removeCritter(i);
 			i--;
@@ -383,6 +489,8 @@ void WorldB::expireCritters()
 			stringstream buf;
 			buf << setw(4) << critters[i]->critterID << " died of age";
 			Textverbosemessage::Instance()->addDeath(buf);
+			if (settings->getCVar("headless"))
+				cerr << buf.str()<< endl;
 
 			removeCritter(i);
 			i--;
@@ -398,6 +506,8 @@ void WorldB::expireCritters()
 				stringstream buf;
 				buf << setw(4) << critters[i]->critterID << " fell in the pit";
 				Textverbosemessage::Instance()->addDeath(buf);
+				if (settings->getCVar("headless"))
+					cerr << buf.str()<< endl;
 
 				removeCritter(i);
 				i--;

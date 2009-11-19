@@ -48,6 +48,9 @@ class Widget
 		int*			v_heightP;
 		int*			v_widthP;
 
+		bool			hcenter;
+		bool			vcenter;
+
 		virtual void		updateAbsPosition();
 	protected:
 		Settings*		settings;
@@ -56,7 +59,6 @@ class Widget
 		// width and height
 		int			v_height;
 		int			v_width;
-
 
 	private:
 };

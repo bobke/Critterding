@@ -8,7 +8,7 @@
 #include "../utils/file.h"
 #include "../math/vector2i.h"
 
-#define FTGL_TEXTURE 5
+// #define FTGL_TEXTURE 5
 #include "../utils/ftgl/FTGL/ftgl.h"
 
 using namespace std;
@@ -24,6 +24,7 @@ class Textprinter
 // 		FTPoint getBBox(const char *fmt, ...);
 		unsigned int getWidth(const char *fmt, ...);
 		unsigned int getWidth(const string& str);
+		Vector2i getDimensions(const string& str);
 
 		string getFormattedString(const char *fmt, ...);
 
