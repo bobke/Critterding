@@ -15,6 +15,11 @@ class Critterview : public Panel
 		NeuronInterz* nPointer;
 		Vector2i position;
 	};
+	struct sensor
+	{
+		sensorNeuron* sPointer;
+		Vector2i position;
+	};
 
 	public:
 		Critterview();
@@ -28,8 +33,9 @@ class Critterview : public Panel
 		Widget* bviewbutton;
 		btScalar viewposition[16];
 		CritterB* currentCritter;
-		
+
 		vector<neuron> neurons;
+		vector<sensor> sensors;
 };
 
 #endif

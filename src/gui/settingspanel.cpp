@@ -35,6 +35,7 @@ Settingspanel::Settingspanel()
 	vspace += vint; addSettingmutator("critter_minenergyproc", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_sightrange", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_autosaveinterval", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_autoexchangeinterval", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_killhalfat", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_enableomnivores", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_raycastvision", hspace, vspace);
