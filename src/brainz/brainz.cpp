@@ -816,7 +816,7 @@ Brainz::Brainz()
 		{
 			for ( unsigned int i=0; i < totalNeurons; i++ )
 			{
-				NeuronInterz *n = &Neurons[i];
+				NeuronInterz* n = &Neurons[i];
 		
 				n->process();
 		
