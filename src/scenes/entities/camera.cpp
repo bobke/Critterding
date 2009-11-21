@@ -24,8 +24,8 @@ void Camera::place()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	float nheight = 0.5f * ((float)(*settings->winHeight) / *settings->winWidth);
-	glFrustum(-0.5f,0.5f,-nheight,nheight,1.0f,10000.0f);
+	float nheight = 0.05f * ((float)(*settings->winHeight) / *settings->winWidth);
+	glFrustum(-0.05f,0.05f,-nheight,nheight,0.1f,10000.0f);
 
 // 	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
 // 	glRotatef(rotation.y, 0.0f, 1.0f, 0.0f);

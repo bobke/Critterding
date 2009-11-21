@@ -409,7 +409,7 @@ void CritterB::procInputNeurons()
 			for ( int y = retinasize-1; y >= 0; y-- )
 				for ( unsigned int x = 0; x < retinasize; x++ )
 				{
-					mouseRay = raycast->cast( body.mouths[0]->ghostObject->getWorldTransform().getOrigin(), getScreenDirection(x, y) );
+					mouseRay = raycast->cast( body.mouths[0]->ghostObject->getWorldTransform().getOrigin(), getScreenDirection(x+1, y) );
 					if ( mouseRay.hit )
 					{
 						Entity* e = static_cast<Entity*>(mouseRay.hitBody->getUserPointer());
@@ -480,7 +480,7 @@ void CritterB::procInputNeurons()
 
 btVector3 CritterB::getScreenDirection(const int& x, const int& y)
 {
-	float directionlength = 100.f;
+	float directionlength = 1000000.f;
 
 	btTransform tr = body.mouths[0]->ghostObject->getWorldTransform();
 	btVector3 forwardRay( 
