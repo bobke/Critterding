@@ -13,6 +13,7 @@
 #include "settingspanel.h"
 #include "settingsbrainpanel.h"
 #include "hud.h"
+#include "critterview.h"
 
 using namespace std;
 

@@ -15,7 +15,6 @@ class Statsgraph : public Panel
 		void draw();
 
 	private:
-		Settings* settings;
 		Statsbuffer* statsBuffer;
 };
 

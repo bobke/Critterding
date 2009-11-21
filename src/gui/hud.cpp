@@ -47,7 +47,7 @@ Hud::Hud()
 	for ( unsigned int i=0; i < 20; i++ )
 	{
 		s << i;
-		cbuttons.push_back( addWidgetButton( s.str(), Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "", Vector2i(16, 13), cmd.gen("cs_unregister", i), 0, 0, 0 ) );
+		cbuttons.push_back( addWidgetButton( s.str(), Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "", Vector2i(16, 13), cmd.gen("cs_select", i), 0, 0, 0 ) );
 		s << "2";
 		static_cast<Button*>(cbuttons[i])->genEvent(3, s.str(), cmd.gen("cs_unregister", i), 0, 0, 0);
 		cbuttons[i]->swap();
@@ -80,21 +80,16 @@ void Hud::draw()
 			else
 				cbuttons[i]->active = false;
 
-		drawChildren();
-
-		btScalar position[16];
 		unsigned int bwidth = 28;
 		unsigned int bheight = 28;
-		float nheight = 0.05f * ((float)(*settings->winHeight) / *settings->winWidth);
-
 		for (unsigned int i=0; i < critterselection->clist.size() && i < 20; i++ )
 		{
 			glViewport(cbuttons[i]->absPosition. x+1, *settings->winHeight-bheight-(cbuttons[i]->absPosition.y-1), bwidth-1, bheight-1);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			glFrustum( -0.05f, 0.05f,-nheight,nheight, 0.1f, 10000.0f);
-			critterselection->clist[i]->body.mouths[0]->ghostObject->getWorldTransform().inverse().getOpenGLMatrix(position);
-			glMultMatrixf(position);
+			glFrustum( -0.05f, 0.05f,-0.05f,0.05f, 0.1f, 10000.0f);
+			critterselection->clist[i]->body.mouths[0]->ghostObject->getWorldTransform().inverse().getOpenGLMatrix(viewposition);
+			glMultMatrixf(viewposition);
 
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
@@ -111,6 +106,8 @@ void Hud::draw()
 		glOrtho(0, *settings->winWidth, *settings->winHeight, 0, 0, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+
+		drawChildren();
 	}
 }
 

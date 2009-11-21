@@ -20,6 +20,7 @@ class Hud : public Panel
 		void		drawBorders();
 		Critterselection	*critterselection;
 		vector<Widget*>		cbuttons;
+		btScalar viewposition[16];
 };
 
 #endif
