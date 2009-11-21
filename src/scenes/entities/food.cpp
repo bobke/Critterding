@@ -19,7 +19,9 @@ Food::Food()
 void Food::draw()
 {
 	myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
-
+/*	btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
+	cerr << pos.getY() */
+	
 	glPushMatrix(); 
 	glMultMatrixf(position);
 

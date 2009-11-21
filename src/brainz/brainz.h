@@ -36,6 +36,9 @@ class Brainz
 		// input / output accessor/mutators
 			vector<sensorNeuron>	Inputs;
 			vector<motorNeuron>	Outputs;
+		// vectors
+			vector<NeuronInterz>	Neurons;
+			vector<ArchNeuronz>	ArchNeurons;
 
 	// BUILD TIME
 
@@ -147,21 +150,17 @@ class Brainz
 			void			process();
 			void			processTillAnswer();
 
-		// vectors
-			vector<NeuronInterz>	Neurons;
+			int			findSensorNeuron( unsigned int id );
 	private:
 		// utilities
 			Parser			*parseH;
 			RandGen			*randgen;
 
-		// vectors
-			vector<ArchNeuronz>	ArchNeurons;
-
 		// a buffer for reading architecture
 			string			archBuffer;
 
 			int			findMotorNeuron( unsigned int id );
-			int			findSensorNeuron( unsigned int id );
+// 			int			findSensorNeuron( unsigned int id );
 
 		// build time functions
 			void			addRandomArchNeuron();
