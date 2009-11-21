@@ -147,6 +147,8 @@ class Brainz
 			void			process();
 			void			processTillAnswer();
 
+		// vectors
+			vector<NeuronInterz>	Neurons;
 	private:
 		// utilities
 			Parser			*parseH;
@@ -154,7 +156,6 @@ class Brainz
 
 		// vectors
 			vector<ArchNeuronz>	ArchNeurons;
-			vector<NeuronInterz>	Neurons;
 
 		// a buffer for reading architecture
 			string			archBuffer;

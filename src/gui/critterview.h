@@ -10,6 +10,12 @@ using namespace std;
 
 class Critterview : public Panel
 {
+	struct neuron
+	{
+		NeuronInterz* nPointer;
+		Vector2i position;
+	};
+
 	public:
 		Critterview();
 		~Critterview();
@@ -19,7 +25,11 @@ class Critterview : public Panel
 	private:
 		Critterselection* critterselection;
 		Widget* viewbutton;
+		Widget* bviewbutton;
 		btScalar viewposition[16];
+		CritterB* currentCritter;
+		
+		vector<neuron> neurons;
 };
 
 #endif
