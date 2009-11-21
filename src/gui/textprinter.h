@@ -29,8 +29,9 @@ class Textprinter
 		string getFormattedString(const char *fmt, ...);
 
 		// print left aligned
-		void print(float x, float y, const char *fmt, ...);
-		void print(float x, float y, const string& str);
+		void print(int x, int y, const char *fmt, ...);
+		void print(int x, int y, const string& str);
+		void print(int x, int y, const long unsigned int& longuint);
 		void print(const Vector2i& pos, const string& str);
 		void print(const Vector2i& pos, const unsigned int* num);
 		// print right aligned

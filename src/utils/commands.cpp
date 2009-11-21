@@ -46,6 +46,7 @@ Commands::Commands()
 	registerCmd("settings_decrease", &Settings::decreaseCVar);
 
 	registerCmd("cs_unregister", &Critterselection::unregisterCritterVID);
+	registerCmd("cs_select", &Critterselection::selectCritterVID);
 }
 
 void Commands::registerCmd(string name, void (Commands::*pt2Func)())

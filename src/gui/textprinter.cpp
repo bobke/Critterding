@@ -11,7 +11,7 @@ Textprinter::Textprinter()
 	setUpFonts();
 }
 
-void Textprinter::print(float x, float y, const char *fmt, ...)
+void Textprinter::print(int x, int y, const char *fmt, ...)
 {
 	glPushMatrix();
 
@@ -104,18 +104,23 @@ Vector2i Textprinter::getDimensions(const string& str)
 // }
 
 // FIXME get rid of this
-void Textprinter::print(float x, float y, const string& str)
+void Textprinter::print(int x, int y, const string& str)
 {
 	glPushMatrix();
 
 		glTranslatef(x, y, 0);
 		glScalef(1,-1,1);
-// 		glRotatef(180, 1.0f, 0.0f, 0.0f);
-
 		const char *text = str.c_str();
 		fonts[0]->Render(text);
 
 	glPopMatrix();
+}
+
+void Textprinter::print(int x, int y, const long unsigned int& longuint)
+{
+	stringstream sstream;
+	sstream << longuint;
+	print(x, y, sstream.str());
 }
 
 void Textprinter::print(const Vector2i& pos, const string& str)
