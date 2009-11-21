@@ -78,6 +78,32 @@ void Critterview::draw()
 		glBegin(GL_QUADS);
 		int column = 0;
 		int row = 0;
+
+		// inputs
+		for ( unsigned int i=0; i < currentCritter->brain.numberOfInputs; i++ )
+		{
+			if ( currentCritter->brain.Inputs[i].output )
+				glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			else
+				glColor4f(0.0f, 0.2f, 0.0f, 1.0f);
+
+			int woffset = (spacing+v_width)*column;
+			int hoffset = (spacing+v_height)*row;
+			glVertex2f(bviewbutton->absPosition.x+woffset,         bviewbutton->absPosition.y+hoffset+v_height);
+			glVertex2f(bviewbutton->absPosition.x+woffset,         bviewbutton->absPosition.y+hoffset);
+			glVertex2f(bviewbutton->absPosition.x+woffset+v_width, bviewbutton->absPosition.y+hoffset);
+			glVertex2f(bviewbutton->absPosition.x+woffset+v_width, bviewbutton->absPosition.y+hoffset+v_height);
+			
+			if ( ++column == 20 )
+			{
+				column = 0;
+				row++;
+			}
+		}
+
+		// neurons
+		column = 0;
+		row++;
 		for ( unsigned int i=0; i < neurons.size(); i++ )
 		{
 			if ( neurons[i].nPointer->output )
@@ -112,6 +138,32 @@ void Critterview::draw()
 				row++;
 			}
 		}
+
+		// inputs
+		column = 0;
+		row++;
+		for ( unsigned int i=0; i < currentCritter->brain.numberOfOutputs; i++ )
+		{
+			if ( *currentCritter->brain.Outputs[i].output )
+				glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+			else
+				glColor4f(0.0f, 0.0f, 0.2f, 1.0f);
+
+			int woffset = (spacing+v_width)*column;
+			int hoffset = (spacing+v_height)*row;
+			glVertex2f(bviewbutton->absPosition.x+woffset,         bviewbutton->absPosition.y+hoffset+v_height);
+			glVertex2f(bviewbutton->absPosition.x+woffset,         bviewbutton->absPosition.y+hoffset);
+			glVertex2f(bviewbutton->absPosition.x+woffset+v_width, bviewbutton->absPosition.y+hoffset);
+			glVertex2f(bviewbutton->absPosition.x+woffset+v_width, bviewbutton->absPosition.y+hoffset+v_height);
+			
+			if ( ++column == 20 )
+			{
+				column = 0;
+				row++;
+			}
+		}
+
+
 		glEnd();
 
 		drawChildren();
