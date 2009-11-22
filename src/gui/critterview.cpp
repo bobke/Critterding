@@ -124,7 +124,7 @@ void Critterview::draw()
 						}
 						float xD=neurons[j].position.x - neurons[i].position.x;
 						float yD=neurons[j].position.y - neurons[i].position.y;
-						float dist = sqrt((xD*xD)+(yD*yD)) - v_radius;
+						float dist = sqrt((xD*xD)+(yD*yD));
 						float oneoverdistancesquared = 1.0f/(dist*dist);
 						if ( oneoverdistancesquared > 1.0f )
 							oneoverdistancesquared = 1.0f;
@@ -145,11 +145,11 @@ void Critterview::draw()
 							neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;*/
 						}
 						// general antigravity
-						neurons[i].position.x -= (xD / 10.0f) * oneoverdistancesquared;
-						neurons[i].position.y -= (yD / 10.0f) * oneoverdistancesquared;
+						neurons[i].position.x -= (xD / 1.0f) * oneoverdistancesquared;
+						neurons[i].position.y -= (yD / 1.0f) * oneoverdistancesquared;
 
-						neurons[j].position.x += (xD / 10.0f) * oneoverdistancesquared;
-						neurons[j].position.y += (yD / 10.0f) * oneoverdistancesquared;
+						neurons[j].position.x += (xD / 1.0f) * oneoverdistancesquared;
+						neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;
 
 						//distance=sqrt(xD*xD+yD*yD);
 						float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
@@ -198,7 +198,58 @@ void Critterview::draw()
 						if ( neurons[i].position.y+v_radius > *bviewbutton->v_heightP ) neurons[i].position.y = *bviewbutton->v_heightP-v_radius;
 						if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
 					}
-					
+
+			// connections
+			glBegin(GL_LINES);
+// 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			for ( unsigned int i=0; i < neurons.size(); i++ )
+			{
+// 				if ( neurons[i].nPointer->output )
+// 				{
+// 					if ( neurons[i].nPointer->isMotor )
+// 						glColor4f(0.0f, 0.0f, 0.5f, 1.0f);
+// 					else if ( neurons[i].nPointer->isInhibitory )
+// 						glColor4f(0.5f, 0.0f, 0.0f, 1.0f);
+// 					else
+// 						glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
+// 				}
+// 				else
+// 				{
+// 					if ( neurons[i].nPointer->isMotor )
+// 						glColor4f(0.0f, 0.0f, dimmed, 1.0f);
+// 					else if ( neurons[i].nPointer->isInhibitory )
+// 						glColor4f(dimmed, 0.0f, 0.0f, 1.0f);
+// 					else
+// 						glColor4f(0.0f, dimmed, 0.0f, 1.0f);
+// 				}
+
+					for ( unsigned int j=0; j < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); j++ )
+					{
+						ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[j];
+						if ( !as->isSensorNeuron && currentCritter->brain.Neurons[as->neuronID].output || as->isSensorNeuron && currentCritter->brain.Inputs[as->realneuronID].output )
+						{
+							if ( as->isSensorNeuron )
+								glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
+							else if ( !neurons[as->neuronID].nPointer->isInhibitory )
+								glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
+							else
+								glColor4f(0.5f, 0.0f, 0.0f, 1.0f);
+
+							glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x,         bviewbutton->absPosition.y+neurons[i].position.y);
+							if ( as->isSensorNeuron )
+							{
+								glVertex2f(bviewbutton->absPosition.x+sensors[as->realneuronID].position.x,         bviewbutton->absPosition.y+sensors[as->realneuronID].position.y);
+							}
+							else
+							{
+								glVertex2f(bviewbutton->absPosition.x+neurons[as->neuronID].position.x,         bviewbutton->absPosition.y+neurons[as->neuronID].position.y);
+							}
+						}
+					}
+// 				}
+			}
+			glEnd();
+
 			glBegin(GL_QUADS);
 
 			float dimmed = 0.3f;
@@ -265,57 +316,6 @@ void Critterview::draw()
 	// 			if ( ++column == rowlength ) { column = 0; row++; }
 	// 		}
 
-			glEnd();
-
-			// connections
-			glBegin(GL_LINES);
-// 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-			for ( unsigned int i=0; i < neurons.size(); i++ )
-			{
-// 				if ( neurons[i].nPointer->output )
-// 				{
-// 					if ( neurons[i].nPointer->isMotor )
-// 						glColor4f(0.0f, 0.0f, 0.5f, 1.0f);
-// 					else if ( neurons[i].nPointer->isInhibitory )
-// 						glColor4f(0.5f, 0.0f, 0.0f, 1.0f);
-// 					else
-// 						glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
-// 				}
-// 				else
-// 				{
-// 					if ( neurons[i].nPointer->isMotor )
-// 						glColor4f(0.0f, 0.0f, dimmed, 1.0f);
-// 					else if ( neurons[i].nPointer->isInhibitory )
-// 						glColor4f(dimmed, 0.0f, 0.0f, 1.0f);
-// 					else
-// 						glColor4f(0.0f, dimmed, 0.0f, 1.0f);
-// 				}
-
-					for ( unsigned int j=0; j < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); j++ )
-					{
-						ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[j];
-						if ( !as->isSensorNeuron && currentCritter->brain.Neurons[as->neuronID].output || as->isSensorNeuron && currentCritter->brain.Inputs[as->realneuronID].output )
-						{
-							if ( as->isSensorNeuron )
-								glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
-							else if ( !neurons[as->neuronID].nPointer->isInhibitory )
-								glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
-							else
-								glColor4f(0.5f, 0.0f, 0.0f, 1.0f);
-
-							glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x,         bviewbutton->absPosition.y+neurons[i].position.y);
-							if ( as->isSensorNeuron )
-							{
-								glVertex2f(bviewbutton->absPosition.x+sensors[as->realneuronID].position.x,         bviewbutton->absPosition.y+sensors[as->realneuronID].position.y);
-							}
-							else
-							{
-								glVertex2f(bviewbutton->absPosition.x+neurons[as->neuronID].position.x,         bviewbutton->absPosition.y+neurons[as->neuronID].position.y);
-							}
-						}
-					}
-// 				}
-			}
 			glEnd();
 
 		// draw the rest
