@@ -179,7 +179,7 @@ void Critterview::draw()
 						float xD=sensors[j].position.x - neurons[i].position.x;
 						float yD=sensors[j].position.y - neurons[i].position.y;
 						float dist = sqrt((xD*xD)+(yD*yD));
-						float oneoverdistancesquared = 120.0f/(dist*dist);
+						float oneoverdistancesquared = 150.0f/(dist*dist);
 						if ( oneoverdistancesquared > 1.0f )
 							oneoverdistancesquared = 1.0f;
 						if ( nrlinks > 0 )
