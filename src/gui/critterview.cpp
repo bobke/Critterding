@@ -7,7 +7,7 @@ Critterview::Critterview()
 	active = false;
 	isMovable = true;
 
-	v_width = 240;
+	v_width = 349;
 	v_height = 400;
 	
 	position.x = 10;
@@ -21,7 +21,7 @@ Critterview::Critterview()
 	
 	// view widgets
 	viewbutton = addWidgetButton( "cv_view", Vector2i(10, 30), Vector2i(50, 50), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
-	bviewbutton = addWidgetButton( "cv_bview", Vector2i(10, 90), Vector2i(220, 300), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
+	bviewbutton = addWidgetButton( "cv_bview", Vector2i(10, 90), Vector2i(v_width-20, 300), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
 }
 
 void Critterview::draw()
@@ -31,6 +31,7 @@ void Critterview::draw()
 	int spacing = 3;
 	int column = 0;
 	int row = 0;
+	int rowlength = 30;
 
 	if ( critterselection->selectedCritter == 0 )
 		active = false;
@@ -51,10 +52,10 @@ void Critterview::draw()
 				s.position = Vector2f(woffset, hoffset);
 				sensors.push_back(s);
 
-				if ( ++column == 20 ) { column = 0; row++; }
+				if ( ++column == rowlength ) { column = 0; row++; }
 			}
 
-			row = (currentCritter->brain.numberOfInputs/20) + 1;
+			row = (currentCritter->brain.numberOfInputs/rowlength) + 1;
 			neurons.clear();
 			for ( unsigned int i=0; i < currentCritter->brain.totalNeurons; i++ )
 			{
@@ -65,7 +66,7 @@ void Critterview::draw()
 				n.position = Vector2f(woffset, hoffset);
 				neurons.push_back(n);
 
-				if ( ++column == 20 ) { column = 0; row++; }
+				if ( ++column == rowlength ) { column = 0; row++; }
 			}
 		}
 	}
@@ -101,7 +102,7 @@ void Critterview::draw()
 
 			// drift
 				for ( unsigned int i=0; i < neurons.size()-1; i++ )
-					for ( unsigned int j=i+1; j < neurons.size()-1; j++ )
+					for ( unsigned int j=i+1; j < neurons.size(); j++ )
 					{
 						// how many connections do they have underling
 						unsigned int nrlinks = 0;
@@ -116,53 +117,30 @@ void Critterview::draw()
 						float dist = sqrt((xD*xD)+(yD*yD));
 						if ( nrlinks )
 						{
-							neurons[i].position.x += (xD / 1000.0f) * dist * nrlinks;
-							neurons[i].position.y += (yD / 1000.0f) * dist * nrlinks;
+							neurons[i].position.x += (xD / 1200.0f) * dist * nrlinks;
+							neurons[i].position.y += (yD / 1200.0f) * dist * nrlinks;
 
-							neurons[j].position.x -= (xD / 1000.0f) * dist * nrlinks;
-							neurons[j].position.y -= (yD / 1000.0f) * dist * nrlinks;
+							neurons[j].position.x -= (xD / 1200.0f) * dist * nrlinks;
+							neurons[j].position.y -= (yD / 1200.0f) * dist * nrlinks;
 						}
-						else
-						{
-						}
-						float oneoverdistancesquared = 20.0f/(dist*dist);
-						if ( oneoverdistancesquared > 100.0f )
-							oneoverdistancesquared = 100.0f;
-// 						cerr << oneoverdistancesquared << endl;
+						// general antigravity
+						float oneoverdistancesquared = 120.0f/(dist*dist);
+						if ( oneoverdistancesquared > 1.0f )
+							oneoverdistancesquared = 1.0f;
 						neurons[i].position.x -= (xD) * oneoverdistancesquared;
 						neurons[i].position.y -= (yD) * oneoverdistancesquared;
 
 						neurons[j].position.x += (xD) * oneoverdistancesquared;
 						neurons[j].position.y += (yD) * oneoverdistancesquared;
 
-// 						// move towards center
-// 						neurons[i].position.x += (xCi / 50) * distCi;
-// 						neurons[i].position.y += (yCi / 50) * distCi;
-// 						neurons[j].position.x -= (xCj / 50) * distCj;
-// 						neurons[j].position.y -= (yCj / 50) * distCj;
-
-
-// // 						// general antigravity
-// // 						float dist = sqrt((xD*xD)+(yD*yD));
-// 						float oneoverdistancesquared = 100.0f/(dist*dist*dist);
-// // 						if ( oneoverdistancesquared < 0.2f )  oneoverdistancesquared = 0.2f;
-// 						neurons[i].position.x -= xD*oneoverdistancesquared;
-// 						neurons[i].position.y -= yD*oneoverdistancesquared;
-// 
-// 						neurons[j].position.x += xD*oneoverdistancesquared;
-// 						neurons[j].position.y += yD*oneoverdistancesquared;
-
-			
-						
-						
 						//distance=sqrt(xD*xD+yD*yD);
-						float miny = v_radius+((spacing+v_diam) * ((sensors.size()/20)+1) );
-						if ( neurons[i].position.x+v_radius > 220.0f ) neurons[i].position.x = 220.0f-v_radius;
+						float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
+						if ( neurons[i].position.x+v_radius > v_width-20 ) neurons[i].position.x = v_width-20-v_radius;
 						if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
 						if ( neurons[i].position.y+v_radius > 300.0f ) neurons[i].position.y = 300.0f-v_radius;
 						if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
 
-						if ( neurons[j].position.x+v_radius > 220.0f ) neurons[j].position.x = 220.0f-v_radius;
+						if ( neurons[j].position.x+v_radius > v_width-20 ) neurons[j].position.x = v_width-20-v_radius;
 						if ( neurons[j].position.x < v_radius ) neurons[j].position.x = v_radius;
 						if ( neurons[j].position.y+v_radius > 300.0f ) neurons[j].position.y = 300.0f-v_radius;
 						if ( neurons[j].position.y < miny ) neurons[j].position.y = miny;
@@ -171,17 +149,18 @@ void Critterview::draw()
 		
 			glBegin(GL_QUADS);
 
+			float dimmed = 0.3f;
 			// inputs
 			for ( unsigned int i=0; i < sensors.size(); i++ )
 			{
 				if ( sensors[i].sPointer->output )
 					glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
 				else
-					glColor4f(0.0f, 0.2f, 0.0f, 1.0f);
+					glColor4f(0.0f, dimmed, 0.0f, 1.0f);
 
-/*				row = (i/20);
+/*				row = (i/rowlength);
 				int hoffset = v_radius+((spacing+v_diam) * row );
-				int woffset = v_radius+((spacing+v_diam) * (i-(row*20)) );*/
+				int woffset = v_radius+((spacing+v_diam) * (i-(row*rowlength)) );*/
 				glVertex2f(bviewbutton->absPosition.x+sensors[i].position.x-v_radius, bviewbutton->absPosition.y+sensors[i].position.y+v_radius);
 				glVertex2f(bviewbutton->absPosition.x+sensors[i].position.x-v_radius, bviewbutton->absPosition.y+sensors[i].position.y-v_radius);
 				glVertex2f(bviewbutton->absPosition.x+sensors[i].position.x+v_radius, bviewbutton->absPosition.y+sensors[i].position.y-v_radius);
@@ -203,11 +182,11 @@ void Critterview::draw()
 				else
 				{
 					if ( neurons[i].nPointer->isMotor )
-						glColor4f(0.0f, 0.0f, 0.2f, 1.0f);
+						glColor4f(0.0f, 0.0f, dimmed, 1.0f);
 					else if ( neurons[i].nPointer->isInhibitory )
-						glColor4f(0.2f, 0.0f, 0.0f, 1.0f);
+						glColor4f(dimmed, 0.0f, 0.0f, 1.0f);
 					else
-						glColor4f(0.0f, 0.2f, 0.0f, 1.0f);
+						glColor4f(0.0f, dimmed, 0.0f, 1.0f);
 				}
 				glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x-v_radius, bviewbutton->absPosition.y+neurons[i].position.y+v_radius);
 				glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x-v_radius, bviewbutton->absPosition.y+neurons[i].position.y-v_radius);
@@ -222,7 +201,7 @@ void Critterview::draw()
 	// 			if ( *currentCritter->brain.Outputs[i].output )
 	// 				glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 	// 			else
-	// 				glColor4f(0.0f, 0.0f, 0.2f, 1.0f);
+	// 				glColor4f(0.0f, 0.0f, dimmed, 1.0f);
 	// 
 	// 			int woffset = v_radius+((spacing+v_diam)*column);
 	// 			int hoffset = 250-v_height;
@@ -231,7 +210,7 @@ void Critterview::draw()
 	// 			glVertex2f(bviewbutton->absPosition.x+woffset+v_radius, bviewbutton->absPosition.y+hoffset-v_radius);
 	// 			glVertex2f(bviewbutton->absPosition.x+woffset+v_radius, bviewbutton->absPosition.y+hoffset+v_radius);
 	// 			
-	// 			if ( ++column == 20 ) { column = 0; row++; }
+	// 			if ( ++column == rowlength ) { column = 0; row++; }
 	// 		}
 
 			glEnd();
@@ -253,11 +232,11 @@ void Critterview::draw()
 // 				else
 // 				{
 // 					if ( neurons[i].nPointer->isMotor )
-// 						glColor4f(0.0f, 0.0f, 0.2f, 1.0f);
+// 						glColor4f(0.0f, 0.0f, dimmed, 1.0f);
 // 					else if ( neurons[i].nPointer->isInhibitory )
-// 						glColor4f(0.2f, 0.0f, 0.0f, 1.0f);
+// 						glColor4f(dimmed, 0.0f, 0.0f, 1.0f);
 // 					else
-// 						glColor4f(0.0f, 0.2f, 0.0f, 1.0f);
+// 						glColor4f(0.0f, dimmed, 0.0f, 1.0f);
 // 				}
 
 					for ( unsigned int j=0; j < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); j++ )

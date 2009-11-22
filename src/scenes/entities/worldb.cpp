@@ -714,7 +714,7 @@ void WorldB::removeCritter(unsigned int cid)
 		mousepicker->detach();
 	
 	critterselection->unregisterCritterID(critters[cid]->critterID);
-	critterselection->deselectCritter(critters[cid]);
+	critterselection->deselectCritter(critters[cid]->critterID);
 
 	delete critters[cid];
 	critters.erase(critters.begin()+cid);
