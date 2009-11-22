@@ -173,11 +173,11 @@ void Critterview::draw()
 				if ( neurons[i].nPointer->output )
 				{
 					if ( neurons[i].nPointer->isMotor )
-						glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+						glColor4f(0.0f, 0.0f, 0.5f, 1.0f);
 					else if ( neurons[i].nPointer->isInhibitory )
-						glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+						glColor4f(0.5f, 0.0f, 0.0f, 1.0f);
 					else
-						glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+						glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
 // 				}
 // 				else
 // 				{
@@ -189,23 +189,20 @@ void Critterview::draw()
 // 						glColor4f(0.0f, 0.2f, 0.0f, 1.0f);
 // 				}
 
-				for ( unsigned int j=0; j < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); j++ )
-				{
-					ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[j];
-					glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x,         bviewbutton->absPosition.y+neurons[i].position.y);
-					if ( as->isSensorNeuron )
+					for ( unsigned int j=0; j < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); j++ )
 					{
-						glVertex2f(bviewbutton->absPosition.x+sensors[currentCritter->brain.findSensorNeuron(as->neuronID)].position.x,         bviewbutton->absPosition.y+sensors[currentCritter->brain.findSensorNeuron(as->neuronID)].position.y);
-					}
-					else
-					{
-						glVertex2f(bviewbutton->absPosition.x+neurons[as->neuronID].position.x,         bviewbutton->absPosition.y+neurons[as->neuronID].position.y);
+						ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[j];
+						glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x,         bviewbutton->absPosition.y+neurons[i].position.y);
+						if ( as->isSensorNeuron )
+						{
+							glVertex2f(bviewbutton->absPosition.x+sensors[as->realneuronID].position.x,         bviewbutton->absPosition.y+sensors[as->realneuronID].position.y);
+						}
+						else
+						{
+							glVertex2f(bviewbutton->absPosition.x+neurons[as->neuronID].position.x,         bviewbutton->absPosition.y+neurons[as->neuronID].position.y);
+						}
 					}
 				}
-				}
-
-// 				glVertex2f(absPosition.x,         absPosition.y+v_height);
-// 				glVertex2f(absPosition.x,         absPosition.y);
 			}
 			glEnd();
 

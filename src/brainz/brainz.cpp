@@ -310,7 +310,8 @@ Brainz::Brainz()
 				{
 					if ( ArchNeurons[i].ArchSynapses[j].isSensorNeuron )
 					{
-						Neurons[i].connec( &Inputs[ findSensorNeuron(ArchNeurons[i].ArchSynapses[j].neuronID) ].output, ArchNeurons[i].ArchSynapses[j].dendriteBranch, ArchNeurons[i].ArchSynapses[j].weight );
+						ArchNeurons[i].ArchSynapses[j].realneuronID = findSensorNeuron(ArchNeurons[i].ArchSynapses[j].neuronID);
+						Neurons[i].connec( &Inputs[ ArchNeurons[i].ArchSynapses[j].realneuronID ].output, ArchNeurons[i].ArchSynapses[j].dendriteBranch, ArchNeurons[i].ArchSynapses[j].weight );
 					}
 					else
 						Neurons[i].connec( &Neurons[ ArchNeurons[i].ArchSynapses[j].neuronID ].output, ArchNeurons[i].ArchSynapses[j].dendriteBranch, ArchNeurons[i].ArchSynapses[j].weight );
