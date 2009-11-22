@@ -7,7 +7,7 @@ Critterview::Critterview()
 	active = false;
 	isMovable = true;
 
-	v_width = 349;
+	v_width = 351;
 	v_height = 450;
 	
 	position.x = 10;
@@ -26,12 +26,12 @@ Critterview::Critterview()
 
 void Critterview::draw()
 {
-	int v_radius = 4;
+	int v_radius = 3;
 	int v_diam = 2*v_radius;
 	int spacing = 3;
 	int column = 0;
 	int row = 0;
-	int rowlength = 30;
+	int rowlength = 37;
 
 	if ( critterselection->selectedCritter == 0 )
 	{
@@ -126,15 +126,15 @@ void Critterview::draw()
 						float yD=neurons[j].position.y - neurons[i].position.y;
 						float dist = sqrt((xD*xD)+(yD*yD));
 						float oneoverdistancesquared = 1.0f/(dist*dist);
-						if ( oneoverdistancesquared > 1.0f )
-							oneoverdistancesquared = 1.0f;
+						if ( oneoverdistancesquared > 1000.0f )
+							oneoverdistancesquared = 1000.0f;
 						if ( nrlinks > 0 )
 						{
-							neurons[i].position.x += (xD / 5000.0f) * dist * nrlinks;
-							neurons[i].position.y += (yD / 5000.0f) * dist * nrlinks;
+							neurons[i].position.x += (xD / 5000.0f) * dist * nrlinks * nrlinks;
+							neurons[i].position.y += (yD / 5000.0f) * dist * nrlinks * nrlinks;
 
-							neurons[j].position.x -= (xD / 5000.0f) * dist * nrlinks;
-							neurons[j].position.y -= (yD / 5000.0f) * dist * nrlinks;
+							neurons[j].position.x -= (xD / 5000.0f) * dist * nrlinks * nrlinks;
+							neurons[j].position.y -= (yD / 5000.0f) * dist * nrlinks * nrlinks;
 						}
 						else
 						{
