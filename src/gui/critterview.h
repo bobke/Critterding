@@ -4,6 +4,7 @@
 #include "panel.h"
 #include "../scenes//entities/worldb.h"
 #include "../utils/critterselection.h"
+#include "../math/vector2f.h"
 #include "../scenes/entities/critterb.h"
 
 using namespace std;
@@ -13,12 +14,12 @@ class Critterview : public Panel
 	struct neuron
 	{
 		NeuronInterz* nPointer;
-		Vector2i position;
+		Vector2f position;
 	};
 	struct sensor
 	{
 		sensorNeuron* sPointer;
-		Vector2i position;
+		Vector2f position;
 	};
 
 	public:
