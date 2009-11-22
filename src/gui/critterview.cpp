@@ -8,7 +8,7 @@ Critterview::Critterview()
 	isMovable = true;
 
 	v_width = 240;
-	v_height = 350;
+	v_height = 400;
 	
 	position.x = 10;
 	position.y = 50;
@@ -21,7 +21,7 @@ Critterview::Critterview()
 	
 	// view widgets
 	viewbutton = addWidgetButton( "cv_view", Vector2i(10, 30), Vector2i(50, 50), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
-	bviewbutton = addWidgetButton( "cv_bview", Vector2i(10, 90), Vector2i(220, 250), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
+	bviewbutton = addWidgetButton( "cv_bview", Vector2i(10, 90), Vector2i(220, 300), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
 }
 
 void Critterview::draw()
@@ -159,12 +159,12 @@ void Critterview::draw()
 						float miny = v_radius+((spacing+v_diam) * ((sensors.size()/20)+1) );
 						if ( neurons[i].position.x+v_radius > 220.0f ) neurons[i].position.x = 220.0f-v_radius;
 						if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
-						if ( neurons[i].position.y+v_radius > 250.0f ) neurons[i].position.y = 250.0f-v_radius;
+						if ( neurons[i].position.y+v_radius > 300.0f ) neurons[i].position.y = 300.0f-v_radius;
 						if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
 
 						if ( neurons[j].position.x+v_radius > 220.0f ) neurons[j].position.x = 220.0f-v_radius;
 						if ( neurons[j].position.x < v_radius ) neurons[j].position.x = v_radius;
-						if ( neurons[j].position.y+v_radius > 250.0f ) neurons[j].position.y = 250.0f-v_radius;
+						if ( neurons[j].position.y+v_radius > 300.0f ) neurons[j].position.y = 300.0f-v_radius;
 						if ( neurons[j].position.y < miny ) neurons[j].position.y = miny;
 					}
 		
