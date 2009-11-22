@@ -40,7 +40,13 @@ void Critterselection::registerCritter(CritterB* critter)
 
 void Critterselection::deselectCritter(CritterB* critter)
 {
-	if ( selectedCritter == critter )
+	if ( selectedCritter && selectedCritter == critter )
+		selectedCritter = 0;
+}
+
+void Critterselection::deselectCritter(const unsigned long& critterID)
+{
+	if ( selectedCritter && selectedCritter->critterID == critterID )
 		selectedCritter = 0;
 }
 
