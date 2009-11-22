@@ -48,7 +48,7 @@ void Critterview::draw()
 				s.sPointer = &currentCritter->brain.Inputs[i];
 				int woffset = v_radius+((spacing+v_diam)*column);
 				int hoffset = v_radius+((spacing+v_diam)*row);
-				s.position = Vector2i(woffset, hoffset);
+				s.position = Vector2f(woffset, hoffset);
 				sensors.push_back(s);
 
 				if ( ++column == 20 ) { column = 0; row++; }
@@ -62,7 +62,7 @@ void Critterview::draw()
 				n.nPointer = &currentCritter->brain.Neurons[i];
 				int woffset = v_radius+((spacing+v_diam)*column);
 				int hoffset = v_radius+((spacing+v_diam)*row);
-				n.position = Vector2i(woffset, hoffset);
+				n.position = Vector2f(woffset, hoffset);
 				neurons.push_back(n);
 
 				if ( ++column == 20 ) { column = 0; row++; }
@@ -98,6 +98,77 @@ void Critterview::draw()
 			glLoadIdentity();
 		
 		// draw brain
+
+			// drift
+				for ( unsigned int i=0; i < neurons.size()-1; i++ )
+					for ( unsigned int j=i+1; j < neurons.size()-1; j++ )
+					{
+						// how many connections do they have underling
+						unsigned int nrlinks = 0;
+						for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[j].ArchSynapses.size(); k++ )
+						{
+							ArchSynapse* as = &currentCritter->brain.ArchNeurons[j].ArchSynapses[k];
+							if ( !as->isSensorNeuron && as->neuronID == i )
+								nrlinks++;
+						}
+						float xD=neurons[j].position.x - neurons[i].position.x;
+						float yD=neurons[j].position.y - neurons[i].position.y;
+						float dist = sqrt((xD*xD)+(yD*yD));
+						if ( nrlinks )
+						{
+							neurons[i].position.x += (xD / 1000.0f) * dist * nrlinks;
+							neurons[i].position.y += (yD / 1000.0f) * dist * nrlinks;
+
+							neurons[j].position.x -= (xD / 1000.0f) * dist * nrlinks;
+							neurons[j].position.y -= (yD / 1000.0f) * dist * nrlinks;
+						}
+						else
+						{
+						}
+						float oneoverdistancesquared = 20.0f/(dist*dist);
+						if ( oneoverdistancesquared > 100.0f )
+							oneoverdistancesquared = 100.0f;
+// 						cerr << oneoverdistancesquared << endl;
+						neurons[i].position.x -= (xD) * oneoverdistancesquared;
+						neurons[i].position.y -= (yD) * oneoverdistancesquared;
+
+						neurons[j].position.x += (xD) * oneoverdistancesquared;
+						neurons[j].position.y += (yD) * oneoverdistancesquared;
+
+// 						// move towards center
+// 						neurons[i].position.x += (xCi / 50) * distCi;
+// 						neurons[i].position.y += (yCi / 50) * distCi;
+// 						neurons[j].position.x -= (xCj / 50) * distCj;
+// 						neurons[j].position.y -= (yCj / 50) * distCj;
+
+
+// // 						// general antigravity
+// // 						float dist = sqrt((xD*xD)+(yD*yD));
+// 						float oneoverdistancesquared = 100.0f/(dist*dist*dist);
+// // 						if ( oneoverdistancesquared < 0.2f )  oneoverdistancesquared = 0.2f;
+// 						neurons[i].position.x -= xD*oneoverdistancesquared;
+// 						neurons[i].position.y -= yD*oneoverdistancesquared;
+// 
+// 						neurons[j].position.x += xD*oneoverdistancesquared;
+// 						neurons[j].position.y += yD*oneoverdistancesquared;
+
+			
+						
+						
+						//distance=sqrt(xD*xD+yD*yD);
+						float miny = v_radius+((spacing+v_diam) * ((sensors.size()/20)+1) );
+						if ( neurons[i].position.x+v_radius > 220.0f ) neurons[i].position.x = 220.0f-v_radius;
+						if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
+						if ( neurons[i].position.y+v_radius > 250.0f ) neurons[i].position.y = 250.0f-v_radius;
+						if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
+
+						if ( neurons[j].position.x+v_radius > 220.0f ) neurons[j].position.x = 220.0f-v_radius;
+						if ( neurons[j].position.x < v_radius ) neurons[j].position.x = v_radius;
+						if ( neurons[j].position.y+v_radius > 250.0f ) neurons[j].position.y = 250.0f-v_radius;
+						if ( neurons[j].position.y < miny ) neurons[j].position.y = miny;
+					}
+		
+		
 			glBegin(GL_QUADS);
 
 			// inputs
@@ -167,7 +238,7 @@ void Critterview::draw()
 
 			// connections
 			glBegin(GL_LINES);
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+// 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			for ( unsigned int i=0; i < neurons.size(); i++ )
 			{
 				if ( neurons[i].nPointer->output )
