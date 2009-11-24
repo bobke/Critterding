@@ -116,6 +116,7 @@ class WorldB
 		void renderVision();
 
 		void			calcMouseDirection();
+		void			moveInMouseDirection(bool towards);
 
 		Dir			dirH;
 		Parser*			parseH;

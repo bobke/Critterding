@@ -119,6 +119,15 @@ void WorldB::calcMouseDirection()
 	mouseRayTo = camera.getScreenDirection(*mousex, *mousey);
 }
 
+void WorldB::moveInMouseDirection(bool towards)
+{
+// 	cerr << "updating mouserayto" << endl;
+	if ( towards )
+		camera.moveTowards(mouseRayTo.normalized());
+	else
+		camera.moveAwayFrom(mouseRayTo.normalized());
+}
+
 void WorldB::pickBody(const int& x, const int& y)
 {
 	if ( mouseRayHit )

@@ -12,8 +12,9 @@ class Panel : public Container
 		~Panel();
 		void		draw();
 		unsigned int	zaxis;
+
 	protected:
-		void		drawBackground();
+		virtual void	drawBackground();
 		virtual void	drawBorders();
 	private:
 

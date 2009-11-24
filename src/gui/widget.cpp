@@ -14,6 +14,8 @@ Widget::Widget()
 	isMovable = false;
 	isTouchable = false;
 	isContainer = false;
+
+	isTransparant = false;
 	active = false;
 }
 

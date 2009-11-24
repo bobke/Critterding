@@ -3,6 +3,7 @@
 Panel::Panel()
 {
 	isTouchable = true;
+	isTransparant = true;
 	zaxis = 0;
 }
 
@@ -18,8 +19,12 @@ void Panel::draw()
 
 void Panel::drawBackground()
 {
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
+	if (isTransparant)
+	{
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+	}
+
 	glColor4f(0.05f, 0.05f, 0.05f, 0.75f);
 	glBegin(GL_QUADS);
 		glVertex2f(absPosition.x,         absPosition.y+v_height);
@@ -27,7 +32,9 @@ void Panel::drawBackground()
 		glVertex2f(absPosition.x+v_width, absPosition.y);
 		glVertex2f(absPosition.x+v_width, absPosition.y+v_height);
 	glEnd();
-	glDisable(GL_BLEND);
+
+	if (isTransparant)
+		glDisable(GL_BLEND);
 }
 
 void Panel::drawBorders()

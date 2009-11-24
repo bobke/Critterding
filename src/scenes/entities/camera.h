@@ -38,6 +38,9 @@ public:
 	void rollRight(const float& factor);
 	void rollLeft(const float& factor);
 
+	void moveTowards(const btVector3& direction);
+	void moveAwayFrom(const btVector3& direction);
+
 	btVector3 getScreenDirection(const int& x, const int& y);
 private:
 	Settings *settings;
