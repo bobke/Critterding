@@ -136,6 +136,8 @@ void WorldRace::process()
 					if ( critters[i]->isPicked )
 						mousepicker->detach();
 // FIXME on windows, we segfault here 1/10 after the first run
+					critterselection->unregisterCritterID(critters[i]->critterID);
+					critterselection->deselectCritter(critters[i]->critterID);
 					delete critters[i];
 // FIXME
 				}

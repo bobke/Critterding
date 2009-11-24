@@ -8,7 +8,7 @@ Critterview::Critterview()
 	isMovable = true;
 
 	v_width = 351;
-	v_height = 450;
+	v_height = 470;
 	
 	position.x = 10;
 	position.y = 50;
@@ -101,104 +101,103 @@ void Critterview::draw()
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 		
-		// draw brain
-
-			// drift
-				// neuron vs neuron
-				for ( unsigned int i=0; i < neurons.size()-1; i++ )
-					for ( unsigned int j=i+1; j < neurons.size(); j++ )
+		// drift
+			// neuron vs neuron
+			for ( unsigned int i=0; i < neurons.size()-1; i++ )
+				for ( unsigned int j=i+1; j < neurons.size(); j++ )
+				{
+					// how many connections do they have underling
+					unsigned int nrlinks = 0;
+					for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); k++ )
 					{
-						// how many connections do they have underling
-						unsigned int nrlinks = 0;
-						for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); k++ )
-						{
-							ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[k];
-							if ( !as->isSensorNeuron && as->neuronID == j )
-								nrlinks++;
-						}
-						for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[j].ArchSynapses.size(); k++ )
-						{
-							ArchSynapse* as = &currentCritter->brain.ArchNeurons[j].ArchSynapses[k];
-							if ( !as->isSensorNeuron && as->neuronID == i )
-								nrlinks++;
-						}
-						float xD=neurons[j].position.x - neurons[i].position.x;
-						float yD=neurons[j].position.y - neurons[i].position.y;
-						float dist = sqrt((xD*xD)+(yD*yD));
-						float oneoverdistancesquared = 1.0f/(dist*dist);
-						if ( oneoverdistancesquared > 1000.0f )
-							oneoverdistancesquared = 1000.0f;
-						if ( nrlinks > 0 )
-						{
-							neurons[i].position.x += (xD / 5000.0f) * dist * nrlinks * nrlinks;
-							neurons[i].position.y += (yD / 5000.0f) * dist * nrlinks * nrlinks;
+						ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[k];
+						if ( !as->isSensorNeuron && as->neuronID == j )
+							nrlinks++;
+					}
+					for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[j].ArchSynapses.size(); k++ )
+					{
+						ArchSynapse* as = &currentCritter->brain.ArchNeurons[j].ArchSynapses[k];
+						if ( !as->isSensorNeuron && as->neuronID == i )
+							nrlinks++;
+					}
+					float xD=neurons[j].position.x - neurons[i].position.x;
+					float yD=neurons[j].position.y - neurons[i].position.y;
+					float dist = sqrt((xD*xD)+(yD*yD));
+					float oneoverdistancesquared = 1.0f/(dist*dist);
+					if ( oneoverdistancesquared > 1000.0f )
+						oneoverdistancesquared = 1000.0f;
+					if ( nrlinks > 0 )
+					{
+						neurons[i].position.x += (xD / 5000.0f) * dist * nrlinks * nrlinks;
+						neurons[i].position.y += (yD / 5000.0f) * dist * nrlinks * nrlinks;
 
-							neurons[j].position.x -= (xD / 5000.0f) * dist * nrlinks * nrlinks;
-							neurons[j].position.y -= (yD / 5000.0f) * dist * nrlinks * nrlinks;
-						}
-						else
-						{
+						neurons[j].position.x -= (xD / 5000.0f) * dist * nrlinks * nrlinks;
+						neurons[j].position.y -= (yD / 5000.0f) * dist * nrlinks * nrlinks;
+					}
+					else
+					{
 /*							neurons[i].position.x -= (xD / 1.0f) * oneoverdistancesquared;
-							neurons[i].position.y -= (yD / 1.0f) * oneoverdistancesquared;
-
-							neurons[j].position.x += (xD / 1.0f) * oneoverdistancesquared;
-							neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;*/
-						}
-						// general antigravity
-						neurons[i].position.x -= (xD / 1.0f) * oneoverdistancesquared;
 						neurons[i].position.y -= (yD / 1.0f) * oneoverdistancesquared;
 
 						neurons[j].position.x += (xD / 1.0f) * oneoverdistancesquared;
-						neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;
-
-						//distance=sqrt(xD*xD+yD*yD);
-						float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
-						if ( neurons[i].position.x+v_radius > *bviewbutton->v_widthP ) neurons[i].position.x = *bviewbutton->v_widthP-v_radius;
-						if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
-						if ( neurons[i].position.y+v_radius > *bviewbutton->v_heightP ) neurons[i].position.y = *bviewbutton->v_heightP-v_radius;
-						if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
-
-						if ( neurons[j].position.x+v_radius > *bviewbutton->v_widthP ) neurons[j].position.x = *bviewbutton->v_widthP-v_radius;
-						if ( neurons[j].position.x < v_radius ) neurons[j].position.x = v_radius;
-						if ( neurons[j].position.y+v_radius > *bviewbutton->v_heightP ) neurons[j].position.y = *bviewbutton->v_heightP-v_radius;
-						if ( neurons[j].position.y < miny ) neurons[j].position.y = miny;
+						neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;*/
 					}
+					// general antigravity
+					neurons[i].position.x -= (xD / 1.0f) * oneoverdistancesquared;
+					neurons[i].position.y -= (yD / 1.0f) * oneoverdistancesquared;
+
+					neurons[j].position.x += (xD / 1.0f) * oneoverdistancesquared;
+					neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;
+
+					//distance=sqrt(xD*xD+yD*yD);
+					float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
+					if ( neurons[i].position.x+v_radius > *bviewbutton->v_widthP ) neurons[i].position.x = *bviewbutton->v_widthP-v_radius;
+					if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
+					if ( neurons[i].position.y+v_radius > *bviewbutton->v_heightP ) neurons[i].position.y = *bviewbutton->v_heightP-v_radius;
+					if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
+
+					if ( neurons[j].position.x+v_radius > *bviewbutton->v_widthP ) neurons[j].position.x = *bviewbutton->v_widthP-v_radius;
+					if ( neurons[j].position.x < v_radius ) neurons[j].position.x = v_radius;
+					if ( neurons[j].position.y+v_radius > *bviewbutton->v_heightP ) neurons[j].position.y = *bviewbutton->v_heightP-v_radius;
+					if ( neurons[j].position.y < miny ) neurons[j].position.y = miny;
+				}
 		
-				// neuron vs sensor
-				for ( unsigned int i=0; i < neurons.size(); i++ )
-					for ( unsigned int j=0; j < sensors.size(); j++ )
+			// neuron vs sensor
+			for ( unsigned int i=0; i < neurons.size(); i++ )
+				for ( unsigned int j=0; j < sensors.size(); j++ )
+				{
+					// how many connections do they have underling
+					unsigned int nrlinks = 0;
+					for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); k++ )
 					{
-						// how many connections do they have underling
-						unsigned int nrlinks = 0;
-						for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); k++ )
-						{
-							ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[k];
-							if ( as->isSensorNeuron && as->realneuronID == j )
-								nrlinks++;
-						}
-						float xD=sensors[j].position.x - neurons[i].position.x;
-						float yD=sensors[j].position.y - neurons[i].position.y;
-						float dist = sqrt((xD*xD)+(yD*yD));
-						float oneoverdistancesquared = 1.0f/(dist*dist*dist);
-						if ( oneoverdistancesquared > 1.0f )
-							oneoverdistancesquared = 1.0f;
-						if ( nrlinks > 0 )
-						{
-							neurons[i].position.x += (xD / 1000.0f) * dist * nrlinks;
-							neurons[i].position.y += (yD / 1000.0f) * dist * nrlinks;
-						}
-						// general antigravity
-						neurons[i].position.x -= xD * oneoverdistancesquared * 15000;
-						neurons[i].position.y -= yD * oneoverdistancesquared * 15000;
-
-						//distance=sqrt(xD*xD+yD*yD);
-						float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
-						if ( neurons[i].position.x+v_radius > *bviewbutton->v_widthP ) neurons[i].position.x = *bviewbutton->v_widthP-v_radius;
-						if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
-						if ( neurons[i].position.y+v_radius > *bviewbutton->v_heightP ) neurons[i].position.y = *bviewbutton->v_heightP-v_radius;
-						if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
+						ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[k];
+						if ( as->isSensorNeuron && as->realneuronID == j )
+							nrlinks++;
 					}
+					float xD=sensors[j].position.x - neurons[i].position.x;
+					float yD=sensors[j].position.y - neurons[i].position.y;
+					float dist = sqrt((xD*xD)+(yD*yD));
+					float oneoverdistancesquared = 1.0f/(dist*dist*dist);
+					if ( oneoverdistancesquared > 1.0f )
+						oneoverdistancesquared = 1.0f;
+					if ( nrlinks > 0 )
+					{
+						neurons[i].position.x += (xD / 1000.0f) * dist * nrlinks;
+						neurons[i].position.y += (yD / 1000.0f) * dist * nrlinks;
+					}
+					// general antigravity
+					neurons[i].position.x -= xD * oneoverdistancesquared * 15000;
+					neurons[i].position.y -= yD * oneoverdistancesquared * 15000;
 
+					//distance=sqrt(xD*xD+yD*yD);
+					float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
+					if ( neurons[i].position.x+v_radius > *bviewbutton->v_widthP ) neurons[i].position.x = *bviewbutton->v_widthP-v_radius;
+					if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
+					if ( neurons[i].position.y+v_radius > *bviewbutton->v_heightP ) neurons[i].position.y = *bviewbutton->v_heightP-v_radius;
+					if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
+				}
+
+		// draw brain
 			// connections
 			glBegin(GL_LINES);
 // 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -229,13 +228,13 @@ void Critterview::draw()
 						if ( !as->isSensorNeuron && currentCritter->brain.Neurons[as->neuronID].output || as->isSensorNeuron && currentCritter->brain.Inputs[as->realneuronID].output )
 						{
 							if ( as->isSensorNeuron )
-								glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
+								glColor4f(0.0f, 0.4f, 0.0f, 1.0f);
 							else if ( !neurons[as->neuronID].nPointer->isInhibitory )
-								glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
+								glColor4f(0.0f, 0.4f, 0.0f, 1.0f);
 							else
-								glColor4f(0.5f, 0.0f, 0.0f, 1.0f);
+								glColor4f(0.4f, 0.0f, 0.0f, 1.0f);
 
-							glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x,         bviewbutton->absPosition.y+neurons[i].position.y);
+							glVertex2f(neurons[i].position.x+bviewbutton->absPosition.x,         neurons[i].position.y+bviewbutton->absPosition.y);
 							if ( as->isSensorNeuron )
 							{
 								glVertex2f(bviewbutton->absPosition.x+sensors[as->realneuronID].position.x,         bviewbutton->absPosition.y+sensors[as->realneuronID].position.y);
@@ -261,40 +260,44 @@ void Critterview::draw()
 				else
 					glColor4f(0.0f, dimmed, 0.0f, 1.0f);
 
-/*				row = (i/rowlength);
-				int hoffset = v_radius+((spacing+v_diam) * row );
-				int woffset = v_radius+((spacing+v_diam) * (i-(row*rowlength)) );*/
-				glVertex2f(bviewbutton->absPosition.x+sensors[i].position.x-v_radius, bviewbutton->absPosition.y+sensors[i].position.y+v_radius);
-				glVertex2f(bviewbutton->absPosition.x+sensors[i].position.x-v_radius, bviewbutton->absPosition.y+sensors[i].position.y-v_radius);
-				glVertex2f(bviewbutton->absPosition.x+sensors[i].position.x+v_radius, bviewbutton->absPosition.y+sensors[i].position.y-v_radius);
-				glVertex2f(bviewbutton->absPosition.x+sensors[i].position.x+v_radius, bviewbutton->absPosition.y+sensors[i].position.y+v_radius);
+// 				glScaled(sensors[i].sPointer->output, sensors[i].sPointer->output, sensors[i].sPointer->output);
+// 				cerr << sensors[i].sPointer->output <<  endl;
+
+// 				float nv_radius = sensors[i].sPointer->output * v_radius;
+				float nv_radius = v_radius;
+
+				glVertex2f(sensors[i].position.x+bviewbutton->absPosition.x-nv_radius, sensors[i].position.y+bviewbutton->absPosition.y+nv_radius);
+				glVertex2f(sensors[i].position.x+bviewbutton->absPosition.x-nv_radius, sensors[i].position.y+bviewbutton->absPosition.y-nv_radius);
+				glVertex2f(sensors[i].position.x+bviewbutton->absPosition.x+nv_radius, sensors[i].position.y+bviewbutton->absPosition.y-nv_radius);
+				glVertex2f(sensors[i].position.x+bviewbutton->absPosition.x+nv_radius, sensors[i].position.y+bviewbutton->absPosition.y+nv_radius);
 			}
 
 			// neurons
 			for ( unsigned int i=0; i < neurons.size(); i++ )
 			{
-				if ( neurons[i].nPointer->output )
-				{
+// 				if ( neurons[i].nPointer->output )
+// 				{
 					if ( neurons[i].nPointer->isMotor )
 						glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 					else if ( neurons[i].nPointer->isInhibitory )
 						glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 					else
 						glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-				}
-				else
-				{
-					if ( neurons[i].nPointer->isMotor )
-						glColor4f(0.0f, 0.0f, dimmed, 1.0f);
-					else if ( neurons[i].nPointer->isInhibitory )
-						glColor4f(dimmed, 0.0f, 0.0f, 1.0f);
-					else
-						glColor4f(0.0f, dimmed, 0.0f, 1.0f);
-				}
-				glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x-v_radius, bviewbutton->absPosition.y+neurons[i].position.y+v_radius);
-				glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x-v_radius, bviewbutton->absPosition.y+neurons[i].position.y-v_radius);
-				glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x+v_radius, bviewbutton->absPosition.y+neurons[i].position.y-v_radius);
-				glVertex2f(bviewbutton->absPosition.x+neurons[i].position.x+v_radius, bviewbutton->absPosition.y+neurons[i].position.y+v_radius);
+// 				}
+// 				else
+// 				{
+// 					if ( neurons[i].nPointer->isMotor )
+// 						glColor4f(0.0f, 0.0f, dimmed, 1.0f);
+// 					else if ( neurons[i].nPointer->isInhibitory )
+// 						glColor4f(dimmed, 0.0f, 0.0f, 1.0f);
+// 					else
+// 						glColor4f(0.0f, dimmed, 0.0f, 1.0f);
+// 				}
+				float nv_radius = (neurons[i].nPointer->potential * v_diam) / settings->getCVar("brain_maxfiringthreshold");
+				glVertex2f(neurons[i].position.x+bviewbutton->absPosition.x-nv_radius, neurons[i].position.y+bviewbutton->absPosition.y+nv_radius);
+				glVertex2f(neurons[i].position.x+bviewbutton->absPosition.x-nv_radius, neurons[i].position.y+bviewbutton->absPosition.y-nv_radius);
+				glVertex2f(neurons[i].position.x+bviewbutton->absPosition.x+nv_radius, neurons[i].position.y+bviewbutton->absPosition.y-nv_radius);
+				glVertex2f(neurons[i].position.x+bviewbutton->absPosition.x+nv_radius, neurons[i].position.y+bviewbutton->absPosition.y+nv_radius);
 			}
 
 	// 		// outputs
