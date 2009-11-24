@@ -72,6 +72,7 @@ void Hud::draw()
 
 		drawBackground();
 		drawBorders();
+		drawChildren();
 
 		// activate the proper buttons before drawing children
 		for (unsigned int i = 0; i < cbuttons.size(); i++ )
@@ -107,7 +108,6 @@ void Hud::draw()
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		drawChildren();
 	}
 }
 

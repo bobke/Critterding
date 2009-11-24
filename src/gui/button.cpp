@@ -2,6 +2,7 @@
 
 Button::Button()
 {
+	isTransparant = false;
 // 	cmd = Commands::Instance();
 	events = Events::Instance();
 	v_width = 60;
@@ -12,6 +13,7 @@ void Button::draw()
 {
 	if (active)
 	{
+		drawBackground();
 		drawBorders();
 		drawChildren();
 	}

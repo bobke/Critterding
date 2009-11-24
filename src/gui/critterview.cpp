@@ -22,6 +22,7 @@ Critterview::Critterview()
 	// view widgets
 	viewbutton = addWidgetButton( "cv_view", Vector2i(10, 30), Vector2i(50, 50), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
 	bviewbutton = addWidgetButton( "cv_bview", Vector2i(10, 90), Vector2i(v_width-20, v_height-100), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
+	children["cv_bview"]->isTransparant = false;
 }
 
 void Critterview::draw()
@@ -128,11 +129,14 @@ void Critterview::draw()
 						oneoverdistancesquared = 1000.0f;
 					if ( nrlinks > 0 )
 					{
-						neurons[i].position.x += (xD / 5000.0f) * dist * nrlinks * nrlinks;
-						neurons[i].position.y += (yD / 5000.0f) * dist * nrlinks * nrlinks;
+// 						if ( dist > 3 )
+// 						{
+						neurons[i].position.x += (xD / 5000.0f) * dist * nrlinks;
+						neurons[i].position.y += (yD / 5000.0f) * dist * nrlinks;
 
-						neurons[j].position.x -= (xD / 5000.0f) * dist * nrlinks * nrlinks;
-						neurons[j].position.y -= (yD / 5000.0f) * dist * nrlinks * nrlinks;
+						neurons[j].position.x -= (xD / 5000.0f) * dist * nrlinks;
+						neurons[j].position.y -= (yD / 5000.0f) * dist * nrlinks;
+// 						}
 					}
 					else
 					{
@@ -196,6 +200,10 @@ void Critterview::draw()
 					if ( neurons[i].position.y+v_radius > *bviewbutton->v_heightP ) neurons[i].position.y = *bviewbutton->v_heightP-v_radius;
 					if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
 				}
+
+		// draw the rest
+			drawChildren();
+			textprinter->print( bviewbutton->absPosition.x+100, absPosition.y+15, critterselection->selectedCritter->critterID );
 
 		// draw brain
 			// connections
@@ -321,22 +329,9 @@ void Critterview::draw()
 
 			glEnd();
 
-		// draw the rest
-			drawChildren();
-			textprinter->print( bviewbutton->absPosition.x+100, absPosition.y+15, critterselection->selectedCritter->critterID );
 	}
 	
 }
-
-// int Brainz::Critterview( unsigned int id )
-// {
-// 	for ( unsigned int i=0; i < currentCritter->brain.numberOfInputs; i++ )
-// 		if ( currentCritter->brain.Inputs[i].id == id )
-// 			return i;
-// // 		cerr << "brain findSensorNeuron error for id: " << id << endl;
-// 	return -1;
-// }
-
 
 Critterview::~Critterview()
 {

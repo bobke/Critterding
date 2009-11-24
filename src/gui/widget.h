@@ -30,6 +30,9 @@ class Widget
 		// types
 		bool			isContainer;
 
+		// drawing
+		bool			isTransparant;
+		
 		// width/height accessors
 		unsigned int		height();
 		unsigned int		width();

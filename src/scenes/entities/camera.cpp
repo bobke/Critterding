@@ -186,6 +186,16 @@ void Camera::lookDown(const float& factor)
 	position *= tr;
 }
 
+void Camera::moveTowards(const btVector3& direction)
+{
+	position.setOrigin( position.getOrigin() + direction ); 
+}
+
+void Camera::moveAwayFrom(const btVector3& direction)
+{
+	position.setOrigin( position.getOrigin() - direction ); 
+}
+
 btVector3 Camera::getScreenDirection(const int& x, const int& y)
 {
 	float directionlength = 1000000.f;

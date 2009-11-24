@@ -319,18 +319,20 @@ void Evolution::handlekeyReleased(const SDLKey& key)
 
 void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
 {
-//	cerr << "button " << button << " clicked at " << x << "x" << y << endl;
+// 	cerr << "button " << button << " clicked at " << x << "x" << y << endl;
 	if ( !mouselook )
 	{
 		canvas.buttonPress(button);
 		if ( button == 1 )
-		{
 			world->selectBody( x, y );
-		}
+		else if ( button == 2 )
+			world->resetCamera();
 		else if ( button == 3 )
-		{
 			world->pickBody( x, y );
-		}
+		else if ( button == 4 )
+			world->moveInMouseDirection(true);
+		else if ( button == 5 )
+			world->moveInMouseDirection(false);
 	}
 }
 
@@ -339,12 +341,9 @@ void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
 // 	cerr << "button " << button << " released at " << x << "x" << y << endl;
 	canvas.buttonRelease(button);
 	if ( button == 1 )
-	{
-	}
+		;
 	else if ( button == 3 )
-	{
 		world->mousepicker->detach();
-	}
 }
 
 void Evolution::handleMouseMotionAbs(int x, int y)
