@@ -79,6 +79,10 @@ void Critterview::draw()
 	{
 		drawBackground();
 		drawBorders();
+		// draw the rest
+		drawChildren();
+		textprinter->print( bviewbutton->absPosition.x+100, absPosition.y+15, critterselection->selectedCritter->critterID );
+
 
 		// draw gl view
 			glViewport(viewbutton->absPosition. x, *settings->winHeight-50-viewbutton->absPosition.y, 50, 50);
@@ -200,10 +204,6 @@ void Critterview::draw()
 					if ( neurons[i].position.y+v_radius > *bviewbutton->v_heightP ) neurons[i].position.y = *bviewbutton->v_heightP-v_radius;
 					if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
 				}
-
-		// draw the rest
-			drawChildren();
-			textprinter->print( bviewbutton->absPosition.x+100, absPosition.y+15, critterselection->selectedCritter->critterID );
 
 		// draw brain
 			// connections
