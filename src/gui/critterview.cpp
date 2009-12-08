@@ -151,11 +151,11 @@ void Critterview::draw()
 						neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;*/
 					}
 					// general antigravity
-					neurons[i].position.x -= (xD / 1.0f) * oneoverdistancesquared;
-					neurons[i].position.y -= (yD / 1.0f) * oneoverdistancesquared;
+					neurons[i].position.x -= (xD * 10.0f) * oneoverdistancesquared;
+					neurons[i].position.y -= (yD * 10.0f) * oneoverdistancesquared;
 
-					neurons[j].position.x += (xD / 1.0f) * oneoverdistancesquared;
-					neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;
+					neurons[j].position.x += (xD * 10.0f) * oneoverdistancesquared;
+					neurons[j].position.y += (yD * 10.0f) * oneoverdistancesquared;
 
 					//distance=sqrt(xD*xD+yD*yD);
 					float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
@@ -194,8 +194,8 @@ void Critterview::draw()
 						neurons[i].position.y += (yD / 1000.0f) * dist * nrlinks;
 					}
 					// general antigravity
-					neurons[i].position.x -= xD * oneoverdistancesquared * 15000;
-					neurons[i].position.y -= yD * oneoverdistancesquared * 15000;
+					neurons[i].position.x -= xD * oneoverdistancesquared * 1000;
+					neurons[i].position.y -= yD * oneoverdistancesquared * 1000;
 
 					//distance=sqrt(xD*xD+yD*yD);
 					float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
