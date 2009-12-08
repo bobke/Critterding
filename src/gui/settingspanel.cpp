@@ -3,7 +3,7 @@
 Settingspanel::Settingspanel()
 {
 	v_width = 490;
-	v_height = 550;
+	v_height = 570;
 
 	isMovable = true;
 
