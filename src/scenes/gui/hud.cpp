@@ -1,5 +1,5 @@
 #include "hud.h"
-#include "button.h"
+#include "../../gui/button.h"
 
 Hud::Hud()
 {

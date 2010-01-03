@@ -8,7 +8,7 @@
 #include "../scenes/entities/worldb.h"
 #include "settings.h"
 #include "critterselection.h"
-#include "../gui/maincanvas.h"
+#include "../scenes/gui/maincanvas.h"
 
 using namespace std;
 

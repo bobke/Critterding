@@ -3,8 +3,8 @@
 
 #include <vector>
 #include "panel.h"
-#include "../scenes//entities/worldb.h"
-#include "../utils/critterselection.h"
+#include "../entities/worldb.h"
+#include "../../utils/critterselection.h"
 
 using namespace std;
 

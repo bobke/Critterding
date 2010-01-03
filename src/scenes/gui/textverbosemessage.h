@@ -1,8 +1,8 @@
 #ifndef TEXTVERBOSEMESSAGE_H
 #define TEXTVERBOSEMESSAGE_H
 
-#include "../utils/timer.h" // FIXME howso this is here?
-#include "panel.h"
+#include "../../utils/timer.h" // FIXME howso this is here?
+#include "../../gui/panel.h"
 
 using namespace std;
 

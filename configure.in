@@ -58,4 +58,5 @@ AC_OUTPUT(Makefile src/Makefile src/brainz/Makefile \
 				src/utils/ftgl/Makefile \
 				src/utils/bullet/Makefile \
 				src/gui/Makefile \
+				src/scenes/gui/Makefile
 )

@@ -1,7 +1,7 @@
 #ifndef HELPINFO_H
 #define HELPINFO_H
 
-#include "panel.h"
+#include "../../gui/panel.h"
 
 using namespace std;
 

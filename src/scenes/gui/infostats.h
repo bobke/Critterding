@@ -1,7 +1,7 @@
 #ifndef INFOSTATS_H
 #define INFOSTATS_H
 
-#include "panel.h"
+#include "../../gui/panel.h"
 
 using namespace std;
 

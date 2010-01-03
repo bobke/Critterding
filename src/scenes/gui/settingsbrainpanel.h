@@ -1,7 +1,7 @@
 #ifndef SETTINGSBRAINPANEL_H
 #define SETTINGSBRAINPANEL_H
 
-#include "panel.h"
+#include "../../gui/panel.h"
 
 using namespace std;
 
