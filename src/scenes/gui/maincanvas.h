@@ -1,7 +1,7 @@
 #ifndef MAINCANVAS_H
 #define MAINCANVAS_H
 
-#include "container.h"
+#include "../../gui/container.h"
 
 #include "helpinfo.h"
 #include "textmessage.h"

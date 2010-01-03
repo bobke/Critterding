@@ -1,7 +1,7 @@
 #ifndef EXITPANEL_H
 #define EXITPANEL_H
 
-#include "panel.h"
+#include "../../gui/panel.h"
 
 using namespace std;
 

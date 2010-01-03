@@ -1,8 +1,8 @@
 #ifndef INFOBAR_H
 #define INFOBAR_H
 
-#include "../utils/fps.h"
-#include "panel.h"
+#include "../../utils/fps.h"
+#include "../../gui/panel.h"
 
 using namespace std;
 

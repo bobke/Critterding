@@ -1,8 +1,8 @@
 #ifndef TEXTMESSAGE_H
 #define TEXTMESSAGE_H
 
-#include "../utils/logbuffer.h"
-#include "panel.h"
+#include "../../utils/logbuffer.h"
+#include "../../gui/panel.h"
 
 using namespace std;
 

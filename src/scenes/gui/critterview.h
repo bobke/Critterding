@@ -2,10 +2,10 @@
 #define CRITTERVIEW_H
 
 #include "panel.h"
-#include "../scenes//entities/worldb.h"
-#include "../utils/critterselection.h"
-#include "../math/vector2f.h"
-#include "../scenes/entities/critterb.h"
+#include "../entities/worldb.h"
+#include "../../utils/critterselection.h"
+#include "../../math/vector2f.h"
+#include "../entities/critterb.h"
 
 using namespace std;
 

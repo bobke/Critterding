@@ -1,8 +1,8 @@
 #ifndef STATSGRAPH_H
 #define STATSGRAPH_H
 
-#include "panel.h"
-#include "../utils/statsbuffer.h"
+#include "../../gui/panel.h"
+#include "../../utils/statsbuffer.h"
 
 using namespace std;
 

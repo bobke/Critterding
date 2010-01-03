@@ -43,12 +43,12 @@ Settings::Settings()
 	registerCVar("critter_minenergyproc",					3000, 1, 1000000, false, "energy a critters needs to procreate");
 	registerCVar("critter_sightrange",					70, 1, 1000000, false, "distance a critter can see (10 = 1 worldsize)");
 
-	registerCVar("critter_retinasize",					3, 1, 1000, false, "size of a critters eye retina");
+	registerCVar("critter_retinasize",					8, 1, 1000, false, "size of a critters eye retina");
 	registerCVar("critter_autosaveinterval",				0, 0, 1000000, false, "save critters every n seconds");
 	registerCVar("critter_autoexchangeinterval",				0, 0, 1000000, false, "save critters every n seconds");
 	registerCVar("critter_killhalfat",					120, 2, 1000000, false, "kill 50% of critters if population reaches n");
 	registerCVar("critter_enableomnivores",					1, 0, 1, true, "enables critters to eat each other");
-	registerCVar("critter_raycastvision",					1, 0, 1, true, "use raycast vision instead of opengl");
+	registerCVar("critter_raycastvision",					0, 0, 1, true, "use raycast vision instead of opengl");
 	
 	registerCVar("food_maxlifetime",					10000, 1, 1000000, false, "maximum number of frames a food unit exists");
 	registerCVar("food_maxenergy",						1500, 1, 1000000, false, "maximum amount of energy a food unit has");

@@ -21,7 +21,7 @@
 #include "../../utils/critterselection.h"
 #include "../../utils/logbuffer.h"
 
-#include "../../gui/textverbosemessage.h"
+#include "../gui/textverbosemessage.h"
 
 #include "food.h"
 #include "wall.h"

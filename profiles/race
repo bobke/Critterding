@@ -8,7 +8,7 @@ worldsizeY 15
 food_maxenergy 3000
 food_size 500
 
-critter_maxlifetime 1000
+critter_maxlifetime 3000
 critter_maxenergy 50000
 
 brain_mutationrate 15

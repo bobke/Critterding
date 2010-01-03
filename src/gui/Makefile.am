@@ -7,19 +7,7 @@ noinst_HEADERS =	widget.h \
 			text_uintp.h \
 			panel.h \
 			button.h \
-			textprinter.h \
-			maincanvas.h \
-			helpinfo.h \
-			textmessage.h \
-			textverbosemessage.h \
-			infostats.h \
-			infobar.h \
-			statsgraph.h \
-			exitpanel.h \
-			settingspanel.h \
-			settingsbrainpanel.h \
-			hud.h \
-			critterview.h
+			textprinter.h
 
 libgui_la_SOURCES = 	widget.cpp \
 			container.cpp \
@@ -27,19 +15,7 @@ libgui_la_SOURCES = 	widget.cpp \
 			text_uintp.cpp \
 			panel.cpp \
 			button.cpp \
-			textprinter.cpp \
-			maincanvas.cpp \
-			helpinfo.cpp \
-			textmessage.cpp \
-			textverbosemessage.cpp \
-			infostats.cpp \
-			infobar.cpp \
-			statsgraph.cpp \
-			exitpanel.cpp \
-			settingspanel.cpp \
-			settingsbrainpanel.cpp \
-			hud.cpp \
-			critterview.cpp
+			textprinter.cpp
 
 libgui_la_LIBADD =	$(top_builddir)/src/utils/libutils.la \
 			$(top_builddir)/src/math/libmath.la

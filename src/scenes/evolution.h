@@ -18,7 +18,7 @@
 // #include <math.h>
 // #include <GL/gl.h>
 
-#include "../gui/maincanvas.h"
+#include "gui/maincanvas.h"
 #include "../utils/commands.h"
 #include "../utils/execcmd.h"
 
