@@ -9,6 +9,7 @@
 #include "../math/vector2i.h"
 
 // #define FTGL_TEXTURE 5
+#include <GL/gl.h>
 #include "../utils/ftgl/FTGL/ftgl.h"
 
 using namespace std;

@@ -8,7 +8,7 @@
 #include "file.h"
 #include "parser.h"
 #include "logbuffer.h"
-#include <GL/gl.h>
+// #include <GL/gl.h>
 
 using namespace std;
 

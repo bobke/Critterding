@@ -6,6 +6,7 @@
 
 #include "textprinter.h"
 #include "../math/vector2i.h"
+#include <GL/gl.h>
 
 using namespace std;
 

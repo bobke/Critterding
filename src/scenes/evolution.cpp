@@ -65,8 +65,10 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_i,		"keyinsertCritter", execcmd.gen("insertcritter"), 0, 0, 0 );
 	events->registerEvent(SDLK_k,		"keykillhalfOfcritters", execcmd.gen("killhalfofcritters"), 0, 0, 0 );
 
-	events->registerEvent(SDLK_KP_MINUS,	"keydecreaseenergy", execcmd.gen("decreaseenergy"), delay, 0, speedup );
-	events->registerEvent(SDLK_KP_PLUS,	"keyincreaseenergy", execcmd.gen("increaseenergy"), delay, 0, speedup );
+	events->registerEvent(SDLK_MINUS,	"keydecreaseenergy", execcmd.gen("decreaseenergy"), delay, 0, speedup );
+	events->registerEvent(SDLK_PLUS,	"keyincreaseenergy", execcmd.gen("increaseenergy"), delay, 0, speedup );
+	events->registerEvent(SDLK_KP_MINUS,	"keydecreaseenergykp", execcmd.gen("decreaseenergy"), delay, 0, speedup );
+	events->registerEvent(SDLK_KP_PLUS,	"keyincreaseenergykp", execcmd.gen("increaseenergy"), delay, 0, speedup );
 
 	sharedTimer* t = events->registerSharedtimer( 20 );
 	
@@ -133,8 +135,8 @@ void Evolution::draw()
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 // 		glEnable(GL_LIGHT1);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+// 		glEnable(GL_CULL_FACE);
+// 		glCullFace(GL_BACK);
 
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 // 		glHint(GL_FOG_HINT, GL_FASTEST);
@@ -208,7 +210,7 @@ void Evolution::draw()
 // 		glDisable(GL_LIGHT1);
 		glDisable(GL_COLOR_MATERIAL);
 // 		glDisable(GL_DITHER);
-		glDisable(GL_CULL_FACE);
+// 		glDisable(GL_CULL_FACE);
 
 		glPushMatrix();
 		glMatrixMode(GL_PROJECTION);

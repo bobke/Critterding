@@ -28,7 +28,7 @@ void Critterselection::unregisterCritterVID(const unsigned int& vectorID)
 
 void Critterselection::registerCritter(CritterB* critter)
 {
-	selectCritter(critter);
+// 	selectCritter(critter);
 
 	// skip if already registered;
 	for ( unsigned int i = 0; i < clist.size(); i++ )
