@@ -25,6 +25,8 @@ Critterview::Critterview()
 	viewbutton = addWidgetButton( "cv_view", Vector2i(10, 30), Vector2i(50, 50), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
 	bviewbutton = addWidgetButton( "cv_bview", Vector2i(10, 90), Vector2i(v_width-20, v_height-100), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
 	children["cv_bview"]->isTransparant = false;
+
+	addWidgetButton( "cv_close", Vector2i(v_width-25, 10), Vector2i(15, 15), "x", cmd.gen("gui_togglepanel", "critterview"), 0, 0, 0 );
 }
 
 void Critterview::draw()
@@ -36,14 +38,20 @@ void Critterview::draw()
 	int row = 0;
 	int rowlength = 37;
 
+	if ( critterselection->cv_activate )
+	{
+		active = true;
+		critterselection->cv_activate = false;
+	}
+	
 	if ( critterselection->selectedCritter == 0 )
 	{
 		active = false;
 		currentCritter = 0;
 	}
-	else
+
+	if (active)
 	{
-		active = true;
 		if ( critterselection->selectedCritter != currentCritter )
 		{
 			currentCritter = critterselection->selectedCritter;
@@ -75,10 +83,7 @@ void Critterview::draw()
 				if ( ++column == rowlength ) { column = 0; row++; }
 			}
 		}
-	}
 
-	if (active)
-	{
 		drawBackground();
 		drawBorders();
 		// draw the rest
