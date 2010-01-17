@@ -77,7 +77,7 @@ Settings::Settings()
 	registerCVar("body_percentmutateeffectchangeconstraintposition_slightly", 5, 0, 100, false, "chance of slightly changing a joints position");
 	registerCVar("body_percentmutateeffectresizehead",			1, 0, 100, false, "chance of resizing a head");
 	registerCVar("body_percentmutateeffectresizehead_slightly",		5, 0, 100, false, "chance of slightly resizing a head");
-	registerCVar("body_percentmutateeffectrepositionhead",			1, 0, 100, false, "chance of repositioning head");
+	registerCVar("body_percentmutateeffectrepositionhead",			5, 0, 100, false, "chance of repositioning head");
 
 	registerCVar("brain_maxmutations",					10, 1, 1000000, false, "maximum mutations on a brain mutant");
 	registerCVar("brain_mutationrate",					10, 0, 100, false, "percentage of newborns that mutate brains");

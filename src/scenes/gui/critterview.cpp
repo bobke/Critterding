@@ -18,7 +18,9 @@ Critterview::Critterview()
 	// text widgets
 	addWidgetText( "cv_cid", 10, 15, "Critter" );
 // 	Widget* cid = addWidgetText( "cv_cid_c", 10, 15, "" );
-	
+// 	addWidgetText( "cv_age", 20, 30, "Age" );
+
+
 	// view widgets
 	viewbutton = addWidgetButton( "cv_view", Vector2i(10, 30), Vector2i(50, 50), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
 	bviewbutton = addWidgetButton( "cv_bview", Vector2i(10, 90), Vector2i(v_width-20, v_height-100), "", Vector2i(0, 0), cmd.gen(""), 0, 0, 0 );
