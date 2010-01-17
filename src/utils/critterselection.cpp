@@ -8,6 +8,7 @@ Critterselection* Critterselection::Instance ()
 
 Critterselection::Critterselection()
 {
+	cv_activate = false;
 }
 
 void Critterselection::unregisterCritterID(const unsigned long& critterID)
@@ -52,11 +53,13 @@ void Critterselection::deselectCritter(const unsigned long& critterID)
 
 void Critterselection::selectCritter(CritterB* critter)
 {
+	cv_activate = true;
 	selectedCritter = critter;
 }
 
 void Critterselection::selectCritterVID(const unsigned int& vectorID)
 {
+	cv_activate = true;
 	selectedCritter = clist[vectorID];
 }
 

@@ -22,6 +22,8 @@ class Critterselection
 
 		vector<CritterB*>	clist;
 		CritterB*		selectedCritter;
+		
+		bool			cv_activate;
 
 	protected:
 		Critterselection();
