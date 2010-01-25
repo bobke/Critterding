@@ -739,10 +739,11 @@ void WorldB::killHalfOfCritters()
 // 		removeCritter(c);
 
 	// kill oldest
-	if ( critters.size() )
+	if ( critters.size() > 0 )
 	{
-		removeCritter(0);
-		for ( unsigned int c = 0; c < critters.size()/2; c++ )
+		unsigned int half = (critters.size()+1)/2;
+// 		removeCritter(0);
+		for ( unsigned int c = 0; c < half; c++ )
 			removeCritter(0);
 	}
 }
