@@ -31,9 +31,20 @@ class Critterview : public Panel
 	private:
 		Critterselection* critterselection;
 		Widget* viewbutton;
-		Widget* bviewbutton;
+		Widget* brainview;
 		btScalar viewposition[16];
 		CritterB* currentCritter;
+		
+		// drawing helpers
+		int v_spacer;
+		int v_space;
+		int v_radius;
+		int v_diam;
+		int spacing;
+		int column;
+		int row;
+		int rowlength;
+
 
 		vector<neuron> neurons;
 		vector<sensor> sensors;

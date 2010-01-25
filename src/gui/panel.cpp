@@ -25,7 +25,7 @@ void Panel::drawBackground()
 		glEnable(GL_BLEND);
 	}
 
-	glColor4f(0.05f, 0.05f, 0.05f, 0.75f);
+	glColor4f(0.05f, 0.05f, 0.05f, 0.60f);
 	glBegin(GL_QUADS);
 		glVertex2f(absPosition.x,         absPosition.y+v_height);
 		glVertex2f(absPosition.x,         absPosition.y);
