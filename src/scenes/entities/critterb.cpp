@@ -371,8 +371,12 @@ void CritterB::procInputNeurons()
 
 	unsigned int overstep = 0;
 
-	// over food sensor neuron
+	// touching food
 		if ( touchingFood )	brain.Inputs[overstep++].output = 1;
+		else			brain.Inputs[overstep++].output = 0;
+
+	// touching critter
+		if ( touchingCritter )	brain.Inputs[overstep++].output = 1;
 		else			brain.Inputs[overstep++].output = 0;
 
 	// can procreate sensor neuron
@@ -403,7 +407,7 @@ void CritterB::procInputNeurons()
 		}
 
 	// Vision
-		unsigned int vstart = overstep;
+// 		unsigned int vstart = overstep;
 
 		if ( *critter_raycastvision )
 			for ( int y = retinasize-1; y >= 0; y-- )
@@ -471,11 +475,11 @@ void CritterB::procInputNeurons()
 			brain.Inputs[overstep++].output = body.constraints[i]->getAngle();
 
 	// debugging check
-// 		if ( overstep-1 != brain.Inputs.size()-1 )
-// 		{
-// 			cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
-// 			exit(0);
-// 		}
+		if ( overstep-1 != brain.numberOfInputs-1 )
+		{
+			cerr << overstep << " does not equal " << brain.Inputs.size()-1 << endl;
+			exit(0);
+		}
 }
 
 btVector3 CritterB::getScreenDirection(const int& x, const int& y)
