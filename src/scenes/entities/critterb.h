@@ -72,6 +72,7 @@ class CritterB : public Entity
 
 		// Vision
 		unsigned int		retinasize;
+		unsigned int		components;
 // 		float			sightrange;
 		float			straal;
 		unsigned char		*retina;
@@ -103,7 +104,6 @@ class CritterB : public Entity
 		inline void		mutateBrain();
 
 		// Vision
-			unsigned int		components;
 			unsigned int		framePosX;
 			unsigned int		framePosY;
 			unsigned int		retinaColumnStart;
