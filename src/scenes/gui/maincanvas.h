@@ -14,6 +14,7 @@
 #include "settingsbrainpanel.h"
 #include "hud.h"
 #include "critterview.h"
+#include "brainview.h"
 
 using namespace std;
 

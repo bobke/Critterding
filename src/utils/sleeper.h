@@ -1,6 +1,7 @@
 #ifndef SLEEPER_H
 #define SLEEPER_H
 
+#include "../../utils/settings.h"
 #include "timer.h"
 
 class Sleeper
@@ -22,6 +23,7 @@ class Sleeper
 		float		cps;
 
 		float timeSinceLastRender;
+		Settings*		settings;
 };
 
 #endif

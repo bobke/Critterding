@@ -61,6 +61,34 @@ Hud::Hud()
 		else
 			c_height += bspacing + bheight;
 	}
+
+	bwidth = 90;
+	bheight = 18;
+
+	c_height = bspacing;
+	addWidgetButton( "hud__cs_selectall", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "select all", cmd.gen("cs_selectall"), 0, 0, 0 );
+
+	c_height += bspacing + bheight;
+	addWidgetButton( "hud__cs_clear", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "clear", cmd.gen("cs_clear"), 0, 0, 0 );
+
+	c_height += bspacing + bheight;
+	addWidgetButton( "hud__cs_kill", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "kill", cmd.gen("cs_killall"), 0, 0, 0 );
+
+	
+	c_width += bspacing + bwidth;
+	c_height = bspacing;
+	addWidgetButton( "hud__cs_duplicateall", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "duplicate", cmd.gen("cs_duplicateall"), 0, 0, 0 );
+
+	c_height += bspacing + bheight;
+	addWidgetButton( "hud_cs_spawnbrainmutantall", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "brain mutants", cmd.gen("cs_spawnbrainmutantall"), 0, 0, 0 );
+
+	c_height += bspacing + bheight;
+	addWidgetButton( "cs_spawnbodymutantall", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "body mutants", cmd.gen("cs_spawnbodymutantall"), 0, 0, 0 );
+
+	c_width += bspacing + bwidth;
+	c_height = bspacing;
+	addWidgetButton( "cs_spawnbrainbodymutantall", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "brain+body m", cmd.gen("cs_spawnbrainbodymutantall"), 0, 0, 0 );
+
 }
 
 void Hud::draw()
