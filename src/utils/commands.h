@@ -23,6 +23,7 @@ class Commands
 // 		void (Maincanvas::*canvasMember)();
 		void (Maincanvas::*canvasMember_string)(const string&);
 		void (Settings::*settingsMember_string)(const string&);
+		void (Critterselection::*critterselectionMember)();
 		void (Critterselection::*critterselectionMember_uint)(const unsigned int&);
 		void (*member)(int);
 	};
@@ -52,6 +53,7 @@ class Commands
 		void registerCmd(string name, void (WorldB::*pt2Func)());
 		void registerCmd(string name, void (Maincanvas::*pt2Func)(const string&));
 		void registerCmd(string name, void (Settings::*pt2Func)(const string&));
+		void registerCmd(string name, void (Critterselection::*pt2Func)());
 		void registerCmd(string name, void (Critterselection::*pt2Func)(const unsigned int&));
 
 		void decreaseenergy();
@@ -62,6 +64,7 @@ class Commands
 		void inc_worldsizex();
 		void dec_worldsizey();
 		void inc_worldsizey();
+		void selectCritterAll();
 
 		map<string, cmd*> cmdlist;
 		typedef map <string, cmd*>::const_iterator cmdlist_iterator;

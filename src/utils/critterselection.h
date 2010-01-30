@@ -19,6 +19,7 @@ class Critterselection
 		void selectCritterVID(const unsigned int& vectorID);
 		void deselectCritter(CritterB* critter);
 		void deselectCritter(const unsigned long& critterID);
+		void clear();
 
 		vector<CritterB*>	clist;
 		CritterB*		selectedCritter;

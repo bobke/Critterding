@@ -47,6 +47,21 @@ Commands::Commands()
 
 	registerCmd("cs_unregister", &Critterselection::unregisterCritterVID);
 	registerCmd("cs_select", &Critterselection::selectCritterVID);
+	registerCmd("cs_selectall", &Commands::selectCritterAll);
+	registerCmd("cs_clear", &Critterselection::clear);
+	registerCmd("cs_kill", &WorldB::removeSelectedCritter);
+	registerCmd("cs_killall", &WorldB::removeAllSelectedCritters);
+
+	registerCmd("cs_duplicate", &WorldB::duplicateSelectedCritter);
+	registerCmd("cs_spawnbrainmutant", &WorldB::spawnBrainMutantSelectedCritter);
+	registerCmd("cs_spawnbodymutant", &WorldB::spawnBodyMutantSelectedCritter);
+	registerCmd("cs_spawnbrainbodymutant", &WorldB::spawnBrainBodyMutantSelectedCritter);
+
+	registerCmd("cs_duplicateall", &WorldB::duplicateAllSelectedCritters);
+	registerCmd("cs_spawnbrainmutantall", &WorldB::spawnBrainMutantAllSelectedCritters);
+	registerCmd("cs_spawnbodymutantall", &WorldB::spawnBodyMutantAllSelectedCritters);
+	registerCmd("cs_spawnbrainbodymutantall", &WorldB::spawnBrainBodyMutantAllSelectedCritters);
+
 }
 
 void Commands::registerCmd(string name, void (Commands::*pt2Func)())
@@ -85,6 +100,15 @@ void Commands::registerCmd(string name, void (Settings::*pt2Func)(const string&)
 	cmdlist[name]		= c;
 }
 
+void Commands::registerCmd(string name, void (Critterselection::*pt2Func)())
+{
+	cmd* c = new cmd();
+	c->commandtype		= T_CS;
+	c->argtype		= A_NOARG;
+	c->critterselectionMember = pt2Func;
+	cmdlist[name]		= c;
+}
+
 void Commands::registerCmd(string name, void (Critterselection::*pt2Func)(const unsigned int&))
 {
 	cmd* c = new cmd();
@@ -98,33 +122,25 @@ void Commands::registerCmd(string name, void (Critterselection::*pt2Func)(const 
 void Commands::execCmd(const string& name)
 {
 	if ( cmdlist[name]->commandtype == T_COMMAND )
-	{
 		(this->*cmdlist[name]->commandsMember)();
-	}
 	else if ( cmdlist[name]->commandtype == T_WORLD )
-	{
 		(world->*cmdlist[name]->worldMember)();
-	}
+	else if ( cmdlist[name]->commandtype == T_CS )
+		(critterselection->*cmdlist[name]->critterselectionMember)();
 }
 
 void Commands::execCmd(const string& name, const string& str)
 {
 	if ( cmdlist[name]->commandtype == T_CANVAS )
-	{
 		(canvas->*cmdlist[name]->canvasMember_string)(str);
-	}
 	else if ( cmdlist[name]->commandtype == T_SETTINGS )
-	{
 		(settings->*cmdlist[name]->settingsMember_string)(str);
-	}
 }
 
 void Commands::execCmd(const string& name, const unsigned int& ui)
 {
 	if ( cmdlist[name]->commandtype == T_CS )
-	{
 		(critterselection->*cmdlist[name]->critterselectionMember_uint)(ui);
-	}
 }
 
 // fixme public
@@ -154,6 +170,13 @@ void Commands::quit()
 {
 	SDL_Quit();
 	exit(0);
+}
+
+void Commands::selectCritterAll()
+{
+	critterselection->clear();
+	for ( unsigned int i=0; i < world->critters.size(); i++ )
+		critterselection->registerCritter(world->critters[i]);
 }
 
 void Commands::decreaseenergy()

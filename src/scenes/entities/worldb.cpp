@@ -742,7 +742,6 @@ void WorldB::killHalfOfCritters()
 	if ( critters.size() > 0 )
 	{
 		unsigned int half = (critters.size()+1)/2;
-// 		removeCritter(0);
 		for ( unsigned int c = 0; c < half; c++ )
 			removeCritter(0);
 	}
@@ -1009,6 +1008,93 @@ void WorldB::resetCamera()
 // 	camera.position = btVector3( -0.5f*settings->getCVar("worldsizeX"), -1.3f*biggest, -0.5f*settings->getCVar("worldsizeY"));
 // 	camera.rotation = Vector3f( 90.0f,  0.0f, 0.0f);
 }
+
+// selected critter actions
+
+int WorldB::findSelectedCritterID()
+{
+	for ( unsigned int i=0; i < critters.size(); i++ )
+		if ( critters[i]->critterID == critterselection->selectedCritter->critterID )
+			return i;
+	return -1;
+}
+
+int WorldB::findCritterID(unsigned int cid)
+{
+	for ( unsigned int i=0; i < critters.size(); i++ )
+		if ( critters[i]->critterID == cid )
+			return i;
+	return -1;
+}
+
+void WorldB::removeSelectedCritter()
+{
+	removeCritter(findSelectedCritterID());
+}
+
+void WorldB::removeAllSelectedCritters()
+{
+	while ( critterselection->clist.size() > 0 )
+		removeCritter( findCritterID(critterselection->clist[0]->critterID) );
+}
+
+void WorldB::duplicateCritter(unsigned int cid, bool brainmutant, bool bodymutant)
+{
+	btDefaultMotionState* myMotionState = (btDefaultMotionState*)critters[cid]->body.bodyparts[0]->body->getMotionState();
+	btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
+
+	// position offset
+	np.setY(insertHight);
+
+	CritterB *nc = new CritterB(*critters[cid], currentCritterID++, np, brainmutant, bodymutant);
+
+	// duplicate energy levels
+	nc->energyLevel = settings->getCVar("critter_startenergy");
+	freeEnergy -= nc->energyLevel;
+
+	critters.push_back( nc );
+	nc->calcFramePos(critters.size()-1);
+}
+
+void WorldB::duplicateSelectedCritter()
+{
+	duplicateCritter( findSelectedCritterID(), false, false );
+}
+void WorldB::spawnBrainMutantSelectedCritter()
+{
+	duplicateCritter( findSelectedCritterID(), true, false );
+}
+void WorldB::spawnBodyMutantSelectedCritter()
+{
+	duplicateCritter( findSelectedCritterID(), false, true );
+}
+void WorldB::spawnBrainBodyMutantSelectedCritter()
+{
+	duplicateCritter( findSelectedCritterID(), true, true );
+}
+
+void WorldB::duplicateAllSelectedCritters()
+{
+	for ( unsigned int i=0; i < critterselection->clist.size(); i ++ )
+		duplicateCritter( findCritterID(critterselection->clist[i]->critterID), false, false );
+}
+void WorldB::spawnBrainMutantAllSelectedCritters()
+{
+	for ( unsigned int i=0; i < critterselection->clist.size(); i ++ )
+		duplicateCritter( findCritterID(critterselection->clist[i]->critterID), true, false );
+}
+void WorldB::spawnBodyMutantAllSelectedCritters()
+{
+	for ( unsigned int i=0; i < critterselection->clist.size(); i ++ )
+		duplicateCritter( findCritterID(critterselection->clist[i]->critterID), false, true );
+}
+void WorldB::spawnBrainBodyMutantAllSelectedCritters()
+{
+	for ( unsigned int i=0; i < critterselection->clist.size(); i ++ )
+		duplicateCritter( findCritterID(critterselection->clist[i]->critterID), true, true );
+}
+
+
 
 void WorldB::makeFloor()
 {

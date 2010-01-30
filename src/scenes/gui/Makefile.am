@@ -2,6 +2,7 @@ INCLUDES = $(all_includes) -I../../utils/bullet -I/usr/include/freetype2
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libcdgui.la
 noinst_HEADERS =	critterview.h \
+			brainview.h \
 			exitpanel.h \
 			helpinfo.h \
 			infostats.h \
@@ -15,6 +16,7 @@ noinst_HEADERS =	critterview.h \
 			maincanvas.h
 
 libcdgui_la_SOURCES =	critterview.cpp \
+			brainview.cpp \
 			exitpanel.cpp \
 			helpinfo.cpp \
 			infostats.cpp \

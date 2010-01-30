@@ -5,6 +5,7 @@
 
 Sleeper::Sleeper()
 {
+	settings = Settings::Instance();
 	t = Timer::Instance();
 
 	active		= false;
@@ -23,8 +24,9 @@ void Sleeper::mark()
 		if ( t->elapsed == 0 ) cps = 0;
 		else cps = t->bullet_ms;
 	
-		if ( cps > optimal ) sleeptime += stepsize;
-		else if ( cps < optimal )
+// 		if ( cps > optimal ) sleeptime += stepsize;
+		if ( cps > settings->getCVar("fpslimit") ) sleeptime += stepsize;
+		else if ( cps < settings->getCVar("fpslimit") )
 		{
 			if ( sleeptime >= stepsize )	sleeptime -= stepsize;
 			else 				sleeptime = 0;
@@ -39,7 +41,7 @@ bool Sleeper::isRenderTime()
 		return true;
 
 	timeSinceLastRender += t->elapsed;
-	if ( timeSinceLastRender >= (1.0f/optimal) )
+	if ( timeSinceLastRender >= (1.0f/settings->getCVar("fpslimit")) )
 	{
 		timeSinceLastRender = 0.0f;
 		return true;

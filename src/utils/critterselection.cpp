@@ -21,6 +21,12 @@ void Critterselection::unregisterCritterID(const unsigned long& critterID)
 		}
 }
 
+void Critterselection::clear()
+{
+	while ( clist.size() > 0 )
+		clist.erase(clist.begin());
+}
+
 void Critterselection::unregisterCritterVID(const unsigned int& vectorID)
 {
 	if ( vectorID < clist.size() )

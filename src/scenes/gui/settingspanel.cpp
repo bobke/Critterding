@@ -26,6 +26,7 @@ Settingspanel::Settingspanel()
 	vspace += vint; addSettingmutator("colormode", hspace, vspace);
 	vspace += vint; addSettingmutator("exit_if_empty", hspace, vspace);
 	vspace += vint; addSettingmutator("killhalfdecreaseenergybypct", hspace, vspace);
+	vspace += vint; addSettingmutator("fpslimit", hspace, vspace);
 
 // 	vspace += vint; 
 	vspace += vint; addSettingmutator("critter_maxlifetime", hspace, vspace);

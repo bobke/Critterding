@@ -91,6 +91,20 @@ class WorldB
 		void			saveAllCritters();
 		virtual void		loadAllCritters();
 
+		void			removeSelectedCritter();
+		void			removeAllSelectedCritters();
+		void			duplicateCritter(unsigned int cid, bool brainmutant, bool bodymutant);
+
+		void			duplicateSelectedCritter();
+		void			spawnBrainMutantSelectedCritter();
+		void			spawnBodyMutantSelectedCritter();
+		void			spawnBrainBodyMutantSelectedCritter();
+
+		void			duplicateAllSelectedCritters();
+		void			spawnBrainMutantAllSelectedCritters();
+		void			spawnBodyMutantAllSelectedCritters();
+		void			spawnBrainBodyMutantAllSelectedCritters();
+
 		void			killHalfOfCritters();
 
 		void			pickBody(const int& x, const int& y);
@@ -180,6 +194,8 @@ class WorldB
 		
 		btManifoldArray   manifoldArray;
 
+		int			findSelectedCritterID();
+		int			findCritterID(unsigned int cid);
 };
 
 #endif

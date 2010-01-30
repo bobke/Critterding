@@ -23,6 +23,7 @@ Maincanvas::Maincanvas()
 	addWidgetPanel( "settingspanel", new Settingspanel() );
 	addWidgetPanel( "settingsbrainpanel", new Settingsbrainpanel() );
 	addWidgetPanel( "critterview", new Critterview() );
+	addWidgetPanel( "brainview", new Brainview() );
 	addWidgetPanel( "hud", new Hud() );
 
 	// set default z axises to panels

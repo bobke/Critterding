@@ -34,6 +34,7 @@ Settings::Settings()
 	registerCVar("colormode",						0, 0, 1, true, "colors genetically exact critters identically");
 	registerCVar("exit_if_empty",						0, 0, 1, true, "exit simulation if there are no critters");
 	registerCVar("autoload",						0, 0, 1, true, "autoload critters from ~/.critterding/load");
+	registerCVar("fpslimit",						30, 1, 1000, false, "frames per second for the fps limiter");
 
 	registerCVar("critter_maxlifetime",					1000000, 1, 1000000, false, "maximum number of frames a critter lives");
 	registerCVar("critter_maxenergy",					5000, 1, 1000000, false, "maximum amount of energy a critter has");
@@ -54,7 +55,7 @@ Settings::Settings()
 	registerCVar("food_maxenergy",						1500, 1, 1000000, false, "maximum amount of energy a food unit has");
 	registerCVar("food_size",						200, 1, 1000000, false, "size of a food unit");
 
-	registerCVar("body_maxmutations",					10, 1, 1000000, false, "maximum mutations on a body mutant");
+	registerCVar("body_maxmutations",					3, 1, 1000000, false, "maximum mutations on a body mutant");
 	registerCVar("body_mutationrate",					10, 0, 100, false, "percentage of newborns that mutate bodies");
 
 	registerCVar("body_maxbodyparts",					30, 0, 1000000, false, "maximum body parts per critter");
