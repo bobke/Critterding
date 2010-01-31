@@ -26,15 +26,24 @@ Hud::Hud()
 	c_height += bspacing + bheight;
 	addWidgetButton( "hud_stats", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "stats", cmd.gen("gui_togglepanel", "infostats"), 0, 0, 0 );
 
+
 	c_width += bspacing + bwidth;
 	c_height = bspacing;
 	addWidgetButton( "hud_events", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "events", cmd.gen("gui_togglepanel", "textverbosemessage"), 0, 0, 0 );
 
 	c_height += bspacing + bheight;
-	addWidgetButton( "hud_settings1", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "settings1", cmd.gen("gui_togglepanel", "settingspanel"), 0, 0, 0 );
+	addWidgetButton( "hud_settings", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "settings", cmd.gen("gui_togglepanel", "globalsettingspanel"), 0, 0, 0 );
 
 	c_height += bspacing + bheight;
-	addWidgetButton( "hud_settings2", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "settings2", cmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
+	addWidgetButton( "hud_mutationpanel", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "mutation", cmd.gen("gui_togglepanel", "mutationpanel"), 0, 0, 0 );
+
+
+	c_width += bspacing + bwidth;
+	c_height = bspacing;
+	addWidgetButton( "hud_brainpanel", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "brain", cmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
+
+	c_height += bspacing + bheight;
+	addWidgetButton( "hud_bodypanel", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "body", cmd.gen("gui_togglepanel", "settingsbodypanel"), 0, 0, 0 );
 
 	// init critter selection buttons
 	c_width += bspacing + bwidth;
@@ -89,6 +98,8 @@ Hud::Hud()
 	c_height = bspacing;
 	addWidgetButton( "cs_spawnbrainbodymutantall", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "brain+body m", cmd.gen("cs_spawnbrainbodymutantall"), 0, 0, 0 );
 
+	c_height += bspacing + bheight;
+// 	addWidgetButton( "cs_feed", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "feed", cmd.gen("cs_spawnbodymutantall"), 0, 0, 0 );
 }
 
 void Hud::draw()

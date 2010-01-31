@@ -10,7 +10,9 @@ noinst_HEADERS =	critterview.h \
 			textmessage.h \
 			textverbosemessage.h \
 			statsgraph.h \
-			settingspanel.h \
+			globalsettingspanel.h \
+			mutationpanel.h \
+			settingsbodypanel.h \
 			settingsbrainpanel.h \
 			hud.h \
 			maincanvas.h
@@ -24,7 +26,9 @@ libcdgui_la_SOURCES =	critterview.cpp \
 			textmessage.cpp \
 			textverbosemessage.cpp \
 			statsgraph.cpp \
-			settingspanel.cpp \
+			globalsettingspanel.cpp \
+			mutationpanel.cpp \
+			settingsbodypanel.cpp \
 			settingsbrainpanel.cpp \
 			hud.cpp \
 			maincanvas.cpp

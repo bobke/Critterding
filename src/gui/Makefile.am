@@ -6,6 +6,7 @@ noinst_HEADERS =	widget.h \
 			text.h \
 			text_uintp.h \
 			panel.h \
+			settingspanel.h \
 			button.h \
 			textprinter.h
 
@@ -14,6 +15,7 @@ libgui_la_SOURCES = 	widget.cpp \
 			text.cpp \
 			text_uintp.cpp \
 			panel.cpp \
+			settingspanel.cpp \
 			button.cpp \
 			textprinter.cpp
 
