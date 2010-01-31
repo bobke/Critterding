@@ -6,7 +6,6 @@
 	#include "../utils/parser.h"
 
 	#include "archneuronz.h"
-//	#include "neuronsensorz.h"
 	#include "neuroninterz.h"
 
 // external includes
