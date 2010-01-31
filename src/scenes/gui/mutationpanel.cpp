@@ -2,7 +2,7 @@
 
 Mutationpanel::Mutationpanel()
 {
-	v_width = 490;
+	v_width = 340;
 	v_height = 85;
 
 	isMovable = true;
@@ -10,7 +10,6 @@ Mutationpanel::Mutationpanel()
 	position.x = 50;
 	position.y = 35;
 
-	// FIXME camera sensitivity is missing
 	unsigned int vint = 12;
 	hspace = 10;
 	vspace = vint; addSettingmutator("body_maxmutations", hspace, vspace);

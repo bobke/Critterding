@@ -62,6 +62,8 @@ Commands::Commands()
 	registerCmd("cs_spawnbodymutantall", &WorldB::spawnBodyMutantAllSelectedCritters);
 	registerCmd("cs_spawnbrainbodymutantall", &WorldB::spawnBrainBodyMutantAllSelectedCritters);
 
+	registerCmd("cs_feed", &WorldB::feedSelectedCritter);
+	registerCmd("cs_resetage", &WorldB::resetageSelectedCritter);
 }
 
 void Commands::registerCmd(string name, void (Commands::*pt2Func)())

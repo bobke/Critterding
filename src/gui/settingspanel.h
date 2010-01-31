@@ -11,6 +11,10 @@ class Settingspanel : public Panel
 		Settingspanel();
 		~Settingspanel();
 	protected:
+		unsigned int mutatorcol1;
+		unsigned int mutatorcol2;
+		unsigned int mutatorcol3;
+
 		virtual void addMutator(  const string& name, const cmdsettings& cmd1, const cmdsettings& cmd2, unsigned int posx, unsigned int posy  );
 		virtual void addSettingmutator( const string& name, unsigned int posx, unsigned int posy );
 	private:

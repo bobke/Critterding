@@ -36,7 +36,7 @@ Settings::Settings()
 	registerCVar("autoload",						0, 0, 1, true, "autoload critters from ~/.critterding/load");
 	registerCVar("fpslimit",						30, 1, 1000, false, "frames per second for the fps limiter");
 
-	registerCVar("critter_maxlifetime",					1000000, 1, 1000000, false, "maximum number of frames a critter lives");
+	registerCVar("critter_maxlifetime",					40000, 1, 1000000, false, "maximum number of frames a critter lives");
 	registerCVar("critter_maxenergy",					5000, 1, 1000000, false, "maximum amount of energy a critter has");
 
 	registerCVar("critter_startenergy",					3000, 1, 1000000, false, "energy a new critter starts with");

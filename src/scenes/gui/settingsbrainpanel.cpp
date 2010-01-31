@@ -10,6 +10,9 @@ Settingsbrainpanel::Settingsbrainpanel()
 	position.x = 50;
 	position.y = 35;
 
+	mutatorcol2 = 350;
+	mutatorcol3 = 430;
+	
 	unsigned int vint = 12;
 	
 	hspace = 10;

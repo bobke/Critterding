@@ -1198,6 +1198,19 @@ void WorldB::spawnBrainBodyMutantSelectedCritter()
 	duplicateCritter( findSelectedCritterID(), true, true );
 }
 
+void WorldB::feedSelectedCritter()
+{
+	CritterB* c = critters[findSelectedCritterID()];
+	float max_currentDiff = (float)settings->getCVar("critter_startenergy") - c->energyLevel;
+	c->energyLevel += max_currentDiff;
+	freeEnergy -= max_currentDiff;
+}
+
+void WorldB::resetageSelectedCritter()
+{
+	critters[findSelectedCritterID()]->totalFrames = 0;
+}
+
 void WorldB::duplicateAllSelectedCritters()
 {
 	for ( unsigned int i=0; i < critterselection->clist.size(); i ++ )
