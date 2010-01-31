@@ -3,7 +3,7 @@
 Settingsbrainpanel::Settingsbrainpanel()
 {
 	v_width = 490;
-	v_height = 540;
+	v_height = 515;
 
 	isMovable = true;
 

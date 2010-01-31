@@ -3,7 +3,7 @@
 Settingsbodypanel::Settingsbodypanel()
 {
 	v_width = 490;
-	v_height = 280;
+	v_height = 255;
 
 	isMovable = true;
 
