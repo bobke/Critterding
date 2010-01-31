@@ -755,8 +755,8 @@ void WorldB::renderVision()
 			if ( critters[i]->body.mouths.size() > 0 )
 			{
 				critters[i]->place();
-				drawWithinCritterSight(critters[i]);
-// 				drawWithinCritterSight( i );
+// 				drawWithinCritterSight(critters[i]);
+				drawWithinCritterSight( i );
 			}
 }
 
