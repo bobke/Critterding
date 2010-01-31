@@ -341,6 +341,13 @@ void WorldB::killHalf()
 			settings->increaseCVar("worldsizeY", settings->getCVar("killhalf_incrworldsizeY"));
 			makeFloor();
 		}
+		
+		// decrease critter_maxlifetime
+		if ( settings->getCVar("killhalf_decrmaxlifetimepct") > 0 )
+		{
+			int dec = (settings->getCVar("critter_maxlifetime") / 100) * settings->getCVar("killhalf_decrmaxlifetimepct");
+			settings->setCVar("critter_maxlifetime", settings->getCVar("critter_maxlifetime")-dec );
+		}
 	}
 }
 
