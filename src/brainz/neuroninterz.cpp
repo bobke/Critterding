@@ -2,29 +2,23 @@
 
 NeuronInterz::NeuronInterz()
 {
-
-// 	maxSynapses			= 150;
-
 	isInhibitory			= false;
 
 	// input weight range, 5 = -5 <-> +5	-> 10 in total because 0 will be excluded
 // 	dendridicBranches		= 10;
 
 	// processing
-// 	firingThreshold			= 30.0f;
 	potential			= 0.0f;
 	potentialDecay			= 0.95f;
 
 	// output
-	output				= 0;
-	waitoutput			= 0;
+	output				= 0.0f;
+	waitoutput			= 0.0f;
 
 	// plasticity up & down
 	isPlastic			= false;
-// 	plasticityStrengthen		= 1.0f+(1.0f/100.0f);
-// 	plasticityWeaken		= 1.0f-(1.0f/1000.0f);
 
-	// SPECIALO optional reference that makes this a MOTOR neuron, but it depends on not being defined
+	// optional reference that makes this a MOTOR neuron, but it depends on not being defined
 	isMotor				= false;
 	motorFunc			= 0;
 }

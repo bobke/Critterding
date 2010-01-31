@@ -264,31 +264,13 @@ Brainz::Brainz()
 			totalNeurons = ArchNeurons.size();
 			totalSynapses = 0;
 
-// 		// init inputs
-// 			for ( unsigned int i=0; i < numberOfInputs; i++ )
-// 			{
-// 				//NeuronSensorz ns;
-// 				Inputs.push_back( sensorNeuron() );
-// 			}
-
-// 		// init outputs
-// 			for ( unsigned int i=0; i < numberOfOutputs; i++ )
-// 			{
-// 				NeuronSensorz ns;
-// 				Outputs.push_back( ns );
-// 			}
-
 		// create all runtime neurons
 			for ( unsigned int i=0; i < totalNeurons; i++ )
 			{
 				NeuronInterz ni;
 
-				ni.maxSynapses		= maxSynapses;
-		
 				ni.isInhibitory		= ArchNeurons[i].isInhibitory;
 				ni.firingThreshold	= ArchNeurons[i].firingThreshold;
-
-				ni.dendridicBranches	= ArchNeurons[i].dendridicBranches;
 
 				ni.isMotor		= ArchNeurons[i].isMotor;
 				if (ni.isMotor)
