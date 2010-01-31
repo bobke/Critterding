@@ -10,7 +10,9 @@ Settingsbodypanel::Settingsbodypanel()
 	position.x = 50;
 	position.y = 35;
 
-	// FIXME camera sensitivity is missing
+	mutatorcol2 = 350;
+	mutatorcol3 = 430;
+
 	unsigned int vint = 12;
 	hspace = 10;
 	vspace = vint; addSettingmutator("body_maxbodyparts", hspace, vspace);

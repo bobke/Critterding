@@ -13,7 +13,7 @@ Critterview::Critterview()
 	unsigned int bspacing = 2;
 	unsigned int totalbuttonheight = (2*bheight) + bspacing;
 
-	v_width = 360;
+	v_width = 386;
 	v_height = 150;
 
 	int buttons_starty = v_height - totalbuttonheight-10;
@@ -66,6 +66,12 @@ Critterview::Critterview()
 	c_height += bspacing + bheight;
 	addWidgetButton( "cv_action_spawnbrainbodymutant", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "brain+body m", cmd.gen("cs_spawnbrainbodymutant"), 0, 0, 0 );
 
+	c_width += bwidth + bspacing;
+	c_height = buttons_starty;
+	addWidgetButton( "cv_action_feed", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "feed", cmd.gen("cs_feed"), 0, 0, 0 );
+
+	c_height += bspacing + bheight;
+	addWidgetButton( "cv_action_resetage", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "reset age", cmd.gen("cs_resetage"), 0, 0, 0 );
 }
 
 void Critterview::draw()

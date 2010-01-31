@@ -100,6 +100,8 @@ class WorldB
 		void			spawnBrainMutantSelectedCritter();
 		void			spawnBodyMutantSelectedCritter();
 		void			spawnBrainBodyMutantSelectedCritter();
+		void			feedSelectedCritter();
+		void			resetageSelectedCritter();
 
 		void			duplicateAllSelectedCritters();
 		void			spawnBrainMutantAllSelectedCritters();

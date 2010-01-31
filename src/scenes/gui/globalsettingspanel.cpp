@@ -2,7 +2,7 @@
 
 Globalsettingspanel::Globalsettingspanel()
 {
-	v_width = 490;
+	v_width = 340;
 	v_height = 340;
 
 	isMovable = true;
