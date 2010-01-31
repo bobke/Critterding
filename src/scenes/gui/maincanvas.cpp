@@ -20,8 +20,10 @@ Maincanvas::Maincanvas()
 	addWidgetPanel( "infostats", new Infostats() );
 	addWidgetPanel( "textverbosemessage", Textverbosemessage::Instance() );
 	addWidgetPanel( "exitpanel", new Exitpanel() );
-	addWidgetPanel( "settingspanel", new Settingspanel() );
+	addWidgetPanel( "mutationpanel", new Mutationpanel() );
+	addWidgetPanel( "globalsettingspanel", new Globalsettingspanel() );
 	addWidgetPanel( "settingsbrainpanel", new Settingsbrainpanel() );
+	addWidgetPanel( "settingsbodypanel", new Settingsbodypanel() );
 	addWidgetPanel( "critterview", new Critterview() );
 	addWidgetPanel( "brainview", new Brainview() );
 	addWidgetPanel( "hud", new Hud() );

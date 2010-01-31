@@ -1,6 +1,6 @@
-#include "settingspanel.h"
+#include "globalsettingspanel.h"
 
-Settingspanel::Settingspanel()
+Globalsettingspanel::Globalsettingspanel()
 {
 	v_width = 490;
 	v_height = 570;
@@ -72,7 +72,7 @@ Settingspanel::Settingspanel()
 	vspace += vint; addSettingmutator("body_percentmutateeffectrepositionhead", hspace, vspace);
 }
 
-void Settingspanel::addMutator(  const string& name, const cmdsettings& cmd1, const cmdsettings& cmd2, unsigned int posx, unsigned int posy  )
+void Globalsettingspanel::addMutator(  const string& name, const cmdsettings& cmd1, const cmdsettings& cmd2, unsigned int posx, unsigned int posy  )
 {
 	unsigned int col1 = 10; unsigned int col2 = 350; unsigned int col3 = 430;
 	string str(name); string strval = str; string strdec = str; string strinc = str;
@@ -84,7 +84,7 @@ void Settingspanel::addMutator(  const string& name, const cmdsettings& cmd1, co
 	addWidgetButton( strinc, Vector2i(posx+col3+18, posy), Vector2i(11, 10), "+", Vector2i(1, 8), cmd2, 150, 0, 2 );
 }
 
-void Settingspanel::addSettingmutator( const string& name, unsigned int posx, unsigned int posy )
+void Globalsettingspanel::addSettingmutator( const string& name, unsigned int posx, unsigned int posy )
 {
 	unsigned int col1 = 10; unsigned int col2 = 350; unsigned int col3 = 430;
 	string str(name); string strval = str; string strdec = str; string strinc = str;
@@ -96,6 +96,6 @@ void Settingspanel::addSettingmutator( const string& name, unsigned int posx, un
 	addWidgetButton( strinc, Vector2i(posx+col3+18, posy), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("settings_increase", name), 150, 0, 2 );
 }
 
-Settingspanel::~Settingspanel()
+Globalsettingspanel::~Globalsettingspanel()
 {
 }

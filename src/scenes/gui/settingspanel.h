@@ -1,15 +1,15 @@
-#ifndef SETTINGSPANEL_H
-#define SETTINGSPANEL_H
+#ifndef GLOBALSETTINGSPANEL_H
+#define GLOBALSETTINGSPANEL_H
 
 #include "../../gui/panel.h"
 
 using namespace std;
 
-class Settingspanel : public Panel
+class Globalsettingspanel : public Panel
 {
 	public:
-		Settingspanel();
-		~Settingspanel();
+		Globalsettingspanel();
+		~Globalsettingspanel();
 
 	private:
 		unsigned int vspace;

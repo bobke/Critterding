@@ -13,9 +13,7 @@ Settingsbrainpanel::Settingsbrainpanel()
 	unsigned int vint = 12;
 	
 	hspace = 10;
-	vspace = vint;  addSettingmutator("brain_maxmutations", hspace, vspace);
-	vspace += vint; addSettingmutator("brain_mutationrate", hspace, vspace);
-	vspace += vint; addSettingmutator("brain_maxneurons", hspace, vspace);
+	vspace = vint;  addSettingmutator("brain_maxneurons", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_minsynapses", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_maxsynapses", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_minneuronsatbuildtime", hspace, vspace);
@@ -58,19 +56,6 @@ Settingsbrainpanel::Settingsbrainpanel()
 	vspace += vint; addSettingmutator("brain_costfiringneuron", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_costfiringmotorneuron", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_costhavingsynapse", hspace, vspace);
-}
-
-
-void Settingsbrainpanel::addSettingmutator( const string& name, unsigned int posx, unsigned int posy )
-{
-	unsigned int col1 = 10; unsigned int col2 = 350; unsigned int col3 = 430;
-	string str(name); string strval = str; string strdec = str; string strinc = str;
-	strval.append("val"); strdec.append("dec"); strinc.append("inc");
-
-	addWidgetText( str, posx+col1, posy+9, name );
-	addWidgetText( strval, posx+col2, posy+9, settings->getCVarPtr(name) );
-	addWidgetButton( strdec, Vector2i(posx+col3, posy), Vector2i(11, 10), "-", Vector2i(3, 8), cmd.gen("settings_decrease", name), 150, 0, 2 );
-	addWidgetButton( strinc, Vector2i(posx+col3+18, posy), Vector2i(11, 10), "+", Vector2i(1, 8), cmd.gen("settings_increase", name), 150, 0, 2 );
 }
 
 Settingsbrainpanel::~Settingsbrainpanel()

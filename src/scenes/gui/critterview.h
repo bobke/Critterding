@@ -1,8 +1,8 @@
 #ifndef CRITTERVIEW_H
 #define CRITTERVIEW_H
 
-#include "panel.h"
 #include "../entities/worldb.h"
+#include "../../gui/panel.h"
 #include "../../utils/critterselection.h"
 #include "../../math/vector2f.h"
 #include "../entities/critterb.h"
