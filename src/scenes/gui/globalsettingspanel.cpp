@@ -3,7 +3,7 @@
 Globalsettingspanel::Globalsettingspanel()
 {
 	v_width = 340;
-	v_height = 340;
+	v_height = 364;
 
 	isMovable = true;
 
@@ -25,7 +25,6 @@ Globalsettingspanel::Globalsettingspanel()
 	vspace += vint; addSettingmutator("fullscreen", hspace, vspace);
 	vspace += vint; addSettingmutator("colormode", hspace, vspace);
 	vspace += vint; addSettingmutator("exit_if_empty", hspace, vspace);
-	vspace += vint; addSettingmutator("killhalfdecreaseenergybypct", hspace, vspace);
 	vspace += vint; addSettingmutator("fpslimit", hspace, vspace);
 
 // 	vspace += vint; 
@@ -37,9 +36,13 @@ Globalsettingspanel::Globalsettingspanel()
 	vspace += vint; addSettingmutator("critter_sightrange", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_autosaveinterval", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_autoexchangeinterval", hspace, vspace);
-	vspace += vint; addSettingmutator("critter_killhalfat", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_enableomnivores", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_raycastvision", hspace, vspace);
+	vspace += vint; addSettingmutator("critter_killhalfat", hspace, vspace);
+
+	vspace += vint; addSettingmutator("killhalf_decrenergypct", hspace, vspace);
+	vspace += vint; addSettingmutator("killhalf_incrworldsizeX", hspace, vspace);
+	vspace += vint; addSettingmutator("killhalf_incrworldsizeY", hspace, vspace);
 
 // 	vspace += vint;
 	vspace += vint; addSettingmutator("food_maxlifetime", hspace, vspace);

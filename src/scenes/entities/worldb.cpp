@@ -317,17 +317,29 @@ void WorldB::killHalf()
 	{
 		killHalfOfCritters();
 		
-		// reduce energy :)
-		if ( settings->getCVar("killhalfdecreaseenergybypct") > 0 )
+		// reduce energy
+		if ( settings->getCVar("killhalf_decrenergypct") > 0 )
 		{
 			float dec_amount = ((*food_maxenergy * *energy) - *food_maxenergy) / *food_maxenergy;
 			if ( dec_amount >= 0.0f )
 			{
-				int dec = (dec_amount / 100) * settings->getCVar("killhalfdecreaseenergybypct");
+				int dec = (dec_amount / 100) * settings->getCVar("killhalf_decrenergypct");
 				settings->setCVar("energy", settings->getCVar("energy")-dec );
 				//*energy -= dec;
 				freeEnergy -= dec * *food_maxenergy;
 			}
+		}
+
+		// increase worldsizes
+		if ( settings->getCVar("killhalf_incrworldsizeX") > 0 )
+		{
+			settings->increaseCVar("worldsizeX", settings->getCVar("killhalf_incrworldsizeX"));
+			makeFloor();
+		}
+		if ( settings->getCVar("killhalf_incrworldsizeY") > 0 )
+		{
+			settings->increaseCVar("worldsizeY", settings->getCVar("killhalf_incrworldsizeY"));
+			makeFloor();
 		}
 	}
 }

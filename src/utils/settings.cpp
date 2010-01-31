@@ -22,7 +22,9 @@ Settings::Settings()
 	registerCVar("worldsizeY",						13, 1, 5000, false, "size of the world along axis Y");
 	registerCVar("worldwalls",						1, 0, 1, false, "enable walls around the world");
 
-	registerCVar("killhalfdecreaseenergybypct",				1, 0, 100, false, "decrease energy by n percent when killhalfat triggers");
+	registerCVar("killhalf_decrenergypct",					1, 0, 100, false, "decrease energy by n percent when killhalfat triggers");
+	registerCVar("killhalf_incrworldsizeX",					0, 0, 100, false, "increase worldsizeX by n when killhalfat triggers");
+	registerCVar("killhalf_incrworldsizeY",					0, 0, 100, false, "increase worldsizeY by n when killhalfat triggers");
 
 	registerCVar("energy",							400, 0, 1000000, false, "energy in the system by number of food cubes");
 	registerCVar("mincritters",						10, 0, 1000, false, "minimum number of critters");
