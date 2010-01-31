@@ -83,6 +83,8 @@ class CritterB : public Entity
 		
 		float			fitness_index;
 
+		vector<unsigned int>	crittersWithinRange;
+		
 	private:
 
 		Settings		*settings;

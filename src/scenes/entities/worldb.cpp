@@ -756,6 +756,7 @@ void WorldB::renderVision()
 			{
 				critters[i]->place();
 				drawWithinCritterSight(critters[i]);
+// 				drawWithinCritterSight( i );
 			}
 }
 
@@ -814,8 +815,6 @@ void WorldB::drawWithGrid()
 
 void WorldB::drawWithinCritterSight(CritterB *c)
 {
-// 	CritterB *c = critters[cid];
-
 	if ( c->body.mouths.size() > 0 )
 	{
 		btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)c->body.mouths[0]->body->getMotionState();
@@ -823,8 +822,6 @@ void WorldB::drawWithinCritterSight(CritterB *c)
 
 		// draw everything in it's sight
 		float sightrange = (float)*critter_sightrange/10;
-
-		btScalar position[16];
 
 		for( unsigned int i=0; i < walls.size(); i++)
 			walls[i]->draw();
@@ -844,9 +841,9 @@ void WorldB::drawWithinCritterSight(CritterB *c)
 				const btDefaultMotionState* fmyMotionState = static_cast<const btDefaultMotionState*>(f->body.bodyparts[b]->body->getMotionState());
 				if ( cposi.distance( fmyMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
 				{
-					fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
+					fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(drawposition);
 					glPushMatrix(); 
-					glMultMatrixf(position);
+					glMultMatrixf(drawposition);
 
 							glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
 
@@ -858,20 +855,20 @@ void WorldB::drawWithinCritterSight(CritterB *c)
 					glPopMatrix();
 				}
 			}
-			if ( c->critterID != critters[j]->critterID )
+			if ( c->critterID != f->critterID )
 			{
-				for( unsigned int j=0; j < f->body.mouths.size(); j++)
+				for( unsigned int b=0; b < f->body.mouths.size(); b++)
 				{
-					if ( cposi.distance( f->body.mouths[j]->ghostObject->getWorldTransform().getOrigin() ) < sightrange )
+					if ( cposi.distance( f->body.mouths[b]->ghostObject->getWorldTransform().getOrigin() ) < sightrange )
 					{
-						f->body.mouths[j]->ghostObject->getWorldTransform().getOpenGLMatrix(position);
+						f->body.mouths[b]->ghostObject->getWorldTransform().getOpenGLMatrix(drawposition);
 						
 						glPushMatrix(); 
-						glMultMatrixf(position);
+						glMultMatrixf(drawposition);
 
 								glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
 
-								btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.mouths[j]->shape)->getHalfExtentsWithMargin();
+								btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.mouths[b]->shape)->getHalfExtentsWithMargin();
 								glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
 
 								Displaylists::Instance()->call(1);
@@ -880,6 +877,134 @@ void WorldB::drawWithinCritterSight(CritterB *c)
 					}
 				}
 			}
+		}
+	}
+}
+
+// same as before, but with exponential optimisation
+void WorldB::drawWithinCritterSight(unsigned int cid)
+{
+	CritterB *c = critters[cid];
+
+	if ( c->body.mouths.size() > 0 )
+	{
+// 		cerr << endl << "run " << cid << endl;
+		btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)c->body.mouths[0]->body->getMotionState();
+		btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
+
+		// draw everything in it's sight
+		float sightrange = (float)*critter_sightrange/10;
+
+		for( unsigned int i=0; i < walls.size(); i++)
+			walls[i]->draw();
+
+		for( unsigned int i=0; i < food.size(); i++)
+		{
+			Food *f = food[i];
+			if ( cposi.distance( f->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
+				f->draw();
+		}
+
+// 		cerr << "prerecorded " << c->crittersWithinRange.size() <<  endl;
+		// first process prechecked crittersWithinRange vector
+		for( unsigned int p=0; p < c->crittersWithinRange.size(); p++)
+		{
+// 			cerr << " drawing " << c->crittersWithinRange[p] << endl;
+			CritterB *f = critters[ c->crittersWithinRange[p] ];
+
+			for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
+			{
+				const btDefaultMotionState* fmyMotionState = static_cast<const btDefaultMotionState*>(f->body.bodyparts[b]->body->getMotionState());
+
+				fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(drawposition);
+				glPushMatrix(); 
+				glMultMatrixf(drawposition);
+
+						glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
+
+						btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape)->getHalfExtentsWithMargin();
+						glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
+
+						Displaylists::Instance()->call(0);
+
+				glPopMatrix();
+			}
+			for( unsigned int j=0; j < f->body.mouths.size(); j++)
+			{
+				f->body.mouths[j]->ghostObject->getWorldTransform().getOpenGLMatrix(drawposition);
+				
+				glPushMatrix(); 
+				glMultMatrixf(drawposition);
+
+						glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
+
+						btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.mouths[j]->shape)->getHalfExtentsWithMargin();
+						glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
+
+						Displaylists::Instance()->call(1);
+
+				glPopMatrix();
+			}
+			
+		}
+		// clear crittersWithinRange vector
+		c->crittersWithinRange.clear();
+
+// 		cerr << "not recorded " << endl;
+		// now start from current critter to last, record new checks for later critters
+		for( unsigned int j=cid; j < critters.size(); j++)
+		{
+// 			cerr << " checking distance of " << j << endl;
+			CritterB *f = critters[j];
+			
+			// if the first head is within range, draw critters bodyparts and if not same critter, draw head.
+			if ( c->critterID == f->critterID || cposi.distance( f->body.mouths[0]->ghostObject->getWorldTransform().getOrigin() ) < sightrange )
+			{
+				//draw bodies if within range
+				for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
+				{
+					const btDefaultMotionState* fmyMotionState = static_cast<const btDefaultMotionState*>(f->body.bodyparts[b]->body->getMotionState());
+
+					fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(drawposition);
+					glPushMatrix(); 
+					glMultMatrixf(drawposition);
+
+							glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
+
+							btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape)->getHalfExtentsWithMargin();
+							glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
+
+							Displaylists::Instance()->call(0);
+
+					glPopMatrix();
+				}
+				//draw heads if within range, and not itself
+				if ( c->critterID != f->critterID )
+				{
+					// record for future distance checks
+					f->crittersWithinRange.push_back(cid);
+// 					cerr << "recording " << cid << " in " << j << endl;
+					
+					for( unsigned int b=0; b < f->body.mouths.size(); b++)
+					{
+						f->body.mouths[b]->ghostObject->getWorldTransform().getOpenGLMatrix(drawposition);
+						
+						glPushMatrix(); 
+						glMultMatrixf(drawposition);
+
+								glColor4f( 1.0f, 0.0f, 0.0f, 0.0f );
+
+								btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.mouths[b]->shape)->getHalfExtentsWithMargin();
+								glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
+
+								Displaylists::Instance()->call(1);
+
+						glPopMatrix();
+					}
+				}
+
+			}
+
 		}
 	}
 }

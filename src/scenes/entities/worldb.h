@@ -81,6 +81,7 @@ class WorldB
 		void			drawWithoutFaces();
 		
 		void			drawWithinCritterSight(CritterB *c);
+		void			drawWithinCritterSight(unsigned int cid);
 
 		void			startfoodamount(unsigned int amount);
 
@@ -191,6 +192,7 @@ class WorldB
 
 		// vision opts
 		unsigned int picwidth;
+		btScalar drawposition[16];
 		
 		btManifoldArray   manifoldArray;
 
