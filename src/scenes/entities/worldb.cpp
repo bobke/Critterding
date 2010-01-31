@@ -1201,9 +1201,12 @@ void WorldB::spawnBrainBodyMutantSelectedCritter()
 void WorldB::feedSelectedCritter()
 {
 	CritterB* c = critters[findSelectedCritterID()];
-	float max_currentDiff = (float)settings->getCVar("critter_startenergy") - c->energyLevel;
-	c->energyLevel += max_currentDiff;
-	freeEnergy -= max_currentDiff;
+	if ( c->energyLevel < settings->getCVar("critter_startenergy") )
+	{
+		float max_currentDiff = (float)settings->getCVar("critter_startenergy") - c->energyLevel;
+		c->energyLevel += max_currentDiff;
+		freeEnergy -= max_currentDiff;
+	}
 }
 
 void WorldB::resetageSelectedCritter()
