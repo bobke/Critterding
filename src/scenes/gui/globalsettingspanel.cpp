@@ -3,7 +3,7 @@
 Globalsettingspanel::Globalsettingspanel()
 {
 	v_width = 340;
-	v_height = 364;
+	v_height = 376;
 
 	isMovable = true;
 
@@ -43,6 +43,7 @@ Globalsettingspanel::Globalsettingspanel()
 	vspace += vint; addSettingmutator("killhalf_decrenergypct", hspace, vspace);
 	vspace += vint; addSettingmutator("killhalf_incrworldsizeX", hspace, vspace);
 	vspace += vint; addSettingmutator("killhalf_incrworldsizeY", hspace, vspace);
+	vspace += vint; addSettingmutator("killhalf_decrmaxlifetimepct", hspace, vspace);
 
 // 	vspace += vint;
 	vspace += vint; addSettingmutator("food_maxlifetime", hspace, vspace);

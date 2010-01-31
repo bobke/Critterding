@@ -25,6 +25,7 @@ Settings::Settings()
 	registerCVar("killhalf_decrenergypct",					1, 0, 100, false, "decrease energy by n percent when killhalfat triggers");
 	registerCVar("killhalf_incrworldsizeX",					0, 0, 100, false, "increase worldsizeX by n when killhalfat triggers");
 	registerCVar("killhalf_incrworldsizeY",					0, 0, 100, false, "increase worldsizeY by n when killhalfat triggers");
+	registerCVar("killhalf_decrmaxlifetimepct",				0, 0, 100, false, "decrease critter_maxlifetime by n when killhalfat triggers");
 
 	registerCVar("energy",							400, 0, 1000000, false, "energy in the system by number of food cubes");
 	registerCVar("mincritters",						10, 0, 1000, false, "minimum number of critters");
