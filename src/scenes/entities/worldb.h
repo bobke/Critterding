@@ -38,7 +38,7 @@ class WorldB
 		virtual void		init();
 		virtual void		process();
 		virtual btVector3	findPosition();
-		virtual			void makeFloor();
+		virtual		void makeFloor();
 		float			insertHight;
 		void			getGeneralStats();
 		void			killHalf();
@@ -77,11 +77,14 @@ class WorldB
 		float			freeEnergy;
 		//float			freeEnergyInfo;
 
-		void			drawWithGrid();
-		void			drawWithoutFaces();
+		virtual void		drawWithGrid();
+		virtual void		drawWithoutFaces();
 		
 		void			drawWithinCritterSight(CritterB *c);
 		void			drawWithinCritterSight(unsigned int cid);
+
+		virtual void		drawfloor();
+		virtual void		childPositionOffset(btVector3* v);
 
 		void			startfoodamount(unsigned int amount);
 

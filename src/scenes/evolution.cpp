@@ -13,7 +13,7 @@ Evolution::Evolution()
 		world = new WorldRace();
 	else if ( settings->getCVar("testworld") == 1 )
 	{
-		world = new TestWorld1();
+		world = new TestWorld2();
 // 		cerr << "test world yeah" << endl;
 	}
 	else

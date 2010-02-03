@@ -225,6 +225,11 @@ void WorldB::process()
 
 }
 
+void WorldB::childPositionOffset(btVector3* v)
+{
+	v->setY(insertHight);
+}
+
 void WorldB::procreate( CritterB* c )
 {
 	if ( c->procreate && c->canProcreate )
@@ -241,7 +246,10 @@ void WorldB::procreate( CritterB* c )
 		btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
 
 		// position offset
-		np.setY(insertHight);
+		childPositionOffset(&np);
+// 		np.setY(insertHight);
+
+
 // 		if ( np.getX() > settings->getCVar("worldsizeX")/2 )
 // 			np.setX(np.getX()-1.0f);
 // 		else
@@ -800,37 +808,34 @@ void WorldB::grabVision()
 
 void WorldB::drawWithoutFaces()
 {
- 	for( unsigned int i=0; i < critters.size(); i++)
+	drawfloor();
+
+	for( unsigned int i=0; i < critters.size(); i++)
 		critters[i]->draw(false);
 
 	for( unsigned int i=0; i < food.size(); i++)
 		food[i]->draw();
-
-	for( unsigned int i=0; i < walls.size(); i++)
-		walls[i]->draw();
-
-	// draw floor
-// 	grid.draw();
 }
 
 
 void WorldB::drawWithGrid()
 {
+	drawfloor();
+
 	for( unsigned int i=0; i < critters.size(); i++)
 		critters[i]->draw(true);
 
 	for( unsigned int i=0; i < food.size(); i++)
 		food[i]->draw();
 
-	for( unsigned int i=0; i < walls.size(); i++)
-		walls[i]->draw();
-
 // 	m_dynamicsWorld->debugDrawWorld();
-
-	// draw floor
-// 	grid.draw();
 }
 
+void WorldB::drawfloor()
+{
+	for( unsigned int i=0; i < walls.size(); i++)
+		walls[i]->draw();
+}
 
 void WorldB::drawWithinCritterSight(CritterB *c)
 {
@@ -842,8 +847,7 @@ void WorldB::drawWithinCritterSight(CritterB *c)
 		// draw everything in it's sight
 		float sightrange = (float)*critter_sightrange/10;
 
-		for( unsigned int i=0; i < walls.size(); i++)
-			walls[i]->draw();
+		drawfloor();
 
 		for( unsigned int i=0; i < food.size(); i++)
 		{
@@ -914,8 +918,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 		// draw everything in it's sight
 		float sightrange = (float)*critter_sightrange/10;
 
-		for( unsigned int i=0; i < walls.size(); i++)
-			walls[i]->draw();
+		drawfloor();
 
 		for( unsigned int i=0; i < food.size(); i++)
 		{
