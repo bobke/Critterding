@@ -10,7 +10,7 @@
 #include "../utils/events.h"
 #include "entities/worldb.h"
 #include "modes/race.h"
-#include "modes/testworld1.h"
+#include "modes/testworld2.h"
 
 // #include <sstream>
 // #include <stdio.h>
