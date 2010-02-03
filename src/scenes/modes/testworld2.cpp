@@ -21,6 +21,8 @@ void TestWorld2::init()
 	fixedGround->setWorldTransform(groundTransform);
 	m_dynamicsWorld->addCollisionObject(fixedGround);
 	
+	if ( settings->getCVar("autoload") )
+		loadAllCritters();
 }
 
 void TestWorld2::process()
