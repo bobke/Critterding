@@ -76,7 +76,11 @@ void TestWorld2::drawWithGrid()
 	glPushMatrix(); 
 		glTranslatef(0,0,0);
 		glColor4f( 0.3f, 0.2f, 0.1f, 1.0f );
-		drawSphere(settings->getCVar("worldsizeX"), settings->getCVar("worldsizeX")*2, settings->getCVar("worldsizeX")*2) ;
+		drawSphere(
+			settings->getCVar("worldsizeX"),
+			(12.56637*settings->getCVar("worldsizeX") / 6),
+			(12.56637*settings->getCVar("worldsizeX") / 3)
+		);
 	glPopMatrix(); 
 
 	for( unsigned int i=0; i < critters.size(); i++)
@@ -104,7 +108,11 @@ void TestWorld2::drawfloor()
 	glPushMatrix(); 
 		glTranslatef(0,0,0);
 		glColor4f( 0.3f, 0.2f, 0.1f, 1.0f );
-		drawSphere(settings->getCVar("worldsizeX"), settings->getCVar("worldsizeX")*2, settings->getCVar("worldsizeX")*2) ;
+		drawSphere(
+			settings->getCVar("worldsizeX"),
+			(12.56637*settings->getCVar("worldsizeX") / 12),
+			(12.56637*settings->getCVar("worldsizeX") / 6)
+		);
 	glPopMatrix(); 
 }
 
