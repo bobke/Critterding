@@ -1191,7 +1191,7 @@ void WorldB::duplicateCritter(unsigned int cid, bool brainmutant, bool bodymutan
 	btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
 
 	// position offset
-	np.setY(insertHight);
+	childPositionOffset(&np);
 
 	CritterB *nc = new CritterB(*critters[cid], currentCritterID++, np, brainmutant, bodymutant);
 
