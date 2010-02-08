@@ -10,7 +10,7 @@ Mouth::Mouth(btDynamicsWorld* ownerWorld, void* owner, const btVector3& dimensio
 		if (weight != 0.f) // weight of non zero = dynamic
 			shape->calculateLocalInertia(weight,localInertia);
 
-		btDefaultMotionState* myMotionState = new btDefaultMotionState(offset*transform);
+		myMotionState = new btDefaultMotionState(offset*transform);
 		
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(weight,myMotionState,shape,localInertia);
 		body = new btRigidBody(rbInfo);

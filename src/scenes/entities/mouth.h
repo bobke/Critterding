@@ -20,8 +20,9 @@ public:
 	void				updateGhostObjectPosition();
 	void				connectMouthAndBody();
 
+	btDefaultMotionState*		myMotionState;
+
 private:
 	btDynamicsWorld* 		m_ownerWorld;
-	btDefaultMotionState*		myMotionState;
 };
 #endif

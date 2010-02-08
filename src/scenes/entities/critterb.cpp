@@ -250,9 +250,7 @@ void CritterB::draw(bool drawFaces)
 {
 	for( unsigned int j=0; j < body.bodyparts.size(); j++)
 	{
-		btRigidBody* bodypart = body.bodyparts[j]->body;
-		btDefaultMotionState* myMotionState = (btDefaultMotionState*)bodypart->getMotionState();
-		myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
+		body.bodyparts[j]->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
 
 		glPushMatrix(); 
 		glMultMatrixf(position);
@@ -262,9 +260,6 @@ void CritterB::draw(bool drawFaces)
 			else
 				glColor4f( color[0], color[1], color[2], 0.0f );
 
-// 				const btCapsuleShape* capsuleShape = static_cast<const btCapsuleShape*>(body->bodyparts[j]->shape);
-// 				btScalar radius = capsuleShape->getRadius();
-//  				glScaled(radius, capsuleShape->getHalfHeight(), radius);
 				const btBoxShape* boxShape = static_cast<const btBoxShape*>(body.bodyparts[j]->shape);
 				btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
 				glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
@@ -292,28 +287,6 @@ void CritterB::draw(bool drawFaces)
 			glPopMatrix();
 		}
 	}
-/*	for( unsigned int j=0; j < body->mouths.size(); j++)
-	{
-		btRigidBody* bodypart = body->mouths[j]->body;
-		btDefaultMotionState* myMotionState = (btDefaultMotionState*)bodypart->getMotionState();
-		myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
-
-		glPushMatrix(); 
-		glMultMatrixf(position);
-
-			if ( settings->colormode == 0 )
-				glColor4f( color[0], color[1], color[2], 0.0f );
-			else if ( settings->colormode == 1 )
-				glColor4f( speciescolor[0], speciescolor[1], speciescolor[2], 0.0f );
-
-				const btBoxShape* boxShape = static_cast<const btBoxShape*>(body->mouths[j]->shape);
-				btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
-				glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
-
-				Displaylists::Instance()->call(0);
-
-		glPopMatrix();
-	}*/
 }
 
 void CritterB::process()
@@ -665,9 +638,6 @@ string CritterB::saveCritterB()
 		glLoadIdentity();
 		glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, (float)*critter_sightrange/10);
 
-// 		btScalar position[16];
-// 		btDefaultMotionState* myMotionState = (btDefaultMotionState*)body.mouths[0]->body->getMotionState();
-// 		btTransform tr = myMotionState->m_graphicsWorldTrans.inverse();
 		body.mouths[0]->ghostObject->getWorldTransform().inverse().getOpenGLMatrix(position);
 		glMultMatrixf(position);
 
