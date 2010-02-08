@@ -63,7 +63,7 @@ void GLWindow::create(const char* title, int width, int height)
 	else
 		surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_RESIZABLE );
 
-	cerr << "SDL: subsystem initalized\n";
+	cerr << "SDL: subsystem initialized\n";
 // 	cerr << "Video " << front.width() << "x" << front.height() << "x" << int(front.getSurface()->format->BitsPerPixel) << "\n";
 // 	cerr << "Render Mode: " <<  ((hwaccel) ? "Direct Rendering" : "Software Rendering")   << "\n";
 // 	cerr << "Hardware Blit Acceleration: " << ((vidInfo->blit_hw) ? "Yes": "No") << "\n";
