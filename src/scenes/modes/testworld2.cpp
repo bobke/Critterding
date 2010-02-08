@@ -8,16 +8,14 @@ void TestWorld2::init()
 {
 	//makeFloor();
 
-	btCollisionShape* world = new btSphereShape(btScalar( settings->getCVar("worldsizeX") ));
-
-	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin( btVector3(0,0,0) );
 
-	btCollisionObject* fixedGround;
+	groundShape = new btSphereShape(btScalar( *worldsizeX ));
+	
 	fixedGround = new btCollisionObject();
 	fixedGround->setUserPointer(this);
-	fixedGround->setCollisionShape(world);
+	fixedGround->setCollisionShape(groundShape);
 	fixedGround->setWorldTransform(groundTransform);
 	m_dynamicsWorld->addCollisionObject(fixedGround);
 	
@@ -71,6 +69,22 @@ void TestWorld2::process()
 		procreate(c);
 	}
 }
+
+void TestWorld2::makeFloor()
+{
+	m_dynamicsWorld->removeCollisionObject(fixedGround);
+	delete groundShape;
+	delete fixedGround;
+
+	groundShape = new btSphereShape(btScalar( *worldsizeX ));
+	
+	fixedGround = new btCollisionObject();
+	fixedGround->setUserPointer(this);
+	fixedGround->setCollisionShape(groundShape);
+	fixedGround->setWorldTransform(groundTransform);
+	m_dynamicsWorld->addCollisionObject(fixedGround);
+}
+
 
 void TestWorld2::drawWithGrid()
 {
@@ -146,4 +160,7 @@ void TestWorld2::drawSphere(btScalar radius, int lats, int longs)
 
 TestWorld2::~TestWorld2()
 {
+	m_dynamicsWorld->removeCollisionObject(fixedGround);
+	delete groundShape;
+	delete fixedGround;
 }

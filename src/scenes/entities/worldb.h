@@ -128,6 +128,7 @@ class WorldB
 		const unsigned int*	retinasperrow;
 		const unsigned int*	critter_retinasize;
 		const unsigned int*	critter_maxenergy;
+		const unsigned int*	worldsizeX;
 
 		void			checkCollisions( CritterB* c );
 
@@ -184,16 +185,33 @@ class WorldB
 		inline void		createDirs();
 
 		// Settings pointers.. performance
+		const unsigned int*	headless;
+
 		const unsigned int*	critter_maxlifetime;
 		const unsigned int*	critter_autosaveinterval;
 		const unsigned int*	critter_autoexchangeinterval;
 		const unsigned int*	critter_killhalfat;
 		const unsigned int*	critter_sightrange;
 		const unsigned int*	critter_raycastvision;
+		const unsigned int*	critter_enableomnivores;
+
+		const unsigned int*	brain_mutationrate;
+		const unsigned int*	body_mutationrate;
+
+		const unsigned int*	killhalf_decrenergypct;
+		const unsigned int*	killhalf_incrworldsizeX;
+		const unsigned int*	killhalf_incrworldsizeY;
+		const unsigned int*	killhalf_decrmaxlifetimepct;
 
 		const unsigned int*	food_maxlifetime;
 		const unsigned int*	food_maxenergy;
 		const unsigned int*	energy;
+		const unsigned int*	mincritters;
+		const unsigned int*	insertcritterevery;
+		const unsigned int*	worldsizeY;
+
+		const unsigned int*	critter_startenergy;
+
 
 		// vision opts
 		unsigned int picwidth;
