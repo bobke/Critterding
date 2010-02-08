@@ -261,8 +261,7 @@ void WorldB::procreate( CritterB* c )
 		if ( randgen->Instance()->get(1,100) <= *body_mutationrate )
 			bodymutant = true;
 
-		btDefaultMotionState* myMotionState = (btDefaultMotionState*)c->body.bodyparts[0]->body->getMotionState();
-		btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
+		btVector3 np = c->body.bodyparts[0]->myMotionState->m_graphicsWorldTrans.getOrigin();
 
 		// position offset
 		childPositionOffset(&np);
@@ -553,8 +552,7 @@ void WorldB::expireCritters()
 		// die if y < 100
 		else
 		{
-			btDefaultMotionState* myMotionState = (btDefaultMotionState*)critters[i]->body.bodyparts[0]->body->getMotionState();
-			btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
+			btVector3 pos = critters[i]->body.bodyparts[0]->myMotionState->m_graphicsWorldTrans.getOrigin();
 			
 			if ( pos.getY() < -100.0f )
 			{
@@ -860,8 +858,7 @@ void WorldB::drawWithinCritterSight(CritterB *c)
 {
 	if ( c->body.mouths.size() > 0 )
 	{
-		btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)c->body.mouths[0]->body->getMotionState();
-		btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
+		btVector3 cposi = c->body.mouths[0]->myMotionState->m_graphicsWorldTrans.getOrigin();
 
 		// draw everything in it's sight
 		float sightrange = (float)*critter_sightrange/10;
@@ -880,10 +877,9 @@ void WorldB::drawWithinCritterSight(CritterB *c)
 			CritterB *f = critters[j];
 			for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
 			{
-				const btDefaultMotionState* fmyMotionState = static_cast<const btDefaultMotionState*>(f->body.bodyparts[b]->body->getMotionState());
-				if ( cposi.distance( fmyMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
+				if ( cposi.distance( f->body.bodyparts[b]->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
 				{
-					fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(drawposition);
+					f->body.bodyparts[b]->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(drawposition);
 					glPushMatrix(); 
 					glMultMatrixf(drawposition);
 
@@ -931,8 +927,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 	if ( c->body.mouths.size() > 0 )
 	{
 // 		cerr << endl << "run " << cid << endl;
-		btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)c->body.mouths[0]->body->getMotionState();
-		btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
+		btVector3 cposi = c->body.mouths[0]->myMotionState->m_graphicsWorldTrans.getOrigin();
 
 		// draw everything in it's sight
 		float sightrange = (float)*critter_sightrange/10;
@@ -945,8 +940,8 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 			if ( cposi.distance( f->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
 				f->draw();
 		}
-
 // 		cerr << "prerecorded " << c->crittersWithinRange.size() <<  endl;
+
 		// first process prechecked crittersWithinRange vector
 		for( unsigned int p=0; p < c->crittersWithinRange.size(); p++)
 		{
@@ -955,9 +950,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 
 			for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
 			{
-				const btDefaultMotionState* fmyMotionState = static_cast<const btDefaultMotionState*>(f->body.bodyparts[b]->body->getMotionState());
-
-				fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(drawposition);
+				f->body.bodyparts[b]->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(drawposition);
 				glPushMatrix(); 
 				glMultMatrixf(drawposition);
 
@@ -1004,9 +997,8 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 				//draw bodies if within range
 				for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
 				{
-					const btDefaultMotionState* fmyMotionState = static_cast<const btDefaultMotionState*>(f->body.bodyparts[b]->body->getMotionState());
-
-					fmyMotionState->m_graphicsWorldTrans.getOpenGLMatrix(drawposition);
+					f->body.bodyparts[b]->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(drawposition);
+					
 					glPushMatrix(); 
 					glMultMatrixf(drawposition);
 
@@ -1206,8 +1198,7 @@ void WorldB::removeAllSelectedCritters()
 
 void WorldB::duplicateCritter(unsigned int cid, bool brainmutant, bool bodymutant)
 {
-	btDefaultMotionState* myMotionState = (btDefaultMotionState*)critters[cid]->body.bodyparts[0]->body->getMotionState();
-	btVector3 np = myMotionState->m_graphicsWorldTrans.getOrigin();
+	btVector3 np = critters[cid]->body.bodyparts[0]->myMotionState->m_graphicsWorldTrans.getOrigin();
 
 	// position offset
 	childPositionOffset(&np);

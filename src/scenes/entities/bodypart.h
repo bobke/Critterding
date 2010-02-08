@@ -14,6 +14,9 @@ class Bodypart
 
 		btRigidBody* 		body;
 		btCollisionShape* 	shape;
+
+		btDefaultMotionState*	myMotionState;
+
 	private:
 		btDynamicsWorld* 	m_ownerWorld;
 

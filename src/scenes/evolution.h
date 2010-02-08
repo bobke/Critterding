@@ -63,6 +63,8 @@ class Evolution : public GLScene {
 		
 		// events
 		void		handleEvents();
+		
+// 		float lightwaveFrame;
 };
 
 #endif

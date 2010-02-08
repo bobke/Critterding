@@ -3,6 +3,8 @@
 #endif
 #include "evolution.h"
 
+# include <math.h>
+
 Evolution::Evolution()
 {
 	cmd = Commands::Instance();
@@ -95,6 +97,8 @@ Evolution::Evolution()
 	oldy = 0;
 
 	world->init();
+	
+// 	lightwaveFrame = 0;
 }
 
 void Evolution::draw()
@@ -119,7 +123,14 @@ void Evolution::draw()
 		GLfloat ambientLight[] = {0.6f, 0.6f, 0.6f, 0.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 // 		GLfloat lightColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+
+/*		lightwaveFrame+=0.001f;
+		if (lightwaveFrame >=3.1415 )
+			lightwaveFrame = 0;
+		float lightwaveFrameSine = sin(lightwaveFrame)  * 0.2f;
+		GLfloat lightColor[] = { lightwaveFrameSine, lightwaveFrameSine, lightwaveFrameSine, 0.0f };*/
 		GLfloat lightColor[] = { 0.04f, 0.04f, 0.04f, 0.0f };
+
 		GLfloat lightPos[] = { 0.5f*settings->getCVar("worldsizeX"), 50.0f, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
 // 		GLfloat lightPos1[] = { 0.0f, 20.0f, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
 // 		GLfloat lightPos2[] = { settings->getCVar("worldsizeX")+1.0f, 20, 0.5f*settings->getCVar("worldsizeY"), 1.0f };

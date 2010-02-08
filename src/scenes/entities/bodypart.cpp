@@ -10,7 +10,7 @@ Bodypart::Bodypart(btDynamicsWorld* ownerWorld, void* owner, const btVector3& di
 	if (weight != 0.f) // weight of non zero = dynamic
 		shape->calculateLocalInertia(weight,localInertia);
 
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(offset*transform);
+	myMotionState = new btDefaultMotionState(offset*transform);
 	
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(weight,myMotionState,shape,localInertia);
 	body = new btRigidBody(rbInfo);
@@ -21,7 +21,6 @@ Bodypart::Bodypart(btDynamicsWorld* ownerWorld, void* owner, const btVector3& di
 	body->setSleepingThresholds(1.6, 2.5);
 
 	m_ownerWorld->addRigidBody(body);
-
 }
 
 Bodypart::~Bodypart()
