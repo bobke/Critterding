@@ -17,7 +17,7 @@ class Sleeper
 	private:
 		Timer *t;
 		bool		active;
-		unsigned int	optimal;
+		const unsigned int*	optimal;
 		unsigned int	stepsize;
 		unsigned int	sleeptime;
 		float		cps;

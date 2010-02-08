@@ -9,10 +9,10 @@ Sleeper::Sleeper()
 	t = Timer::Instance();
 
 	active		= false;
-	optimal		= 30;
+	optimal		= Settings::Instance()->getCVarPtr("fpslimit");
 	stepsize	= 500;
 	sleeptime	= 10000;
-	cps		= optimal;
+	cps		= *optimal;
 
 	timeSinceLastRender = 1.0f;
 }
@@ -25,8 +25,8 @@ void Sleeper::mark()
 		else cps = t->bullet_ms;
 	
 // 		if ( cps > optimal ) sleeptime += stepsize;
-		if ( cps > settings->getCVar("fpslimit") ) sleeptime += stepsize;
-		else if ( cps < settings->getCVar("fpslimit") )
+		if ( cps > *optimal ) sleeptime += stepsize;
+		else if ( cps < *optimal )
 		{
 			if ( sleeptime >= stepsize )	sleeptime -= stepsize;
 			else 				sleeptime = 0;
