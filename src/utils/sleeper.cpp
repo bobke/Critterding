@@ -24,7 +24,6 @@ void Sleeper::mark()
 		if ( t->elapsed == 0 ) cps = 0;
 		else cps = t->bullet_ms;
 	
-// 		if ( cps > optimal ) sleeptime += stepsize;
 		if ( cps > *optimal ) sleeptime += stepsize;
 		else if ( cps < *optimal )
 		{
