@@ -42,7 +42,7 @@ Settings::Settings()
 	registerCVar("critter_maxlifetime",					40000, 1, 1000000, false, "maximum number of frames a critter lives");
 	registerCVar("critter_maxenergy",					5000, 1, 1000000, false, "maximum amount of energy a critter has");
 
-	registerCVar("critter_startenergy",					3000, 1, 1000000, false, "energy a new critter starts with");
+	registerCVar("critter_startenergy",					3000, 1, 1000000, false, "energy a new critter (adam) starts with");
 	registerCVar("critter_procinterval",					20, 1, 1000000, false, "minimum frames between procreations");
 	registerCVar("critter_minenergyproc",					3000, 1, 1000000, false, "energy a critters needs to procreate");
 	registerCVar("critter_sightrange",					70, 1, 1000000, false, "distance a critter can see (10 = 1 worldsize)");
@@ -151,6 +151,8 @@ Settings::Settings()
 
 	info_totalBodyparts = 0;
 	info_totalWeight = 0;
+
+	dirlayout = Dirlayout::Instance();
 	
 	createHelpInfo();
 }
@@ -383,12 +385,21 @@ void Settings::loadProfile(char* filename)
 
 void Settings::saveProfile()
 {
-	stringstream buf;
+	string fulldir;
+	fulldir = dirlayout->savedir;
+	fulldir.append("/");
+	fulldir.append(profileName);
 
+	if ( !dirH.exists(fulldir) )		dirH.make(fulldir);
+
+	stringstream filename;
+	filename << fulldir << "/" << profileName;
+
+	stringstream buf;
 	for( cvarit = cvarlist.begin(); cvarit != cvarlist.end(); cvarit++ )
 		buf << cvarit->first << " " << cvarit->second->int_val << endl;
 
-	fileH.save(profileName, buf.str());
+	fileH.save(filename.str(), buf.str());
 }
 
 void Settings::doCommandLineOptions(int argc, char *argv[])

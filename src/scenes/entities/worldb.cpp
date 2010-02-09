@@ -20,7 +20,6 @@ WorldB::WorldB()
 		critter_enableomnivores = settings->getCVarPtr("critter_enableomnivores");
 		critter_startenergy = settings->getCVarPtr("critter_startenergy");
 
-
 		killhalf_decrenergypct = settings->getCVarPtr("killhalf_decrenergypct");
 		killhalf_incrworldsizeX = settings->getCVarPtr("killhalf_incrworldsizeX");
 		killhalf_incrworldsizeY = settings->getCVarPtr("killhalf_incrworldsizeY");
@@ -37,12 +36,12 @@ WorldB::WorldB()
 		insertcritterevery = settings->getCVarPtr("insertcritterevery");
 		worldsizeX = settings->getCVarPtr("worldsizeX");
 		worldsizeY = settings->getCVarPtr("worldsizeY");
-		
-		
-		
+
 
 	statsBuffer = Statsbuffer::Instance();
 	critterselection = Critterselection::Instance();
+	// home & program directory
+	dirlayout = Dirlayout::Instance();
 
 	freeEnergy = *food_maxenergy * *energy;
 		
@@ -56,9 +55,6 @@ WorldB::WorldB()
 	items = 4 * 800 * 600;
 	retina = (unsigned char*)malloc(items);
 	memset(retina, 0, items);
-
-	// home & program directory
-	createDirs();
 
 	m_collisionConfiguration = new btDefaultCollisionConfiguration();
 
@@ -104,9 +100,6 @@ WorldB::WorldB()
 void WorldB::init()
 {
 	makeFloor();
-
-// 	// reset cam
-// 		resetCamera();
 
 	if ( settings->getCVar("autoload") )
 		loadAllCritters();
@@ -422,7 +415,7 @@ void WorldB::autoexchangeCritters()
 
 			// determine exchange directory
 			stringstream buf;
-			buf << savedir << "/exchange";
+			buf << dirlayout->savedir << "/exchange";
 			string exchangedir = buf.str();
 			
 			// save or load? :)
@@ -491,7 +484,7 @@ void WorldB::autoexchangeCritters()
 				string filename = buf.str();
 
 				// makde dirs
-				if ( !dirH.exists(savedir) )		dirH.make(savedir);
+				if ( !dirH.exists(dirlayout->savedir) )		dirH.make(dirlayout->savedir);
 				if ( !dirH.exists(exchangedir) )	dirH.make(exchangedir);
 
 				// save critter
@@ -596,8 +589,7 @@ void WorldB::expireFood()
 /*		// die if y < 100
 		else
 		{
-			btDefaultMotionState* myMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
-			btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
+			btVector3 pos = food[i]->body.bodyparts[0]->myMotionState->m_graphicsWorldTrans.getOrigin();
 
 			if ( pos.getY() < -100.0f )
 			{
@@ -1045,7 +1037,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 void WorldB::loadAllCritters()
 {
 	vector<string> files;
-	dirH.listContentsFull(loaddir, files);
+	dirH.listContentsFull(dirlayout->loaddir, files);
 
 	for ( unsigned int i = 0; i < files.size(); i++ )
 	{
@@ -1088,7 +1080,7 @@ void WorldB::loadAllCritters()
 		}
 	}
 	stringstream buf;
-	buf << "Loaded critters from " << loaddir;
+	buf << "Loaded critters from " << dirlayout->loaddir;
 	Logbuffer::Instance()->add(buf);
 	//cerr << endl << "Loaded critters from " << loaddir << endl << endl;
 }
@@ -1097,14 +1089,14 @@ void WorldB::saveAllCritters()
 {
 	// determine save directory
 	stringstream buf;
-	buf << savedir << "/" << settings->profileName;
+	buf << dirlayout->savedir << "/" << settings->profileName;
 	string subprofiledir = buf.str();
 	
 	buf << "/" << time(0);
 	string subsavedir = buf.str();
 
 	// makde dirs
-	if ( !dirH.exists(savedir) )		dirH.make(savedir);
+	if ( !dirH.exists(dirlayout->savedir) )		dirH.make(dirlayout->savedir);
 	if ( !dirH.exists(subprofiledir) )	dirH.make(subprofiledir);
 	if ( !dirH.exists(subsavedir) )		dirH.make(subsavedir);
 
@@ -1124,34 +1116,6 @@ void WorldB::saveAllCritters()
 
 }
 
-void WorldB::createDirs()
-{
-#ifndef _WIN32
- 	homedir = getenv("HOME");
- 	if ( homedir.empty() ) {
-		cout << "environment variable HOME not defined/detected" << endl;
-		exit(0);
-	}
-	progdir = homedir;	progdir.append("/.critterding");
-	savedir = progdir;	savedir.append("/save");
-	loaddir = progdir;	loaddir.append("/load");
-#else
-	char mydoc[256];
-	memset(mydoc, 0, sizeof(mydoc));
-
-	SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, mydoc);
-	homedir.assign(mydoc);
-	progdir = homedir;	progdir.append("\\critterding");
-	savedir = progdir;	savedir.append("\\save");
-	loaddir = progdir;	loaddir.append("\\load");
-#endif
-
-//	cerr << progdir << endl;
-
-	if ( !dirH.exists(progdir) ) dirH.make(progdir);
-	if ( !dirH.exists(loaddir) ) dirH.make(loaddir);
-}
-
 void WorldB::resetCamera()
 {
 	unsigned int biggest = *worldsizeX;
@@ -1168,7 +1132,6 @@ void WorldB::resetCamera()
 }
 
 // selected critter actions
-
 int WorldB::findSelectedCritterID()
 {
 	for ( unsigned int i=0; i < critters.size(); i++ )
