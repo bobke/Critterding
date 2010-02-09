@@ -281,7 +281,7 @@ void WorldRace::loadAllCritters()
 	else
 	{
 		vector<string> files;
-		dirH.listContentsFull(loaddir, files);
+		dirH.listContentsFull(dirlayout->loaddir, files);
 
 		unsigned int inserted = 0;
 		for ( unsigned int i = 0; i < files.size() && inserted < settings->getCVar("mincritters"); i++ )
@@ -325,7 +325,7 @@ void WorldRace::loadAllCritters()
 			}
 		}
 		stringstream buf;
-		buf << "Loaded critters from " << loaddir;
+		buf << "Loaded critters from " << dirlayout->loaddir;
 		Logbuffer::Instance()->add(buf);
 		//cerr << endl << "Loaded critters from " << loaddir << endl << endl;
 	}

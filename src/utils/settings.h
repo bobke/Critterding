@@ -5,9 +5,11 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <string>
 #include "file.h"
 #include "parser.h"
 #include "logbuffer.h"
+#include "dirlayout.h"
 // #include <GL/gl.h>
 
 using namespace std;
@@ -82,7 +84,9 @@ class Settings
 		static Settings* _instance;
 
 		File		fileH;
-		Parser		*parseH;
+		Dir		dirH;
+		Parser*		parseH;
+		Dirlayout*	dirlayout;
 
 		map<string, cvar*> cvarlist;
 		typedef map <string, cvar*>::const_iterator cvarlist_iterator;

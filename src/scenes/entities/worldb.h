@@ -20,6 +20,7 @@
 #include "../../utils/statsbuffer.h"
 #include "../../utils/critterselection.h"
 #include "../../utils/logbuffer.h"
+#include "../../utils/dirlayout.h"
 
 #include "../gui/textverbosemessage.h"
 
@@ -57,6 +58,7 @@ class WorldB
 		Statsbuffer*		statsBuffer;
 		RandGen*		randgen;
 		Mousepicker*		mousepicker;
+		Dirlayout*		dirlayout;
 		Camera camera;
 		void resetCamera();
 
@@ -143,8 +145,6 @@ class WorldB
 		Parser*			parseH;
 		File			fileH;
 
-		string			loaddir;
-
 		bool			mouseRayHit;
 		Entity*			mouseRayHitEntity;
 
@@ -175,14 +175,10 @@ class WorldB
 		unsigned int		insertCritterCounter;
 // 		GLDebugDrawer debugDrawer;
 
-		// FIXME give these a better place.  We also want to know where to save profiles to
-		string			homedir;
-		string			progdir;
-		string			savedir;
 
 		// methods
 		inline void		removeCritter(unsigned int cid);
-		inline void		createDirs();
+// 		inline void		createDirs();
 
 		// Settings pointers.. performance
 		const unsigned int*	headless;
