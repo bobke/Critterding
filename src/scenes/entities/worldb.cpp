@@ -1,7 +1,7 @@
-#ifdef _WIN32
+/*#ifdef _WIN32
 	#include <windows.h>
 	#include <shlobj.h>
-#endif
+#endif*/
 #include "worldb.h"
 
 WorldB::WorldB()
