@@ -1,3 +1,7 @@
+#ifdef _WIN32
+	#include <windows.h>
+	#include <shlobj.h>
+#endif
 #include "dirlayout.h"
 
 Dirlayout* Dirlayout::Instance () 
