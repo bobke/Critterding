@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I../utils/bullet -I/usr/include/freetype2
+INCLUDES = $(all_includes) -I../utils/bullet 
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libgui.la
 noinst_HEADERS =	widget.h \
