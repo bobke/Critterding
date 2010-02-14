@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I./bullet -I/usr/include/freetype2
+INCLUDES = $(all_includes) -I./bullet 
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libutils.la
 noinst_HEADERS =	dir.h \
@@ -41,8 +41,8 @@ libutils_la_SOURCES =	dir.cpp \
 			headless.cpp \
 			dirlayout.cpp
 		      
-libutils_la_LIBADD = $(top_builddir)/src/utils/ftgl/libftgl.la $(top_builddir)/src/utils/bullet/libbulletmath.la $(top_builddir)/src/utils/bullet/libbulletcollision.la \
+libutils_la_LIBADD = @FTGL_LA@ $(top_builddir)/src/utils/bullet/libbulletmath.la $(top_builddir)/src/utils/bullet/libbulletcollision.la \
                      $(top_builddir)/src/utils/bullet/libbulletdynamics.la
 libutils_la_LDFLAGS = -avoid-version -no-undefined
 
-SUBDIRS = ftgl bullet
+SUBDIRS = @FTGL_LOCALDIR@ bullet

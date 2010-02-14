@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I../../utils/bullet -I/usr/include/freetype2
+INCLUDES = $(all_includes) -I../../utils/bullet 
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libentities.la
 noinst_HEADERS = 	camera.h \

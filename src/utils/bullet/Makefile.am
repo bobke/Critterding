@@ -3,13 +3,10 @@ METASOURCES = AUTO
 noinst_LTLIBRARIES = libbulletmath.la libbulletcollision.la libbulletdynamics.la libbulletsoftbody.la
 noinst_HEADERS = btBulletDynamicsCommon.h Bullet-C-Api.h btBulletCollisionCommon.h $(bullet_headers)
 
-#libftgl_la_CPPFLAGS =
 libbulletmath_la_LDFLAGS = -avoid-version -no-undefined
 libbulletcollision_la_LDFLAGS = -avoid-version -no-undefined
 libbulletdynamics_la_LDFLAGS = -avoid-version -no-undefined
 libbulletsoftbody_la_LDFLAGS = -avoid-version -no-undefined
-
-#libftgl_la_LIBADD = -l
 
 libbulletmath_la_SOURCES	= \
 		LinearMath/btQuickprof.cpp \
