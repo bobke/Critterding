@@ -1,21 +1,19 @@
 #ifndef BODY_H
 #define BODY_H
 
-#include "../../utils/timer.h"
-#include "../../utils/randgen.h"
-#include "../../utils/parser.h"
-#include "../../utils/settings.h"
-#include "archbodypart.h"
+// #include "../../utils/timer.h"
+// #include "../../utils/randgen.h"
+// #include "../../utils/parser.h"
+// #include "../../utils/settings.h"
+#include "bodyarch.h"
 #include "bodypart.h"
-#include "archconstraint.h"
 #include "constraint.h"
-#include "archmouth.h"
 #include "mouth.h"
 #include "GL/gl.h"
-#include <cmath>
+// #include <cmath>
 #include <vector>
 #include <iostream>
-#include <sstream>
+// #include <sstream>
 #include "btBulletDynamicsCommon.h"
 
 using namespace std;
@@ -26,8 +24,9 @@ class Body
 		Body();
 		~Body();
 
+		void			wireArch(BodyArch* bodyArch, void* owner, btDynamicsWorld* ownerWorld, const btVector3& startOffset);
 		vector<Bodypart*>	bodyparts;
-		void			addBodyPart_Capsule(void* owner, float width, float height, float weight, btTransform& offset, btTransform& transform);
+// 		void			addBodyPart_Capsule(void* owner, float width, float height, float weight, btTransform& offset, btTransform& transform);
 		void			addBodyPart_Box(void* owner, float x, float y, float z, float weight, btTransform& offset, btTransform& transform);
 
 		vector<Mouth*>		mouths;
@@ -42,42 +41,8 @@ class Body
 		void 			motorateExpand(unsigned int constraintID);
 		void 			motorateContract(unsigned int constraintID);
 
-		// load save architecture (serialize)
-		void			buildArch();
-		void			setArch(string* content);
-		string*			getArch();
-		void			copyFrom(const Body& otherBody);
-		void			wireArch(void* owner, btDynamicsWorld* ownerWorld, const btVector3& startOffset);
-		void			mutate(unsigned int runs);
-
-		vector<archBodypart>	archBodyparts;
-		vector<archConstraint>	archConstraints;
-		vector<archMouth>	archMouths;
-
 		btDynamicsWorld* 	m_ownerWorld;
 		float			totalWeight;
-
 	private:
-		Parser			*parseH;
-		RandGen			*randgen;
-		Settings		*settings;
-
-		float			bodypartspacer;
-		void			repositiontoConstraints( archBodypart* bp );
-		void			repositiontoConstraints( archMouth* bp );
-		// mutation helpers
-		void			addRandomMouth();
-		void			addRandomBodypart();
-		void			addRandomConstraint(unsigned int connID1, unsigned int connID2, bool isMouth);
-		void			removeBodypart(unsigned int id);
-		void			removeMouth(unsigned int id);
-		void			randomConstraintPosition(archConstraint* co, unsigned int OneOrTwo, unsigned int connID);
-
-		unsigned int		getUniqueBodypartID();
-		unsigned int		getUniqueConstraintID();
-		int			findBodypart(unsigned int id);
-		int			findMouth( unsigned int id );
-
-		string			archBuffer;
 };
 #endif

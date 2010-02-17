@@ -20,4 +20,4 @@ critterding_LDADD =	$(top_builddir)/src/gl/libgl.la \
 # -lGL -lfreetype -lSDL
 # -lBulletDynamics -lBulletCollision -lLinearMath  
 # -lftgl
-critterding_LDFLAGS = -avoid-version -no-undefined
+critterding_LDFLAGS = -avoid-version -no-undefined  -fopenmp

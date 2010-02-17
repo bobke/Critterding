@@ -33,22 +33,38 @@ void TestWorld2::process()
 	autoinsertCritters();
 
 	// adjust gravity vectors of all entities' rigid bodies
-	for( unsigned int j=0; j < food.size(); j++)
+	unsigned int j, b;
+	Food* f;
+	CritterB* bod;
+	btRigidBody* bo;
+	
+	unsigned int biggest = food.size();
+	if ( critters.size() > biggest )
+		biggest = critters.size();
+	
+#pragma omp parallel for private(j, b, f, bod, bo)
+	for ( j=0; j < biggest; j++ )
 	{
-		Food *f = food[j];
-		for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
+// 		for( j=0; j < food.size(); j++)
+		if( j < food.size() )
 		{
-			btRigidBody* bo = f->body.bodyparts[b]->body;
-			bo->setGravity( -(bo->getCenterOfMassPosition().normalized()*10) );
+			f = food[j];
+			for( b=0; b < f->body.bodyparts.size(); b++)
+			{
+				bo = f->body.bodyparts[b]->body;
+				bo->setGravity( -(bo->getCenterOfMassPosition().normalized()*10) );
+			}
 		}
-	}
-	for( unsigned int j=0; j < critters.size(); j++)
-	{
-		CritterB *f = critters[j];
-		for( unsigned int b=0; b < f->body.bodyparts.size(); b++)
+// 		#pragma omp parallel for private(j, b)
+// 		for( j=0; j < critters.size(); j++)
+		if( j < critters.size() )
 		{
-			btRigidBody* bo = f->body.bodyparts[b]->body;
-			bo->setGravity( -(bo->getCenterOfMassPosition().normalized()*10) );
+			bod = critters[j];
+			for( b=0; b < bod->body.bodyparts.size(); b++)
+			{
+				bo = bod->body.bodyparts[b]->body;
+				bo->setGravity( -(bo->getCenterOfMassPosition().normalized()*10) );
+			}
 		}
 	}
 	
@@ -57,12 +73,20 @@ void TestWorld2::process()
 	renderVision();
 	grabVision();
 
-	unsigned int lmax = critters.size();
-	for( unsigned int i=0; i < lmax; i++)
-	{
-		CritterB *c = critters[i];
+	int lmax = (int)critters.size();
 
-		checkCollisions(  c );
+	CritterB *c;
+	int i;
+	for( i=0; i < lmax; i++)
+	{
+		checkCollisions(  critters[i] );
+	}
+
+#pragma omp parallel for private(i, c)
+	for( i=0; i < lmax; i++)
+	{
+		c = critters[i];
+
 		c->process();
 		freeEnergy += c->energyUsed;
 		eat(c);

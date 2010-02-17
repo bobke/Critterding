@@ -4,6 +4,7 @@ void CritterB::initConst()
 {
 	// settings and pointers
 	settings = Settings::Instance();
+	genotypes = Genotypes::Instance();
 	retinasperrow = settings->getCVarPtr("retinasperrow");
 	critter_maxlifetime = settings->getCVarPtr("critter_maxlifetime");
 	critter_maxenergy = settings->getCVarPtr("critter_maxenergy");
@@ -50,57 +51,59 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 // 	lifetime						= settings->critter_maxlifetime;
 	retinasize						= settings->getCVar("critter_retinasize");
 
-	brain.maxNeurons					= settings->getCVar("brain_maxneurons");
-	brain.minSynapses					= settings->getCVar("brain_minsynapses");
-	brain.maxSynapses					= settings->getCVar("brain_maxsynapses");
-	brain.minNeuronsAtBuildtime				= settings->getCVar("brain_minneuronsatbuildtime");
-	brain.maxNeuronsAtBuildtime				= settings->getCVar("brain_maxneuronsatbuildtime");
+	genotype = genotypes->newg();
 
-	brain.minSynapsesAtBuildtime				= settings->getCVar("brain_minsynapsesatbuildtime");
+	genotype->brainzArch->maxNeurons					= settings->getCVar("brain_maxneurons");
+	genotype->brainzArch->minSynapses					= settings->getCVar("brain_minsynapses");
+	genotype->brainzArch->maxSynapses					= settings->getCVar("brain_maxsynapses");
+	genotype->brainzArch->minNeuronsAtBuildtime				= settings->getCVar("brain_minneuronsatbuildtime");
+	genotype->brainzArch->maxNeuronsAtBuildtime				= settings->getCVar("brain_maxneuronsatbuildtime");
+
+	genotype->brainzArch->minSynapsesAtBuildtime				= settings->getCVar("brain_minsynapsesatbuildtime");
 // 		brain.mutate_minSynapsesAtBuildtime		= settings->getCVar("brain_mutate_minsynapsesatbuildtime");
 
-	brain.maxSynapsesAtBuildtime				= settings->getCVar("brain_maxsynapsesatbuildtime");
+	genotype->brainzArch->maxSynapsesAtBuildtime				= settings->getCVar("brain_maxsynapsesatbuildtime");
 // 		brain.mutate_maxSynapsesAtBuildtime		= settings->getCVar("brain_mutate_maxsynapsesatbuildtime");
 
-	brain.percentChanceInhibitoryNeuron			= settings->getCVar("brain_percentchanceinhibitoryneuron");
-		brain.mutate_percentChanceInhibitoryNeuron	= settings->getCVar("brain_mutate_percentchanceinhibitoryneuron");
+	genotype->brainzArch->percentChanceInhibitoryNeuron			= settings->getCVar("brain_percentchanceinhibitoryneuron");
+		genotype->brainzArch->mutate_percentChanceInhibitoryNeuron	= settings->getCVar("brain_mutate_percentchanceinhibitoryneuron");
 
-	brain.percentChanceMotorNeuron				= settings->getCVar("brain_percentchancemotorneuron");
-		brain.mutate_percentChanceMotorNeuron		= settings->getCVar("brain_mutate_percentchancemotorneuron");
+	genotype->brainzArch->percentChanceMotorNeuron				= settings->getCVar("brain_percentchancemotorneuron");
+		genotype->brainzArch->mutate_percentChanceMotorNeuron		= settings->getCVar("brain_mutate_percentchancemotorneuron");
 
-	brain.percentChancePlasticNeuron			= settings->getCVar("brain_percentchanceplasticneuron");
-		brain.mutate_percentChancePlasticNeuron			= settings->getCVar("brain_mutate_percentchanceplasticneuron");
+	genotype->brainzArch->percentChancePlasticNeuron			= settings->getCVar("brain_percentchanceplasticneuron");
+		genotype->brainzArch->mutate_percentChancePlasticNeuron			= settings->getCVar("brain_mutate_percentchanceplasticneuron");
 
-	brain.minPlasticityStrengthen				= settings->getCVar("brain_minplasticitystrengthen");
-	brain.maxPlasticityStrengthen				= settings->getCVar("brain_maxplasticitystrengthen");
-	brain.minPlasticityWeaken				= settings->getCVar("brain_minplasticityweaken");
-	brain.maxPlasticityWeaken				= settings->getCVar("brain_maxplasticityweaken");
-		brain.mutate_PlasticityFactors				= settings->getCVar("brain_mutate_plasticityfactors");
+	genotype->brainzArch->minPlasticityStrengthen				= settings->getCVar("brain_minplasticitystrengthen");
+	genotype->brainzArch->maxPlasticityStrengthen				= settings->getCVar("brain_maxplasticitystrengthen");
+	genotype->brainzArch->minPlasticityWeaken				= settings->getCVar("brain_minplasticityweaken");
+	genotype->brainzArch->maxPlasticityWeaken				= settings->getCVar("brain_maxplasticityweaken");
+		genotype->brainzArch->mutate_PlasticityFactors				= settings->getCVar("brain_mutate_plasticityfactors");
 
-	brain.minFiringThreshold				= settings->getCVar("brain_minfiringthreshold");
-		brain.mutate_minFiringThreshold				= settings->getCVar("brain_mutate_minfiringthreshold");
+	genotype->brainzArch->minFiringThreshold				= settings->getCVar("brain_minfiringthreshold");
+		genotype->brainzArch->mutate_minFiringThreshold				= settings->getCVar("brain_mutate_minfiringthreshold");
 
-	brain.maxFiringThreshold				= settings->getCVar("brain_maxfiringthreshold");
-		brain.mutate_maxFiringThreshold				= settings->getCVar("brain_mutate_maxfiringthreshold");
+	genotype->brainzArch->maxFiringThreshold				= settings->getCVar("brain_maxfiringthreshold");
+		genotype->brainzArch->mutate_maxFiringThreshold				= settings->getCVar("brain_mutate_maxfiringthreshold");
 
-	brain.maxDendridicBranches				= settings->getCVar("brain_maxdendridicbranches");
-		brain.mutate_maxDendridicBranches		= settings->getCVar("brain_mutate_maxdendridicbranches");
+	genotype->brainzArch->maxDendridicBranches				= settings->getCVar("brain_maxdendridicbranches");
+		genotype->brainzArch->mutate_maxDendridicBranches		= settings->getCVar("brain_mutate_maxdendridicbranches");
 
-	brain.percentChanceConsistentSynapses			= settings->getCVar("brain_percentchanceconsistentsynapses");
-		brain.mutate_percentChanceConsistentSynapses		= settings->getCVar("brain_mutate_percentchanceconsistentsynapses");
+	genotype->brainzArch->percentChanceConsistentSynapses			= settings->getCVar("brain_percentchanceconsistentsynapses");
+		genotype->brainzArch->mutate_percentChanceConsistentSynapses		= settings->getCVar("brain_mutate_percentchanceconsistentsynapses");
 
-	brain.percentChanceInhibitorySynapses			= settings->getCVar("brain_percentchanceinhibitorysynapses");
-		brain.mutate_percentChanceInhibitorySynapses		= settings->getCVar("brain_mutate_percentchanceinhibitorysynapses");
+	genotype->brainzArch->percentChanceInhibitorySynapses			= settings->getCVar("brain_percentchanceinhibitorysynapses");
+		genotype->brainzArch->mutate_percentChanceInhibitorySynapses		= settings->getCVar("brain_mutate_percentchanceinhibitorysynapses");
 
-	brain.percentChanceSensorySynapse			= settings->getCVar("brain_percentchancesensorysynapse");
-		brain.mutate_percentChanceSensorySynapse	= settings->getCVar("brain_mutate_percentchancesensorysynapse");
+	genotype->brainzArch->percentChanceSensorySynapse			= settings->getCVar("brain_percentchancesensorysynapse");
+		genotype->brainzArch->mutate_percentChanceSensorySynapse	= settings->getCVar("brain_mutate_percentchancesensorysynapse");
 
-	brain.percentMutateEffectAddNeuron			= settings->getCVar("brain_percentmutateeffectaddneuron");
-	brain.percentMutateEffectRemoveNeuron			= settings->getCVar("brain_percentmutateeffectremoveneuron");
-	brain.percentMutateEffectAlterNeuron			= settings->getCVar("brain_percentmutateeffectalterneuron");
-	brain.percentMutateEffectAddSynapse			= settings->getCVar("brain_percentmutateeffectaddsynapse");
-	brain.percentMutateEffectRemoveSynapse			= settings->getCVar("brain_percentmutateeffectremovesynapse");
-		brain.mutate_MutateEffects				= settings->getCVar("brain_mutate_mutateeffects");
+	genotype->brainzArch->percentMutateEffectAddNeuron			= settings->getCVar("brain_percentmutateeffectaddneuron");
+	genotype->brainzArch->percentMutateEffectRemoveNeuron			= settings->getCVar("brain_percentmutateeffectremoveneuron");
+	genotype->brainzArch->percentMutateEffectAlterNeuron			= settings->getCVar("brain_percentmutateeffectalterneuron");
+	genotype->brainzArch->percentMutateEffectAddSynapse			= settings->getCVar("brain_percentmutateeffectaddsynapse");
+	genotype->brainzArch->percentMutateEffectRemoveSynapse			= settings->getCVar("brain_percentmutateeffectremovesynapse");
+		genotype->brainzArch->mutate_MutateEffects				= settings->getCVar("brain_mutate_mutateeffects");
 
 	color[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
@@ -113,15 +116,15 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 	speciescolor[3] = 0.0f;
 
 	// BODY
-	body.buildArch();
-	body.wireArch( (void*)this, btDynWorld, startPos );
+	genotype->bodyArch->buildArch();
+	body.wireArch( genotype->bodyArch, (void*)this, btDynWorld, startPos );
 
 	// LINK
 	registerBrainInputOutputs();
 	
 	// BRAIN
-	brain.buildArch();
-	brain.wireArch();
+	genotype->brainzArch->buildArch();
+	brain.wireArch( genotype->brainzArch );
 }
 
 CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& startPos, bool brainmutant, bool bodymutant)
@@ -148,24 +151,30 @@ CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& start
 	speciescolor[2]					= other.speciescolor[2];
 	speciescolor[3]					= other.speciescolor[3];
 
-	body.copyFrom(other.body);
-	brain.copyFrom(other.brain);
-
+	// IF we mutate, copy the genotype
+	if ( bodymutant || brainmutant )
+		genotype = genotypes->copy(other.genotype);
+	else
+	{
+		genotypes->add(other.genotype);
+		genotype = other.genotype;
+	}
+	
 	if ( bodymutant )
 		mutateBody();
 
-	body.wireArch( (void*)this, btDynWorld, startPos );
+	body.wireArch( genotype->bodyArch, (void*)this, btDynWorld, startPos );
 
 	// LINK
 	registerBrainInputOutputs();
 	if ( bodymutant )
-		brain.removeObsoleteMotorsAndSensors();
+		genotype->brainzArch->removeObsoleteMotorsAndSensors();
 
 	// BRAIN
 	if ( brainmutant )
 		mutateBrain();
 
-	brain.wireArch();
+	brain.wireArch( genotype->brainzArch );
 }
 
 CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVector3& startPos, unsigned char* retinap)
@@ -185,16 +194,17 @@ CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVect
 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	speciescolor[3] = 0.0f;
 
+	genotype = genotypes->newg(); // FIXME, with a speciesID
 	loadCritterB(critterstring);
 
 	// BODY
-	body.wireArch( (void*)this, btDynWorld, startPos );
+	body.wireArch( genotype->bodyArch, (void*)this, btDynWorld, startPos );
 
 	// LINK
 	registerBrainInputOutputs();
 
 	// BRAIN
-	brain.wireArch();
+	brain.wireArch( genotype->brainzArch );
 }
 
 void CritterB::registerBrainInputOutputs()
@@ -204,28 +214,44 @@ void CritterB::registerBrainInputOutputs()
 
 	// touching food
 		brain.registerInput( 10000 );
+		genotype->brainzArch->registerInput( 10000 );
+
 
 	// touching critter
 		brain.registerInput( 10001 );
+		genotype->brainzArch->registerInput( 10001 );
 
 	// canprocreate
 		brain.registerInput( 20000 );
+		genotype->brainzArch->registerInput( 20000 );
 
 	// energy state
 		for ( unsigned int i=0; i < 10; i++ )
+		{
 			brain.registerInput( 30000+i );
+			genotype->brainzArch->registerInput( 30000+i );
+		}
 	// age state
 		for ( unsigned int i=0; i < 10; i++ )
+		{
 			brain.registerInput( 40000+i );
+			genotype->brainzArch->registerInput( 40000+i );
+		}
 
 	// vision retina number of items
 		items = retinasize * retinasize * components;
 		for ( unsigned int i=0; i < items; i++ )
+		{
 			brain.registerInput( 50000+i );
+			genotype->brainzArch->registerInput( 50000+i );
+		}
 
 	// register constraint angles outputs as brain inputs, take constraint_id1 for ease
-		for ( unsigned int i=0; i < body.archConstraints.size(); i++ )
-			brain.registerInput( body.archConstraints[i].constraint_id1 );
+		for ( unsigned int i=0; i < genotype->bodyArch->archConstraints.size(); i++ )
+		{
+			brain.registerInput( genotype->bodyArch->archConstraints[i].constraint_id1 );
+			genotype->brainzArch->registerInput( genotype->bodyArch->archConstraints[i].constraint_id1 );
+		}
 
 // BRAIN OUTPUTS
 
@@ -234,16 +260,21 @@ void CritterB::registerBrainInputOutputs()
 		{
 			for ( unsigned int j=0; j < body.constraints[i]->Inputs.size(); j+=2 )
 			{
-				brain.registerOutput( body.constraints[i]->Inputs[j], body.archConstraints[i].constraint_id1 );
-				brain.registerOutput( body.constraints[i]->Inputs[j+1], body.archConstraints[i].constraint_id2 );
+				brain.registerOutput( body.constraints[i]->Inputs[j], genotype->bodyArch->archConstraints[i].constraint_id1 );
+				brain.registerOutput( body.constraints[i]->Inputs[j+1], genotype->bodyArch->archConstraints[i].constraint_id2 );
+				
+				genotype->brainzArch->registerOutput( genotype->bodyArch->archConstraints[i].constraint_id1 );
+				genotype->brainzArch->registerOutput( genotype->bodyArch->archConstraints[i].constraint_id2 );
 			}
 		}
 
 	// eat
 		brain.registerOutput( &eat, 100000 );
+		genotype->brainzArch->registerOutput( 100000 );
 
 	// procreate
 		brain.registerOutput( &procreate, 100001 );
+		genotype->brainzArch->registerOutput( 100001 );
 }
 
 void CritterB::draw(bool drawFaces)
@@ -386,7 +417,9 @@ void CritterB::procInputNeurons()
 			for ( int y = retinasize-1; y >= 0; y-- )
 				for ( unsigned int x = 0; x < retinasize; x++ )
 				{
+// 					cerr << "starting" << endl;
 					mouseRay = raycast->cast( body.mouths[0]->ghostObject->getWorldTransform().getOrigin(), getScreenDirection(x+1, y) );
+// 					cerr << "e1" << endl;
 					if ( mouseRay.hit )
 					{
 						Entity* e = static_cast<Entity*>(mouseRay.hitBody->getUserPointer());
@@ -402,6 +435,7 @@ void CritterB::procInputNeurons()
 						brain.Inputs[overstep++].output = 0.0f;
 						brain.Inputs[overstep++].output = 0.0f;
 					}
+// 					cerr << "e2" << endl;
 				}
 		else
 			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
@@ -515,7 +549,9 @@ void CritterB::mutateBody()
 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
 	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("body_maxmutations"));
-	body.mutate( runs ); // 0 for random
+
+	genotype->bodyArch->mutate( runs ); // 0 for random
+// 	cerr << "MUTATION is disabled at tis time" << endl;
 }
 
 void CritterB::mutateBrain()
@@ -546,7 +582,8 @@ void CritterB::mutateBrain()
 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
 	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("brain_maxmutations"));
-	brain.mutate( runs ); // 0 for random
+	genotype->brainzArch->mutate( runs ); // 0 for random
+// 	cerr << "MUTATION is disabled at tis time" << endl;
 }
 
 // LOAD critter
@@ -610,8 +647,8 @@ void CritterB::loadCritterB(string &content)
 		line = Parser::Instance()->returnUntillStrip( "\n", content );
 	}
 
-	body.setArch(&passToBody);
-	brain.setArch(&passToBrain);
+	genotype->bodyArch->setArch(&passToBody);
+	genotype->brainzArch->setArch(&passToBrain);
 }
 
 string CritterB::saveCritterB()
@@ -621,8 +658,8 @@ string CritterB::saveCritterB()
 	buf << "adamdist=" << adamdist << ";\n";
 	buf << "retinasize=" << retinasize << ";\n";
 
-	string* bodyarch = body.getArch();
-	string* brainarch = brain.getArch();
+	string* bodyarch = genotype->bodyArch->getArch();
+	string* brainarch = genotype->brainzArch->getArch();
 	buf << *bodyarch;
 	buf << *brainarch;
 	//cout << *arch << endl;
@@ -700,6 +737,8 @@ string CritterB::saveCritterB()
 
 CritterB::~CritterB()
 {
+	genotypes->remove(genotype);
+	delete raycast;
 }
 
 

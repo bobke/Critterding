@@ -41,8 +41,10 @@ libutils_la_SOURCES =	dir.cpp \
 			headless.cpp \
 			dirlayout.cpp
 		      
-libutils_la_LIBADD = @FTGL_LA@ $(top_builddir)/src/utils/bullet/libbulletmath.la $(top_builddir)/src/utils/bullet/libbulletcollision.la \
-                     $(top_builddir)/src/utils/bullet/libbulletdynamics.la
+libutils_la_LIBADD = @FTGL_LA@ $(top_builddir)/src/utils/bullet/libbulletmath.la \
+			$(top_builddir)/src/utils/bullet/libbulletcollision.la \
+			$(top_builddir)/src/utils/bullet/libbulletdynamics.la \
+			$(top_builddir)/src/utils/bullet/libbulletmultithreaded.la
 libutils_la_LDFLAGS = -avoid-version -no-undefined
 
 SUBDIRS = @FTGL_LOCALDIR@ bullet

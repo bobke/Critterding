@@ -26,11 +26,12 @@ Bodypart::Bodypart(btDynamicsWorld* ownerWorld, void* owner, const btVector3& di
 Bodypart::~Bodypart()
 {
 	// Remove all bodies and shapes
-	m_ownerWorld->removeRigidBody(body);
 	m_ownerWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(body->getBroadphaseHandle(),m_ownerWorld->getDispatcher());
-	delete body->getMotionState();
-	delete body;
+	m_ownerWorld->removeRigidBody(body);
+	delete myMotionState;
 	delete shape;
+// 	delete body->getMotionState();
+	delete body;
 }
 
 

@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I../utils/bullet
+INCLUDES = $(all_includes) -I../utils/bullet -fopenmp
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libscenes.la
 libscenes_la_SOURCES = evolution.cpp
