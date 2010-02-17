@@ -3,6 +3,9 @@
 #endif
 #include "randgen.h"
 
+// good rng seeds for benchmark:
+// 1063523561
+
 RandGen* RandGen::Instance () 
 {
 	static RandGen t;

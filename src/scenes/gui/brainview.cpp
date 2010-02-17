@@ -1,3 +1,4 @@
+#include <omp.h>
 #include "brainview.h"
 
 Brainview::Brainview()
@@ -186,27 +187,31 @@ void Brainview::draw()
 		
 		// drift
 			// neuron vs neuron
-			for ( unsigned int i=0; i < neurons.size()-1; i++ )
-				for ( unsigned int j=i+1; j < neurons.size(); j++ )
+			unsigned int i, j, k, nrlinks;
+			float xD, yD, dist, oneoverdistancesquared, miny;
+			ArchSynapse* as;
+// #pragma omp parallel for private(i, j, k, nrlinks, xD, yD, dist, oneoverdistancesquared, miny, as)
+			for ( i=0; i < (int)neurons.size()-1; i++ )
+				for ( j=i+1; j < neurons.size(); j++ )
 				{
 					// how many connections do they have underling
-					unsigned int nrlinks = 0;
-					for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); k++ )
+					nrlinks = 0;
+					for ( k=0; k < currentCritter->genotype->brainzArch->ArchNeurons[i].ArchSynapses.size(); k++ )
 					{
-						ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[k];
+						as = &currentCritter->genotype->brainzArch->ArchNeurons[i].ArchSynapses[k];
 						if ( !as->isSensorNeuron && as->neuronID == j )
 							nrlinks++;
 					}
-					for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[j].ArchSynapses.size(); k++ )
+					for ( k=0; k < currentCritter->genotype->brainzArch->ArchNeurons[j].ArchSynapses.size(); k++ )
 					{
-						ArchSynapse* as = &currentCritter->brain.ArchNeurons[j].ArchSynapses[k];
+						as = &currentCritter->genotype->brainzArch->ArchNeurons[j].ArchSynapses[k];
 						if ( !as->isSensorNeuron && as->neuronID == i )
 							nrlinks++;
 					}
-					float xD=neurons[j].position.x - neurons[i].position.x;
-					float yD=neurons[j].position.y - neurons[i].position.y;
-					float dist = sqrt((xD*xD)+(yD*yD));
-					float oneoverdistancesquared = 1.0f/(dist*dist);
+					xD=neurons[j].position.x - neurons[i].position.x;
+					yD=neurons[j].position.y - neurons[i].position.y;
+					dist = sqrt((xD*xD)+(yD*yD));
+					oneoverdistancesquared = 1.0f/(dist*dist);
 					if ( oneoverdistancesquared > 1000.0f )
 						oneoverdistancesquared = 1000.0f;
 					if ( nrlinks > 0 )
@@ -220,14 +225,14 @@ void Brainview::draw()
 						neurons[j].position.y -= (yD / 5000.0f) * dist * nrlinks;
 // 						}
 					}
-					else
+/*					else
 					{
-/*							neurons[i].position.x -= (xD / 1.0f) * oneoverdistancesquared;
+						neurons[i].position.x -= (xD / 1.0f) * oneoverdistancesquared;
 						neurons[i].position.y -= (yD / 1.0f) * oneoverdistancesquared;
 
 						neurons[j].position.x += (xD / 1.0f) * oneoverdistancesquared;
-						neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;*/
-					}
+						neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;
+					}*/
 					// general antigravity
 					neurons[i].position.x -= (xD * 10.0f) * oneoverdistancesquared;
 					neurons[i].position.y -= (yD * 10.0f) * oneoverdistancesquared;
@@ -236,7 +241,7 @@ void Brainview::draw()
 					neurons[j].position.y += (yD * 10.0f) * oneoverdistancesquared;
 
 					//distance=sqrt(xD*xD+yD*yD);
-					float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
+					miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
 					if ( neurons[i].position.x+v_radius > *brainview->v_widthP ) neurons[i].position.x = *brainview->v_widthP-v_radius;
 					if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
 					if ( neurons[i].position.y+v_radius > *brainview->v_heightP ) neurons[i].position.y = *brainview->v_heightP-v_radius;
@@ -254,9 +259,9 @@ void Brainview::draw()
 				{
 					// how many connections do they have underling
 					unsigned int nrlinks = 0;
-					for ( unsigned int k=0; k < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); k++ )
+					for ( unsigned int k=0; k < currentCritter->genotype->brainzArch->ArchNeurons[i].ArchSynapses.size(); k++ )
 					{
-						ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[k];
+						ArchSynapse* as = &currentCritter->genotype->brainzArch->ArchNeurons[i].ArchSynapses[k];
 						if ( as->isSensorNeuron && as->realneuronID == j )
 							nrlinks++;
 					}
@@ -309,9 +314,9 @@ void Brainview::draw()
 // 						glColor4f(0.0f, dimmed, 0.0f, 1.0f);
 // 				}
 
-					for ( unsigned int j=0; j < currentCritter->brain.ArchNeurons[i].ArchSynapses.size(); j++ )
+					for ( unsigned int j=0; j < currentCritter->genotype->brainzArch->ArchNeurons[i].ArchSynapses.size(); j++ )
 					{
-						ArchSynapse* as = &currentCritter->brain.ArchNeurons[i].ArchSynapses[j];
+						ArchSynapse* as = &currentCritter->genotype->brainzArch->ArchNeurons[i].ArchSynapses[j];
 						if ( !as->isSensorNeuron && currentCritter->brain.Neurons[as->neuronID].output || as->isSensorNeuron && currentCritter->brain.Inputs[as->realneuronID].output )
 						{
 							if ( as->isSensorNeuron )

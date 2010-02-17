@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I../../utils/bullet 
+INCLUDES = $(all_includes) -I../../utils/bullet -fopenmp
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libcdgui.la
 noinst_HEADERS =	critterview.h \

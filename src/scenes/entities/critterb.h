@@ -5,18 +5,13 @@
 #include "GL/gl.h"
 
 #include "../../utils/parser.h"
-#include "../../utils/randgen.h"
 #include "../../brainz/brainz.h"
 #include "../../utils/settings.h"
 #include "../../utils/displaylists.h"
 #include "../../utils/raycast.h"
+#include "genotypes.h"
 #include "entity.h"
 #include "body.h"
-#include "food.h"
-// #include <cmath>
-// #include <vector>
-// #include <iostream>
-// #include <sstream>
 
 using namespace std;
 
@@ -30,6 +25,7 @@ class CritterB : public Entity
 
 		Brainz			brain;
 		Body			body;
+		Genotype*		genotype;
 		inline void		registerBrainInputOutputs();
 		void			draw(bool drawFaces);
 		void			move();
@@ -41,11 +37,9 @@ class CritterB : public Entity
 		unsigned int		adamdist;
 		btScalar		position[16];
 
-/*		float			color[3];*/
 		float			speciescolor[3];
 		float			colorTrim;
 
-// 		unsigned int		lifetime;
 		float			energyLevel;
 		float			energyUsed;
 		unsigned int		totalFrames;
@@ -53,9 +47,7 @@ class CritterB : public Entity
 		// Inputs
 		bool			canProcreate;
 		bool			touchingFood;
-// 		Food*			touchedFoodID;
 		bool			touchingCritter;
-// 		CritterB*		touchedCritterID;
 		Entity*			touchedEntity;
 
 		// Motor Func
@@ -73,7 +65,6 @@ class CritterB : public Entity
 		// Vision
 		unsigned int		retinasize;
 		unsigned int		components;
-// 		float			sightrange;
 		float			straal;
 		unsigned char		*retina;
 		unsigned int		items;
@@ -87,11 +78,11 @@ class CritterB : public Entity
 		
 	private:
 
-		Settings		*settings;
+		Settings*		settings;
+		Genotypes*		genotypes;
 		Raycast*		raycast;
 		castResult		mouseRay;
 
-// 		unsigned int		motorneuronsfired;
 		unsigned int		movementsmade;
 
 		btDynamicsWorld*	btDynWorld;

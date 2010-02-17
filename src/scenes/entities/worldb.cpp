@@ -56,27 +56,46 @@ WorldB::WorldB()
 	retina = (unsigned char*)malloc(items);
 	memset(retina, 0, items);
 
+	// THREADED BULLET
+// 	int maxNumOutstandingTasks = 4;
+// 	m_collisionConfiguration = new btDefaultCollisionConfiguration();
+// 	PosixThreadSupport::ThreadConstructionInfo constructionInfo("collision", processCollisionTask, createCollisionLocalStoreMemory, maxNumOutstandingTasks);
+// 	m_threadSupportCollision = new PosixThreadSupport(constructionInfo);
+// 	m_dispatcher = new SpuGatheringCollisionDispatcher(m_threadSupportCollision,maxNumOutstandingTasks,m_collisionConfiguration);
+// 	
+// 	btVector3 worldAabbMin(-10000,-10000,-10000);
+// 	btVector3 worldAabbMax(10000,10000,10000);
+// 	m_broadphase = new btAxisSweep3 (worldAabbMin, worldAabbMax);
+// 	m_broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+// 	m_solver = new btSequentialImpulseConstraintSolver;
+// // 	m_solver = new SpuMinkowskiPenetrationDepthSolver();
+// 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
+
+// 		m_dynamicsWorld->getSolverInfo().m_numIterations = 10;
+// 		m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_SIMD+SOLVER_USE_WARMSTARTING;
+
+// 		m_dynamicsWorld->getDispatchInfo().m_enableSPU = true;
+	// stop threaded bullet
+
+	// NOT THREADED
 	m_collisionConfiguration = new btDefaultCollisionConfiguration();
-
 	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
-	//m_dispatcher = new SpuGatheringCollisionDispatcher(m_collisionConfiguration);
-
 	btVector3 worldAabbMin(-10000,-10000,-10000);
 	btVector3 worldAabbMax(10000,10000,10000);
 	m_broadphase = new btAxisSweep3 (worldAabbMin, worldAabbMax);
 	m_broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 	m_solver = new btSequentialImpulseConstraintSolver;
-
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
+	// END NOT THREADED
 	
 // 	btVector3 v = m_dynamicsWorld->getGravity();
 // 	cerr << v.y() << endl;
 // 	m_dynamicsWorld->setGravity( btVector3(0.0f, -50.0f, 0.0f) );
 
 // 	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_USE_WARMSTARTING + SOLVER_SIMD;
-	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_SIMD + SOLVER_USE_WARMSTARTING + SOLVER_CACHE_FRIENDLY;
+	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_SIMD + SOLVER_USE_WARMSTARTING;
 	
-	m_dynamicsWorld->getSolverInfo().m_numIterations = 10;
+	m_dynamicsWorld->getSolverInfo().m_numIterations = 8;
 	// raycast
 	raycast = new Raycast(m_dynamicsWorld);
 
@@ -104,6 +123,41 @@ void WorldB::init()
 	if ( settings->getCVar("autoload") )
 		loadAllCritters();
 }
+
+void WorldB::drawShadow(btScalar* m,const btVector3& extrusion,const btCollisionShape* shape,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax)
+{
+	glPushMatrix(); 
+	glMultMatrixf(m);
+	if(shape->getShapeType() == UNIFORM_SCALING_SHAPE_PROXYTYPE)
+	{
+		const btUniformScalingShape* scalingShape = static_cast<const btUniformScalingShape*>(shape);
+		const btConvexShape* convexShape = scalingShape->getChildShape();
+		float	scalingFactor = (float)scalingShape->getUniformScalingFactor();
+		btScalar tmpScaling[4][4]={	{scalingFactor,0,0,0},
+		{0,scalingFactor,0,0},
+		{0,0,scalingFactor,0},
+		{0,0,0,1}};
+		drawShadow((btScalar*)tmpScaling,extrusion,convexShape,worldBoundsMin,worldBoundsMax);
+		glPopMatrix();
+		return;
+	}
+	else if(shape->getShapeType()==COMPOUND_SHAPE_PROXYTYPE)
+	{
+		const btCompoundShape* compoundShape = static_cast<const btCompoundShape*>(shape);
+		for (int i=compoundShape->getNumChildShapes()-1;i>=0;i--)
+		{
+			btTransform childTrans = compoundShape->getChildTransform(i);
+			const btCollisionShape* colShape = compoundShape->getChildShape(i);
+			btScalar childMat[16];
+			childTrans.getOpenGLMatrix(childMat);
+			drawShadow(childMat,extrusion*childTrans.getBasis(),colShape,worldBoundsMin,worldBoundsMax);
+		}
+	}
+
+	glPopMatrix();
+
+}
+
 
 void WorldB::castMouseRay()
 {
@@ -213,13 +267,21 @@ void WorldB::process()
 	grabVision();
 
 	// process all critters
-	unsigned int lmax = critters.size();
-	for( unsigned int i=0; i < lmax; i++)
-	{
-		CritterB *c = critters[i];
+	int lmax = (int)critters.size();
 
+	int i;
+	CritterB* c;
+
+	for( i=0; i < lmax; i++)
+	{
 		// TOUCH inputs and references -> find overlappings
-			checkCollisions(  c );
+			checkCollisions(  critters[i] );
+	}
+
+#pragma omp parallel for private(i, c)
+	for( i=0; i < lmax; i++)
+	{
+		c = critters[i];
 
 		// process
 			c->process();
@@ -234,6 +296,11 @@ void WorldB::process()
 			procreate(c);
 	}
 
+// 	for( i=0; i < lmax; i++)
+// 	{
+// 		c = critters[i];
+// 
+// 	}
 
 }
 
@@ -615,7 +682,9 @@ void WorldB::getGeneralStats()
 	settings->info_critters = critters.size();
 	settings->info_food = food.size();
 
-	for( unsigned int i=0; i < critters.size(); i++)
+	int i;
+// 	#pragma omp parallel for private(i) // FIXME screws the numbers?
+	for( i=0; i < (int)critters.size(); i++)
 	{
 		settings->info_totalNeurons		+= critters[i]->brain.totalNeurons;
 		settings->info_totalSynapses		+= critters[i]->brain.totalSynapses;
@@ -727,7 +796,7 @@ void WorldB::insertRandomFood(int amount, float energy)
 {
 	for ( int i=0; i < amount; i++ )
 	{
-		Food *f = new Food;
+		Food *f = new Food();
 		f->energyLevel = energy;
 		//f->resize();
 		f->createBody( m_dynamicsWorld, findPosition() );
@@ -765,7 +834,9 @@ void WorldB::removeCritter(unsigned int cid)
 	critters.erase(critters.begin()+cid);
 
 	// update higher retina frame positions
-	for ( unsigned int c = cid; c < critters.size(); c++ )
+	int c;
+	#pragma omp parallel for private(c)
+	for ( c = cid; c < (int)critters.size(); c++ )
 		critters[c]->calcFramePos(c);
 }
 

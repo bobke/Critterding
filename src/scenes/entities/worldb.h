@@ -2,9 +2,17 @@
 #define WORLDB_H
 
 #include "btBulletDynamicsCommon.h"
+#include "BulletMultiThreaded/SpuCollisionTaskProcess.h"
+#include "BulletMultiThreaded/SpuCollisionTaskProcess.h"
+#include "BulletMultiThreaded/PosixThreadSupport.h"
+#include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h"
+#include "BulletMultiThreaded/SpuGatheringCollisionDispatcher.h"
+#include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuMinkowskiPenetrationDepthSolver.h"
+
 // #include "LinearMath/btIDebugDraw.h"
 // #include "../../gl/gldebugdrawer.h"
 // #include <sstream>
+#include <omp.h>
 #include <iomanip>
 // #include <vector>
 // #include <string>
@@ -33,6 +41,9 @@ using namespace std;
 
 class WorldB
 {
+	class	btThreadSupportInterface*		m_threadSupportCollision;
+	class	btThreadSupportInterface*		m_threadSupportSolver;
+
 	public:
 		WorldB();
 		virtual			~WorldB();
@@ -68,6 +79,7 @@ class WorldB
 		btDefaultCollisionConfiguration* m_collisionConfiguration;
 		btDynamicsWorld*	m_dynamicsWorld;
 		btConstraintSolver*	m_solver;
+// 		SpuMinkowskiPenetrationDepthSolver*	m_solver;
 		btAlignedObjectArray<btCollisionShape*>	m_collisionShapes;
 
 		vector<CritterB*>	critters;
@@ -171,7 +183,9 @@ class WorldB
 
 		castResult		mouseRay;
 		btVector3		mouseRayTo;
-
+		
+ 		void drawShadow(btScalar* m,const btVector3& extrusion,const btCollisionShape* shape,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax);
+		
 		unsigned int		insertCritterCounter;
 // 		GLDebugDrawer debugDrawer;
 
