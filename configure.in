@@ -32,7 +32,7 @@ case "$host" in
                 AC_MSG_RESULT(win32)
                 ;;
         *)
-                HOST_LIBS="-lGL -lfreetype -lSDL"
+                HOST_LIBS="-lGL -lSDL"
 		SDLMAIN=""
                 AC_MSG_RESULT(generic unix)
 		OS=UNIX
@@ -74,18 +74,36 @@ AC_SUBST(SDLMAIN)
 		else 
 			if test "${FTGL}" = "no"; then
 				# have Freetype2
-				AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required by FTGL. Please see README])])
-				CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
-				FTGL_LOCALDIR="ftgl"
-				FTGL_LA="\$(top_builddir)/src/utils/ftgl/libftgl.la"
+				AC_MSG_CHECKING(for Freetype)
+				AC_CHECK_PROG([FREETYPE_CONFIG],[freetype-config],yes,no)
+				if test "$FREETYPE_CONFIG" = yes; then
+					FT2_CFLAGS=`freetype-config --cflags`
+					FT2_LIBS=`freetype-config --libs`
+					AC_MSG_RESULT($FT2_CFLAGS)
+					CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
+					HOST_LIBS="$HOST_LIBS $FT2_LIBS"
+					FTGL_LOCALDIR="ftgl"
+					FTGL_LA="\$(top_builddir)/src/utils/ftgl/libftgl.la"
+				else
+					AC_MSG_ERROR([Could not find freetype-config.  FreeType2 is required by FTGL.])
+				fi
 			fi
 		fi
 	else
 		# have Freetype2
-		AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required by FTGL. Please see README])])
-		CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
-		FTGL_LOCALDIR="ftgl"
-		FTGL_LA="\$(top_builddir)/src/utils/ftgl/libftgl.la"
+		AC_MSG_CHECKING(for Freetype)
+		AC_CHECK_PROG([FREETYPE_CONFIG],[freetype-config],yes,no)
+		if test "$FREETYPE_CONFIG" = yes; then
+			FT2_CFLAGS=`freetype-config --cflags`
+			FT2_LIBS=`freetype-config --libs`
+			AC_MSG_RESULT($FT2_CFLAGS)
+			CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
+			HOST_LIBS="$HOST_LIBS $FT2_LIBS"
+			FTGL_LOCALDIR="ftgl"
+			FTGL_LA="\$(top_builddir)/src/utils/ftgl/libftgl.la"
+		else
+			AC_MSG_ERROR([Could not find freetype-config.  FreeType2 is required by FTGL.])
+		fi
 	fi
 
 AC_OUTPUT(Makefile src/Makefile src/brainz/Makefile \
