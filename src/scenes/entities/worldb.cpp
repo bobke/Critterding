@@ -114,6 +114,10 @@ WorldB::WorldB()
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints);
 // 	debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraintLimits);
 // 	m_dynamicsWorld->setDebugDrawer(&debugDrawer);
+
+	// threading locks
+	omp_init_lock(&my_lock1);
+	omp_init_lock(&my_lock2);
 }
 
 void WorldB::init()
@@ -260,47 +264,58 @@ void WorldB::process()
 	// Autoinsert Critters?
 		autoinsertCritters();
 
-	// do a bullet step
-		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
-
-	renderVision();
-	grabVision();
+	if ( *critter_raycastvision == 1 )
+	{
+		// do a bullet step
+			m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
+	}
+	else
+	{
+		renderVision();
+		#pragma omp parallel sections
+		{
+			#pragma omp section
+			{
+				grabVision();
+			}
+			#pragma omp section
+			{
+				m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
+			}
+		}
+	}
 
 	// process all critters
 	int lmax = (int)critters.size();
-
 	int i;
 	CritterB* c;
+	float freeEnergyc = 0.0f;
 
-	for( i=0; i < lmax; i++)
-	{
-		// TOUCH inputs and references -> find overlappings
-			checkCollisions(  critters[i] );
-	}
-
-#pragma omp parallel for private(i, c)
+	omp_set_num_threads(settings->getCVar("threads"));
+	#pragma omp parallel for shared(freeEnergyc) private(i, c)
 	for( i=0; i < lmax; i++)
 	{
 		c = critters[i];
+		
+		omp_set_lock(&my_lock1);
+			checkCollisions(  critters[i] );
+		omp_unset_lock(&my_lock1);
 
 		// process
-			c->process();
+		c->process();
 
 		// record critter used energy
-			freeEnergy += c->energyUsed;
+		freeEnergyc += c->energyUsed;
 
 		// process Output Neurons
-			eat(c);
+		eat(c);
 
 		// procreation if procreation energy trigger is hit
+		omp_set_lock(&my_lock1);
 			procreate(c);
+		omp_unset_lock(&my_lock1);
 	}
-
-// 	for( i=0; i < lmax; i++)
-// 	{
-// 		c = critters[i];
-// 
-// 	}
+	freeEnergy += freeEnergyc;
 
 }
 
@@ -682,19 +697,33 @@ void WorldB::getGeneralStats()
 	settings->info_critters = critters.size();
 	settings->info_food = food.size();
 
-	int i;
-// 	#pragma omp parallel for private(i) // FIXME screws the numbers?
-	for( i=0; i < (int)critters.size(); i++)
+	int i = 0;
+	int info_totalNeurons = 0;
+	int info_totalSynapses = 0;
+	int info_totalAdamDistance = 0;
+	int info_totalBodyparts = 0;
+	int info_totalWeight = 0;
+	int crittersize = critters.size();
+	CritterB* c;
+
+// #pragma omp parallel for shared (info_totalNeurons, info_totalSynapses, info_totalAdamDistance, info_totalBodyparts, info_totalWeight, crittersize) private(i, c)
+	for( i=0; i < crittersize; i++ )
 	{
-		settings->info_totalNeurons		+= critters[i]->brain.totalNeurons;
-		settings->info_totalSynapses		+= critters[i]->brain.totalSynapses;
-		settings->info_totalAdamDistance	+= critters[i]->adamdist;
-		settings->info_totalBodyparts		+= critters[i]->body.bodyparts.size();
-		settings->info_totalWeight		+= critters[i]->body.totalWeight;
+		c = critters[i];
+		info_totalNeurons		+= c->brain.totalNeurons;
+		info_totalSynapses		+= c->brain.totalSynapses;
+		info_totalAdamDistance		+= c->adamdist;
+		info_totalBodyparts		+= c->body.bodyparts.size();
+		info_totalWeight		+= c->body.totalWeight;
 	}
 
-	statsBuffer->add();
+	settings->info_totalNeurons		+= info_totalNeurons;
+	settings->info_totalSynapses		+= info_totalSynapses;
+	settings->info_totalAdamDistance	+= info_totalAdamDistance;
+	settings->info_totalBodyparts		+= info_totalBodyparts;
+	settings->info_totalWeight		+= info_totalWeight;
 
+	statsBuffer->add();
 }
 
 void WorldB::checkCollisions( CritterB* c )
@@ -835,7 +864,8 @@ void WorldB::removeCritter(unsigned int cid)
 
 	// update higher retina frame positions
 	int c;
-	#pragma omp parallel for private(c)
+	omp_set_num_threads(settings->getCVar("threads"));
+// 	#pragma omp parallel for private(c)
 	for ( c = cid; c < (int)critters.size(); c++ )
 		critters[c]->calcFramePos(c);
 }
@@ -1383,4 +1413,7 @@ WorldB::~WorldB()
 	
 	delete raycast;
 	delete mousepicker;
+
+	omp_destroy_lock(&my_lock1);
+	omp_destroy_lock(&my_lock2);
 }

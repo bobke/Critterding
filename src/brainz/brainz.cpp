@@ -102,9 +102,12 @@ Brainz::Brainz()
 			*Outputs[i].output = false;
 		}
 	
-		for ( unsigned int i=0; i < totalNeurons; i++ )
+		int i;
+		NeuronInterz* n;
+//#pragma omp parallel for shared(totalNeurons, Neurons) private(i, n, neuronsFired, motorsFired)
+		for ( i=0; i < totalNeurons; i++ )
 		{
-			NeuronInterz *n = &Neurons[i];
+			n = &Neurons[i];
 	
 			n->process();
 	
