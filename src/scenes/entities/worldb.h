@@ -140,6 +140,7 @@ class WorldB
 		unsigned int		items;
 
 		const unsigned int*	retinasperrow;
+		const unsigned int*	critter_raycastvision;
 		const unsigned int*	critter_retinasize;
 		const unsigned int*	critter_maxenergy;
 		const unsigned int*	worldsizeX;
@@ -178,6 +179,9 @@ class WorldB
 		int* mousex;
 		int* mousey;
 
+		// threading
+		omp_lock_t my_lock1;
+		omp_lock_t my_lock2;
 	private:
 		Raycast*		raycast;
 
@@ -202,7 +206,6 @@ class WorldB
 		const unsigned int*	critter_autoexchangeinterval;
 		const unsigned int*	critter_killhalfat;
 		const unsigned int*	critter_sightrange;
-		const unsigned int*	critter_raycastvision;
 		const unsigned int*	critter_enableomnivores;
 
 		const unsigned int*	brain_mutationrate;
@@ -231,6 +234,7 @@ class WorldB
 
 		int			findSelectedCritterID();
 		int			findCritterID(unsigned int cid);
+
 };
 
 #endif

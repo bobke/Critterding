@@ -11,6 +11,7 @@ Settings::Settings()
 	profileName			= "default";
 
 	registerCVar("fullscreen",						0, 0, 1, true, "enable fullscreen mode");
+	registerCVar("threads",							1, 1, 16, false, "threads to use");
 	registerCVar("headless",						0, 0, 1, true, "do not open gl context");
 	registerCVar("fsX",							800, 1, 1000000, false, "fullscreen resolution X");
 	registerCVar("fsY",							600, 1, 1000000, false, "fullscreen resolution Y");

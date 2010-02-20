@@ -114,7 +114,6 @@ void Evolution::draw()
 
 	if ( !settings->getCVar("headless") )
 	{
-
 		handleEvents();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -160,8 +159,8 @@ void Evolution::draw()
 		glDisable(GL_POLYGON_SMOOTH);
 	}
 
-		world->process();
-		world->getGeneralStats();
+	world->process();
+	world->getGeneralStats();
 
 	if ( !settings->getCVar("headless") )
 	{

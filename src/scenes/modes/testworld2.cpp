@@ -42,11 +42,11 @@ void TestWorld2::process()
 	if ( critters.size() > biggest )
 		biggest = critters.size();
 	
-#pragma omp parallel for private(j, b, f, bod, bo)
-	for ( j=0; j < biggest; j++ )
-	{
-// 		for( j=0; j < food.size(); j++)
-		if( j < food.size() )
+// #pragma omp parallel for private(j, b, f, bod, bo)
+// 	for ( j=0; j < biggest; j++ )
+// 	{
+		for( j=0; j < food.size(); j++)
+// 		if( j < food.size() )
 		{
 			f = food[j];
 			for( b=0; b < f->body.bodyparts.size(); b++)
@@ -56,8 +56,8 @@ void TestWorld2::process()
 			}
 		}
 // 		#pragma omp parallel for private(j, b)
-// 		for( j=0; j < critters.size(); j++)
-		if( j < critters.size() )
+		for( j=0; j < critters.size(); j++)
+// 		if( j < critters.size() )
 		{
 			bod = critters[j];
 			for( b=0; b < bod->body.bodyparts.size(); b++)
@@ -66,32 +66,58 @@ void TestWorld2::process()
 				bo->setGravity( -(bo->getCenterOfMassPosition().normalized()*10) );
 			}
 		}
-	}
+// 	}
 	
-	m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
-
-	renderVision();
-	grabVision();
+	if ( *critter_raycastvision == 1 )
+	{
+		// do a bullet step
+			m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
+	}
+	else
+	{
+		renderVision();
+		#pragma omp parallel sections
+		{
+			#pragma omp section
+			{
+				grabVision();
+			}
+			#pragma omp section
+			{
+				m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
+			}
+		}
+	}
 
 	int lmax = (int)critters.size();
 
 	CritterB *c;
 	int i;
-	for( i=0; i < lmax; i++)
-	{
-		checkCollisions(  critters[i] );
-	}
 
-#pragma omp parallel for private(i, c)
+	float freeEnergyc = 0.0f;
+
+	omp_set_num_threads(settings->getCVar("threads"));	
+	#pragma omp parallel for shared(freeEnergyc) private(i, c)
 	for( i=0; i < lmax; i++)
 	{
 		c = critters[i];
 
+		omp_set_lock(&my_lock1);
+			checkCollisions(  c );
+		omp_unset_lock(&my_lock1);
+
 		c->process();
+
 		freeEnergy += c->energyUsed;
+
 		eat(c);
+
+		omp_set_lock(&my_lock1);
 		procreate(c);
+		omp_unset_lock(&my_lock1);
 	}
+
+	freeEnergy += freeEnergyc;
 }
 
 void TestWorld2::makeFloor()
