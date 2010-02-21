@@ -40,6 +40,7 @@ class CritterB : public Entity
 
 // 		float			speciescolor[3];
 // 		float			colorTrim;
+		bool			loadError;
 
 		float			energyLevel;
 		float			energyUsed;

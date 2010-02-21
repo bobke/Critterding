@@ -36,6 +36,8 @@ void CritterB::initConst()
 
 CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVector3& startPos, unsigned char* retinap)
 {
+	loadError = false;
+
 	// first things first
 	btDynWorld						= btWorld;
 	retina							= retinap;
@@ -63,6 +65,7 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 
 CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& startPos, bool brainmutant, bool bodymutant)
 {
+	loadError = false;
 
 	// first things first
 	btDynWorld					= other.btDynWorld;
@@ -85,6 +88,7 @@ CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& start
 
 CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVector3& startPos, unsigned char* retinap)
 {
+	loadError = false;
 	// critterID is arranged in world, definite critter insertion is not determined yet
 
 	// first things first
@@ -97,14 +101,26 @@ CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVect
 
 	genotype = genotypes->loadGenotype(critterstring);
 
-	// BODY
-	body.wireArch( genotype->bodyArch, (void*)this, btDynWorld, startPos );
+	if ( genotype->bodyArch->retinasize != settings->getCVar("critter_retinasize"))
+	{
+		stringstream buf;
+		buf << "ERROR: critter retinasize (" << genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << settings->getCVar("critter_retinasize") << ")";
+		Logbuffer::Instance()->add(buf);
 
-	// LINK
-	registerBrainInputOutputs();
+		cerr << "ERROR: critter retinasize (" << genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << settings->getCVar("critter_retinasize") << ")" << endl;
+		loadError = true;
+	}
+	else
+	{
+		// BODY
+		body.wireArch( genotype->bodyArch, (void*)this, btDynWorld, startPos );
 
-	// BRAIN
-	brain.wireArch( genotype->brainzArch );
+		// LINK
+		registerBrainInputOutputs();
+
+		// BRAIN
+		brain.wireArch( genotype->brainzArch );
+	}
 }
 
 void CritterB::registerBrainInputOutputs()

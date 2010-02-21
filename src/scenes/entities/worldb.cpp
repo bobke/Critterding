@@ -1153,10 +1153,7 @@ void WorldB::loadAllCritters()
 
 			CritterB *c = new CritterB(content, m_dynamicsWorld, findPosition(), retina);
 
-			unsigned int error = 0;
-			if ( c->genotype->bodyArch->retinasize != *critter_retinasize ) error = 1;
-
-			if ( !error)
+			if ( !c->loadError)
 			{
 				critters.push_back( c );
 
@@ -1167,17 +1164,7 @@ void WorldB::loadAllCritters()
 				freeEnergy -= c->energyLevel;
 			}
 			else
-			{
 				delete c;
-				if ( error == 1 )
-				{
-					stringstream buf;
-					buf << "ERROR: critter retinasize (" << c->genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
-					Logbuffer::Instance()->add(buf);
-
-					cerr << "ERROR: critter retinasize (" << c->genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
-				}
-			}
 		}
 	}
 	stringstream buf;
