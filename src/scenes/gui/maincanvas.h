@@ -17,6 +17,7 @@
 #include "hud.h"
 #include "critterview.h"
 #include "brainview.h"
+#include "speciesview.h"
 
 using namespace std;
 

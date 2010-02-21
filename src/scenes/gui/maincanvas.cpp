@@ -27,6 +27,7 @@ Maincanvas::Maincanvas()
 	addWidgetPanel( "critterview", new Critterview() );
 	addWidgetPanel( "brainview", new Brainview() );
 	addWidgetPanel( "hud", new Hud() );
+	addWidgetPanel( "speciesview", new Speciesview() );
 
 	// set default z axises to panels
 	unsigned int panelc = 0;

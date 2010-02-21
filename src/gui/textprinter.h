@@ -25,6 +25,7 @@ class Textprinter
 // 		FTPoint getBBox(const char *fmt, ...);
 		unsigned int getWidth(const char *fmt, ...);
 		unsigned int getWidth(const string& str);
+		unsigned int getWidth(const int& number);
 		Vector2i getDimensions(const string& str);
 
 		string getFormattedString(const char *fmt, ...);

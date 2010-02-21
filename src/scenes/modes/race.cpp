@@ -98,7 +98,7 @@ void WorldRace::process()
 
 				}
 
-			// initialize sort indices for
+			// initialize sort indices
 				vector<int> indices ( critters.size(), 0 );
 				for ( unsigned int i = 0; i < critters.size(); i++ )
 					indices[i] = i;

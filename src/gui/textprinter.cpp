@@ -51,21 +51,31 @@ string Textprinter::getFormattedString(const char *fmt, ...)
 
 unsigned int Textprinter::getWidth(const char *fmt, ...)
 {
-		va_list ap;     /* our argument pointer */
-		char text[256];
-		va_start(ap, fmt);  /* make ap point to first unnamed arg */
-		/* FIXME: we *should* do boundschecking or something to prevent buffer
-		* overflows/segmentations faults
-		*/
-		vsprintf(text, fmt, ap);
+	va_list ap;     /* our argument pointer */
+	char text[256];
+	va_start(ap, fmt);  /* make ap point to first unnamed arg */
+	/* FIXME: we *should* do boundschecking or something to prevent buffer
+	* overflows/segmentations faults
+	*/
+	vsprintf(text, fmt, ap);
 
-		FTBBox test = fonts[0]->BBox(text);
-		return test.Upper().X();
+	FTBBox test = fonts[0]->BBox(text);
+	return test.Upper().X();
 }
 
 unsigned int Textprinter::getWidth(const string& str)
 {
 	const char *text = str.c_str();
+
+	FTBBox test = fonts[0]->BBox(text);
+	return test.Upper().X();
+}
+
+unsigned int Textprinter::getWidth(const int& number)
+{
+	stringstream sstream;
+	sstream << number;
+	const char *text = sstream.str().c_str();
 
 	FTBBox test = fonts[0]->BBox(text);
 	return test.Upper().X();
