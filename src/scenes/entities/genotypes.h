@@ -19,16 +19,17 @@ class Genotypes
 		Genotype* copy(Genotype* gt, bool brainmutant, unsigned int brruns, bool bodymutant, unsigned int boruns);
 		Genotype* loadGenotype(string &content);
 		string saveGenotype();
-		
+
 		void remove(Genotype* gt);
 		Color			colorH;
+
+		vector<Genotype*>	list;
+
 	protected:
 		Genotypes();
 		~Genotypes();
 	private:
 		static Genotypes* _instance;
-
-		vector<Genotype*>	list;
 };
 
 #endif

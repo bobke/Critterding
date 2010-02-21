@@ -45,6 +45,9 @@ Hud::Hud()
 	c_height += bspacing + bheight;
 	addWidgetButton( "hud_bodypanel", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "body", cmd.gen("gui_togglepanel", "settingsbodypanel"), 0, 0, 0 );
 
+	c_height += bspacing + bheight;
+	addWidgetButton( "hud_speciesview", Vector2i(c_width, c_height), Vector2i(bwidth, bheight), "species", cmd.gen("gui_togglepanel", "speciesview"), 0, 0, 0 );
+
 	// init critter selection buttons
 	c_width += bspacing + bwidth;
 	bheight = 28;

@@ -15,6 +15,7 @@ noinst_HEADERS =	critterview.h \
 			settingsbodypanel.h \
 			settingsbrainpanel.h \
 			hud.h \
+			speciesview.h \
 			maincanvas.h
 
 libcdgui_la_SOURCES =	critterview.cpp \
@@ -31,6 +32,7 @@ libcdgui_la_SOURCES =	critterview.cpp \
 			settingsbodypanel.cpp \
 			settingsbrainpanel.cpp \
 			hud.cpp \
+			speciesview.cpp \
 			maincanvas.cpp
 
 libcdgui_la_LIBADD =	$(top_builddir)/src/gui/libgui.la \
