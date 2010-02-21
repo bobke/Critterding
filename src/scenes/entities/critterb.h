@@ -9,6 +9,7 @@
 #include "../../utils/settings.h"
 #include "../../utils/displaylists.h"
 #include "../../utils/raycast.h"
+#include "../../utils/color.h"
 #include "genotypes.h"
 #include "entity.h"
 #include "body.h"
@@ -27,6 +28,7 @@ class CritterB : public Entity
 		Body			body;
 		Genotype*		genotype;
 		inline void		registerBrainInputOutputs();
+		inline void		registerBrainInputOutputsNew();
 		void			draw(bool drawFaces);
 		void			move();
 		
@@ -37,7 +39,7 @@ class CritterB : public Entity
 		unsigned int		adamdist;
 		btScalar		position[16];
 
-		float			speciescolor[3];
+// 		float			speciescolor[3];
 		float			colorTrim;
 
 		float			energyLevel;

@@ -117,7 +117,7 @@ WorldB::WorldB()
 
 	// threading locks
 	omp_init_lock(&my_lock1);
-	omp_init_lock(&my_lock2);
+// 	omp_init_lock(&my_lock2);
 }
 
 void WorldB::init()
@@ -1415,5 +1415,5 @@ WorldB::~WorldB()
 	delete mousepicker;
 
 	omp_destroy_lock(&my_lock1);
-	omp_destroy_lock(&my_lock2);
+// 	omp_destroy_lock(&my_lock2);
 }
