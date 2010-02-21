@@ -101,7 +101,7 @@ void Critterview::draw()
 		// draw values of critter
 		v_space = 0;
 		v_space += v_spacer; textprinter->print( absPosition.x+110, absPosition.y+v_space, critterselection->selectedCritter->critterID );
-		v_space += v_spacer; textprinter->print( absPosition.x+110, absPosition.y+v_space, critterselection->selectedCritter->adamdist );
+		v_space += v_spacer; textprinter->print( absPosition.x+110, absPosition.y+v_space, critterselection->selectedCritter->genotype->adamdist );
  		v_space += v_spacer; textprinter->print( absPosition.x+110, absPosition.y+v_space, critterselection->selectedCritter->totalFrames );
  		v_space += v_spacer; textprinter->print( absPosition.x+110, absPosition.y+v_space, "%1.1f", critterselection->selectedCritter->energyLevel );
  		v_space += v_spacer; textprinter->print( absPosition.x+110, absPosition.y+v_space, critterselection->selectedCritter->brain.totalNeurons );

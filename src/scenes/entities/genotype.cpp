@@ -6,9 +6,10 @@ Genotype::Genotype()
 	brainzArch = new BrainzArch();
 
 	count = 0;
+	adamdist = 0;
 }
 
-void Genotype::registerBrainInputOutputs(const unsigned int& retinasize)
+void Genotype::registerBrainInputOutputs()
 {
 
 // BRAIN INPUTS
@@ -31,7 +32,7 @@ void Genotype::registerBrainInputOutputs(const unsigned int& retinasize)
 			brainzArch->registerInput( 40000+i );
 
 	// vision retina number of items
-		unsigned int items = retinasize * retinasize * 4;
+		unsigned int items = bodyArch->retinasize * bodyArch->retinasize * 4;
 		for ( unsigned int i=0; i < items; i++ )
 			brainzArch->registerInput( 50000+i );
 
@@ -53,6 +54,22 @@ void Genotype::registerBrainInputOutputs(const unsigned int& retinasize)
 
 	// procreate
 		brainzArch->registerOutput( 100001 );
+}
+
+string Genotype::saveGenotype()
+{
+	stringstream buf;
+// 	buf << "color=" << color[0] << "," << color[1] << "," << color[2] << ";\n";
+	buf << "adamdist=" << adamdist << ";\n";
+// 	buf << "retinasize=" << retinasize << ";\n";
+
+	string* bodyarch = bodyArch->getArch();
+	string* brainarch = brainzArch->getArch();
+	buf << *bodyarch;
+	buf << *brainarch;
+	//cout << *arch << endl;
+
+	return buf.str();
 }
 
 Genotype::~Genotype()

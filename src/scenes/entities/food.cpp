@@ -7,10 +7,10 @@ Food::Food()
 	lifetime	= 0;
 	energyLevel	= 0;
 
-	color[0] = 0.0f;
-	color[1] = 0.5f;
-	color[2] = 0.0f;
-	color[3] = 1.0f;
+	color.r 	= 0.0f;
+	color.g		= 0.5f;
+	color.b		= 0.0f;
+	color.a		= 1.0f;
 
 	type = 1;
 	isPicked = false;
@@ -25,7 +25,7 @@ void Food::draw()
 	glPushMatrix(); 
 	glMultMatrixf(position);
 
-			glColor4f( color[0], color[1], color[2], 1.0f );
+			glColor4f( color.r, color.g, color.b, color.a );
 			glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
 			Displaylists::Instance()->call(1);
 

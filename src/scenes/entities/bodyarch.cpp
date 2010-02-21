@@ -256,7 +256,8 @@ void BodyArch::mutate(unsigned int runs)
 {
 	for ( unsigned int i=0; i < runs; i++ )
 	{
-		unsigned int tsum = 	settings->getCVar("body_percentmutateeffectaddbodypart")
+		unsigned int tsum = 	settings->getCVar("body_percentmutateeffectchangecolor")
+					+ settings->getCVar("body_percentmutateeffectaddbodypart")
 					+ settings->getCVar("body_percentmutateeffectremovebodypart")
 					+ settings->getCVar("body_percentmutateeffectresizebodypart")
 					+ settings->getCVar("body_percentmutateeffectresizebodypart_slightly")
@@ -272,9 +273,27 @@ void BodyArch::mutate(unsigned int runs)
 				;
 
 		unsigned int mode = randgen->Instance()->get(1,tsum);
-		
+
+		// CHANGE COLOR
+			unsigned int modesum = settings->getCVar("body_percentmutateeffectchangecolor");
+			if ( mode <= modesum )
+			{
+				// mutate color
+				unsigned int ncolor = randgen->Instance()->get(0,2);
+
+				if ( ncolor == 0 )
+					color.r = (float)RandGen::Instance()->get(0,100)/100.0f;
+				else if ( ncolor == 1 )
+					color.g = (float)RandGen::Instance()->get(0,100)/100.0f;
+				else if ( ncolor == 2 )
+					color.b = (float)RandGen::Instance()->get(0,100)/100.0f;
+
+				continue;
+			}
+
+
 		// ADD BODYPART
-			unsigned int modesum = settings->getCVar("body_percentmutateeffectaddbodypart");
+			modesum += settings->getCVar("body_percentmutateeffectaddbodypart");
 			if ( mode <= modesum )
 			{
 				if ( archBodyparts.size() < settings->getCVar("body_maxbodyparts") )
@@ -974,6 +993,9 @@ unsigned int BodyArch::getUniqueConstraintID()
 
 void BodyArch::copyFrom(const BodyArch* otherBody)
 {
+	color = otherBody->color;
+	retinasize = otherBody->retinasize;
+
 	for ( unsigned int i=0; i < otherBody->archBodyparts.size(); i++ )
 	{
 		const archBodypart *obp = &otherBody->archBodyparts[i];
@@ -1038,7 +1060,24 @@ void BodyArch::setArch(string* content)
 	string line = parseH->Instance()->returnUntillStrip( "\n", contentCopy );
 	while ( !line.empty() )
 	{
-		if ( parseH->Instance()->beginMatchesStrip( "b ", line ) )
+		if ( Parser::Instance()->beginMatchesStrip( "color=", line ) )
+		{
+			string R = Parser::Instance()->returnUntillStrip( ",", line );
+			string G = Parser::Instance()->returnUntillStrip( ",", line );
+			string B = Parser::Instance()->returnUntillStrip( ";", line );
+
+			if(EOF == sscanf(R.c_str(), "%f", &color.r)) cerr << "ERROR INSERTING CRITTER (colorR)" << endl;
+			if(EOF == sscanf(G.c_str(), "%f", &color.g)) cerr << "ERROR INSERTING CRITTER (colorG)" << endl;
+			if(EOF == sscanf(B.c_str(), "%f", &color.b)) cerr << "ERROR INSERTING CRITTER (colorB)" << endl;
+			color.a = 0.0f;
+		}
+		else if ( Parser::Instance()->beginMatchesStrip( "retinasize=", line ) )
+		{
+			string RES = Parser::Instance()->returnUntillStrip( ";", line );
+			//cerr << "RES: " << RES << endl;
+			if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
+		}
+		else if ( parseH->Instance()->beginMatchesStrip( "b ", line ) )
 		{
 			// b 99999 box 0 75 75 200
 
@@ -1249,6 +1288,8 @@ string* BodyArch::getArch()
 	stringstream buf;
 
 	// neuron info
+		buf << "color=" << color.r << "," << color.g << "," << color.b << ";\n";
+		buf << "retinasize=" << retinasize << ";\n";
 		for ( unsigned int i=0; i < archBodyparts.size(); i++ )
 		{
 			archBodypart *bp = &archBodyparts[i];

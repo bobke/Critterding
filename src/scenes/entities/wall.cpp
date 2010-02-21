@@ -8,10 +8,10 @@ Wall::Wall(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dyn
 	halfY		= Y/2;
 	halfZ		= Z/2;
 
-	color[0]	= 0.0f;
-	color[1]	= 0.0f;
-	color[2]	= 0.5f;
-	color[3]	= 0.0f;
+	color.r		= 0.0f;
+	color.g		= 0.0f;
+	color.b		= 0.5f;
+	color.a		= 0.0f;
 
 	groundShape = new btBoxShape( btVector3( halfX ,halfY, halfZ ) );
 	
@@ -36,7 +36,7 @@ void Wall::draw()
 	glPushMatrix(); 
 	glMultMatrixf(nposition);
 
-		glColor4f( color[0], color[1], color[2], color[3] );
+		glColor4f( color.r, color.g, color.b, color.a );
 
 /*		const btBoxShape* boxShape = static_cast<const btBoxShape*>(groundShape);
 		btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();*/

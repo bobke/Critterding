@@ -25,8 +25,7 @@ void CritterB::initConst()
 	procreateTimeCount	= 0;
 
 // 	sightrange = settings->critter_sightrange;
-	components		= 4;
-	colorTrim		= 0.15f;
+// 	colorTrim		= 0.15f;
 
 	eat			= false;
 	procreate		= false;
@@ -44,71 +43,11 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 
 	initConst();
 
-	adamdist						= 0;
-
 	energyLevel						= settings->getCVar("critter_startenergy");
 
 // 	lifetime						= settings->critter_maxlifetime;
-	retinasize						= settings->getCVar("critter_retinasize");
 
-	genotype = genotypes->newg(retinasize);
-
-	genotype->brainzArch->maxNeurons					= settings->getCVar("brain_maxneurons");
-	genotype->brainzArch->minSynapses					= settings->getCVar("brain_minsynapses");
-	genotype->brainzArch->maxSynapses					= settings->getCVar("brain_maxsynapses");
-	genotype->brainzArch->minNeuronsAtBuildtime				= settings->getCVar("brain_minneuronsatbuildtime");
-	genotype->brainzArch->maxNeuronsAtBuildtime				= settings->getCVar("brain_maxneuronsatbuildtime");
-
-	genotype->brainzArch->minSynapsesAtBuildtime				= settings->getCVar("brain_minsynapsesatbuildtime");
-// 		brain.mutate_minSynapsesAtBuildtime		= settings->getCVar("brain_mutate_minsynapsesatbuildtime");
-
-	genotype->brainzArch->maxSynapsesAtBuildtime				= settings->getCVar("brain_maxsynapsesatbuildtime");
-// 		brain.mutate_maxSynapsesAtBuildtime		= settings->getCVar("brain_mutate_maxsynapsesatbuildtime");
-
-	genotype->brainzArch->percentChanceInhibitoryNeuron			= settings->getCVar("brain_percentchanceinhibitoryneuron");
-		genotype->brainzArch->mutate_percentChanceInhibitoryNeuron	= settings->getCVar("brain_mutate_percentchanceinhibitoryneuron");
-
-	genotype->brainzArch->percentChanceMotorNeuron				= settings->getCVar("brain_percentchancemotorneuron");
-		genotype->brainzArch->mutate_percentChanceMotorNeuron		= settings->getCVar("brain_mutate_percentchancemotorneuron");
-
-	genotype->brainzArch->percentChancePlasticNeuron			= settings->getCVar("brain_percentchanceplasticneuron");
-		genotype->brainzArch->mutate_percentChancePlasticNeuron			= settings->getCVar("brain_mutate_percentchanceplasticneuron");
-
-	genotype->brainzArch->minPlasticityStrengthen				= settings->getCVar("brain_minplasticitystrengthen");
-	genotype->brainzArch->maxPlasticityStrengthen				= settings->getCVar("brain_maxplasticitystrengthen");
-	genotype->brainzArch->minPlasticityWeaken				= settings->getCVar("brain_minplasticityweaken");
-	genotype->brainzArch->maxPlasticityWeaken				= settings->getCVar("brain_maxplasticityweaken");
-		genotype->brainzArch->mutate_PlasticityFactors				= settings->getCVar("brain_mutate_plasticityfactors");
-
-	genotype->brainzArch->minFiringThreshold				= settings->getCVar("brain_minfiringthreshold");
-		genotype->brainzArch->mutate_minFiringThreshold				= settings->getCVar("brain_mutate_minfiringthreshold");
-
-	genotype->brainzArch->maxFiringThreshold				= settings->getCVar("brain_maxfiringthreshold");
-		genotype->brainzArch->mutate_maxFiringThreshold				= settings->getCVar("brain_mutate_maxfiringthreshold");
-
-	genotype->brainzArch->maxDendridicBranches				= settings->getCVar("brain_maxdendridicbranches");
-		genotype->brainzArch->mutate_maxDendridicBranches		= settings->getCVar("brain_mutate_maxdendridicbranches");
-
-	genotype->brainzArch->percentChanceConsistentSynapses			= settings->getCVar("brain_percentchanceconsistentsynapses");
-		genotype->brainzArch->mutate_percentChanceConsistentSynapses		= settings->getCVar("brain_mutate_percentchanceconsistentsynapses");
-
-	genotype->brainzArch->percentChanceInhibitorySynapses			= settings->getCVar("brain_percentchanceinhibitorysynapses");
-		genotype->brainzArch->mutate_percentChanceInhibitorySynapses		= settings->getCVar("brain_mutate_percentchanceinhibitorysynapses");
-
-	genotype->brainzArch->percentChanceSensorySynapse			= settings->getCVar("brain_percentchancesensorysynapse");
-		genotype->brainzArch->mutate_percentChanceSensorySynapse	= settings->getCVar("brain_mutate_percentchancesensorysynapse");
-
-	genotype->brainzArch->percentMutateEffectAddNeuron			= settings->getCVar("brain_percentmutateeffectaddneuron");
-	genotype->brainzArch->percentMutateEffectRemoveNeuron			= settings->getCVar("brain_percentmutateeffectremoveneuron");
-	genotype->brainzArch->percentMutateEffectAlterNeuron			= settings->getCVar("brain_percentmutateeffectalterneuron");
-	genotype->brainzArch->percentMutateEffectAddSynapse			= settings->getCVar("brain_percentmutateeffectaddsynapse");
-	genotype->brainzArch->percentMutateEffectRemoveSynapse			= settings->getCVar("brain_percentmutateeffectremovesynapse");
-		genotype->brainzArch->mutate_MutateEffects				= settings->getCVar("brain_mutate_mutateeffects");
-
-	color[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	color[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	color[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	color[3] = 0.0f;
+	genotype = genotypes->newg( settings );
 
 	// BODY
 // 	genotype->bodyArch->buildArch();
@@ -132,28 +71,14 @@ CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& start
 
 	initConst();
 
-	adamdist					= other.adamdist;
-	retinasize					= other.retinasize;
 // 	lifetime					= other.lifetime;
 
-	color[0]					= other.color[0];
-	color[1]					= other.color[1];
-	color[2]					= other.color[2];
-	color[3]					= other.color[3];
-
-	genotype = genotypes->copy(other.genotype, brainmutant, RandGen::Instance()->get(1, settings->getCVar("brain_maxmutations")), bodymutant, RandGen::Instance()->get(1, settings->getCVar("body_maxmutations")), retinasize);
-
-	if ( bodymutant )
-		mutateBody();
+	genotype = genotypes->copy(other.genotype, brainmutant, RandGen::Instance()->get(1, settings->getCVar("brain_maxmutations")), bodymutant, RandGen::Instance()->get(1, settings->getCVar("body_maxmutations")));
 
 	body.wireArch( genotype->bodyArch, (void*)this, btDynWorld, startPos );
 
 	// LINK
 	registerBrainInputOutputs();
-
-	// BRAIN
-	if ( brainmutant )
-		mutateBrain();
 
 	brain.wireArch( genotype->brainzArch );
 }
@@ -170,7 +95,7 @@ CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVect
 
 	energyLevel		= settings->getCVar("critter_startenergy");
 
-	loadCritterB(critterstring);
+	genotype = genotypes->loadGenotype(critterstring);
 
 	// BODY
 	body.wireArch( genotype->bodyArch, (void*)this, btDynWorld, startPos );
@@ -180,75 +105,6 @@ CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVect
 
 	// BRAIN
 	brain.wireArch( genotype->brainzArch );
-}
-
-void CritterB::registerBrainInputOutputsNew()
-{
-// BRAIN INPUTS
-
-	// touching food
-		brain.registerInput( 10000 );
-		genotype->brainzArch->registerInput( 10000 );
-
-
-	// touching critter
-		brain.registerInput( 10001 );
-		genotype->brainzArch->registerInput( 10001 );
-
-	// canprocreate
-		brain.registerInput( 20000 );
-		genotype->brainzArch->registerInput( 20000 );
-
-	// energy state
-		for ( unsigned int i=0; i < 10; i++ )
-		{
-			brain.registerInput( 30000+i );
-			genotype->brainzArch->registerInput( 30000+i );
-		}
-	// age state
-		for ( unsigned int i=0; i < 10; i++ )
-		{
-			brain.registerInput( 40000+i );
-			genotype->brainzArch->registerInput( 40000+i );
-		}
-
-	// vision retina number of items
-		items = retinasize * retinasize * components;
-		for ( unsigned int i=0; i < items; i++ )
-		{
-			brain.registerInput( 50000+i );
-			genotype->brainzArch->registerInput( 50000+i );
-		}
-
-	// register constraint angles outputs as brain inputs, take constraint_id1 for ease
-		for ( unsigned int i=0; i < genotype->bodyArch->archConstraints.size(); i++ )
-		{
-			brain.registerInput( genotype->bodyArch->archConstraints[i].constraint_id1 );
-			genotype->brainzArch->registerInput( genotype->bodyArch->archConstraints[i].constraint_id1 );
-		}
-
-// BRAIN OUTPUTS
-
-	// register constraints's inputs as brain outputs
-		for ( unsigned int i=0; i < body.constraints.size(); i++ )
-		{
-			for ( unsigned int j=0; j < body.constraints[i]->Inputs.size(); j+=2 )
-			{
-				brain.registerOutput( body.constraints[i]->Inputs[j], genotype->bodyArch->archConstraints[i].constraint_id1 );
-				brain.registerOutput( body.constraints[i]->Inputs[j+1], genotype->bodyArch->archConstraints[i].constraint_id2 );
-				
-				genotype->brainzArch->registerOutput( genotype->bodyArch->archConstraints[i].constraint_id1 );
-				genotype->brainzArch->registerOutput( genotype->bodyArch->archConstraints[i].constraint_id2 );
-			}
-		}
-
-	// eat
-		brain.registerOutput( &eat, 100000 );
-		genotype->brainzArch->registerOutput( 100000 );
-
-	// procreate
-		brain.registerOutput( &procreate, 100001 );
-		genotype->brainzArch->registerOutput( 100001 );
 }
 
 void CritterB::registerBrainInputOutputs()
@@ -292,7 +148,7 @@ void CritterB::draw(bool drawFaces)
 			if ( settings->getCVar("colormode") == 1 )
 				glColor4f( genotype->speciescolor.r, genotype->speciescolor.g, genotype->speciescolor.b, genotype->speciescolor.a );
 			else
-				glColor4f( color[0], color[1], color[2], 0.0f );
+				glColor4f( genotype->bodyArch->color.r, genotype->bodyArch->color.g, genotype->bodyArch->color.b, genotype->bodyArch->color.a );
 
 				const btBoxShape* boxShape = static_cast<const btBoxShape*>(body.bodyparts[j]->shape);
 				btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();
@@ -417,8 +273,8 @@ void CritterB::procInputNeurons()
 // 		unsigned int vstart = overstep;
 
 		if ( *critter_raycastvision )
-			for ( int y = retinasize-1; y >= 0; y-- )
-				for ( unsigned int x = 0; x < retinasize; x++ )
+			for ( int y = genotype->bodyArch->retinasize-1; y >= 0; y-- )
+				for ( unsigned int x = 0; x < genotype->bodyArch->retinasize; x++ )
 				{
 // 					cerr << "starting" << endl;
 					mouseRay = raycast->cast( body.mouths[0]->ghostObject->getWorldTransform().getOrigin(), getScreenDirection(x+1, y) );
@@ -426,10 +282,21 @@ void CritterB::procInputNeurons()
 					if ( mouseRay.hit )
 					{
 						Entity* e = static_cast<Entity*>(mouseRay.hitBody->getUserPointer());
-						brain.Inputs[overstep++].output = e->color[0];
-						brain.Inputs[overstep++].output = e->color[1];
-						brain.Inputs[overstep++].output = e->color[2];
-						brain.Inputs[overstep++].output = e->color[3];
+						if ( e->type == 0 )
+						{
+							CritterB* c = static_cast<CritterB*>(e);
+							brain.Inputs[overstep++].output = c->genotype->bodyArch->color.r;
+							brain.Inputs[overstep++].output = c->genotype->bodyArch->color.g;
+							brain.Inputs[overstep++].output = c->genotype->bodyArch->color.b;
+							brain.Inputs[overstep++].output = c->genotype->bodyArch->color.a;
+						}
+						else
+						{
+							brain.Inputs[overstep++].output = e->color.r;
+							brain.Inputs[overstep++].output = e->color.g;
+							brain.Inputs[overstep++].output = e->color.b;
+							brain.Inputs[overstep++].output = e->color.a;
+						}
 					}
 					else
 					{
@@ -441,8 +308,8 @@ void CritterB::procInputNeurons()
 // 					cerr << "e2" << endl;
 				}
 		else
-			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
-				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w++ )
+			for ( unsigned int h=retinaRowStart; h < retinaRowStart+(genotype->bodyArch->retinasize*retinaRowLength); h += retinaRowLength )
+				for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((genotype->bodyArch->retinasize)*4); w++ )
 					brain.Inputs[overstep++].output = (float)retina[w] / 256.0f;
 
 // 		for ( unsigned int x = 0; x < retinasize; x++ )
@@ -465,7 +332,7 @@ void CritterB::procInputNeurons()
 // 
 // 		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
 // 		{
-// 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=components )
+// 			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*4); w+=4 )
 // 			{
 // 				if ( (int)retina[w] ) cerr << "\033[1;34mB\033[0m";
 // 				else cerr << ".";
@@ -517,164 +384,38 @@ btVector3 CritterB::getScreenDirection(const int& x, const int& y)
 	upRay *= directionlength;
 
 	btVector3 rayTo = (tr.getOrigin() + forwardRay) - (0.5f * hor) + (0.5f * upRay);
-	rayTo += x * (hor * (1.0f/(retinasize)));
-	rayTo -= y * (upRay * (1.0f/(retinasize)));
+	rayTo += x * (hor * (1.0f/(genotype->bodyArch->retinasize)));
+	rayTo -= y * (upRay * (1.0f/(genotype->bodyArch->retinasize)));
 
 	return rayTo;
 }
 
-
-void CritterB::mutateBody()
+void CritterB::mutateBrain() // FIXME PUSH THIS TO BODYARCH MUTATE FUNCTION
 {
-	adamdist++;
-
-	// mutate color
-	unsigned int mode = RandGen::Instance()->get(1,2);
-	unsigned int ncolor = RandGen::Instance()->get(0,2);
-
-	// nasty correction
-	if ( ncolor == 1 )
-		ncolor = 0;
-	if ( mode == 1 )
-	{
-		color[ncolor] += (float)RandGen::Instance()->get(1,10)/100.0f;
-		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
-	}
-	else
-	{
-		color[ncolor] -= (float)RandGen::Instance()->get(1,10)/100.0f;
-		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
-	}
-
-/*	// a new speciescolor
-	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-*/
-// 	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("body_maxmutations"));
-// 	genotype->bodyArch->mutate( runs ); // 0 for random
-// 	cerr << "MUTATION is disabled at tis time" << endl;
+// 	// mutate color
+// 	unsigned int mode = RandGen::Instance()->get(1,2);
+// 	unsigned int ncolor = RandGen::Instance()->get(0,2);
+// 
+// 	// nasty correction
+// 	if ( ncolor == 1 )
+// 		ncolor = 0;
+// 	if ( mode == 1 )
+// 	{
+// 		color[ncolor] += (float)RandGen::Instance()->get(1,10)/100.0f;
+// 		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
+// 	}
+// 	else
+// 	{
+// 		color[ncolor] -= (float)RandGen::Instance()->get(1,10)/100.0f;
+// 		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
+// 	}
 }
 
-void CritterB::mutateBrain()
-{
-	adamdist++;
-
-	// mutate color
-	unsigned int mode = RandGen::Instance()->get(1,2);
-	unsigned int ncolor = RandGen::Instance()->get(0,2);
-
-	// nasty correction
-	if ( ncolor == 1 )
-		ncolor = 0;
-	if ( mode == 1 )
-	{
-		color[ncolor] += (float)RandGen::Instance()->get(1,10)/100.0f;
-		if ( color[ncolor] > 1.0f ) color[ncolor] = 1.0f;
-	}
-	else
-	{
-		color[ncolor] -= (float)RandGen::Instance()->get(1,10)/100.0f;
-		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
-	}
-
-// 	// a new speciescolor
-// 	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-// 	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-// 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-
-// 	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("brain_maxmutations"));
-// 	genotype->brainzArch->mutate( runs ); // 0 for random
-// 	cerr << "MUTATION is disabled at tis time" << endl;
-}
-
-// LOAD critter
-
-void CritterB::loadCritterB(string &content)
-{
-	string passToBody;
-	string passToBrain;
-	string line = Parser::Instance()->returnUntillStrip( "\n", content );
-	while ( !line.empty() )
-	{
-		// color=0.03,0.82,0.12,0;
-			if ( Parser::Instance()->beginMatchesStrip( "color=", line ) )
-			{
-				string R = Parser::Instance()->returnUntillStrip( ",", line );
-				string G = Parser::Instance()->returnUntillStrip( ",", line );
-				string B = Parser::Instance()->returnUntillStrip( ";", line );
-
-				if(EOF == sscanf(R.c_str(), "%f", &color[0])) cerr << "ERROR INSERTING CRITTER (colorR)" << endl;
-				if(EOF == sscanf(G.c_str(), "%f", &color[1])) cerr << "ERROR INSERTING CRITTER (colorG)" << endl;
-				if(EOF == sscanf(B.c_str(), "%f", &color[2])) cerr << "ERROR INSERTING CRITTER (colorB)" << endl;
-				color[3] = 0.0f;
-			}
-
-		// adamdist=690;
-			else if ( Parser::Instance()->beginMatchesStrip( "adamdist=", line ) )
-			{
-				string AD = Parser::Instance()->returnUntillStrip( ";", line );
-				//cerr << "AD: " << AD << endl;
-				if(EOF == sscanf(AD.c_str(), "%d", &adamdist)) cerr << "ERROR INSERTING CRITTER" << endl;
-			}
-
-		// retinasize=9;
-			else if ( Parser::Instance()->beginMatchesStrip( "retinasize=", line ) )
-			{
-				string RES = Parser::Instance()->returnUntillStrip( ";", line );
-				//cerr << "RES: " << RES << endl;
-				if(EOF == sscanf(RES.c_str(), "%d", &retinasize)) cerr << "ERROR INSERTING CRITTER" << endl;
-			}
-
-		// the rest goes to the body or brain
-			else
-			{
-				if ( 
-					Parser::Instance()->beginMatches( "b ", line ) ||
-					Parser::Instance()->beginMatches( "m ", line ) ||
-					Parser::Instance()->beginMatches( "c ", line ) ||
-					Parser::Instance()->beginMatches( "cm ", line )
-				)
-				{
-					passToBody.append(line);
-					passToBody.append("\n");
-				}
-				else
-				{
-					passToBrain.append(line);
-					passToBrain.append("\n");
-				}
-			}
-
-		line = Parser::Instance()->returnUntillStrip( "\n", content );
-	}
-
-	genotype = genotypes->newg(passToBody, passToBrain, retinasize); // FIXME, with a speciesID
-
-// 	genotype->bodyArch->setArch(&passToBody);
-// 	genotype->brainzArch->setArch(&passToBrain);
-}
-
-string CritterB::saveCritterB()
-{
-	stringstream buf;
-	buf << "color=" << color[0] << "," << color[1] << "," << color[2] << ";\n";
-	buf << "adamdist=" << adamdist << ";\n";
-	buf << "retinasize=" << retinasize << ";\n";
-
-	string* bodyarch = genotype->bodyArch->getArch();
-	string* brainarch = genotype->brainzArch->getArch();
-	buf << *bodyarch;
-	buf << *brainarch;
-	//cout << *arch << endl;
-
-	return buf.str();
-}
 
 // Vision Stuff
 	void CritterB::place()
 	{
-		glViewport(framePosX, framePosY, retinasize, retinasize);
+		glViewport(framePosX, framePosY, genotype->bodyArch->retinasize, genotype->bodyArch->retinasize);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, (float)*critter_sightrange/10);
@@ -695,24 +436,24 @@ string CritterB::saveCritterB()
 		while ( pos >= *retinasperrow )
 		{
 			pos -= *retinasperrow;
-			framePosY += retinasize;
+			framePosY += genotype->bodyArch->retinasize;
 		}
-		framePosX = (pos * retinasize) + pos;
+		framePosX = (pos * genotype->bodyArch->retinasize) + pos;
 
 		// Calculate where in the Great Retina this critter shold start (column & row)
 		unsigned int target = visionPosition;
 		retinaRowStart = 0;
 
 		// determine on which row of the retina to start for this critter
-		retinaRowLength = *retinasperrow * (retinasize+1) * components;
+		retinaRowLength = *retinasperrow * (genotype->bodyArch->retinasize+1) * 4;
 
 		// determine on which column to start
 		while ( target >= *retinasperrow )
 		{
-			retinaRowStart += retinasize * retinaRowLength;
+			retinaRowStart += genotype->bodyArch->retinasize * retinaRowLength;
 			target -= *retinasperrow;
 		}
-		retinaColumnStart = target * (retinasize+1) * components;
+		retinaColumnStart = target * (genotype->bodyArch->retinasize+1) * 4;
 
 	// cerr << framePosX << " : " << framePosY << endl;
 	// usleep (1000);
@@ -721,9 +462,9 @@ string CritterB::saveCritterB()
 
 	void CritterB::printVision()
 	{
-		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(retinasize*retinaRowLength); h += retinaRowLength )
+		for ( unsigned int h=retinaRowStart; h < retinaRowStart+(genotype->bodyArch->retinasize*retinaRowLength); h += retinaRowLength )
 		{
-			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((retinasize)*components); w+=components )
+			for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+((genotype->bodyArch->retinasize)*4); w+=4 )
 			{
 				if ( (int)retina[w+2] ) cerr << "\033[1;31mR\033[0m";
 				else cerr << ".";

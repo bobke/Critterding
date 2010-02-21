@@ -108,10 +108,10 @@ void Brainview::draw()
 				else if ( currentCritter->brain.Inputs[i].id >= 50000 && currentCritter->brain.Inputs[i].id < 60000 )
 				{
 					int vinput = currentCritter->brain.Inputs[i].id-50000;
-					int vcolmax = currentCritter->retinasize * currentCritter->components;
+					int vcolmax = currentCritter->genotype->bodyArch->retinasize * 4;
 					int row = vinput / vcolmax;
 					int col = vinput - (row * vcolmax);
-					row = currentCritter->retinasize - row - 1;
+					row = currentCritter->genotype->bodyArch->retinasize - row - 1;
 
 					sensor s; s.sPointer = &currentCritter->brain.Inputs[i];
 					s.position = Vector2f(brainview->position.x+((spacing+v_diam)*col)+10, 10+((spacing+v_diam)*row));

@@ -354,7 +354,7 @@ void WorldB::procreate( CritterB* c )
 		// display message of birth
 			stringstream buf;
 			buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
-			buf << " ad: " << setw(4) << nc->adamdist;
+			buf << " ad: " << setw(4) << nc->genotype->adamdist;
 			buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
 
 			if ( brainmutant || bodymutant )
@@ -525,7 +525,7 @@ void WorldB::autoexchangeCritters()
 						CritterB *c = new CritterB(content, m_dynamicsWorld, findPosition(), retina);
 
 						unsigned int error = 0;
-						if ( c->retinasize != *critter_retinasize ) error = 1;
+						if ( c->genotype->bodyArch->retinasize != *critter_retinasize ) error = 1;
 
 						if ( !error)
 						{
@@ -543,10 +543,10 @@ void WorldB::autoexchangeCritters()
 							if ( error == 1 )
 							{
 								stringstream buf;
-								buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
+								buf << "ERROR: critter retinasize (" << c->genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
 								Logbuffer::Instance()->add(buf);
 
-								cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
+								cerr << "ERROR: critter retinasize (" << c->genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
 							}
 						}
 					}
@@ -570,7 +570,7 @@ void WorldB::autoexchangeCritters()
 				if ( !dirH.exists(exchangedir) )	dirH.make(exchangedir);
 
 				// save critter
-				fileH.save(filename, critters[savec]->saveCritterB());
+				fileH.save(filename, critters[savec]->genotype->saveGenotype());
 
 				//cerr << endl << "Saved critters to " << subsavedir << endl << endl;
 				stringstream buf2;
@@ -712,7 +712,7 @@ void WorldB::getGeneralStats()
 		c = critters[i];
 		info_totalNeurons		+= c->brain.totalNeurons;
 		info_totalSynapses		+= c->brain.totalSynapses;
-		info_totalAdamDistance		+= c->adamdist;
+		info_totalAdamDistance		+= c->genotype->adamdist;
 		info_totalBodyparts		+= c->body.bodyparts.size();
 		info_totalWeight		+= c->body.totalWeight;
 	}
@@ -976,7 +976,7 @@ void WorldB::drawWithinCritterSight(CritterB *c)
 					glPushMatrix(); 
 					glMultMatrixf(drawposition);
 
-							glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
+							glColor4f( f->genotype->bodyArch->color.r, f->genotype->bodyArch->color.g, f->genotype->bodyArch->color.b, f->genotype->bodyArch->color.a );
 
 							btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape)->getHalfExtentsWithMargin();
 							glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
@@ -1047,7 +1047,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 				glPushMatrix(); 
 				glMultMatrixf(drawposition);
 
-						glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
+						glColor4f( f->genotype->bodyArch->color.r, f->genotype->bodyArch->color.g, f->genotype->bodyArch->color.b, f->genotype->bodyArch->color.a );
 
 						btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape)->getHalfExtentsWithMargin();
 						glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
@@ -1095,7 +1095,7 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 					glPushMatrix(); 
 					glMultMatrixf(drawposition);
 
-							glColor4f( f->color[0], f->color[1], f->color[2], 0.0f );
+							glColor4f( f->genotype->bodyArch->color.r, f->genotype->bodyArch->color.g, f->genotype->bodyArch->color.b, f->genotype->bodyArch->color.a );
 
 							btVector3 halfExtent = static_cast<const btBoxShape*>(f->body.bodyparts[b]->shape)->getHalfExtentsWithMargin();
 							glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
@@ -1154,7 +1154,7 @@ void WorldB::loadAllCritters()
 			CritterB *c = new CritterB(content, m_dynamicsWorld, findPosition(), retina);
 
 			unsigned int error = 0;
-			if ( c->retinasize != *critter_retinasize ) error = 1;
+			if ( c->genotype->bodyArch->retinasize != *critter_retinasize ) error = 1;
 
 			if ( !error)
 			{
@@ -1172,10 +1172,10 @@ void WorldB::loadAllCritters()
 				if ( error == 1 )
 				{
 					stringstream buf;
-					buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
+					buf << "ERROR: critter retinasize (" << c->genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
 					Logbuffer::Instance()->add(buf);
 
-					cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
+					cerr << "ERROR: critter retinasize (" << c->genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
 				}
 			}
 		}
@@ -1208,7 +1208,7 @@ void WorldB::saveAllCritters()
 		filename << subsavedir << "/" << "critter" << i << ".cr";
 	
 		// save critters
-		fileH.save(filename.str(), critters[i]->saveCritterB());
+		fileH.save(filename.str(), critters[i]->genotype->saveGenotype());
 	}
  	//cerr << endl << "Saved critters to " << subsavedir << endl << endl;
 	stringstream buf2;
@@ -1353,7 +1353,7 @@ void WorldB::makeDefaultFloor()
 	// Ground Floor
 		btVector3 position( *worldsizeX/2.0f, -WallHalfWidth, *worldsizeY/2.0f );
 		Wall* w = new Wall( *worldsizeX, WallWidth, *worldsizeY, position, m_dynamicsWorld );
-		w->color[0] = 0.30f; w->color[1] = 0.20f; w->color[2] = 0.10f;
+		w->color.r = 0.30f; w->color.g = 0.20f; w->color.b = 0.10f;
 		walls.push_back(w);
 	
 	if ( settings->getCVar("worldwalls") )
@@ -1361,22 +1361,22 @@ void WorldB::makeDefaultFloor()
 		// Left Wall
 			position = btVector3 ( 0.0f-WallHalfWidth, WallHalfHeight-WallWidth, *worldsizeY/2.0f );
 			w = new Wall( WallWidth, WallHeight, *worldsizeY, position, m_dynamicsWorld );
-			w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
 			walls.push_back(w);
 		// Right Wall
 			position = btVector3 ( *worldsizeX+WallHalfWidth, WallHalfHeight-WallWidth, *worldsizeY/2.0f );
 			w = new Wall( WallWidth, WallHeight, *worldsizeY, position, m_dynamicsWorld );
-			w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
 			walls.push_back(w);
 		// Top Wall
 			position = btVector3 ( *worldsizeX/2.0f, WallHalfHeight-WallWidth, 0.0f-WallHalfWidth );
 			w = new Wall( *worldsizeX+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
-			w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
 			walls.push_back(w);
 		// Bottom Wall
 			position = btVector3 ( *worldsizeX/2.0f, WallHalfHeight-WallWidth, *worldsizeY+WallHalfWidth );
 			w = new Wall( *worldsizeX+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
-			w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
 			walls.push_back(w);
 	}
 }
