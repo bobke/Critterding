@@ -10,14 +10,36 @@ Genotypes::Genotypes()
 {
 }
 
-Genotype* Genotypes::newg()
+Genotype* Genotypes::newg(const unsigned int& retinasize)
 {
+// cerr << " gentotype start" << endl;
 	Genotype* gt = new Genotype();
+	gt->bodyArch->buildArch();
+	gt->registerBrainInputOutputs(retinasize);
+	gt->brainzArch->buildArch();
 
 	gt->count=1;
-	
+	gt->speciescolor = colorH.randomColorRGB().normalized();
+
 	list.push_back(gt);
 // 	cerr << " new genotype " << list.size() << endl;
+	return gt;
+}
+
+Genotype* Genotypes::newg(string& passToBody, string& passToBrain, const unsigned int& retinasize)
+{
+// cerr << " gentotype start" << endl;
+	Genotype* gt = new Genotype();
+	gt->bodyArch->setArch(&passToBody);
+	gt->registerBrainInputOutputs(retinasize);
+	gt->brainzArch->setArch(&passToBrain);
+
+	gt->count=1;
+	gt->speciescolor = colorH.randomColorRGB().normalized();
+
+	list.push_back(gt);
+// 	cerr << " new genotype " << list.size() << endl;
+// cerr << " gentotype end" << endl;
 	return gt;
 }
 
@@ -27,13 +49,49 @@ void Genotypes::add(Genotype* gt)
 // 	cerr << " added genotype " << list.size() << endl;
 }
 
-Genotype* Genotypes::copy(Genotype* gt)
+Genotype* Genotypes::copy(Genotype* gt, bool brainmutant, unsigned int brruns, bool bodymutant, unsigned int boruns, const unsigned int& retinasize)
 {
-	Genotype* newgt = newg();
-	newgt->bodyArch->copyFrom(gt->bodyArch);
-	newgt->brainzArch->copyFrom(gt->brainzArch);
+// cerr << " gentotype copy start" << endl;
+	if ( bodymutant || brainmutant )
+	{
+		Genotype* newgt = new Genotype();
+
+		newgt->bodyArch->copyFrom(gt->bodyArch);
+
+		if ( bodymutant )
+		{
+			unsigned int runs = RandGen::Instance()->get(1, boruns);
+			newgt->bodyArch->mutate( runs );
+		}
+
+		newgt->registerBrainInputOutputs(retinasize);
+		newgt->brainzArch->copyFrom(gt->brainzArch);
+
+		if ( bodymutant )
+			newgt->brainzArch->removeObsoleteMotorsAndSensors();
+
+		if ( brainmutant )
+		{
+			unsigned int runs = RandGen::Instance()->get(1, brruns);
+			newgt->brainzArch->mutate( runs );
+		}
+
+		newgt->count=1;
+		newgt->speciescolor = colorH.randomColorRGB().normalized();
+
+		list.push_back(newgt);
+// cerr << " gentotype copy end" << endl;
+		return newgt;
+	}
+	else
+	{
+		add(gt);
+// cerr << " gentotype copy end" << endl;
+		return gt;
+	}
+
+	
 // 	cerr << " copied genotype " << list.size() << endl;
-	return newgt;
 }
 
 

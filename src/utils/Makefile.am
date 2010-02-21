@@ -19,6 +19,7 @@ noinst_HEADERS =	dir.h \
 			logbuffer.h \
 			critterselection.h \
 			headless.h \
+			color.h \
 			dirlayout.h
 
 libutils_la_SOURCES =	dir.cpp \
@@ -39,6 +40,7 @@ libutils_la_SOURCES =	dir.cpp \
 			logbuffer.cpp \
 			critterselection.cpp \
 			headless.cpp \
+			color.cpp \
 			dirlayout.cpp
 		      
 libutils_la_LIBADD = @FTGL_LA@ $(top_builddir)/src/utils/bullet/libbulletmath.la \

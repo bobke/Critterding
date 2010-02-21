@@ -51,7 +51,7 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 // 	lifetime						= settings->critter_maxlifetime;
 	retinasize						= settings->getCVar("critter_retinasize");
 
-	genotype = genotypes->newg();
+	genotype = genotypes->newg(retinasize);
 
 	genotype->brainzArch->maxNeurons					= settings->getCVar("brain_maxneurons");
 	genotype->brainzArch->minSynapses					= settings->getCVar("brain_minsynapses");
@@ -110,20 +110,15 @@ CritterB::CritterB(btDynamicsWorld* btWorld, long unsigned int id, const btVecto
 	color[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	color[3] = 0.0f;
 
-	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[3] = 0.0f;
-
 	// BODY
-	genotype->bodyArch->buildArch();
+// 	genotype->bodyArch->buildArch();
 	body.wireArch( genotype->bodyArch, (void*)this, btDynWorld, startPos );
 
 	// LINK
 	registerBrainInputOutputs();
 	
 	// BRAIN
-	genotype->brainzArch->buildArch();
+// 	genotype->brainzArch->buildArch();
 	brain.wireArch( genotype->brainzArch );
 }
 
@@ -146,20 +141,8 @@ CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& start
 	color[2]					= other.color[2];
 	color[3]					= other.color[3];
 
-	speciescolor[0]					= other.speciescolor[0];
-	speciescolor[1]					= other.speciescolor[1];
-	speciescolor[2]					= other.speciescolor[2];
-	speciescolor[3]					= other.speciescolor[3];
+	genotype = genotypes->copy(other.genotype, brainmutant, RandGen::Instance()->get(1, settings->getCVar("brain_maxmutations")), bodymutant, RandGen::Instance()->get(1, settings->getCVar("body_maxmutations")), retinasize);
 
-	// IF we mutate, copy the genotype
-	if ( bodymutant || brainmutant )
-		genotype = genotypes->copy(other.genotype);
-	else
-	{
-		genotypes->add(other.genotype);
-		genotype = other.genotype;
-	}
-	
 	if ( bodymutant )
 		mutateBody();
 
@@ -167,8 +150,6 @@ CritterB::CritterB(CritterB& other, long unsigned int id, const btVector3& start
 
 	// LINK
 	registerBrainInputOutputs();
-	if ( bodymutant )
-		genotype->brainzArch->removeObsoleteMotorsAndSensors();
 
 	// BRAIN
 	if ( brainmutant )
@@ -189,12 +170,6 @@ CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVect
 
 	energyLevel		= settings->getCVar("critter_startenergy");
 
-	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[3] = 0.0f;
-
-	genotype = genotypes->newg(); // FIXME, with a speciesID
 	loadCritterB(critterstring);
 
 	// BODY
@@ -207,9 +182,8 @@ CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVect
 	brain.wireArch( genotype->brainzArch );
 }
 
-void CritterB::registerBrainInputOutputs()
+void CritterB::registerBrainInputOutputsNew()
 {
-
 // BRAIN INPUTS
 
 	// touching food
@@ -277,6 +251,35 @@ void CritterB::registerBrainInputOutputs()
 		genotype->brainzArch->registerOutput( 100001 );
 }
 
+void CritterB::registerBrainInputOutputs()
+{
+// 	cerr << "attaching INPUTS" << endl;
+	for ( unsigned int i=0; i < genotype->brainzArch->InputIDs.size(); i++ )
+	{
+		brain.registerInput( genotype->brainzArch->InputIDs[i] );
+	}
+
+// 	cerr << "attaching OUTPUTS" << endl;
+
+	for ( unsigned int i=0; i < body.constraints.size(); i++ )
+	{
+		for ( unsigned int j=0; j < body.constraints[i]->Inputs.size(); j++ )
+		{
+			brain.registerOutput( body.constraints[i]->Inputs[j], genotype->brainzArch->OutputIDs[ (i*2)+j ] );
+		}
+	}
+
+	// eat
+		brain.registerOutput( &eat, 100000 );
+
+	// procreate
+		brain.registerOutput( &procreate, 100001 );
+		
+	// debug check
+	if ( brain.Outputs.size() != genotype->brainzArch->OutputIDs.size() )
+		cerr << "WARNING: brain.Outputs.size() != genotype->brainzArch->OutputIDs.size()" << endl;
+}
+
 void CritterB::draw(bool drawFaces)
 {
 	for( unsigned int j=0; j < body.bodyparts.size(); j++)
@@ -287,7 +290,7 @@ void CritterB::draw(bool drawFaces)
 		glMultMatrixf(position);
 
 			if ( settings->getCVar("colormode") == 1 )
-				glColor4f( speciescolor[0], speciescolor[1], speciescolor[2], speciescolor[3] );
+				glColor4f( genotype->speciescolor.r, genotype->speciescolor.g, genotype->speciescolor.b, genotype->speciescolor.a );
 			else
 				glColor4f( color[0], color[1], color[2], 0.0f );
 
@@ -543,14 +546,13 @@ void CritterB::mutateBody()
 		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
 	}
 
-	// a new speciescolor
+/*	// a new speciescolor
 	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-
-	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("body_maxmutations"));
-
-	genotype->bodyArch->mutate( runs ); // 0 for random
+*/
+// 	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("body_maxmutations"));
+// 	genotype->bodyArch->mutate( runs ); // 0 for random
 // 	cerr << "MUTATION is disabled at tis time" << endl;
 }
 
@@ -576,13 +578,13 @@ void CritterB::mutateBrain()
 		if ( color[ncolor] < colorTrim ) color[ncolor] = colorTrim;
 	}
 
-	// a new speciescolor
-	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
-	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+// 	// a new speciescolor
+// 	speciescolor[0] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+// 	speciescolor[1] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
+// 	speciescolor[2] = (float)RandGen::Instance()->get( 10*colorTrim,100 ) / 100.0f;
 
-	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("brain_maxmutations"));
-	genotype->brainzArch->mutate( runs ); // 0 for random
+// 	unsigned int runs = RandGen::Instance()->get(1, settings->getCVar("brain_maxmutations"));
+// 	genotype->brainzArch->mutate( runs ); // 0 for random
 // 	cerr << "MUTATION is disabled at tis time" << endl;
 }
 
@@ -647,8 +649,10 @@ void CritterB::loadCritterB(string &content)
 		line = Parser::Instance()->returnUntillStrip( "\n", content );
 	}
 
-	genotype->bodyArch->setArch(&passToBody);
-	genotype->brainzArch->setArch(&passToBrain);
+	genotype = genotypes->newg(passToBody, passToBrain, retinasize); // FIXME, with a speciesID
+
+// 	genotype->bodyArch->setArch(&passToBody);
+// 	genotype->brainzArch->setArch(&passToBrain);
 }
 
 string CritterB::saveCritterB()

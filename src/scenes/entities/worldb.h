@@ -181,7 +181,7 @@ class WorldB
 
 		// threading
 		omp_lock_t my_lock1;
-		omp_lock_t my_lock2;
+// 		omp_lock_t my_lock2;
 	private:
 		Raycast*		raycast;
 

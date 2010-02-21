@@ -42,11 +42,11 @@ void TestWorld2::process()
 	if ( critters.size() > biggest )
 		biggest = critters.size();
 	
-// #pragma omp parallel for private(j, b, f, bod, bo)
-// 	for ( j=0; j < biggest; j++ )
-// 	{
-		for( j=0; j < food.size(); j++)
-// 		if( j < food.size() )
+#pragma omp parallel for private(j, b, f, bod, bo)
+	for ( j=0; j < biggest; j++ )
+	{
+// 		for( j=0; j < food.size(); j++)
+		if( j < food.size() )
 		{
 			f = food[j];
 			for( b=0; b < f->body.bodyparts.size(); b++)
@@ -56,8 +56,8 @@ void TestWorld2::process()
 			}
 		}
 // 		#pragma omp parallel for private(j, b)
-		for( j=0; j < critters.size(); j++)
-// 		if( j < critters.size() )
+// 		for( j=0; j < critters.size(); j++)
+		if( j < critters.size() )
 		{
 			bod = critters[j];
 			for( b=0; b < bod->body.bodyparts.size(); b++)
@@ -66,7 +66,7 @@ void TestWorld2::process()
 				bo->setGravity( -(bo->getCenterOfMassPosition().normalized()*10) );
 			}
 		}
-// 	}
+	}
 	
 	if ( *critter_raycastvision == 1 )
 	{
