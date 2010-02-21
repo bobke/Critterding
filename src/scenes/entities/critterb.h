@@ -28,7 +28,6 @@ class CritterB : public Entity
 		Body			body;
 		Genotype*		genotype;
 		inline void		registerBrainInputOutputs();
-		inline void		registerBrainInputOutputsNew();
 		void			draw(bool drawFaces);
 		void			move();
 		
@@ -36,11 +35,11 @@ class CritterB : public Entity
 		
 		unsigned long		critterID;
 
-		unsigned int		adamdist;
+// 		unsigned int		adamdist;
 		btScalar		position[16];
 
 // 		float			speciescolor[3];
-		float			colorTrim;
+// 		float			colorTrim;
 
 		float			energyLevel;
 		float			energyUsed;
@@ -61,12 +60,8 @@ class CritterB : public Entity
 
 		void			process();
 
-		void			loadCritterB(string &content);
-		string			saveCritterB();
-
 		// Vision
-		unsigned int		retinasize;
-		unsigned int		components;
+// 		unsigned int		components;
 		float			straal;
 		unsigned char		*retina;
 		unsigned int		items;

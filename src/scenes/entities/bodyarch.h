@@ -4,18 +4,13 @@
 #include "../../utils/randgen.h"
 #include "../../utils/parser.h"
 #include "../../utils/settings.h"
+#include "../../utils/color.h"
 #include "archbodypart.h"
-// #include "bodypart.h"
 #include "archconstraint.h"
-// #include "constraint.h"
 #include "archmouth.h"
-// #include "mouth.h"
-// #include "GL/gl.h"
-// #include <cmath>
 #include <vector>
 #include <iostream>
 #include <sstream>
-// #include "btBulletDynamicsCommon.h"
 
 using namespace std;
 
@@ -35,6 +30,8 @@ class BodyArch
 		vector<archBodypart>	archBodyparts;
 		vector<archConstraint>	archConstraints;
 		vector<archMouth>	archMouths;
+		Color			color;
+		unsigned int		retinasize;
 
 		float			totalWeight;
 

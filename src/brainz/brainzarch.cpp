@@ -286,10 +286,19 @@ BrainzArch::BrainzArch()
 
 		for ( unsigned int i=0; i < runs; i++ )
 		{
-			unsigned int mode = randgen->Instance()->get(1,100);
+			unsigned int tsum = 	percentMutateEffectAddNeuron
+						+ percentMutateEffectRemoveNeuron
+						+ percentMutateEffectAlterNeuron
+						+ percentMutateEffectAddSynapse
+						+ percentMutateEffectRemoveSynapse
+						+ percentMutateEffectAlterMutable
+					;
+
+			unsigned int mode = randgen->Instance()->get(1,tsum);
 
 		// add a new neuron
-			if ( mode <= percentMutateEffectAddNeuron )
+			unsigned int modesum = percentMutateEffectAddNeuron;
+			if ( mode <= modesum )
 			{
 				if ( ArchNeurons.size() < maxNeurons )
 				{
@@ -308,11 +317,14 @@ BrainzArch::BrainzArch()
 					for ( unsigned j = 0; j < cAmount; j++ )
 						addRandomArchSynapse(nid);
 				}
-				else runs++;
+				else
+					runs++;
+				continue;
 			}
 
 		// remove a neuron
-			else if ( mode <= percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron )
+			modesum += percentMutateEffectRemoveNeuron;
+			if ( mode <= modesum )
 			{
 				if ( ArchNeurons.size() > 0 )
 				{
@@ -344,11 +356,14 @@ BrainzArch::BrainzArch()
 					ArchNeurons.erase(ArchNeurons.begin()+nid);
 				}
 				// make sure we mutate
-				else runs++;
+				else
+					runs++;
+				continue;
 			}
 
 		// alter a neuron
-			else if ( mode <= percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron + percentMutateEffectAlterNeuron )
+			modesum += percentMutateEffectAlterNeuron;
+			if ( mode <= modesum )
 			{
 				if ( ArchNeurons.size() > 0 )
 				{
@@ -481,10 +496,14 @@ BrainzArch::BrainzArch()
 						}
 
 				}
+				else
+					runs++;
+				continue;
 			}
 
 		// add a new synapse
-			else if ( mode <= percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron + percentMutateEffectAlterNeuron + percentMutateEffectAddSynapse )
+			modesum += percentMutateEffectAddSynapse;
+			if ( mode <= modesum )
 			{
 				if ( ArchNeurons.size() > 0 )
 				{
@@ -499,11 +518,14 @@ BrainzArch::BrainzArch()
 					}
 					else runs++;
 				}
-				else runs++;
+				else
+					runs++;
+				continue;
 			}
 
 		// remove a synapse
-			else if ( mode <= percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron + percentMutateEffectAlterNeuron + percentMutateEffectAddSynapse + percentMutateEffectRemoveSynapse )
+			modesum += percentMutateEffectRemoveSynapse;
+			if ( mode <= modesum )
 			{
 				if ( ArchNeurons.size() > 0 )
 				{
@@ -518,13 +540,17 @@ BrainzArch::BrainzArch()
 						//delete ArchNeurons[nid].ArchSynapses[connid];
 						ArchNeurons[nid].ArchSynapses.erase(ArchNeurons[nid].ArchSynapses.begin()+sID);
 					}
-					else runs++;
+					else
+						runs++;
 				}
-				else runs++;
+				else
+					runs++;
+				continue;
 			}
 
 		// change a mutatable
-			else if (  mode <= percentMutateEffectAddNeuron + percentMutateEffectRemoveNeuron + percentMutateEffectAlterNeuron + percentMutateEffectAddSynapse + percentMutateEffectRemoveSynapse + percentMutateEffectAlterMutable )
+			modesum += percentMutateEffectAlterMutable;
+			if ( mode <= modesum )
 			{
 				unsigned int imode = randgen->Instance()->get(1,12);
 
@@ -676,6 +702,7 @@ BrainzArch::BrainzArch()
 				else runs++;
 			}
 			else runs++;
+			continue;
 		}
 	}
 

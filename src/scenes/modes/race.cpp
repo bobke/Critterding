@@ -178,7 +178,7 @@ void WorldRace::process()
 						CritterB* nc = critters[critters.size()-1];
 						stringstream buf;
 						buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
-						buf << " ad: " << setw(4) << nc->adamdist;
+						buf << " ad: " << setw(4) << nc->genotype->adamdist;
 						buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
 
 						count++;
@@ -235,7 +235,7 @@ void WorldRace::makeFloor()
 		{
 			btVector3 position = btVector3 ( 0.0f-WallHalfWidth + (critterspacing*i), WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
 			Wall* w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
-			w->color[0] = 0.34f; w->color[1] = 0.25f; w->color[2] = 0.11f;
+			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
 			walls.push_back(w);
 		}
 }
@@ -299,7 +299,7 @@ void WorldRace::loadAllCritters()
 				CritterB *c = new CritterB(content, m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*critters.size()), 1.0f, settings->getCVar("worldsizeY")-(settings->getCVar("worldsizeY")/4) ), retina);
 
 				unsigned int error = 0;
-				if ( c->retinasize != *critter_retinasize ) error = 1;
+				if ( c->genotype->bodyArch->retinasize != *critter_retinasize ) error = 1;
 
 				if ( !error)
 				{
@@ -316,10 +316,10 @@ void WorldRace::loadAllCritters()
 					if ( error == 1 )
 					{
 						stringstream buf;
-						buf << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
+						buf << "ERROR: critter retinasize (" << c->genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << files[i];
 						Logbuffer::Instance()->add(buf);
 
-						cerr << "ERROR: critter retinasize (" << c->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
+						cerr << "ERROR: critter retinasize (" << c->genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << *critter_retinasize << ")" << endl;
 					}
 				}
 			}

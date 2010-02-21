@@ -70,6 +70,7 @@ Settings::Settings()
 	registerCVar("body_minheadsize",					30, 1, 1000000, false, "minimum size of a critters head");
 	registerCVar("body_maxheadsize",					80, 1, 1000000, false, "maximum size of a critters head");
 
+	registerCVar("body_percentmutateeffectchangecolor",			5, 0, 100, false, "chance of changing body color");
 	registerCVar("body_percentmutateeffectaddbodypart",			1, 0, 100, false, "chance of adding a body part");
 	registerCVar("body_percentmutateeffectremovebodypart",			1, 0, 100, false, "chance of removing a body part");
 	registerCVar("body_percentmutateeffectresizebodypart",			1, 0, 100, false, "chance of resizing a body part");
@@ -129,11 +130,11 @@ Settings::Settings()
 	registerCVar("brain_percentchancesensorysynapse",			20, 0, 100, false, "percent change a synapse connects to an input");
 	registerCVar("brain_mutate_percentchancesensorysynapse",		0, 0, 1, true, "mutate this value");
 
-	registerCVar("brain_percentmutateeffectaddneuron",			10, 0, 100, false, "chance of adding a neuron");
-	registerCVar("brain_percentmutateeffectremoveneuron",			10, 0, 100, false, "chance of removing a neuron");
-	registerCVar("brain_percentmutateeffectalterneuron",			20, 0, 100, false, "chance of altering a neuron");
-	registerCVar("brain_percentmutateeffectaddsynapse",			29, 0, 100, false, "chance of adding a synapse");
-	registerCVar("brain_percentmutateeffectremovesynapse",			29, 0, 100, false, "chance of removing a synapse");
+	registerCVar("brain_percentmutateeffectaddneuron",			1, 0, 100, false, "chance of adding a neuron");
+	registerCVar("brain_percentmutateeffectremoveneuron",			1, 0, 100, false, "chance of removing a neuron");
+	registerCVar("brain_percentmutateeffectalterneuron",			2, 0, 100, false, "chance of altering a neuron");
+	registerCVar("brain_percentmutateeffectaddsynapse",			5, 0, 100, false, "chance of adding a synapse");
+	registerCVar("brain_percentmutateeffectremovesynapse",			5, 0, 100, false, "chance of removing a synapse");
 	registerCVar("brain_mutate_mutateeffects",				0, 0, 1, true, "mutate mutation effects");
 
 	registerCVar("brain_percentmutateeffectaltermutable",			1, 0, 100, false,"mutate value of a mutatable option");

@@ -3,6 +3,7 @@
 
 #include "genotype.h"
 #include "../../utils/color.h"
+#include "../../utils/settings.h"
 
 #include <vector>
 #include <iostream>
@@ -13,10 +14,12 @@ class Genotypes
 {
 	public:
 		static Genotypes* Instance();
-		Genotype* newg(const unsigned int& retinasize);
-		Genotype* newg(string& passToBody, string& passToBrain, const unsigned int& retinasize);
+		Genotype* newg(Settings* settings);
 		void add(Genotype* gt);
-		Genotype* copy(Genotype* gt, bool brainmutant, unsigned int brruns, bool bodymutant, unsigned int boruns, const unsigned int& retinasize);
+		Genotype* copy(Genotype* gt, bool brainmutant, unsigned int brruns, bool bodymutant, unsigned int boruns);
+		Genotype* loadGenotype(string &content);
+		string saveGenotype();
+		
 		void remove(Genotype* gt);
 		Color			colorH;
 	protected:

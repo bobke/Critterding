@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include "btBulletDynamicsCommon.h"
+#include "../../utils/color.h"
 using namespace std;
 
 class Entity
@@ -11,7 +12,8 @@ class Entity
 		~Entity();
 		
 		unsigned int type;
-		float			color[4];
+// 		float			color[4];
+		Color			color;
 		bool			isPicked;
 	private:
 };

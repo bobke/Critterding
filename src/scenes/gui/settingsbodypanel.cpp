@@ -21,6 +21,7 @@ Settingsbodypanel::Settingsbodypanel()
 	vspace += vint; addSettingmutator("body_maxbodypartsize", hspace, vspace);
 	vspace += vint; addSettingmutator("body_minheadsize", hspace, vspace);
 	vspace += vint; addSettingmutator("body_maxheadsize", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectchangecolor", hspace, vspace);
 	vspace += vint; addSettingmutator("body_percentmutateeffectaddbodypart", hspace, vspace);
 	vspace += vint; addSettingmutator("body_percentmutateeffectremovebodypart", hspace, vspace);
 	vspace += vint; addSettingmutator("body_percentmutateeffectresizebodypart", hspace, vspace);
