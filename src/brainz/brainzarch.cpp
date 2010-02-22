@@ -156,9 +156,16 @@ BrainzArch::BrainzArch()
 				an.isInhibitory = true;
 
 		// if not, is it motor ?
-			else if ( randgen->Instance()->get(1,100) <= percentChanceMotorNeuron )
+		// if 1 or 2nd archneuron, pic eat & procreate specifically
+			else if ( randgen->Instance()->get(1,100) <= percentChanceMotorNeuron || ArchNeurons.size() < 3 )
 			{
-				unsigned int motorID = OutputIDs[ randgen->Instance()->get( 0, numberOfOutputs-1 ) ];
+				unsigned int motorID;
+				if ( ArchNeurons.size() == 0 )
+					motorID = OutputIDs[ numberOfOutputs-2 ];
+				else if ( ArchNeurons.size() == 1 )
+					motorID = OutputIDs[ numberOfOutputs-1 ];
+				else
+					motorID = OutputIDs[ randgen->Instance()->get( 0, numberOfOutputs-1 ) ];
 
 				// check if motor already used
 				bool proceed = true;
