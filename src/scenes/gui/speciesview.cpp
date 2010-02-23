@@ -9,6 +9,28 @@ Speciesview::Speciesview()
 	
 	active = false;
 	isMovable = true;
+
+	titlebar = 25;
+	v_space = -10 + titlebar;
+	rowspacer = 4;
+	qwidth = 25;
+	qheight = 10;
+	
+	titlePos = "#";
+	titleColor = "Color";
+	titleNum = "Population";
+	titleAd = "Adam Distance";
+	titleNeurons = "Neurons";
+	titleSynapses = "Synapses";
+	titleBodyparts = "Bodyparts";
+	
+	titlePosW = textprinter->getWidth( titlePos );
+	titleColorW = textprinter->getWidth( titleColor );
+	titleNumW = textprinter->getWidth( titleNum );
+	titleAdW = textprinter->getWidth( titleAd );
+	titleNeuronsW = textprinter->getWidth( titleNeurons );
+	titleSynapsesW = textprinter->getWidth( titleSynapses );
+	titleBodypartsW = textprinter->getWidth( titleBodyparts );
 }
 
 void Speciesview::draw()
@@ -54,37 +76,12 @@ void Speciesview::draw()
 					indices[j+1]	= keepI;
 				}
 	
-		int titlebar = 25;
-		int v_space = -10 + titlebar;
-		int rowspacer = 4;
-		int qwidth = 25;
-		int qheight = 10;
-		
-		string titlePos = "#";
-		string titleColor = "Color";
-		string titleNum = "Population";
-		string titleAd = "Adam Distance";
-		string titleNeurons = "Neurons";
-		string titleSynapses = "Synapses";
-		string titleBodyparts = "Bodyparts";
-		
-		int titlePosW = textprinter->getWidth( titlePos );
-		int titlePosWH = textprinter->getWidth( genotypes->list.size() );
-		int titleColorW = textprinter->getWidth( titleColor );
-		int titleColorWH = qwidth;
-		int titleNumW = textprinter->getWidth( titleNum );
 		int titleNumWH = textprinter->getWidth( highestCount );
-
-		int titleAdW = textprinter->getWidth( titleAd );
+		int titleColorWH = qwidth;
+		int titlePosWH = textprinter->getWidth( genotypes->list.size() );
 		int titleAdWH = textprinter->getWidth( highestAD );
-
-		int titleNeuronsW = textprinter->getWidth( titleNeurons );
 		int titleNeuronsWH = textprinter->getWidth( highestNeurons );
-
-		int titleSynapsesW = textprinter->getWidth( titleSynapses );
 		int titleSynapsesWH = textprinter->getWidth( highestSynapses );
-
-		int titleBodypartsW = textprinter->getWidth( titleBodyparts );
 		int titleBodypartsWH = textprinter->getWidth( highestBodyparts );
 		
 		int colw1 = titlePosW;
@@ -93,7 +90,6 @@ void Speciesview::draw()
 		if ( colw2 < titleColorWH ) colw2 = titleColorWH;
 		int colw3 = titleNumW;
 		if ( colw3 < titleNumWH ) colw3 = titleNumWH;
-
 		int colw4 = titleAdW;
 		if ( colw4 < titleAdWH ) colw4 = titleAdWH;
 		int colw5 = titleNeuronsW;
@@ -112,6 +108,8 @@ void Speciesview::draw()
 		int col6 = col5+colspacer + colw5;
 		int col7 = col6+colspacer + colw6;
 		int col8 = col7+colspacer + colw7;
+
+		v_space = -10 + titlebar;
 
 		v_height = (genotypes->list.size() * (qheight+rowspacer)) + rowspacer + titlebar;
 		v_width = col8;

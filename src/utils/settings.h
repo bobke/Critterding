@@ -31,6 +31,7 @@ struct cvar
 	unsigned int int_min;
 	unsigned int int_max;
 	bool loop;
+	bool local;
 };
 
 class Settings
@@ -41,6 +42,7 @@ class Settings
 
 		void			registerCVar(const string& name, const unsigned int& defaultvalue, const unsigned int& min_val, const unsigned int& max_val, const string& comment);
 		void			registerCVar(const string& name, const unsigned int& defaultvalue, const unsigned int& min_val, const unsigned int& max_val, bool loop, const string& comment);
+		void			registerLocalCVar(const string& name, const unsigned int& defaultvalue, const unsigned int& min_val, const unsigned int& max_val, bool loop, const string& comment);
 
 		void			unregisterCVar(const string& name);
 		bool			isCVar(const string& name);
@@ -56,17 +58,6 @@ class Settings
 		void			increaseCVar(const string& name);
 
 		string profileName;
-
-		// info data
-		unsigned int info_critters;
-		unsigned int info_food;
-
-		unsigned int info_totalNeurons;
-		unsigned int info_totalSynapses;
-		unsigned int info_totalAdamDistance;
-
-		unsigned int info_totalBodyparts;
-		float info_totalWeight;
 
 		int *winWidth;
 		int *winHeight;
@@ -94,7 +85,6 @@ class Settings
 
 		stringstream helpinfo;
 		void createHelpInfo();
-
 };
 
 #endif

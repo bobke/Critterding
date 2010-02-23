@@ -1,7 +1,7 @@
 #ifndef BRAINVIEW_H
 #define BRAINVIEW_H
 
-#include "panel.h"
+#include "../../gui/settingspanel.h"
 #include "../entities/worldb.h"
 #include "../../utils/critterselection.h"
 #include "../../math/vector2f.h"
@@ -9,12 +9,13 @@
 
 using namespace std;
 
-class Brainview : public Panel
+class Brainview : public Settingspanel
 {
 	struct neuron
 	{
 		NeuronInterz* nPointer;
 		Vector2f position;
+		Vector2f newposition;
 	};
 	struct sensor
 	{
@@ -38,13 +39,19 @@ class Brainview : public Panel
 		// drawing helpers
 		int v_spacer;
 		int v_space;
-		int v_radius;
-		int v_diam;
+		float v_radius;
+		float v_diam;
 		int spacing;
 		int column;
 		int row;
 		int rowlength;
 
+		// shortcuts to settings
+		const unsigned int*	attractor1;
+		const unsigned int*	attractor2;
+		const unsigned int*	attractor3;
+		const unsigned int*	attractor4;
+		const unsigned int*	brain_maxfiringthreshold;
 
 		vector<neuron> neurons;
 		vector<sensor> sensors;

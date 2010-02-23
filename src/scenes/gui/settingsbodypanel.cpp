@@ -14,7 +14,8 @@ Settingsbodypanel::Settingsbodypanel()
 	mutatorcol3 = 430;
 
 	unsigned int vint = 12;
-	hspace = 10;
+	unsigned int vspace;
+	unsigned int hspace = 10;
 	vspace = vint; addSettingmutator("body_maxbodyparts", hspace, vspace);
 	vspace += vint; addSettingmutator("body_maxbodypartsatbuildtime", hspace, vspace);
 	vspace += vint; addSettingmutator("body_minbodypartsize", hspace, vspace);

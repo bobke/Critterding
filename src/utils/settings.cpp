@@ -144,16 +144,6 @@ Settings::Settings()
 	registerCVar("brain_costfiringmotorneuron",				100, 0, 1000000, false, "cost of firing a motor neuron");
 	registerCVar("brain_costhavingsynapse",					1, 0, 1000000, false, "cost of having a synapse");
 
-	info_critters = 0;
-	info_food = 0;
-
-	info_totalNeurons = 0;
-	info_totalSynapses = 0;
-	info_totalAdamDistance = 0;
-
-	info_totalBodyparts = 0;
-	info_totalWeight = 0;
-
 	dirlayout = Dirlayout::Instance();
 	
 	createHelpInfo();
@@ -161,7 +151,6 @@ Settings::Settings()
 
 void Settings::registerCVar(const string& name, const unsigned int& defaultvalue, const unsigned int& min_val, const unsigned int& max_val, const string& comment)
 {
-	cerr << "hello" << endl;
 	registerCVar( name, defaultvalue, min_val, max_val, false, comment );
 }
 
@@ -173,6 +162,23 @@ void Settings::registerCVar(const string& name, const unsigned int& defaultvalue
 	v->int_min = min_val;
 	v->int_max = max_val;
 	v->loop = loop;
+	v->comment = comment;
+
+	unregisterCVar(name);
+	cvarlist[name] = v;
+
+// 	cvarlist[name]->loop = true;
+}
+
+void Settings::registerLocalCVar(const string& name, const unsigned int& defaultvalue, const unsigned int& min_val, const unsigned int& max_val, bool loop, const string& comment)
+{
+	cvar* v = new cvar();
+
+	v->int_val = defaultvalue;
+	v->int_min = min_val;
+	v->int_max = max_val;
+	v->loop = loop;
+	v->local = true;
 	v->comment = comment;
 
 	unregisterCVar(name);
@@ -399,7 +405,10 @@ void Settings::saveProfile()
 
 	stringstream buf;
 	for( cvarit = cvarlist.begin(); cvarit != cvarlist.end(); cvarit++ )
-		buf << cvarit->first << " " << cvarit->second->int_val << endl;
+	{
+		if ( !cvarit->second->local )
+			buf << cvarit->first << " " << cvarit->second->int_val << endl;
+	}
 
 	fileH.save(filename.str(), buf.str());
 }

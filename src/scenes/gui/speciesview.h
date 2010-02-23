@@ -19,6 +19,28 @@ class Speciesview : public Panel
 	private:
 		Genotypes* genotypes;
 
+		int titlebar;
+		int v_space;
+		int rowspacer;
+		int qwidth;
+		int qheight;
+		
+		string titlePos;
+		string titleColor;
+		string titleNum;
+		string titleAd;
+		string titleNeurons;
+		string titleSynapses;
+		string titleBodyparts;
+		
+		int titlePosW;
+		int titleColorW;
+		int titleNumW;
+		int titleAdW;
+		int titleNeuronsW;
+		int titleSynapsesW;
+		int titleBodypartsW;
+		
 };
 
 #endif
