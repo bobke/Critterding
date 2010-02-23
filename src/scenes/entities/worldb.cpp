@@ -675,42 +675,40 @@ void WorldB::expireFood()
 
 void WorldB::getGeneralStats()
 {
-	settings->info_totalNeurons = 0;
-	settings->info_totalSynapses = 0;
-	settings->info_totalAdamDistance = 0;
-	settings->info_totalBodyparts = 0;
-	settings->info_totalWeight = 0;
+// 	settings->info_totalNeurons = 0;
+// 	settings->info_totalSynapses = 0;
+// 	settings->info_totalAdamDistance = 0;
+// 	settings->info_totalBodyparts = 0;
+// 	settings->info_totalWeight = 0;
 
-	settings->info_critters = critters.size();
-	settings->info_food = food.size();
+// 	settings->info_critters = critters.size();
+// 	settings->info_food = food.size();
 
-	int i = 0;
-	int info_totalNeurons = 0;
-	int info_totalSynapses = 0;
-	int info_totalAdamDistance = 0;
-	int info_totalBodyparts = 0;
-	int info_totalWeight = 0;
-	int crittersize = critters.size();
-	CritterB* c;
+// 	int info_totalNeurons = 0;
+// 	int info_totalSynapses = 0;
+// 	int info_totalAdamDistance = 0;
+// 	int info_totalBodyparts = 0;
+// 	int info_totalWeight = 0;
+// 	CritterB* c;
 
 // #pragma omp parallel for shared (info_totalNeurons, info_totalSynapses, info_totalAdamDistance, info_totalBodyparts, info_totalWeight, crittersize) private(i, c)
-	for( i=0; i < crittersize; i++ )
-	{
-		c = critters[i];
-		info_totalNeurons		+= c->brain.totalNeurons;
-		info_totalSynapses		+= c->brain.totalSynapses;
-		info_totalAdamDistance		+= c->genotype->adamdist;
-		info_totalBodyparts		+= c->body.bodyparts.size();
-		info_totalWeight		+= c->body.totalWeight;
-	}
+// 	for( unsigned int i=0; i < critters.size(); i++ )
+// 	{
+// 		c = critters[i];
+// 		info_totalNeurons		+= c->brain.totalNeurons;
+// 		info_totalSynapses		+= c->brain.totalSynapses;
+// 		info_totalAdamDistance		+= c->genotype->adamdist;
+// 		info_totalBodyparts		+= c->body.bodyparts.size();
+// 		info_totalWeight		+= c->body.totalWeight;
+// 	}
+// 
+// 	settings->info_totalNeurons		+= info_totalNeurons;
+// 	settings->info_totalSynapses		+= info_totalSynapses;
+// 	settings->info_totalAdamDistance	+= info_totalAdamDistance;
+// 	settings->info_totalBodyparts		+= info_totalBodyparts;
+// 	settings->info_totalWeight		+= info_totalWeight;
 
-	settings->info_totalNeurons		+= info_totalNeurons;
-	settings->info_totalSynapses		+= info_totalSynapses;
-	settings->info_totalAdamDistance	+= info_totalAdamDistance;
-	settings->info_totalBodyparts		+= info_totalBodyparts;
-	settings->info_totalWeight		+= info_totalWeight;
-
-	statsBuffer->add();
+	statsBuffer->add( critters, food );
 }
 
 void WorldB::checkCollisions( CritterB* c )

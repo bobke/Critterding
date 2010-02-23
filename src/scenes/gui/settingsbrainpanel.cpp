@@ -14,8 +14,9 @@ Settingsbrainpanel::Settingsbrainpanel()
 	mutatorcol3 = 430;
 	
 	unsigned int vint = 12;
+	unsigned int vspace;
+	unsigned int hspace = 10;
 	
-	hspace = 10;
 	vspace = vint;  addSettingmutator("brain_maxneurons", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_minsynapses", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_maxsynapses", hspace, vspace);

@@ -12,8 +12,6 @@ class Globalsettingspanel : public Settingspanel
 		~Globalsettingspanel();
 
 	private:
-		unsigned int vspace;
-		unsigned int hspace;
 };
 
 #endif

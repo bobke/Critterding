@@ -2,6 +2,8 @@
 
 Infobar::Infobar()
 {
+	statsBuffer = Statsbuffer::Instance();
+
 	active = true;
 	isMovable = true;
 	
@@ -46,15 +48,17 @@ void Infobar::draw()
 		glColor3f(1.0f, 1.0f, 1.0f);
 // 		glEnable(GL_TEXTURE_2D);
 
-	// Row 1
+		// Row 1
 		Textprinter::Instance()->print(position.x+hsp,		position.y+vsp,	"fps:");
 		Textprinter::Instance()->printR(position.x+col1-hsp,	position.y+vsp,	"%1.1f",	fps.currentfps);
 
 		Textprinter::Instance()->print(position.x+col1+hsp,	position.y+vsp,	"critters:");
-		Textprinter::Instance()->printR(position.x+col2-hsp,	position.y+vsp,	"%1u",		settings->info_critters);
+// 		Textprinter::Instance()->printR(position.x+col2-hsp,	position.y+vsp,	"%1u",		settings->info_critters);
+		Textprinter::Instance()->printR(position.x+col2-hsp,	position.y+vsp,	"%1u",		statsBuffer->current.critters);
 
 		Textprinter::Instance()->print(position.x+col2+hsp,	position.y+vsp,	"food:");
-		Textprinter::Instance()->printR(position.x+col3-hsp,	position.y+vsp,	"%1u/%1u",	settings->info_food, settings->getCVar("energy"));
+// 		Textprinter::Instance()->printR(position.x+col3-hsp,	position.y+vsp,	"%1u/%1u",	settings->info_food, settings->getCVar("energy"));
+		Textprinter::Instance()->printR(position.x+col3-hsp,	position.y+vsp,	"%1u/%1u",	statsBuffer->current.food, settings->getCVar("energy"));
 
 // 		Textprinter::Instance()->print(col3+hsp,	vsp,	"corpses:");
 // 		Textprinter::Instance()->printR(col4-hsp,	vsp,	"%1u",		Settings::Instance()->info_corpses);

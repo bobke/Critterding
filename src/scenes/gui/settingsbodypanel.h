@@ -12,8 +12,6 @@ class Settingsbodypanel : public Settingspanel
 		~Settingsbodypanel();
 
 	private:
-		unsigned int vspace;
-		unsigned int hspace;
 };
 
 #endif

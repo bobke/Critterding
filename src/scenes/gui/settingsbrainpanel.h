@@ -12,8 +12,6 @@ class Settingsbrainpanel : public Settingspanel
 		~Settingsbrainpanel();
 
 	private:
-		unsigned int vspace;
-		unsigned int hspace;
 };
 
 #endif

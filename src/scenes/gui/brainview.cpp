@@ -4,7 +4,9 @@
 Brainview::Brainview()
 {
 	critterselection = Critterselection::Instance();
-	
+
+	brain_maxfiringthreshold = settings->getCVarPtr("brain_maxfiringthreshold");
+
 	active = false;
 	isMovable = true;
 
@@ -14,15 +16,15 @@ Brainview::Brainview()
 	spacing = 3;
 
 	int brainview_width = 20 + ((v_diam+spacing) * settings->getCVar("critter_retinasize") * 4);
-	if ( brainview_width < 350 )
-		brainview_width = 350;
+	if ( brainview_width < 400 )
+		brainview_width = 400;
 
 	int brainview_height = 20 + ((v_diam+spacing) * 40);
-	if ( brainview_height < 245 )
-		brainview_height = 245;
+	if ( brainview_height < 400 )
+		brainview_height = 400;
 
 	v_width = 20 + brainview_width;
-	v_height = 45 + brainview_height;
+	v_height = 80 + brainview_height;
 
 	int buttons_starty = v_height - brainview_height - 10;
 	int brainview_starty = buttons_starty;
@@ -38,6 +40,24 @@ Brainview::Brainview()
 	children["bv_bview"]->isTransparant = false;
 
 	addWidgetButton( "bv_close", Vector2i(v_width-25, 10), Vector2i(15, 15), "x", cmd.gen("gui_togglepanel", "brainview"), 0, 0, 0 );
+
+
+	settings->registerLocalCVar("attract neurons", 100, 0, 1000000, false, "attract neurons");
+	addSettingmutator("attract neurons", 10, 10);
+
+	settings->registerLocalCVar("repel neurons", 100, 0, 1000000, false, "repel neurons");
+	addSettingmutator("repel neurons", 10, 36);
+
+	settings->registerLocalCVar("attract neuron inputs", 100, 0, 1000000, false, "attract neuron<>inputs");
+	addSettingmutator("attract neuron inputs", 10, 22);
+
+	settings->registerLocalCVar("repel neuron inputs", 100, 0, 1000000, false, "repel neuron<>inputs");
+	addSettingmutator("repel neuron inputs", 10, 48);
+
+	attractor1 = settings->getCVarPtr("attract neurons");
+	attractor2 = settings->getCVarPtr("attract neuron inputs");
+	attractor3 = settings->getCVarPtr("repel neurons");
+	attractor4 = settings->getCVarPtr("repel neuron inputs");
 }
 
 void Brainview::draw()
@@ -163,35 +183,22 @@ void Brainview::draw()
 		// draw the rest
 		drawChildren();
 
-// 		// draw gl view
-// 			glViewport(viewbutton->absPosition.x, *settings->winHeight-50-viewbutton->absPosition.y, 50, 50);
-// 			glMatrixMode(GL_PROJECTION);
-// 			glLoadIdentity();
-// 			glFrustum( -0.05f, 0.05f,-0.05f,0.05f, 0.1f, 10000.0f);
-// 			critterselection->selectedCritter->body.mouths[0]->ghostObject->getWorldTransform().inverse().getOpenGLMatrix(viewposition);
-// 			glMultMatrixf(viewposition);
-// 
-// 			glMatrixMode(GL_MODELVIEW);
-// 			glLoadIdentity();
-// 
-// 			world->drawWithinCritterSight(critterselection->selectedCritter);
-// 
-// 		// switch back to 2d 
-// 			world->camera.place();
-// 			glPushMatrix();
-// 			glMatrixMode(GL_PROJECTION);
-// 			glLoadIdentity();
-// 			glOrtho(0, *settings->winWidth, *settings->winHeight, 0, 0, 1);
-// 			glMatrixMode(GL_MODELVIEW);
-// 			glLoadIdentity();
-		
 		// drift
+
 			// neuron vs neuron
 			unsigned int i, j, k, nrlinks;
-			float xD, yD, dist, oneoverdistancesquared, miny;
+			float xD, yD, dist, oneoverdistance, oneoverdistancesquared;
 			ArchSynapse* as;
+			
+			// reset newpositions
+			for ( i=0; i < neurons.size(); i++ )
+			{
+				neurons[i].newposition.x = 0;
+				neurons[i].newposition.y = 0;
+			}
+
 // #pragma omp parallel for private(i, j, k, nrlinks, xD, yD, dist, oneoverdistancesquared, miny, as)
-			for ( i=0; i < (int)neurons.size()-1; i++ )
+			for ( i=0; i < neurons.size()-1; i++ )
 				for ( j=i+1; j < neurons.size(); j++ )
 				{
 					// how many connections do they have underling
@@ -208,51 +215,33 @@ void Brainview::draw()
 						if ( !as->isSensorNeuron && as->neuronID == i )
 							nrlinks++;
 					}
+
 					xD=neurons[j].position.x - neurons[i].position.x;
 					yD=neurons[j].position.y - neurons[i].position.y;
+
 					dist = sqrt((xD*xD)+(yD*yD));
-					oneoverdistancesquared = 1.0f/(dist*dist);
-					if ( oneoverdistancesquared > 1000.0f )
-						oneoverdistancesquared = 1000.0f;
+
+					oneoverdistance = 1.0f/dist;
+					oneoverdistancesquared = oneoverdistance * oneoverdistance;
+// 					if ( oneoverdistancesquared < 0.00001f )
+// 						oneoverdistancesquared = 0.00001f;
+					if ( oneoverdistancesquared > 0.001f )
+						oneoverdistancesquared = 0.001f;
+
 					if ( nrlinks > 0 )
 					{
-// 						if ( dist > 3 )
-// 						{
-						neurons[i].position.x += (xD / 5000.0f) * dist * nrlinks;
-						neurons[i].position.y += (yD / 5000.0f) * dist * nrlinks;
-
-						neurons[j].position.x -= (xD / 5000.0f) * dist * nrlinks;
-						neurons[j].position.y -= (yD / 5000.0f) * dist * nrlinks;
-// 						}
+						neurons[i].newposition.x += xD * oneoverdistancesquared * *attractor1 * nrlinks / 10.0f;
+						neurons[i].newposition.y += yD * oneoverdistancesquared * *attractor1 * nrlinks / 10.0f;
+						neurons[j].newposition.x -= xD * oneoverdistancesquared * *attractor1 * nrlinks / 10.0f;
+						neurons[j].newposition.y -= yD * oneoverdistancesquared * *attractor1 * nrlinks / 10.0f;
 					}
-/*					else
-					{
-						neurons[i].position.x -= (xD / 1.0f) * oneoverdistancesquared;
-						neurons[i].position.y -= (yD / 1.0f) * oneoverdistancesquared;
-
-						neurons[j].position.x += (xD / 1.0f) * oneoverdistancesquared;
-						neurons[j].position.y += (yD / 1.0f) * oneoverdistancesquared;
-					}*/
 					// general antigravity
-					neurons[i].position.x -= (xD * 10.0f) * oneoverdistancesquared;
-					neurons[i].position.y -= (yD * 10.0f) * oneoverdistancesquared;
-
-					neurons[j].position.x += (xD * 10.0f) * oneoverdistancesquared;
-					neurons[j].position.y += (yD * 10.0f) * oneoverdistancesquared;
-
-					//distance=sqrt(xD*xD+yD*yD);
-					miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
-					if ( neurons[i].position.x+v_radius > *brainview->v_widthP ) neurons[i].position.x = *brainview->v_widthP-v_radius;
-					if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
-					if ( neurons[i].position.y+v_radius > *brainview->v_heightP ) neurons[i].position.y = *brainview->v_heightP-v_radius;
-					if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
-
-					if ( neurons[j].position.x+v_radius > *brainview->v_widthP ) neurons[j].position.x = *brainview->v_widthP-v_radius;
-					if ( neurons[j].position.x < v_radius ) neurons[j].position.x = v_radius;
-					if ( neurons[j].position.y+v_radius > *brainview->v_heightP ) neurons[j].position.y = *brainview->v_heightP-v_radius;
-					if ( neurons[j].position.y < miny ) neurons[j].position.y = miny;
+					neurons[i].newposition.x -= xD * oneoverdistancesquared * oneoverdistancesquared * *attractor3 * 100;
+					neurons[i].newposition.y -= yD * oneoverdistancesquared * oneoverdistancesquared * *attractor3 * 100;
+					neurons[j].newposition.x += xD * oneoverdistancesquared * oneoverdistancesquared * *attractor3 * 100;
+					neurons[j].newposition.y += yD * oneoverdistancesquared * oneoverdistancesquared * *attractor3 * 100;
 				}
-		
+
 			// neuron vs sensor
 			for ( unsigned int i=0; i < neurons.size(); i++ )
 				for ( unsigned int j=0; j < sensors.size(); j++ )
@@ -269,24 +258,38 @@ void Brainview::draw()
 					float yD=sensors[j].position.y - neurons[i].position.y;
 					float dist = sqrt((xD*xD)+(yD*yD));
 					float oneoverdistancesquared = 1.0f/(dist*dist*dist);
-					if ( oneoverdistancesquared > 1.0f )
-						oneoverdistancesquared = 1.0f;
+/*					if ( oneoverdistancesquared > 1.0f )
+						oneoverdistancesquared = 1.0f;*/
+					if ( oneoverdistancesquared > 0.001f )
+						oneoverdistancesquared = 0.001f;
 					if ( nrlinks > 0 )
 					{
-						neurons[i].position.x += (xD / 1000.0f) * dist * nrlinks;
-						neurons[i].position.y += (yD / 1000.0f) * dist * nrlinks;
+						neurons[i].newposition.x += xD * oneoverdistancesquared * *attractor2 * nrlinks * 10.0f;
+						neurons[i].newposition.y += yD * oneoverdistancesquared * *attractor2 * nrlinks * 10.0f;
 					}
 					// general antigravity
-					neurons[i].position.x -= xD * oneoverdistancesquared * 5000;
-					neurons[i].position.y -= yD * oneoverdistancesquared * 5000;
-
-					//distance=sqrt(xD*xD+yD*yD);
-					float miny = v_radius+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
-					if ( neurons[i].position.x+v_radius > *brainview->v_widthP ) neurons[i].position.x = *brainview->v_widthP-v_radius;
-					if ( neurons[i].position.x < v_radius ) neurons[i].position.x = v_radius;
-					if ( neurons[i].position.y+v_radius > *brainview->v_heightP ) neurons[i].position.y = *brainview->v_heightP-v_radius;
-					if ( neurons[i].position.y < miny ) neurons[i].position.y = miny;
+					neurons[i].newposition.x -= xD * oneoverdistancesquared * oneoverdistancesquared * *attractor4 * 100000;
+					neurons[i].newposition.y -= yD * oneoverdistancesquared * oneoverdistancesquared * *attractor4 * 100000;
 				}
+
+			// apply newpositions & check boundaries
+			for ( i=0; i < neurons.size(); i++ )
+			{
+				neurons[i].position.x += neurons[i].newposition.x;
+				neurons[i].position.y += neurons[i].newposition.y;
+
+				float miny = (v_radius*2)+((spacing+v_diam) * ((sensors.size()/rowlength)+1) );
+				float leftborder = 20.0f;
+
+				if ( neurons[i].position.x+v_radius > *brainview->v_widthP )
+					neurons[i].position.x = *brainview->v_widthP-v_radius;
+				if ( neurons[i].position.x < v_radius+leftborder )
+					neurons[i].position.x = v_radius+leftborder;
+				if ( neurons[i].position.y+v_radius > *brainview->v_heightP )
+					neurons[i].position.y = *brainview->v_heightP-v_radius;
+				if ( neurons[i].position.y < miny )
+					neurons[i].position.y = miny;
+			}
 
 		// draw brain
 			// connections
@@ -374,41 +377,16 @@ void Brainview::draw()
 						glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 					else
 						glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-// 				}
-// 				else
-// 				{
-// 					if ( neurons[i].nPointer->isMotor )
-// 						glColor4f(0.0f, 0.0f, dimmed, 1.0f);
-// 					else if ( neurons[i].nPointer->isInhibitory )
-// 						glColor4f(dimmed, 0.0f, 0.0f, 1.0f);
-// 					else
-// 						glColor4f(0.0f, dimmed, 0.0f, 1.0f);
-// 				}
-				float nv_radius = (neurons[i].nPointer->potential * v_diam) / settings->getCVar("brain_maxfiringthreshold");
+
+				float nv_radius = abs(neurons[i].nPointer->potential * (v_diam / *brain_maxfiringthreshold));
+				// show minimum
+				if ( nv_radius < 0.5f )
+					nv_radius = 0.5f;
 				glVertex2f(neurons[i].position.x+brainview->absPosition.x-nv_radius, neurons[i].position.y+brainview->absPosition.y+nv_radius);
 				glVertex2f(neurons[i].position.x+brainview->absPosition.x-nv_radius, neurons[i].position.y+brainview->absPosition.y-nv_radius);
 				glVertex2f(neurons[i].position.x+brainview->absPosition.x+nv_radius, neurons[i].position.y+brainview->absPosition.y-nv_radius);
 				glVertex2f(neurons[i].position.x+brainview->absPosition.x+nv_radius, neurons[i].position.y+brainview->absPosition.y+nv_radius);
 			}
-
-	// 		// outputs
-	// 		column = 0;
-	// 		for ( unsigned int i=0; i < currentCritter->brain.numberOfOutputs; i++ )
-	// 		{
-	// 			if ( *currentCritter->brain.Outputs[i].output )
-	// 				glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	// 			else
-	// 				glColor4f(0.0f, 0.0f, dimmed, 1.0f);
-	// 
-	// 			int woffset = v_radius+((spacing+v_diam)*column);
-	// 			int hoffset = 250-v_height;
-	// 			glVertex2f(brainview->absPosition.x+woffset-v_radius, brainview->absPosition.y+hoffset+v_radius);
-	// 			glVertex2f(brainview->absPosition.x+woffset-v_radius, brainview->absPosition.y+hoffset-v_radius);
-	// 			glVertex2f(brainview->absPosition.x+woffset+v_radius, brainview->absPosition.y+hoffset-v_radius);
-	// 			glVertex2f(brainview->absPosition.x+woffset+v_radius, brainview->absPosition.y+hoffset+v_radius);
-	// 			
-	// 			if ( ++column == rowlength ) { column = 0; row++; }
-	// 		}
 
 			glEnd();
 

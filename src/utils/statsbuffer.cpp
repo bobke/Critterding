@@ -8,27 +8,42 @@ Statsbuffer* Statsbuffer::Instance ()
 
 Statsbuffer::Statsbuffer()
 {
-	settings = Settings::Instance();
+// 	settings = Settings::Instance();
 
 	recordInterval = 100;
 	framecounter = 0;
 	maxSnapshots = 3000;
 }
 
-void Statsbuffer::add()
+void Statsbuffer::add( const vector<CritterB*>& critters, const vector<Food*>& food )
 {
+	// get stats of this frame
+	current.neurons	= 0;
+	current.synapses	= 0;
+	current.adamdistance	= 0;
+	current.bodyparts	= 0;
+	current.weight		= 0;
+	CritterB* c;
+	for( unsigned int i=0; i < critters.size(); i++ )
+	{
+		c = critters[i];
+		current.neurons	+= c->brain.totalNeurons;
+		current.synapses	+= c->brain.totalSynapses;
+		current.adamdistance	+= c->genotype->adamdist;
+		current.bodyparts	+= c->body.bodyparts.size();
+		current.weight		+= c->body.totalWeight;
+	}
+	current.critters		= critters.size();
+	current.food			= food.size();
+
 	if ( ++framecounter == recordInterval )
 	{
 		// remove expired snapshots
 		if ( snapshots.size() == maxSnapshots )
 			snapshots.erase(snapshots.begin());
 
-		// insert a new snapshot
-		snapshots.push_back(statsSnapshot());
-		statsSnapshot* s = &snapshots[snapshots.size() - 1];
-
-		s->critters		= settings->info_critters;
-		s->food			= settings->info_food;
+		// insert the current snapshot
+		snapshots.push_back(current);
 
 		framecounter = 0;
 

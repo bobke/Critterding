@@ -2,6 +2,8 @@
 
 Infostats::Infostats()
 {
+	statsBuffer = Statsbuffer::Instance();
+
 	hsp = 10;
 	vsp = 13;
 
@@ -44,37 +46,38 @@ void Infostats::draw()
 		// row counter
 		unsigned int rc=1;
 
-		// HEADING
+// 		statsSnapshot* ss = &statsBuffer->snapshots[statsBuffer->snapshots.size()-1];
 
+		// HEADING
 
 	// COLUMN 1
 		Textprinter::Instance()->print(position.x+hsp,	position.y+vsp*rc,	"brain");
 
 		rc++;
 		Textprinter::Instance()->print(position.x+hsp,	position.y+vsp*rc,	"avg neurons:");
-		if ( settings->info_critters > 0 )
-			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalNeurons / settings->info_critters);
+		if ( statsBuffer->current.critters > 0 )
+			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)statsBuffer->current.neurons / statsBuffer->current.critters);
 		else
 			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(position.x+hsp,	position.y+vsp*rc,	"avg synapses:");
-		if ( settings->info_critters > 0 )
-			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalSynapses / settings->info_critters);
+		if ( statsBuffer->current.critters > 0 )
+			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)statsBuffer->current.synapses / statsBuffer->current.critters);
 		else
 			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(position.x+hsp,	position.y+vsp*rc,	"avg synapses/neuron:");
-		if ( settings->info_totalNeurons > 0 )
-			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalSynapses / settings->info_totalNeurons);
+		if ( statsBuffer->current.neurons > 0 )
+			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)statsBuffer->current.synapses / statsBuffer->current.neurons);
 		else
 			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(position.x+hsp,	position.y+vsp*rc,	"avg adam distance:");
-		if ( settings->info_critters > 0 )
-			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalAdamDistance / settings->info_critters);
+		if ( statsBuffer->current.critters > 0 )
+			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", (float)statsBuffer->current.adamdistance / statsBuffer->current.critters);
 		else
 			Textprinter::Instance()->printR(col2-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
@@ -85,15 +88,15 @@ void Infostats::draw()
 
 		rc++;
 		Textprinter::Instance()->print(col2+hsp,	position.y+vsp*rc,	"avg body parts:");
-		if ( settings->info_critters > 0 )
-			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalBodyparts / settings->info_critters);
+		if ( statsBuffer->current.critters > 0 )
+			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", (float)statsBuffer->current.bodyparts / statsBuffer->current.critters);
 		else
 			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
 		rc++;
 		Textprinter::Instance()->print(col2+hsp,	position.y+vsp*rc,	"avg weight:");
-		if ( settings->info_critters > 0 )
-			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", (float)settings->info_totalWeight / settings->info_critters);
+		if ( statsBuffer->current.critters > 0 )
+			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", (float)statsBuffer->current.weight / statsBuffer->current.critters);
 		else
 			Textprinter::Instance()->printR(col4-hsp,	position.y+vsp*rc,	"%1.2f", 0.0f);
 
