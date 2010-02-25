@@ -308,8 +308,9 @@ void Evolution::handlekeyPressed(const SDLKey& key)
 		{
 			settings->saveProfile();
 			stringstream buf;
-			buf << "Profile saved to: " << world->dirlayout->savedir << "/" << settings->profileName << "/" << settings->profileName;
+			buf << "Profile saved to: " << world->dirlayout->savedir << "/" << settings->profileName << "/" << settings->profileName << ".pro";
 			Logbuffer::Instance()->add(buf);
+			cerr << buf.str() << endl;
 		}
 		break;
 

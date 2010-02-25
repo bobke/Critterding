@@ -324,12 +324,14 @@ void Settings::loadProfile(char* filename)
 	// nasty code for stripping dir names from the given profile name
 	profileName = filename;
 	string dirs("");
+	parseH->Instance()->beginMatchesStrip( "/", profileName );
 	dirs = parseH->Instance()->returnUntillStrip( "/", profileName );
 	while ( !dirs.empty() )
 	{
 		dirs="";
 		dirs = parseH->Instance()->returnUntillStrip( "/", profileName );
 	}
+	profileName = parseH->Instance()->returnUntillStrip( ".pro", profileName );
 
 	string content;
 	if ( fileH.open( filename, content ) )
@@ -401,7 +403,7 @@ void Settings::saveProfile()
 	if ( !dirH.exists(fulldir) )		dirH.make(fulldir);
 
 	stringstream filename;
-	filename << fulldir << "/" << profileName;
+// 	filename << fulldir << "/" << profileName << ".pro";
 
 	stringstream buf;
 	for( cvarit = cvarlist.begin(); cvarit != cvarlist.end(); cvarit++ )
