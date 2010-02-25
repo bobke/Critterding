@@ -857,16 +857,16 @@ void WorldB::removeCritter(unsigned int cid)
 
 void WorldB::killHalfOfCritters()
 {
-// 	for ( unsigned int c = 0; c < critters.size(); c++ )
-// 		removeCritter(c);
+	for ( unsigned int c = 0; c < critters.size(); c++ )
+		removeCritter(c);
 
-	// kill oldest
+/*	// kill oldest
 	if ( critters.size() > 0 )
 	{
 		unsigned int half = (critters.size()+1)/2;
 		for ( unsigned int c = 0; c < half; c++ )
 			removeCritter(0);
-	}
+	}*/
 }
 
 void WorldB::renderVision()

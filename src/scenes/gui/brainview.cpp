@@ -46,10 +46,10 @@ Brainview::Brainview()
 	addSettingmutator("attract neurons", 10, 10);
 
 	settings->registerLocalCVar("repel neurons", 100, 0, 1000000, false, "repel neurons");
-	addSettingmutator("repel neurons", 10, 36);
+	addSettingmutator("repel neurons", 10, 22);
 
 	settings->registerLocalCVar("attract neuron inputs", 100, 0, 1000000, false, "attract neuron<>inputs");
-	addSettingmutator("attract neuron inputs", 10, 22);
+	addSettingmutator("attract neuron inputs", 10, 36);
 
 	settings->registerLocalCVar("repel neuron inputs", 100, 0, 1000000, false, "repel neuron<>inputs");
 	addSettingmutator("repel neuron inputs", 10, 48);
@@ -197,7 +197,7 @@ void Brainview::draw()
 				neurons[i].newposition.y = 0;
 			}
 
-// #pragma omp parallel for private(i, j, k, nrlinks, xD, yD, dist, oneoverdistancesquared, miny, as)
+// 			#pragma omp parallel for private(i, j, k, nrlinks, xD, yD, dist, oneoverdistancesquared, as)
 			for ( i=0; i < neurons.size()-1; i++ )
 				for ( j=i+1; j < neurons.size(); j++ )
 				{
