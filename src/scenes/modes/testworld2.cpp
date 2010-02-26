@@ -68,26 +68,14 @@ void TestWorld2::process()
 		}
 	}
 	
-	if ( *critter_raycastvision == 1 )
-	{
-		// do a bullet step
-			m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
-	}
-	else
-	{
-		renderVision();
-		#pragma omp parallel sections
-		{
-			#pragma omp section
-			{
-				grabVision();
-			}
-			#pragma omp section
-			{
-				m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
-			}
-		}
-	}
+	  if ( *critter_raycastvision == 0 )
+	  {
+		  renderVision();
+		  grabVision();
+	  }
+
+	// do a bullet step
+		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
 
 	int lmax = (int)critters.size();
 
