@@ -77,7 +77,7 @@ Genotype* Genotypes::newg( Settings* settings )
 
 	gt->count=1;
 	gt->adamdist=0;
-	gt->speciescolor = colorH.randomColorRGB().normalized();
+	gt->speciescolor = colorH.randomColorRGB().getNormalized();
 
 	list.push_back(gt);
 // 	cerr << " new genotype " << list.size() << endl;
@@ -119,7 +119,7 @@ Genotype* Genotypes::copy(Genotype* gt, bool brainmutant, unsigned int brruns, b
 
 		newgt->count=1;
 		newgt->adamdist = gt->adamdist+1;
-		newgt->speciescolor = colorH.randomColorRGB().normalized();
+		newgt->speciescolor = colorH.randomColorRGB().getNormalized();
 
 		list.push_back(newgt);
 // cerr << " gentotype copy end" << endl;
@@ -203,7 +203,7 @@ Genotype* Genotypes::loadGenotype(string &content)
 	gt->brainzArch->setArch(&passToBrain);
 
 	gt->count=1;
-	gt->speciescolor = colorH.randomColorRGB().normalized();
+	gt->speciescolor = colorH.randomColorRGB().getNormalized();
 	list.push_back(gt);
 	
 // 	genotype = genotypes->newg(passToBody, passToBrain, retinasize); // FIXME, with a speciesID

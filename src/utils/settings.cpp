@@ -70,7 +70,8 @@ Settings::Settings()
 	registerCVar("body_minheadsize",					30, 1, 1000000, false, "minimum size of a critters head");
 	registerCVar("body_maxheadsize",					80, 1, 1000000, false, "maximum size of a critters head");
 
-	registerCVar("body_percentmutateeffectchangecolor",			5, 0, 100, false, "chance of changing body color");
+	registerCVar("body_percentmutateeffectchangecolor",			1, 0, 100, false, "chance of changing body color");
+	registerCVar("body_percentmutateeffectchangecolor_slightly",		5, 0, 100, false, "chance of changing body color");
 	registerCVar("body_percentmutateeffectaddbodypart",			1, 0, 100, false, "chance of adding a body part");
 	registerCVar("body_percentmutateeffectremovebodypart",			1, 0, 100, false, "chance of removing a body part");
 	registerCVar("body_percentmutateeffectresizebodypart",			1, 0, 100, false, "chance of resizing a body part");

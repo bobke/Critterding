@@ -18,7 +18,8 @@ class Color
 		Color randomColorRGB();
 		void normalize(Color* c );
 		Color& operator=(const Color& other);
-		Color normalized();
+		Color getNormalized();
+		void normalize();
 	private:
 		RandGen			*randgen;
 };

@@ -257,6 +257,7 @@ void BodyArch::mutate(unsigned int runs)
 	for ( unsigned int i=0; i < runs; i++ )
 	{
 		unsigned int tsum = 	settings->getCVar("body_percentmutateeffectchangecolor")
+					+ settings->getCVar("body_percentmutateeffectchangecolor_slightly")
 					+ settings->getCVar("body_percentmutateeffectaddbodypart")
 					+ settings->getCVar("body_percentmutateeffectremovebodypart")
 					+ settings->getCVar("body_percentmutateeffectresizebodypart")
@@ -291,6 +292,51 @@ void BodyArch::mutate(unsigned int runs)
 				continue;
 			}
 
+		// CHANGE COLOR SLIGHTLY
+			modesum += settings->getCVar("body_percentmutateeffectchangecolor_slightly");
+			if ( mode <= modesum )
+			{
+				// mutate color
+				unsigned int ncolor = randgen->Instance()->get(0,2);
+				unsigned int nweight = randgen->Instance()->get(1,10);
+				float amount = 0.01 * nweight;
+
+				if ( randgen->Instance()->get(0,1) == 0 )
+					amount *= -1;
+
+				if ( ncolor == 0 )
+					color.r += amount;
+				else if ( ncolor == 1 )
+					color.g += amount;
+				else if ( ncolor == 2 )
+					color.b += amount;
+				
+				if ( color.r < 0.1f )
+				{
+					float diff = 0.1f - color.r;
+					color.r += diff; color.g += diff; color.b += diff; color.a += diff;
+				}
+				if ( color.g < 0.1f )
+				{
+					float diff = 0.1f - color.g;
+					color.r += diff; color.g += diff; color.b += diff; color.a += diff;
+				}
+				if ( color.b < 0.1f )
+				{
+					float diff = 0.1f - color.b;
+					color.r += diff; color.g += diff; color.b += diff; color.a += diff;
+				}
+				if ( color.a < 0.1f )
+				{
+					float diff = 0.1f - color.a;
+					color.r += diff; color.g += diff; color.b += diff; color.a += diff;
+				}
+				
+				if ( color.r > 1.0f && color.g > 1.0f && color.b > 1.0f && color.a > 1.0f )
+					color.normalize();
+
+				continue;
+			}
 
 		// ADD BODYPART
 			modesum += settings->getCVar("body_percentmutateeffectaddbodypart");

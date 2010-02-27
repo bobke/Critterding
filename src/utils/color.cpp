@@ -35,7 +35,7 @@ void Color::normalize(Color* c)
 	c->a /= highest;
 }
 
-Color Color::normalized()
+Color Color::getNormalized()
 {
 	float highest = r;
 	if ( g > highest )
@@ -52,6 +52,22 @@ Color Color::normalized()
 	c.a = a/highest;
 	
 	return c;
+}
+
+void Color::normalize()
+{
+	float highest = r;
+	if ( g > highest )
+		highest = g;
+	if ( b > highest )
+		highest = b;
+	if ( a > highest )
+		highest = a;
+
+	r /= highest;
+	g /= highest;
+	b /= highest;
+	a /= highest;
 }
 
 Color& Color::operator=(const Color& other)
