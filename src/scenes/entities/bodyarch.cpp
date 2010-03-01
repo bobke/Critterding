@@ -326,13 +326,8 @@ void BodyArch::mutate(unsigned int runs)
 					float diff = 0.1f - color.b;
 					color.r += diff; color.g += diff; color.b += diff; color.a += diff;
 				}
-				if ( color.a < 0.1f )
-				{
-					float diff = 0.1f - color.a;
-					color.r += diff; color.g += diff; color.b += diff; color.a += diff;
-				}
-				
-				if ( color.r > 1.0f && color.g > 1.0f && color.b > 1.0f && color.a > 1.0f )
+			
+				if ( color.r > 1.0f && color.g > 1.0f && color.b > 1.0f )
 					color.normalize();
 
 				continue;

@@ -12,7 +12,8 @@ struct msg
 {
 	string str;
 	unsigned int len;
-	struct timeval	appeartime;
+	unsigned int	appeartime;
+// 	struct timeval	appeartime;
 };
 
 class Logbuffer
@@ -22,7 +23,7 @@ class Logbuffer
 
 		void		add(const stringstream& streamptr);
 		unsigned int	maxMessages;
-		float		msgLifetime;
+		unsigned int	msgLifetime;
 
 		unsigned int	longestLength;
 

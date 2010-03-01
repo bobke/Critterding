@@ -12,14 +12,14 @@ Timer* Timer::Instance ()
 Timer::Timer()
 {
 	// calc lasttime for first time
-	gettimeofday(&lasttime, &timer_tz);
+// 	gettimeofday(&lasttime, &timer_tz);
 	sdl_lasttime = 0;
 }
 
 void Timer::mark()
 {
 	// get now
-	gettimeofday(&lasttime, &timer_tz);
+// 	gettimeofday(&lasttime, &timer_tz);
 	sdl_now = SDL_GetTicks();
 
 	// calc diff between now and lasttime
@@ -40,7 +40,7 @@ void Timer::mark()
 	sdl_lasttime = sdl_now;
 }
 
-float Timer::timediff(const struct timeval& now, const struct timeval& lasttime)
-{
-	return ( (float)((now.tv_sec - lasttime.tv_sec) * 1000000 + (now.tv_usec - lasttime.tv_usec)) / 1000000);
-}
+// float Timer::timediff(const struct timeval& now, const struct timeval& lasttime)
+// {
+// 	return ( (float)((now.tv_sec - lasttime.tv_sec) * 1000000 + (now.tv_usec - lasttime.tv_usec)) / 1000000);
+// }

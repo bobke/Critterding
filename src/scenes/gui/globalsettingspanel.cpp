@@ -15,7 +15,7 @@ Globalsettingspanel::Globalsettingspanel()
 	unsigned int vspace;
 	unsigned int hspace = 10;
 // 	hspace = 10;
-	vspace = vint; addSettingmutator("mincritters", hspace, vspace);
+	vspace = 7; addSettingmutator("mincritters", hspace, vspace);
 	vspace += vint; addMutator("energy", cmd.gen("decreaseenergy"), cmd.gen("increaseenergy"), hspace, vspace);
 	vspace += vint; addSettingmutator("insertcritterevery", hspace, vspace);
 	vspace += vint; addMutator("worldsizeX", cmd.gen("dec_worldsizex"), cmd.gen("inc_worldsizex"), hspace, vspace);

@@ -21,7 +21,6 @@
 #include "../../utils/dir.h"
 #include "../../utils/file.h"
 #include "../../utils/parser.h"
-#include "../../utils/randgen.h"
 #include "../../utils/settings.h"
 #include "../../utils/raycast.h"
 #include "../../utils/mousepicker.h"
@@ -29,6 +28,7 @@
 #include "../../utils/critterselection.h"
 #include "../../utils/logbuffer.h"
 #include "../../utils/dirlayout.h"
+#include "../../utils/randgen.h"
 
 #include "../gui/textverbosemessage.h"
 

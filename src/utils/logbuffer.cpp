@@ -9,14 +9,14 @@ Logbuffer* Logbuffer::Instance ()
 Logbuffer::Logbuffer()
 {
 	maxMessages = 5;
-	msgLifetime = 3.0f;
+	msgLifetime = 3000;
 }
 
 void Logbuffer::add(const stringstream& streamptr)
 {
 	msg *Msg = new msg;
 	Msg->str = streamptr.str();
-	Msg->appeartime = Timer::Instance()->lasttime;
+	Msg->appeartime = Timer::Instance()->sdl_lasttime;
 	Msg->len = Textprinter::Instance()->getWidth(Msg->str);
 	messages.push_back(Msg);
 
@@ -31,7 +31,8 @@ void Logbuffer::deleteExpiredMsg()
 	{
 		if (
 			messages.size() > maxMessages
-			|| ( msgLifetime > 0.0f && Timer::Instance()->timediff( Timer::Instance()->lasttime, messages[0]->appeartime ) > msgLifetime )
+			|| ( msgLifetime > 0.0f && (Timer::Instance()->sdl_lasttime - messages[0]->appeartime) > msgLifetime )
+// 			|| ( msgLifetime > 0.0f && Timer::Instance()->timediff( Timer::Instance()->lasttime, messages[0]->appeartime ) > msgLifetime )
 		)
 		{
 			delete messages[0];

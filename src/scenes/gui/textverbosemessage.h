@@ -9,7 +9,7 @@ using namespace std;
 struct vmsg
 {
 	string str;
-	struct timeval	appeartime;
+	unsigned int	appeartime;
 };
 
 class Textverbosemessage : public Panel
@@ -22,7 +22,7 @@ class Textverbosemessage : public Panel
 		void		addBirth(stringstream& streamptr);
 		void		addDeath(stringstream& streamptr);
 		unsigned int	maxMessages;
-		float		msgLifetime;
+		unsigned int	msgLifetime;
 
 		void swap();
 
@@ -34,7 +34,7 @@ class Textverbosemessage : public Panel
 		vector<vmsg*>	births;
 		vector<vmsg*>	deaths;
 
-		float		longestLength;
+// 		float		longestLength;
 		void		getLongestMsg();
 
 		void		deleteExpiredMsg();

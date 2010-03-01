@@ -3,7 +3,7 @@
 Settingsbrainpanel::Settingsbrainpanel()
 {
 	v_width = 490;
-	v_height = 515;
+	v_height = 510;
 
 	isMovable = true;
 
@@ -17,7 +17,7 @@ Settingsbrainpanel::Settingsbrainpanel()
 	unsigned int vspace;
 	unsigned int hspace = 10;
 	
-	vspace = vint;  addSettingmutator("brain_maxneurons", hspace, vspace);
+	vspace = 7;  addSettingmutator("brain_maxneurons", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_minsynapses", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_maxsynapses", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_minneuronsatbuildtime", hspace, vspace);

@@ -20,15 +20,15 @@ Textverbosemessage::Textverbosemessage()
 	isMovable = true;
 	
 	maxMessages = 5;
-	msgLifetime = 0.0f;
-	longestLength = 0;
+	msgLifetime = 0;
+// 	longestLength = 0;
 }
 
 void Textverbosemessage::addBirth(stringstream& streamptr)
 {
 	vmsg *Msg = new vmsg;
 	Msg->str = streamptr.str();
-	Msg->appeartime = Timer::Instance()->lasttime;
+	Msg->appeartime = Timer::Instance()->sdl_lasttime;
 	births.push_back(Msg);
 
 	// to prevent overfilling:
@@ -39,7 +39,7 @@ void Textverbosemessage::addDeath(stringstream& streamptr)
 {
 	vmsg *Msg = new vmsg;
 	Msg->str = streamptr.str();
-	Msg->appeartime = Timer::Instance()->lasttime;
+	Msg->appeartime = Timer::Instance()->sdl_lasttime;
 	deaths.push_back(Msg);
 
 	// to prevent overfilling:
@@ -52,7 +52,7 @@ void Textverbosemessage::deleteExpiredMsg()
 	{
 		if (
 			births.size() > maxMessages
-			|| ( msgLifetime > 0.0f && Timer::Instance()->timediff( Timer::Instance()->lasttime, births[0]->appeartime ) > msgLifetime )
+			|| ( msgLifetime > 0 && Timer::Instance()->sdl_lasttime - births[0]->appeartime > msgLifetime )
 		)
 		{
 			delete births[0];
@@ -63,7 +63,7 @@ void Textverbosemessage::deleteExpiredMsg()
 	{
 		if (
 			deaths.size() > maxMessages
-			|| ( msgLifetime > 0.0f && Timer::Instance()->timediff( Timer::Instance()->lasttime, deaths[0]->appeartime ) > msgLifetime )
+			|| ( msgLifetime > 0 && Timer::Instance()->sdl_lasttime - deaths[0]->appeartime > msgLifetime )
 		)
 		{
 			delete deaths[0];

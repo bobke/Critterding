@@ -3,7 +3,7 @@
 Settingsbodypanel::Settingsbodypanel()
 {
 	v_width = 490;
-	v_height = 255;
+	v_height = 265;
 
 	isMovable = true;
 
@@ -16,13 +16,14 @@ Settingsbodypanel::Settingsbodypanel()
 	unsigned int vint = 12;
 	unsigned int vspace;
 	unsigned int hspace = 10;
-	vspace = vint; addSettingmutator("body_maxbodyparts", hspace, vspace);
+	vspace = 7; addSettingmutator("body_maxbodyparts", hspace, vspace);
 	vspace += vint; addSettingmutator("body_maxbodypartsatbuildtime", hspace, vspace);
 	vspace += vint; addSettingmutator("body_minbodypartsize", hspace, vspace);
 	vspace += vint; addSettingmutator("body_maxbodypartsize", hspace, vspace);
 	vspace += vint; addSettingmutator("body_minheadsize", hspace, vspace);
 	vspace += vint; addSettingmutator("body_maxheadsize", hspace, vspace);
 	vspace += vint; addSettingmutator("body_percentmutateeffectchangecolor", hspace, vspace);
+	vspace += vint; addSettingmutator("body_percentmutateeffectchangecolor_slightly", hspace, vspace);
 	vspace += vint; addSettingmutator("body_percentmutateeffectaddbodypart", hspace, vspace);
 	vspace += vint; addSettingmutator("body_percentmutateeffectremovebodypart", hspace, vspace);
 	vspace += vint; addSettingmutator("body_percentmutateeffectresizebodypart", hspace, vspace);
