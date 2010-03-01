@@ -404,7 +404,7 @@ void Settings::saveProfile()
 	if ( !dirH.exists(fulldir) )		dirH.make(fulldir);
 
 	stringstream filename;
-// 	filename << fulldir << "/" << profileName << ".pro";
+	filename << fulldir << "/" << profileName << ".pro";
 
 	stringstream buf;
 	for( cvarit = cvarlist.begin(); cvarit != cvarlist.end(); cvarit++ )
