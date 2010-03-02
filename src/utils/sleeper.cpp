@@ -1,6 +1,6 @@
-#ifdef _WIN32
+/*#ifdef _WIN32
 	#include <unistd.h>
-#endif
+#endif*/
 #include "sleeper.h"
 
 Sleeper::Sleeper()
@@ -30,7 +30,8 @@ void Sleeper::mark()
 			if ( sleeptime >= stepsize )	sleeptime -= stepsize;
 			else 				sleeptime = 0;
 		}
-		if (sleeptime > 0 ) usleep(sleeptime);
+// 		if (sleeptime > 0 ) usleep(sleeptime);
+		if (sleeptime > 0 ) SDL_Delay(sleeptime*0.01f);
 	}
 }
 
@@ -40,7 +41,7 @@ bool Sleeper::isRenderTime()
 		return true;
 
 	timeSinceLastRender += t->elapsed;
-	if ( timeSinceLastRender >= (1.0f/settings->getCVar("fpslimit")) )
+	if ( timeSinceLastRender >= (1.0f / *optimal ) )
 	{
 		timeSinceLastRender = 0.0f;
 		return true;
