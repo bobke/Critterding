@@ -3,6 +3,7 @@
 Speciesview::Speciesview()
 {
 	genotypes = Genotypes::Instance();
+	colormode = Settings::Instance()->getCVarPtr("colormode");
 
 	v_width = 200;
 	v_height = 300;
@@ -143,7 +144,11 @@ void Speciesview::draw()
 			textprinter->print( absPosition.x+col6, absPosition.y+v_space+9, totalSyns );
 			textprinter->print( absPosition.x+col7, absPosition.y+v_space+9, genotypes->list[i]->bodyArch->archBodyparts.size() );
 
-			glColor4f(genotypes->list[indices[i]]->speciescolor.r, genotypes->list[indices[i]]->speciescolor.g, genotypes->list[indices[i]]->speciescolor.b, genotypes->list[indices[i]]->speciescolor.a);
+			if ( *colormode )
+				glColor4f(genotypes->list[indices[i]]->speciescolor.r, genotypes->list[indices[i]]->speciescolor.g, genotypes->list[indices[i]]->speciescolor.b, genotypes->list[indices[i]]->speciescolor.a);
+			else
+				glColor4f(genotypes->list[indices[i]]->bodyArch->color.r, genotypes->list[indices[i]]->bodyArch->color.g, genotypes->list[indices[i]]->bodyArch->color.b, genotypes->list[indices[i]]->bodyArch->color.a);
+
 			glBegin(GL_QUADS);
 				glVertex2f(absPosition.x+col2,         absPosition.y+v_space+qheight);
 				glVertex2f(absPosition.x+col2,         absPosition.y+v_space);

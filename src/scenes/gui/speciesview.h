@@ -41,6 +41,7 @@ class Speciesview : public Panel
 		int titleSynapsesW;
 		int titleBodypartsW;
 		
+		const unsigned int*	colormode;
 };
 
 #endif
