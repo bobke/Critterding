@@ -79,32 +79,33 @@ void Roundworld::process()
 // 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
 
 	int lmax = (int)critters.size();
-
 	CritterB *c;
-	int i;
-
 	float freeEnergyc = 0.0f;
 
 	// FIXME USE FROM WORLDB
-// 	omp_set_num_threads(settings->getCVar("threads"));	
-// 	#pragma omp parallel for shared(freeEnergyc) private(i, c)
-	for( i=0; i < lmax; i++)
+	omp_set_num_threads( *threads );
+	#pragma omp parallel for ordered shared(freeEnergyc, lmax) private(c) // ordered 
+	for( int i=0; i < lmax; i++)
 	{
 		c = critters[i];
-
-// 		omp_set_lock(&my_lock1);
+		
+		omp_set_lock(&my_lock1);
 			checkCollisions(  c );
-// 		omp_unset_lock(&my_lock1);
+		omp_unset_lock(&my_lock1);
 
-		c->process();
+		// process
+			c->process();
 
-		freeEnergy += c->energyUsed;
+		// record critter used energy
+			freeEnergyc += c->energyUsed;
 
-		eat(c);
+		// process Output Neurons
+			eat(c);
 
-// 		omp_set_lock(&my_lock1);
-		procreate(c);
-// 		omp_unset_lock(&my_lock1);
+		// procreation if procreation energy trigger is hit
+		omp_set_lock(&my_lock1);
+			procreate(c);
+		omp_unset_lock(&my_lock1);
 	}
 
 	freeEnergy += freeEnergyc;

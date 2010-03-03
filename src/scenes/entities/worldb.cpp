@@ -248,24 +248,18 @@ void WorldB::process()
 	CritterB* c;
 	float freeEnergyc = 0.0f;
 
-// 	omp_lock_t my_lock1;
-// 	omp_init_lock(&my_lock1);
-	
 	omp_set_num_threads( *threads );
 	#pragma omp parallel for ordered shared(freeEnergyc, lmax) private(c) // ordered 
 	for( int i=0; i < lmax; i++)
 	{
-// 		#pragma omp ordered
-// 		{
-		  
 // 			omp_set_lock(&my_lock1);
 				c = critters[i];
 // 			omp_unset_lock(&my_lock1);
 			
-// 			omp_set_lock(&my_lock1);
-			#pragma omp critical
+			omp_set_lock(&my_lock1);
+// 			#pragma omp critical
 				checkCollisions(  c );
-// 			omp_unset_lock(&my_lock1);
+			omp_unset_lock(&my_lock1);
 
 			// process
 // 			omp_set_lock(&my_lock1);
@@ -283,13 +277,12 @@ void WorldB::process()
 // 			omp_unset_lock(&my_lock1);
 
 			// procreation if procreation energy trigger is hit
-// 			omp_set_lock(&my_lock1);
-			#pragma omp critical
+			omp_set_lock(&my_lock1);
+// 			#pragma omp critical
 				procreate(c);
-// 			omp_unset_lock(&my_lock1);
+			omp_unset_lock(&my_lock1);
 // 		}
 	}
-// 	omp_destroy_lock(&my_lock1);
 
 	freeEnergy += freeEnergyc;
 }

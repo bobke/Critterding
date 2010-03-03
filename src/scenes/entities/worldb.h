@@ -146,6 +146,7 @@ class WorldB
 		const unsigned int*	worldsizeX;
 		const unsigned int*	worldsizeY;
 		const unsigned int*	headless;
+		const unsigned int*	threads;
 
 		void			checkCollisions( CritterB* c );
 
@@ -201,8 +202,6 @@ class WorldB
 // 		inline void		createDirs();
 
 		// Settings pointers.. performance
-		const unsigned int*	threads;
-
 		const unsigned int*	critter_maxlifetime;
 		const unsigned int*	critter_autosaveinterval;
 		const unsigned int*	critter_autoexchangeinterval;
