@@ -1,10 +1,10 @@
-#include "testworld2.h"
+#include "roundworld.h"
 
-TestWorld2::TestWorld2()
+Roundworld::Roundworld()
 {
 }
 
-void TestWorld2::init()
+void Roundworld::init()
 {
 	//makeFloor();
 
@@ -23,7 +23,7 @@ void TestWorld2::init()
 		loadAllCritters();
 }
 
-void TestWorld2::process()
+void Roundworld::process()
 {
 	killHalf();
 	expireFood();
@@ -85,15 +85,16 @@ void TestWorld2::process()
 
 	float freeEnergyc = 0.0f;
 
-	omp_set_num_threads(settings->getCVar("threads"));	
-	#pragma omp parallel for shared(freeEnergyc) private(i, c)
+	// FIXME USE FROM WORLDB
+// 	omp_set_num_threads(settings->getCVar("threads"));	
+// 	#pragma omp parallel for shared(freeEnergyc) private(i, c)
 	for( i=0; i < lmax; i++)
 	{
 		c = critters[i];
 
-		omp_set_lock(&my_lock1);
+// 		omp_set_lock(&my_lock1);
 			checkCollisions(  c );
-		omp_unset_lock(&my_lock1);
+// 		omp_unset_lock(&my_lock1);
 
 		c->process();
 
@@ -101,15 +102,15 @@ void TestWorld2::process()
 
 		eat(c);
 
-		omp_set_lock(&my_lock1);
+// 		omp_set_lock(&my_lock1);
 		procreate(c);
-		omp_unset_lock(&my_lock1);
+// 		omp_unset_lock(&my_lock1);
 	}
 
 	freeEnergy += freeEnergyc;
 }
 
-void TestWorld2::makeFloor()
+void Roundworld::makeFloor()
 {
 	m_dynamicsWorld->removeCollisionObject(fixedGround);
 	delete groundShape;
@@ -125,16 +126,16 @@ void TestWorld2::makeFloor()
 }
 
 
-void TestWorld2::drawWithGrid()
+void Roundworld::drawWithGrid()
 {
 // 	drawfloor();
 	glPushMatrix(); 
 		glTranslatef(0,0,0);
 		glColor4f( 0.3f, 0.2f, 0.1f, 1.0f );
 		drawSphere(
-			settings->getCVar("worldsizeX"),
-			(12.56637*settings->getCVar("worldsizeX") / 6),
-			(12.56637*settings->getCVar("worldsizeX") / 3)
+			*worldsizeX,
+			(12.56637* *worldsizeX / 6),
+			(12.56637* *worldsizeX / 3)
 		);
 	glPopMatrix(); 
 
@@ -145,33 +146,33 @@ void TestWorld2::drawWithGrid()
 		food[i]->draw();
 }
 
-void TestWorld2::childPositionOffset(btVector3* v)
+void Roundworld::childPositionOffset(btVector3* v)
 {
 	*v+= (v->normalized()*insertHight);
 }
 
-btVector3 TestWorld2::findPosition()
+btVector3 Roundworld::findPosition()
 {
 	return btVector3(	((float)randgen->Instance()->get( 0, 200 )-100.0f) / 100,
 				((float)randgen->Instance()->get( 0, 200 )-100.0f) / 100,
 				((float)randgen->Instance()->get( 0, 200 )-100.0f) / 100
-	).normalized() * (settings->getCVar("worldsizeX") + insertHight);
+	).normalized() * ( *worldsizeX + insertHight);
 }
 
-void TestWorld2::drawfloor()
+void Roundworld::drawfloor()
 {
 	glPushMatrix(); 
 		glTranslatef(0,0,0);
 		glColor4f( 0.3f, 0.2f, 0.1f, 1.0f );
 		drawSphere(
-			settings->getCVar("worldsizeX"),
-			(12.56637*settings->getCVar("worldsizeX") / 12),
-			(12.56637*settings->getCVar("worldsizeX") / 6)
+			*worldsizeX,
+			(12.56637* *worldsizeX / 12),
+			(12.56637* *worldsizeX / 6)
 		);
 	glPopMatrix(); 
 }
 
-void TestWorld2::drawSphere(btScalar radius, int lats, int longs) 
+void Roundworld::drawSphere(btScalar radius, int lats, int longs) 
 {
 	int i, j;
 	for(i = 0; i <= lats; i++) {
@@ -197,7 +198,7 @@ void TestWorld2::drawSphere(btScalar radius, int lats, int longs)
 	}
 }
 
-TestWorld2::~TestWorld2()
+Roundworld::~Roundworld()
 {
 	m_dynamicsWorld->removeCollisionObject(fixedGround);
 	delete groundShape;

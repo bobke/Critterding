@@ -11,13 +11,20 @@ Evolution::Evolution()
 	settings = Settings::Instance();
 	events = Events::Instance();
 
+	drawscene = settings->getCVarPtr("drawscene");
+	benchmark = settings->getCVarPtr("benchmark");
+
+	if ( *benchmark == 1 )
+	{
+		canvas.active = false;
+// 		canvas.children["hud"]->active = false;
+		settings->setCVar("startseed", 11);
+	}
+
 	if ( settings->getCVar("race") == 1 )
 		world = new WorldRace();
-	else if ( settings->getCVar("testworld") == 1 )
-	{
-		world = new TestWorld2();
-// 		cerr << "test world yeah" << endl;
-	}
+	else if ( settings->getCVar("roundworld") == 1 )
+		world = new Roundworld();
 	else
 		world = new WorldB();
 
@@ -28,7 +35,7 @@ Evolution::Evolution()
 	static_cast<Hud*>(canvas.children["hud"])->world = world;
 	static_cast<Critterview*>(canvas.children["critterview"])->world = world;
 	cmd->canvas = &canvas;
-	
+
 	pause = false;
 // 	drawCVNeurons = false;
 
@@ -36,6 +43,7 @@ Evolution::Evolution()
 	unsigned int speedup = 2;
 
 	// events
+	events->registerEvent(SDLK_TAB,		"swapspeciespanel", execcmd.gen("gui_togglepanel", "speciesview"), 0, 0, 0 );
 	events->registerEvent(SDLK_ESCAPE,	"swapexitpanel", execcmd.gen("gui_togglepanel", "exitpanel"), 0, 0, 0 );
 	events->registerEvent(SDLK_F1,		"swaphelpinfo", execcmd.gen("gui_togglepanel", "helpinfo"), 0, 0, 0 );
 	events->registerEvent(SDLK_F2,		"swapinfobar", execcmd.gen("gui_togglepanel", "infobar"), 0, 0, 0 );
@@ -47,6 +55,9 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_F7,		"swapsettingsbrainpanel", execcmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
 	events->registerEvent(SDLK_F8,		"swaphud", execcmd.gen("gui_togglepanel", "hud"), 0, 0, 0 );
 	
+	events->registerEvent(SDLK_d,		"toggle_drawscene", execcmd.gen("settings_increase", "drawscene"), 0, 0, 0 );
+	events->registerEvent(SDLK_h,		"swapcanvas", execcmd.gen("gui_toggle"), 0, 0, 0 );
+
 // 	events->registerEvent(SDLK_F5,		"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
 // 	events->registerEvent(SDLK_F6,		"inc_critters", execcmd.gen("settings_increase", "mincritters"), delay, 0, speedup );
 // 	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", execcmd.gen("settings_decrease", "critter_killhalfat"), delay, 0, speedup );
@@ -93,11 +104,13 @@ Evolution::Evolution()
 
 	mouselook = false;
 
-	oldx = 0;
-	oldy = 0;
+	oldx = -100;
+	oldy = -100;
+
+	frameCounter = 0;
 
 	world->init();
-	
+
 // 	lightwaveFrame = 0;
 }
 
@@ -109,10 +122,22 @@ void Evolution::draw()
 		return;
 	}
 
+	frameCounter++;
+
 	Timer::Instance()->mark();
 	sleeper.mark();
 
-	if ( !settings->getCVar("headless") )
+	if ( *benchmark == 1 )
+	{
+		if ( frameCounter == 10000 )
+		{
+			cerr << "benchmark: ran " << frameCounter << " frames in " << (float)SDL_GetTicks()/1000 << " sec, avg: " << (float)frameCounter / SDL_GetTicks() * 1000 << endl;
+			cerr << "and btw, freeEnergy: " << world->freeEnergy << ", critters: " << world->critters.size() << endl;
+			exit(0);
+		}
+	}
+	
+	if ( !*world->headless )
 	{
 		handleEvents();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -130,7 +155,7 @@ void Evolution::draw()
 		GLfloat lightColor[] = { lightwaveFrameSine, lightwaveFrameSine, lightwaveFrameSine, 0.0f };*/
 		GLfloat lightColor[] = { 0.04f, 0.04f, 0.04f, 0.0f };
 
-		GLfloat lightPos[] = { 0.5f*settings->getCVar("worldsizeX"), 50.0f, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
+		GLfloat lightPos[] = { 0.5f * *world->worldsizeX, 50.0f, 0.5f * *world->worldsizeY, 1.0f };
 // 		GLfloat lightPos1[] = { 0.0f, 20.0f, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
 // 		GLfloat lightPos2[] = { settings->getCVar("worldsizeX")+1.0f, 20, 0.5f*settings->getCVar("worldsizeY"), 1.0f };
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
@@ -162,7 +187,7 @@ void Evolution::draw()
 	world->process();
 	world->getGeneralStats();
 
-	if ( !settings->getCVar("headless") )
+	if ( !*world->headless )
 	{
 
 // 			if (world->critters.size() > 1 )
@@ -173,47 +198,53 @@ void Evolution::draw()
 // 			}
 
 		world->camera.place();
-		world->drawWithGrid();
 
-		// draw selected info
-		btScalar position[16];
-		btTransform trans;
-		trans.setIdentity();
-
-		btTransform up;
-		up.setIdentity();
-		up.setOrigin( btVector3(0.0f, 0.2f, 0.0f) );
-
-		for ( unsigned int i=0; i < world->critterselection->clist.size(); i++ )
+		if ( *drawscene == 1 )
 		{
-			trans.setOrigin(world->critterselection->clist[i]->body.mouths[0]->ghostObject->getWorldTransform().getOrigin());
-			trans.getOrigin().setY(trans.getOrigin().getY()+0.5f);
-			trans.setBasis(world->camera.position.getBasis());
-			trans *= up;
-			trans.getOpenGLMatrix(position);
+			world->drawWithGrid();
 
-			glPushMatrix(); 
-			glMultMatrixf(position);
+			// draw selected info
+			btScalar position[16];
+			btTransform trans;
+			trans.setIdentity();
 
-				glColor3f(1.5f, 1.5f, 1.5f);
-				glBegin(GL_LINES);
-					glVertex2f(-0.2f, 0.05f);
-					glVertex2f(-0.2f,-0.05f);
+			btTransform up;
+			up.setIdentity();
+			up.setOrigin( btVector3(0.0f, 0.2f, 0.0f) );
 
-					glVertex2f(-0.2f,-0.05f);
-					glVertex2f(0.2f, -0.05f);
+			for ( unsigned int i=0; i < world->critterselection->clist.size(); i++ )
+			{
+				trans.setOrigin(world->critterselection->clist[i]->body.mouths[0]->ghostObject->getWorldTransform().getOrigin());
+				trans.getOrigin().setY(trans.getOrigin().getY()+0.5f);
+				trans.setBasis(world->camera.position.getBasis());
+				trans *= up;
+				trans.getOpenGLMatrix(position);
 
-					glVertex2f(0.2f, -0.05f);
-					glVertex2f(0.2f,  0.05f);
+				glPushMatrix(); 
+				glMultMatrixf(position);
 
-					glVertex2f(0.2f,  0.05f);
-					glVertex2f(-0.2f, 0.05f);
-				glEnd();
+					glColor3f(1.5f, 1.5f, 1.5f);
+					glBegin(GL_LINES);
+						glVertex2f(-0.2f, 0.05f);
+						glVertex2f(-0.2f,-0.05f);
 
-			glPopMatrix();
+						glVertex2f(-0.2f,-0.05f);
+						glVertex2f(0.2f, -0.05f);
+
+						glVertex2f(0.2f, -0.05f);
+						glVertex2f(0.2f,  0.05f);
+
+						glVertex2f(0.2f,  0.05f);
+						glVertex2f(-0.2f, 0.05f);
+					glEnd();
+
+				glPopMatrix();
+			}
 		}
 
 	// 2D
+		if ( canvas.active )
+		{
 		glDisable(GL_DEPTH_TEST);
 		glDisable (GL_LIGHTING);
 		glDisable(GL_LIGHT0);
@@ -231,33 +262,37 @@ void Evolution::draw()
 
 			canvas.draw();
 
-			world->mouseRayHit = false;
-			if (!mouselook && !canvas.mouseFocus )
-				world->castMouseRay();
-
-			// hover test
-			if ( world->mouseRayHit )
+			if ( *drawscene == 1 )
 			{
-				unsigned int margin = 20;
-				unsigned int rmargindistance = 70;
-				unsigned int vspacer = 12;
-				glColor3f(1.0f, 1.0f, 1.0f);
-				if ( world->mouseRayHitEntity->type == 1 )
+				world->mouseRayHit = false;
+				if (!mouselook && !canvas.mouseFocus )
+					world->castMouseRay();
+
+				// hover test
+				if ( world->mouseRayHit )
 				{
-					Textprinter::Instance()->print( oldx+margin, oldy,    "food");
-					Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
-					Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", static_cast<const Food*>(world->mouseRayHitEntity)->energyLevel);
-				}
-				else if ( world->mouseRayHitEntity->type == 0 )
-				{
-					CritterB* c = static_cast<const CritterB*>(world->mouseRayHitEntity);
-					Textprinter::Instance()->print( oldx+margin, oldy,    "critter");
-					Textprinter::Instance()->print(oldx+rmargindistance, oldy, "%1i", c->critterID);
-					Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
-					Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", c->energyLevel);
+					unsigned int margin = 20;
+					unsigned int rmargindistance = 70;
+					unsigned int vspacer = 12;
+					glColor3f(1.0f, 1.0f, 1.0f);
+					if ( world->mouseRayHitEntity->type == 1 )
+					{
+						Textprinter::Instance()->print( oldx+margin, oldy,    "food");
+						Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
+						Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", static_cast<const Food*>(world->mouseRayHitEntity)->energyLevel);
+					}
+					else if ( world->mouseRayHitEntity->type == 0 )
+					{
+						CritterB* c = static_cast<const CritterB*>(world->mouseRayHitEntity);
+						Textprinter::Instance()->print( oldx+margin, oldy,    "critter");
+						Textprinter::Instance()->print(oldx+rmargindistance, oldy, "%1i", c->critterID);
+						Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
+						Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", c->energyLevel);
+					}
 				}
 			}
 		glPopMatrix();
+		}
 
 		SDL_GL_SwapBuffers();		
 	}

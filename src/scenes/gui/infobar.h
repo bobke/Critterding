@@ -22,6 +22,7 @@ class Infobar : public Panel
 		// horizontal/vertical spacers (padding)
 		unsigned int hsp;
 		unsigned int vsp;
+		const unsigned int*	energy;
 };
 
 #endif

@@ -10,7 +10,7 @@
 #include "../utils/events.h"
 #include "entities/worldb.h"
 #include "modes/race.h"
-#include "modes/testworld2.h"
+#include "modes/roundworld.h"
 
 // #include <sstream>
 // #include <stdio.h>
@@ -48,6 +48,8 @@ class Evolution : public GLScene {
 
 	private:
 		Settings *settings;
+		const unsigned int* drawscene;
+		const unsigned int* benchmark;
 		Commands *cmd;
 		Events *events;
 		Sleeper sleeper;
@@ -64,7 +66,7 @@ class Evolution : public GLScene {
 		// events
 		void		handleEvents();
 		
-// 		float lightwaveFrame;
+		long long	frameCounter;
 };
 
 #endif

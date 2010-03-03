@@ -155,7 +155,7 @@ void Genotypes::remove(Genotype* gt)
 	}
 }
 
-Genotype* Genotypes::loadGenotype(string &content)
+Genotype* Genotypes::loadGenotype(string& content)
 {
 // 	cerr << "loading genotype start" << endl;
 	Genotype* gt = new Genotype();
@@ -199,6 +199,7 @@ Genotype* Genotypes::loadGenotype(string &content)
 	}
 
 	gt->bodyArch->setArch(&passToBody);
+	
 	gt->registerBrainInputOutputs();
 	gt->brainzArch->setArch(&passToBrain);
 

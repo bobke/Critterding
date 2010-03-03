@@ -6,6 +6,7 @@ void CritterB::initConst()
 	settings = Settings::Instance();
 	genotypes = Genotypes::Instance();
 	retinasperrow = settings->getCVarPtr("retinasperrow");
+	colormode = settings->getCVarPtr("colormode");
 	critter_maxlifetime = settings->getCVarPtr("critter_maxlifetime");
 	critter_maxenergy = settings->getCVarPtr("critter_maxenergy");
 	critter_sightrange = settings->getCVarPtr("critter_sightrange");
@@ -107,7 +108,7 @@ CritterB::CritterB(string &critterstring, btDynamicsWorld* btWorld, const btVect
 		buf << "ERROR: critter retinasize (" << genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << settings->getCVar("critter_retinasize") << ")";
 		Logbuffer::Instance()->add(buf);
 
-		cerr << "ERROR: critter retinasize (" << genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << settings->getCVar("critter_retinasize") << ")" << endl;
+		cerr << "!ERROR: critter retinasize (" << genotype->bodyArch->retinasize << ") doesn't fit world retinasize (" << settings->getCVar("critter_retinasize") << ")" << endl;
 		loadError = true;
 	}
 	else
@@ -161,7 +162,7 @@ void CritterB::draw(bool drawFaces)
 		glPushMatrix(); 
 		glMultMatrixf(position);
 
-			if ( settings->getCVar("colormode") == 1 )
+			if ( *colormode == 1 )
 				glColor4f( genotype->speciescolor.r, genotype->speciescolor.g, genotype->speciescolor.b, genotype->speciescolor.a );
 			else
 				glColor4f( genotype->bodyArch->color.r, genotype->bodyArch->color.g, genotype->bodyArch->color.b, genotype->bodyArch->color.a );

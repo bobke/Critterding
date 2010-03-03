@@ -115,6 +115,7 @@ class CritterB : public Entity
 			const unsigned int*	brain_costfiringneuron;
 			const unsigned int*	brain_costfiringmotorneuron;
 			const unsigned int*	brain_costhavingsynapse;
+			const unsigned int*	colormode;
 };
 
 #endif

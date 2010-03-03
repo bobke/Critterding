@@ -18,6 +18,14 @@ bool Dir::exists(string &directory)
 
 void Dir::make(string &directory)
 {
+
+// [02:44:27] <b0000> #ifdef CD_PLATFORM_LINUX
+// [02:44:36] <b0000> #ifdef CD_PLATFORM_MINGW
+// [02:44:40] <b0000> #else
+// [02:44:42] <b0000> #endif
+// [02:44:44] <b0000> #endif
+// [02:44:50] <bobke> alright :)
+
 #ifndef _WIN32
 	mkdir( directory.c_str(), 0755 );
 #else

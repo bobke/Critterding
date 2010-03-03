@@ -3,6 +3,7 @@
 Food::Food()
 {
 	settings	= Settings::Instance();
+	food_size 	= settings->getCVarPtr("food_size");
 	totalFrames	= 0;
 	lifetime	= 0;
 	energyLevel	= 0;
@@ -42,7 +43,7 @@ void Food::createBody(btDynamicsWorld* m_dynamicsWorld, const btVector3& startOf
 	btTransform transform; transform.setIdentity();
 	transform.setOrigin( btVector3(0.0f, 0.10f, 0.0f) );
 
-	body.addBodyPart_Box((void*)this, (float)settings->getCVar("food_size")/1000, (float)settings->getCVar("food_size")/1000, (float)settings->getCVar("food_size")/1000, 1.0f, offset, transform);
+	body.addBodyPart_Box((void*)this, (float)*food_size/1000, (float)*food_size/1000, (float)*food_size/1000, 1.0f, offset, transform);
 
 	myMotionState = (btDefaultMotionState*)body.bodyparts[0]->body->getMotionState();
 	boxShape = static_cast<btBoxShape*>(body.bodyparts[0]->shape);

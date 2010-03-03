@@ -42,6 +42,7 @@ Commands::Commands()
 	registerCmd("camera_rollright", &WorldB::camera_rollright);
 
 	registerCmd("gui_togglepanel", &Maincanvas::swapChild);
+	registerCmd("gui_toggle", &Maincanvas::swap);
 	registerCmd("settings_increase", &Settings::increaseCVar);
 	registerCmd("settings_decrease", &Settings::decreaseCVar);
 
@@ -81,6 +82,15 @@ void Commands::registerCmd(string name, void (WorldB::*pt2Func)())
 	c->commandtype		= T_WORLD;
 	c->argtype		= A_NOARG;
 	c->worldMember		= pt2Func;
+	cmdlist[name]		= c;
+}
+
+void Commands::registerCmd(string name, void (Maincanvas::*pt2Func)())
+{
+	cmd* c = new cmd();
+	c->commandtype		= T_CANVAS;
+	c->argtype		= A_NOARG;
+	c->canvasMember		= pt2Func;
 	cmdlist[name]		= c;
 }
 
@@ -129,6 +139,8 @@ void Commands::execCmd(const string& name)
 		(world->*cmdlist[name]->worldMember)();
 	else if ( cmdlist[name]->commandtype == T_CS )
 		(critterselection->*cmdlist[name]->critterselectionMember)();
+	else if ( cmdlist[name]->commandtype == T_CANVAS )
+		(canvas->*cmdlist[name]->canvasMember)();
 }
 
 void Commands::execCmd(const string& name, const string& str)

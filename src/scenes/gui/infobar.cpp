@@ -3,6 +3,7 @@
 Infobar::Infobar()
 {
 	statsBuffer = Statsbuffer::Instance();
+	energy = settings->getCVarPtr("energy");
 
 	active = true;
 	isMovable = true;
@@ -58,7 +59,7 @@ void Infobar::draw()
 
 		Textprinter::Instance()->print(position.x+col2+hsp,	position.y+vsp,	"food:");
 // 		Textprinter::Instance()->printR(position.x+col3-hsp,	position.y+vsp,	"%1u/%1u",	settings->info_food, settings->getCVar("energy"));
-		Textprinter::Instance()->printR(position.x+col3-hsp,	position.y+vsp,	"%1u/%1u",	statsBuffer->current.food, settings->getCVar("energy"));
+		Textprinter::Instance()->printR(position.x+col3-hsp,	position.y+vsp,	"%1u/%1u",	statsBuffer->current.food, *energy);
 
 // 		Textprinter::Instance()->print(col3+hsp,	vsp,	"corpses:");
 // 		Textprinter::Instance()->printR(col4-hsp,	vsp,	"%1u",		Settings::Instance()->info_corpses);

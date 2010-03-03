@@ -3,7 +3,7 @@
 Globalsettingspanel::Globalsettingspanel()
 {
 	v_width = 340;
-	v_height = 376;
+	v_height = 388;
 
 	isMovable = true;
 
@@ -29,6 +29,7 @@ Globalsettingspanel::Globalsettingspanel()
 	vspace += vint; addSettingmutator("exit_if_empty", hspace, vspace);
 	vspace += vint; addSettingmutator("fpslimit", hspace, vspace);
 	vspace += vint; addSettingmutator("threads", hspace, vspace);
+	vspace += vint; addSettingmutator("drawscene", hspace, vspace);
 
 // 	vspace += vint; 
 	vspace += vint; addSettingmutator("critter_maxlifetime", hspace, vspace);

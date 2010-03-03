@@ -32,6 +32,7 @@ WorldB::WorldB()
 		food_maxenergy = settings->getCVarPtr("food_maxenergy");
 		energy = settings->getCVarPtr("energy");
 		headless = settings->getCVarPtr("headless");
+		threads = settings->getCVarPtr("threads");
 		mincritters = settings->getCVarPtr("mincritters");
 		insertcritterevery = settings->getCVarPtr("insertcritterevery");
 		worldsizeX = settings->getCVarPtr("worldsizeX");
@@ -127,41 +128,6 @@ void WorldB::init()
 	if ( settings->getCVar("autoload") )
 		loadAllCritters();
 }
-
-void WorldB::drawShadow(btScalar* m,const btVector3& extrusion,const btCollisionShape* shape,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax)
-{
-	glPushMatrix(); 
-	glMultMatrixf(m);
-	if(shape->getShapeType() == UNIFORM_SCALING_SHAPE_PROXYTYPE)
-	{
-		const btUniformScalingShape* scalingShape = static_cast<const btUniformScalingShape*>(shape);
-		const btConvexShape* convexShape = scalingShape->getChildShape();
-		float	scalingFactor = (float)scalingShape->getUniformScalingFactor();
-		btScalar tmpScaling[4][4]={	{scalingFactor,0,0,0},
-		{0,scalingFactor,0,0},
-		{0,0,scalingFactor,0},
-		{0,0,0,1}};
-		drawShadow((btScalar*)tmpScaling,extrusion,convexShape,worldBoundsMin,worldBoundsMax);
-		glPopMatrix();
-		return;
-	}
-	else if(shape->getShapeType()==COMPOUND_SHAPE_PROXYTYPE)
-	{
-		const btCompoundShape* compoundShape = static_cast<const btCompoundShape*>(shape);
-		for (int i=compoundShape->getNumChildShapes()-1;i>=0;i--)
-		{
-			btTransform childTrans = compoundShape->getChildTransform(i);
-			const btCollisionShape* colShape = compoundShape->getChildShape(i);
-			btScalar childMat[16];
-			childTrans.getOpenGLMatrix(childMat);
-			drawShadow(childMat,extrusion*childTrans.getBasis(),colShape,worldBoundsMin,worldBoundsMax);
-		}
-	}
-
-	glPopMatrix();
-
-}
-
 
 void WorldB::castMouseRay()
 {
@@ -271,40 +237,61 @@ void WorldB::process()
 	  }
 
 	// do a bullet step
-		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
+		m_dynamicsWorld->stepSimulation(0.016667f, 0, 0.016667f);
+// 		m_dynamicsWorld->stepSimulation(0.016667f);
+// 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
+// cerr << Timer::Instance()->bullet_ms << " : " << Timer::Instance()->bullet_ms / 1000.f << endl;
 
 	// process all critters
 	int lmax = (int)critters.size();
-	int i;
+// 	int i;
 	CritterB* c;
 	float freeEnergyc = 0.0f;
 
-	omp_set_num_threads(settings->getCVar("threads"));
-	#pragma omp parallel for shared(freeEnergyc) private(i, c)
-	for( i=0; i < lmax; i++)
+// 	omp_lock_t my_lock1;
+// 	omp_init_lock(&my_lock1);
+	
+	omp_set_num_threads( *threads );
+	#pragma omp parallel for ordered shared(freeEnergyc, lmax) private(c) // ordered 
+	for( int i=0; i < lmax; i++)
 	{
-		c = critters[i];
-		
-		omp_set_lock(&my_lock1);
-			checkCollisions(  critters[i] );
-		omp_unset_lock(&my_lock1);
+// 		#pragma omp ordered
+// 		{
+		  
+// 			omp_set_lock(&my_lock1);
+				c = critters[i];
+// 			omp_unset_lock(&my_lock1);
+			
+// 			omp_set_lock(&my_lock1);
+			#pragma omp critical
+				checkCollisions(  c );
+// 			omp_unset_lock(&my_lock1);
 
-		// process
-		c->process();
+			// process
+// 			omp_set_lock(&my_lock1);
+				c->process();
+// 			omp_unset_lock(&my_lock1);
 
-		// record critter used energy
-		freeEnergyc += c->energyUsed;
+			// record critter used energy
+// 			omp_set_lock(&my_lock1);
+				freeEnergyc += c->energyUsed;
+// 			omp_unset_lock(&my_lock1);
 
-		// process Output Neurons
-		eat(c);
+			// process Output Neurons
+// 			omp_set_lock(&my_lock1);
+				eat(c);
+// 			omp_unset_lock(&my_lock1);
 
-		// procreation if procreation energy trigger is hit
-		omp_set_lock(&my_lock1);
-			procreate(c);
-		omp_unset_lock(&my_lock1);
+			// procreation if procreation energy trigger is hit
+// 			omp_set_lock(&my_lock1);
+			#pragma omp critical
+				procreate(c);
+// 			omp_unset_lock(&my_lock1);
+// 		}
 	}
-	freeEnergy += freeEnergyc;
+// 	omp_destroy_lock(&my_lock1);
 
+	freeEnergy += freeEnergyc;
 }
 
 void WorldB::childPositionOffset(btVector3* v)
@@ -837,7 +824,7 @@ void WorldB::removeCritter(unsigned int cid)
 
 	// update higher retina frame positions
 	int c;
-	omp_set_num_threads(settings->getCVar("threads"));
+	omp_set_num_threads( *threads );
 // 	#pragma omp parallel for private(c)
 	for ( c = cid; c < (int)critters.size(); c++ )
 		critters[c]->calcFramePos(c);
@@ -918,6 +905,40 @@ void WorldB::drawfloor()
 {
 	for( unsigned int i=0; i < walls.size(); i++)
 		walls[i]->draw();
+}
+
+void WorldB::drawShadow(btScalar* m,const btVector3& extrusion,const btCollisionShape* shape,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax)
+{
+	glPushMatrix(); 
+	glMultMatrixf(m);
+	if(shape->getShapeType() == UNIFORM_SCALING_SHAPE_PROXYTYPE)
+	{
+		const btUniformScalingShape* scalingShape = static_cast<const btUniformScalingShape*>(shape);
+		const btConvexShape* convexShape = scalingShape->getChildShape();
+		float	scalingFactor = (float)scalingShape->getUniformScalingFactor();
+		btScalar tmpScaling[4][4]={	{scalingFactor,0,0,0},
+		{0,scalingFactor,0,0},
+		{0,0,scalingFactor,0},
+		{0,0,0,1}};
+		drawShadow((btScalar*)tmpScaling,extrusion,convexShape,worldBoundsMin,worldBoundsMax);
+		glPopMatrix();
+		return;
+	}
+	else if(shape->getShapeType()==COMPOUND_SHAPE_PROXYTYPE)
+	{
+		const btCompoundShape* compoundShape = static_cast<const btCompoundShape*>(shape);
+		for (int i=compoundShape->getNumChildShapes()-1;i>=0;i--)
+		{
+			btTransform childTrans = compoundShape->getChildTransform(i);
+			const btCollisionShape* colShape = compoundShape->getChildShape(i);
+			btScalar childMat[16];
+			childTrans.getOpenGLMatrix(childMat);
+			drawShadow(childMat,extrusion*childTrans.getBasis(),colShape,worldBoundsMin,worldBoundsMax);
+		}
+	}
+
+	glPopMatrix();
+
 }
 
 void WorldB::drawWithinCritterSight(CritterB *c)

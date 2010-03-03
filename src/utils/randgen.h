@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include "timer.h"
+#include "settings.h"
 
 using namespace std;
 

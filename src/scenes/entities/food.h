@@ -29,13 +29,14 @@ class Food : public Entity
 		unsigned int		lifetime;
 		float			energyLevel;
 		unsigned int		totalFrames;
-
 		btDefaultMotionState* myMotionState;
 	private:
 		Settings		*settings;
 
 		btBoxShape* boxShape;
 		btVector3 halfExtent;
+
+		const unsigned int*	food_size;
 };
 
 #endif

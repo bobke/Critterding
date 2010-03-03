@@ -17,7 +17,7 @@ class Genotypes
 		Genotype* newg(Settings* settings);
 		void add(Genotype* gt);
 		Genotype* copy(Genotype* gt, bool brainmutant, unsigned int brruns, bool bodymutant, unsigned int boruns);
-		Genotype* loadGenotype(string &content);
+		Genotype* loadGenotype(string& content);
 		string saveGenotype();
 
 		void remove(Genotype* gt);

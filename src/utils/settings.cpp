@@ -13,11 +13,15 @@ Settings::Settings()
 	registerCVar("fullscreen",						0, 0, 1, true, "enable fullscreen mode");
 	registerCVar("threads",							1, 1, 16, false, "threads to use");
 	registerCVar("headless",						0, 0, 1, true, "do not open gl context");
+	registerCVar("drawscene",						1, 0, 1, true, "draw the scene");
 	registerCVar("fsX",							800, 1, 1000000, false, "fullscreen resolution X");
 	registerCVar("fsY",							600, 1, 1000000, false, "fullscreen resolution Y");
+	registerCVar("startseed",						0, 0, 4000000000, true, "enable fullscreen mode");
+	registerCVar("benchmark",						0, 0, 1, true, "run the critterding benchmark");
 
 	registerCVar("race",							0, 0, 1, false, "enable race simulation");
-	registerCVar("testworld",						0, 0, 1, false, "enable race simulation");
+	registerCVar("roundworld",						0, 0, 1, false, "enable round planet");
+	registerCVar("testworld",						0, 0, 1, false, "a world for test purposes");
 
 	registerCVar("worldsizeX",						23, 1, 5000, false, "size of the world along axis X");
 	registerCVar("worldsizeY",						13, 1, 5000, false, "size of the world along axis Y");
@@ -190,8 +194,12 @@ void Settings::registerLocalCVar(const string& name, const unsigned int& default
 
 unsigned int Settings::getCVar(const string& name)
 {
-// 	return cvarlist[name]->int_val;
+// 	cerr << "asking for " << name << endl;
+
+	// the fast"er" way
+	return cvarlist[name]->int_val;
 	
+	// the slow way
 	cvarit = cvarlist.find(name);
 	if ( cvarit != cvarlist.end() )
 		return cvarit->second->int_val;
