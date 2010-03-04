@@ -35,7 +35,6 @@ Settings::Settings()
 	registerCVar("energy",							400, 0, 1000000, false, "energy in the system by number of food cubes");
 	registerCVar("mincritters",						10, 0, 1000, false, "minimum number of critters");
 
-	registerCVar("insertcritterevery",					0, 0, 1000000, false, "inserts a random critter every n frames");
 	registerCVar("retinasperrow",						20, 1, 1000, false, "number of vision retinas to stack per row onscreen");
 	registerCVar("camerasensitivity",					20, 1, 1000, false, "sensitivity of the camera");
 
@@ -44,6 +43,7 @@ Settings::Settings()
 	registerCVar("autoload",						0, 0, 1, true, "autoload critters from ~/.critterding/load");
 	registerCVar("fpslimit",						30, 1, 1000, false, "frames per second for the fps limiter");
 
+	registerCVar("critter_insertevery",					0, 0, 1000000, false, "inserts a random critter every n frames");
 	registerCVar("critter_maxlifetime",					40000, 1, 1000000, false, "maximum number of frames a critter lives");
 	registerCVar("critter_maxenergy",					5000, 1, 1000000, false, "maximum amount of energy a critter has");
 
@@ -197,7 +197,7 @@ unsigned int Settings::getCVar(const string& name)
 // 	cerr << "asking for " << name << endl;
 
 	// the fast"er" way
-	return cvarlist[name]->int_val;
+// 	return cvarlist[name]->int_val;
 	
 	// the slow way
 	cvarit = cvarlist.find(name);
@@ -383,7 +383,7 @@ void Settings::loadProfile(char* filename)
 					else
 					{
 						cerr << "Unknown option in profile: " << sw << endl;
-						exit(1);
+// 						exit(1);
 					}
 				}
 				else
@@ -475,8 +475,8 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 			else
 			{
 				cerr << "Unknown commandline option: --" << sw << endl;
-				cerr << "use --help for more information" << endl;
-				exit(1);
+// 				cerr << "use --help for more information" << endl;
+// 				exit(1);
 			}
 		}
 
@@ -486,8 +486,8 @@ void Settings::doCommandLineOptions(int argc, char *argv[])
 	if (optind<argc)
 	{
 		cerr << "Unknown commandline option: " << argv[optind] << endl;
-		cerr << "use --help for more information" << endl;
-		exit(1);
+// 		cerr << "use --help for more information" << endl;
+// 		exit(1);
 	}
 	cout << endl << endl;
 }

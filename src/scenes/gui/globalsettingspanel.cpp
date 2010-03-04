@@ -17,7 +17,6 @@ Globalsettingspanel::Globalsettingspanel()
 // 	hspace = 10;
 	vspace = 7; addSettingmutator("mincritters", hspace, vspace);
 	vspace += vint; addMutator("energy", cmd.gen("decreaseenergy"), cmd.gen("increaseenergy"), hspace, vspace);
-	vspace += vint; addSettingmutator("insertcritterevery", hspace, vspace);
 	vspace += vint; addMutator("worldsizeX", cmd.gen("dec_worldsizex"), cmd.gen("inc_worldsizex"), hspace, vspace);
 	vspace += vint; addMutator("worldsizeY", cmd.gen("dec_worldsizey"), cmd.gen("inc_worldsizey"), hspace, vspace);
 
@@ -32,6 +31,7 @@ Globalsettingspanel::Globalsettingspanel()
 	vspace += vint; addSettingmutator("drawscene", hspace, vspace);
 
 // 	vspace += vint; 
+	vspace += vint; addSettingmutator("critter_insertevery", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_maxlifetime", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_maxenergy", hspace, vspace);
 	vspace += vint; addSettingmutator("critter_startenergy", hspace, vspace);

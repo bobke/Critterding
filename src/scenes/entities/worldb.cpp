@@ -34,7 +34,7 @@ WorldB::WorldB()
 		headless = settings->getCVarPtr("headless");
 		threads = settings->getCVarPtr("threads");
 		mincritters = settings->getCVarPtr("mincritters");
-		insertcritterevery = settings->getCVarPtr("insertcritterevery");
+		insertcritterevery = settings->getCVarPtr("critter_insertevery");
 		worldsizeX = settings->getCVarPtr("worldsizeX");
 		worldsizeY = settings->getCVarPtr("worldsizeY");
 
