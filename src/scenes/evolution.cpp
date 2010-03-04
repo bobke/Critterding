@@ -55,7 +55,7 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_F7,		"swapsettingsbrainpanel", execcmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
 	events->registerEvent(SDLK_F8,		"swaphud", execcmd.gen("gui_togglepanel", "hud"), 0, 0, 0 );
 	
-	events->registerEvent(SDLK_d,		"toggle_drawscene", execcmd.gen("settings_increase", "drawscene"), 0, 0, 0 );
+	events->registerEvent(SDLK_r,		"toggle_drawscene", execcmd.gen("settings_increase", "drawscene"), 0, 0, 0 );
 	events->registerEvent(SDLK_h,		"swapcanvas", execcmd.gen("gui_toggle"), 0, 0, 0 );
 
 // 	events->registerEvent(SDLK_F5,		"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
@@ -100,7 +100,7 @@ Evolution::Evolution()
 	events->registerEvent(SDLK_KP1,		"keycamera_rollleft", execcmd.gen("camera_rollleft"), t );
 	events->registerEvent(SDLK_KP3,		"keycamera_rollright", execcmd.gen("camera_rollright"), t );
 
-	events->registerEvent(SDLK_f, "inc_fullscreen", execcmd.gen("settings_increase", "fullscreen"), 0, 0, 0 );
+	events->registerEvent(SDLK_f,		"inc_fullscreen", execcmd.gen("settings_increase", "fullscreen"), 0, 0, 0 );
 
 	mouselook = false;
 
