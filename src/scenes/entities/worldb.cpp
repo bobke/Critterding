@@ -340,7 +340,7 @@ void WorldB::procreate( CritterB* c )
 
 		// split energies in half
 			nc->energyLevel = c->energyLevel/2.0f;
-			c->energyLevel = nc->energyLevel;
+			c->energyLevel -= nc->energyLevel;
 
 		// reset procreation energy count
 			critters.push_back( nc );
