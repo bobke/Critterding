@@ -1,3 +1,26 @@
+1.0-beta12
+----------
+critter selection and actions (kill, duplicate)
+new panels: neural net brainviewer, hud, species list
+touchingcritter brain input fix
+profile saves to ~/critterding/save/(profile)/(profile).pro
+toggle rendering of gui and scene (h & r)
+font switch to DejaVuSans
+an icon thanks to jrabbit
+new options:
+ --roundworld: a round planet
+ --benchmark: times a scene of 10000 frames
+ --headless: console mode
+ --startseed: seed for the random number generator
+ --killhalf_incrworldsizeX/Y: option to increase worldsize when killhalf triggers
+ --killhalf_decrmaxlifetimepct: option to decrease critter maxlifetime when killhalf triggers
+ --critter_raycastvision: raycast vision for critters
+ --threads, number of threads, making openmp (comes with gcc4.2+) a requirement
+build system: 
+ if available, build against system ftgl (pass --disable-system-ftgl to use internal)
+ make install
+many fixes, cleanups & changes
+
 1.0-beta11
 ---------
 improved keyboard / mouse input handling
