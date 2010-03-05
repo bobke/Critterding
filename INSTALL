@@ -1,21 +1,28 @@
 Requirements
 ============
 
+gcc 4.2+
+libtool
 freetype2
 SDL
 
 Basic Installation
 ==================
 
-autoreconf -fi
-./configure
-make
+> autoreconf -fi
+> ./configure
+> make
+> (make install)
 
 start an ecosim
-./src/critterding
+> ./src/critterding
+or if you did 'make install'
+> critterding
 
 start a race
-./src/critterding --profile profiles/race
+> ./src/critterding --profile profiles/race
+or if you did 'make install'
+> critterding --profile profiles/race
 
 Problems
 ========
