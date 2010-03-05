@@ -12,22 +12,25 @@ Maincanvas::Maincanvas()
 	hasPickedwidget = false;
 	pickedwidget = 0;
 
-	// register subwidgets of maincanvas
-	addWidgetPanel( "helpinfo", new Helpinfo() );
-	addWidgetPanel( "textmessage", new Textmessage() );
-	addWidgetPanel( "statsgraph", new Statsgraph() );
-	addWidgetPanel( "infobar", new Infobar() );
-	addWidgetPanel( "infostats", new Infostats() );
-	addWidgetPanel( "textverbosemessage", Textverbosemessage::Instance() );
-	addWidgetPanel( "exitpanel", new Exitpanel() );
-	addWidgetPanel( "mutationpanel", new Mutationpanel() );
-	addWidgetPanel( "globalsettingspanel", new Globalsettingspanel() );
-	addWidgetPanel( "settingsbrainpanel", new Settingsbrainpanel() );
-	addWidgetPanel( "settingsbodypanel", new Settingsbodypanel() );
-	addWidgetPanel( "critterview", new Critterview() );
-	addWidgetPanel( "brainview", new Brainview() );
-	addWidgetPanel( "hud", new Hud() );
-	addWidgetPanel( "speciesview", new Speciesview() );
+  	if ( settings->getCVar("headless") == 0 )
+	{
+		// register subwidgets of maincanvas
+		addWidgetPanel( "helpinfo", new Helpinfo() );
+		addWidgetPanel( "textmessage", new Textmessage() );
+		addWidgetPanel( "statsgraph", new Statsgraph() );
+		addWidgetPanel( "infobar", new Infobar() );
+		addWidgetPanel( "infostats", new Infostats() );
+		addWidgetPanel( "textverbosemessage", Textverbosemessage::Instance() );
+		addWidgetPanel( "exitpanel", new Exitpanel() );
+		addWidgetPanel( "mutationpanel", new Mutationpanel() );
+		addWidgetPanel( "globalsettingspanel", new Globalsettingspanel() );
+		addWidgetPanel( "settingsbrainpanel", new Settingsbrainpanel() );
+		addWidgetPanel( "settingsbodypanel", new Settingsbodypanel() );
+		addWidgetPanel( "critterview", new Critterview() );
+		addWidgetPanel( "brainview", new Brainview() );
+		addWidgetPanel( "hud", new Hud() );
+		addWidgetPanel( "speciesview", new Speciesview() );
+	}
 
 	// set default z axises to panels
 	unsigned int panelc = 0;

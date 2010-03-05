@@ -32,9 +32,13 @@ Evolution::Evolution()
 	world->mousey = &oldy;
 	
 	cmd->world = world;
-	static_cast<Hud*>(canvas.children["hud"])->world = world;
-	static_cast<Critterview*>(canvas.children["critterview"])->world = world;
-	cmd->canvas = &canvas;
+	
+	if ( !*world->headless )
+	{
+		static_cast<Hud*>(canvas.children["hud"])->world = world;
+		static_cast<Critterview*>(canvas.children["critterview"])->world = world;
+		cmd->canvas = &canvas;
+	}
 
 	pause = false;
 // 	drawCVNeurons = false;

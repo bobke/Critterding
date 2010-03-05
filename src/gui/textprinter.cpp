@@ -8,7 +8,9 @@ Textprinter* Textprinter::Instance ()
 
 Textprinter::Textprinter()
 {
-	setUpFonts();
+// 	settings = Settings::Instance();
+	if ( Settings::Instance()->getCVar("headless") == 0 )
+		setUpFonts();
 }
 
 void Textprinter::print(int x, int y, const char *fmt, ...)
@@ -66,7 +68,6 @@ unsigned int Textprinter::getWidth(const char *fmt, ...)
 unsigned int Textprinter::getWidth(const string& str)
 {
 	const char *text = str.c_str();
-
 	FTBBox test = fonts[0]->BBox(text);
 	return test.Upper().X();
 }
