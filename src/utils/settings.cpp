@@ -426,8 +426,14 @@ void Settings::saveProfile()
 
 void Settings::doCommandLineOptions(int argc, char *argv[])
 {
+	// parse argv[0] for binary path
+	string path;
+	path.append(argv[0]);
+	size_t pos = path.find_last_of("/", path.size());
+	if ( pos != string::npos )
+		binarypath = path.substr( 0, pos+1 );
 
-	// first check if --help occurs, overrides the rest
+	// check if --help occurs, overrides the rest
 	for (int i=1; i < argc; i++ )
 	{
 		string sw = argv[i];

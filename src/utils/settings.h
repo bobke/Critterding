@@ -68,6 +68,8 @@ class Settings
 		void doCommandLineOptions(int argc, char *argv[]);
 		void loadProfile(char* filename);
 		void saveProfile();
+		
+		string binarypath;
 
 	protected:
 		Settings();

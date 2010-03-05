@@ -5,12 +5,11 @@
 
 using namespace std;
 
-Settings *settings = Settings::Instance();
-
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
+	Settings *settings = Settings::Instance();
 	settings->doCommandLineOptions(argc,argv);
-
+	
 	if ( settings->getCVar("headless") )
 	{
 		Headless headless;

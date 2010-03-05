@@ -44,6 +44,12 @@ void GLWindow::create(const char* title, int width, int height)
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	SDL_WM_SetCaption(title, 0);
+// 	SDL_WM_SetIcon(SDL_LoadBMP("other files/critterding icon.png"), 0);
+// 	SDL_WM_SetIcon(SDL_LoadBMP("other files/cd.bmp"), 0);
+	string pixmappath = Settings::Instance()->binarypath;
+	pixmappath.append( "../share/critterding/pixmaps/cd.bmp" );
+	SDL_WM_SetIcon(SDL_LoadBMP(pixmappath.c_str()), 0);
+// 	SDL_WM_SetIcon(SDL_LoadBMP("/projects/lessons/lesson20/data/image2.bmp"), 0);
 
 	w_width = width;
 	w_height = height;

@@ -183,22 +183,39 @@ void Textprinter::setUpFonts()
 	fonts = new FTFont *[1];
 	char const *fontFilePath;
 
-	fontFilePath = "fonts/DejaVuSans.ttf";
-	if ( !file.exists(fontFilePath) )
+	string fontpath = Settings::Instance()->binarypath;
+	string defaultf = "../share/critterding/font.ttf";
+	string systemf = "/usr/share/fonts/TTF/DejaVuSans.ttf";
+
+	string usepath = fontpath;
+	usepath.append(defaultf);
+	
+	if ( !file.exists(usepath.c_str()) )
 	{
-		fontFilePath = "../fonts/DejaVuSans.ttf";
-		if ( !file.exists(fontFilePath) )
+		usepath = systemf;
+		if ( !file.exists(usepath.c_str()) )
 		{
-			fontFilePath = "/usr/share/fonts/TTF/DejaVuSans.ttf";
-			if ( !file.exists(fontFilePath) )
-			{
-				cerr << "Count not find font " << fontFilePath << endl;
-				exit(1);
-			}
+			cerr << "Count not find font " << usepath << endl;
+			exit(1);
 		}
 	}
 
-	fonts[0] = new FTTextureFont(fontFilePath);
+// 	fontFilePath = "fonts/DejaVuSans.ttf";
+// 	if ( !file.exists(fontFilePath) )
+// 	{
+// 		fontFilePath = "../fonts/DejaVuSans.ttf";
+// 		if ( !file.exists(fontFilePath) )
+// 		{
+// 			fontFilePath = "/usr/share/fonts/TTF/DejaVuSans.ttf";
+// 			if ( !file.exists(fontFilePath) )
+// 			{
+// 				cerr << "Count not find font " << fontFilePath << endl;
+// 				exit(1);
+// 			}
+// 		}
+// 	}
+
+	fonts[0] = new FTTextureFont(usepath.c_str());
 	fonts[0]->UseDisplayList(true);
 
 	if(!fonts[0]->FaceSize(11))

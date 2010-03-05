@@ -38,7 +38,6 @@ WorldB::WorldB()
 		worldsizeX = settings->getCVarPtr("worldsizeX");
 		worldsizeY = settings->getCVarPtr("worldsizeY");
 
-
 	statsBuffer = Statsbuffer::Instance();
 	critterselection = Critterselection::Instance();
 	// home & program directory
