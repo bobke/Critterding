@@ -29,9 +29,9 @@ void Roundworld::process()
 	expireFood();
 	autoinsertFood();
 	expireCritters();
+	autoexchangeCritters();
 	autosaveCritters();
 	autoinsertCritters();
-
 	// adjust gravity vectors of all entities' rigid bodies
 	unsigned int j, b;
 	Food* f;
