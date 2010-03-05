@@ -29,7 +29,6 @@ string Parser::returnUntillStrip(string stop, string &line)
 
 	// strip result from line
 	line = line.substr( pos+1, line.size() );
-	cerr << "returning " << result << endl;
 	return result;
 }
 
