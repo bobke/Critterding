@@ -135,7 +135,8 @@ void Evolution::draw()
 	{
 		if ( frameCounter == 10000 )
 		{
-			cerr << "benchmark: ran " << frameCounter << " frames in " << (float)SDL_GetTicks()/1000 << " sec, avg: " << (float)frameCounter / SDL_GetTicks() * 1000 << endl;
+			float ms = Timer::Instance()->sdl_lasttime - Timer::Instance()->sdl_firsttime;
+			cerr << "benchmark: ran " << frameCounter << " frames in " << ms/1000 << " sec, avg: " << (float)frameCounter / ms * 1000 << endl;
 			cerr << "and btw, freeEnergy: " << world->freeEnergy << ", critters: " << world->critters.size() << endl;
 			exit(0);
 		}

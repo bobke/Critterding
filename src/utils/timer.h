@@ -17,6 +17,7 @@ class Timer
 
 		int sdl_now;
 		int sdl_lasttime;
+		int sdl_firsttime;
 
 // 		struct timeval lasttime;
 // 		float timediff(const struct timeval& now, const struct timeval& lasttime);

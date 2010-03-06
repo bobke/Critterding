@@ -57,24 +57,24 @@ WorldB::WorldB()
 	memset(retina, 0, items);
 
 	// THREADED BULLET
-// 	int maxNumOutstandingTasks = 4;
-// 	m_collisionConfiguration = new btDefaultCollisionConfiguration();
-// 	PosixThreadSupport::ThreadConstructionInfo constructionInfo("collision", processCollisionTask, createCollisionLocalStoreMemory, maxNumOutstandingTasks);
-// 	m_threadSupportCollision = new PosixThreadSupport(constructionInfo);
-// 	m_dispatcher = new SpuGatheringCollisionDispatcher(m_threadSupportCollision,maxNumOutstandingTasks,m_collisionConfiguration);
-// 	
-// 	btVector3 worldAabbMin(-10000,-10000,-10000);
-// 	btVector3 worldAabbMax(10000,10000,10000);
-// 	m_broadphase = new btAxisSweep3 (worldAabbMin, worldAabbMax);
-// 	m_broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
-// 	m_solver = new btSequentialImpulseConstraintSolver;
-// // 	m_solver = new SpuMinkowskiPenetrationDepthSolver();
-// 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
+/*	int maxNumOutstandingTasks = 4;
+	m_collisionConfiguration = new btDefaultCollisionConfiguration();
+	PosixThreadSupport::ThreadConstructionInfo constructionInfo("collision", processCollisionTask, createCollisionLocalStoreMemory, maxNumOutstandingTasks);
+	m_threadSupportCollision = new PosixThreadSupport(constructionInfo);
+	m_dispatcher = new SpuGatheringCollisionDispatcher(m_threadSupportCollision,maxNumOutstandingTasks,m_collisionConfiguration);
+	
+	btVector3 worldAabbMin(-10000,-10000,-10000);
+	btVector3 worldAabbMax(10000,10000,10000);
+	m_broadphase = new btAxisSweep3 (worldAabbMin, worldAabbMax);
+	m_broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+	m_solver = new btSequentialImpulseConstraintSolver;
+// 	m_solver = new SpuMinkowskiPenetrationDepthSolver();
+	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 
-// 		m_dynamicsWorld->getSolverInfo().m_numIterations = 10;
-// 		m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_SIMD+SOLVER_USE_WARMSTARTING;
+		m_dynamicsWorld->getSolverInfo().m_numIterations = 10;
+		m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_SIMD+SOLVER_USE_WARMSTARTING;
 
-// 		m_dynamicsWorld->getDispatchInfo().m_enableSPU = true;
+		m_dynamicsWorld->getDispatchInfo().m_enableSPU = true;*/
 	// stop threaded bullet
 
 	// NOT THREADED
@@ -482,8 +482,12 @@ void WorldB::autoexchangeCritters()
 					if ( parseH->Instance()->endMatches( ".cr", files[i] ) )
 					{
 						stringstream buf;
+						
 						buf << "loading " << files[i];
-						Logbuffer::Instance()->add(buf);
+						if ( !*headless )
+						{
+							Logbuffer::Instance()->add(buf);
+						}
 
 						string content;
 						fileH.open( files[i], content ); 
@@ -507,8 +511,11 @@ void WorldB::autoexchangeCritters()
 				}
 				stringstream buf;
 				buf << "Loaded critters from " << exchangedir;
-				Logbuffer::Instance()->add(buf);
-				if (*headless)
+				if ( !*headless )
+				{
+					Logbuffer::Instance()->add(buf);
+				}
+				else
 					cerr << buf.str()<< endl;
 			}
 			else
@@ -529,8 +536,9 @@ void WorldB::autoexchangeCritters()
 				//cerr << endl << "Saved critters to " << subsavedir << endl << endl;
 				stringstream buf2;
 				buf2 << "Autoexchange: Saved critter to " << filename;
-				Logbuffer::Instance()->add(buf2);
-				if (*headless)
+				if ( !*headless )
+					Logbuffer::Instance()->add(buf2);
+				else
 					cerr << buf2.str()<< endl;
 			}
 		}

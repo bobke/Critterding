@@ -13,7 +13,8 @@ Timer::Timer()
 {
 	// calc lasttime for first time
 // 	gettimeofday(&lasttime, &timer_tz);
-	sdl_lasttime = 0;
+	sdl_lasttime = SDL_GetTicks();
+	sdl_firsttime = sdl_lasttime;
 }
 
 void Timer::mark()
@@ -21,6 +22,7 @@ void Timer::mark()
 	// get now
 // 	gettimeofday(&lasttime, &timer_tz);
 	sdl_now = SDL_GetTicks();
+// 	cerr << SDL_GetTicks() << endl;
 
 	// calc diff between now and lasttime
 	elapsed = sdl_now - sdl_lasttime;
