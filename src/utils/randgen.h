@@ -19,6 +19,12 @@ class RandGen
 		static RandGen* _instance;
 
 		unsigned int count;
+		
+		unsigned int rand1(unsigned int lim);
+		unsigned int rand2(unsigned int lim);
+		unsigned int rand3(unsigned int lim);
+		unsigned int seed;
+		unsigned int startseed;
 };
 
 #endif

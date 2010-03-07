@@ -1,0 +1,4 @@
+INCLUDES = 
+METASOURCES = AUTO
+bin_PROGRAMS = hal
+hal_SOURCES = hal.cpp

@@ -92,8 +92,7 @@ WorldB::WorldB()
 // 	cerr << v.y() << endl;
 // 	m_dynamicsWorld->setGravity( btVector3(0.0f, -50.0f, 0.0f) );
 
-// 	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_USE_WARMSTARTING + SOLVER_SIMD;
-	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_SIMD + SOLVER_USE_WARMSTARTING;
+	m_dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_USE_WARMSTARTING + SOLVER_SIMD;
 	
 	m_dynamicsWorld->getSolverInfo().m_numIterations = 8;
 	// raycast
@@ -126,6 +125,8 @@ void WorldB::init()
 
 	if ( settings->getCVar("autoload") )
 		loadAllCritters();
+	if ( settings->getCVar("autoloadlastsaved") )
+		loadAllLastSavedCritters();
 }
 
 void WorldB::castMouseRay()
@@ -1167,6 +1168,62 @@ void WorldB::loadAllCritters()
 	//cerr << endl << "Loaded critters from " << loaddir << endl << endl;
 }
 
+void WorldB::loadAllLastSavedCritters() // FIXME overlap with previous function
+{
+cerr << "loading" << endl;
+	vector<string> files;
+	
+	string filen = dirlayout->progdir;
+	filen.append("/lastsaved");
+	
+	if ( fileH.exists(filen) )
+	{
+
+		string lastsaveddir;
+		fileH.open( filen, lastsaveddir ); 
+		
+		lastsaveddir = lastsaveddir.substr(0, lastsaveddir.length() - 1);
+		
+	// 	lastsaveddir.append("/");
+	cerr << lastsaveddir << endl;
+
+		dirH.listContentsFull(lastsaveddir, files);
+
+	cerr << "found file: " << files.size() << endl;
+		for ( unsigned int i = 0; i < files.size(); i++ )
+		{
+			if ( parseH->Instance()->endMatches( ".cr", files[i] ) )
+			{
+				stringstream buf;
+				buf << "loading " << files[i];
+				Logbuffer::Instance()->add(buf);
+
+				string content;
+				fileH.open( files[i], content ); 
+
+				CritterB *c = new CritterB(content, m_dynamicsWorld, findPosition(), retina);
+
+				if ( !c->loadError)
+				{
+					critters.push_back( c );
+
+					c->critterID = currentCritterID++;
+					c->calcFramePos(critters.size()-1);
+
+					// start energy
+					freeEnergy -= c->energyLevel;
+				}
+				else
+					delete c;
+			}
+		}
+		stringstream buf;
+		buf << "Loaded critters from " << lastsaveddir;
+		Logbuffer::Instance()->add(buf);
+		//cerr << endl << "Loaded critters from " << loaddir << endl << endl;
+	}
+}
+
 void WorldB::saveAllCritters()
 {
 	// determine save directory
@@ -1177,8 +1234,8 @@ void WorldB::saveAllCritters()
 	buf << "/" << time(0);
 	string subsavedir = buf.str();
 
-	// makde dirs
-	if ( !dirH.exists(dirlayout->savedir) )		dirH.make(dirlayout->savedir);
+	// make dirs
+	if ( !dirH.exists(dirlayout->savedir) )	dirH.make(dirlayout->savedir);
 	if ( !dirH.exists(subprofiledir) )	dirH.make(subprofiledir);
 	if ( !dirH.exists(subsavedir) )		dirH.make(subsavedir);
 
@@ -1191,6 +1248,13 @@ void WorldB::saveAllCritters()
 		// save critters
 		fileH.save(filename.str(), critters[i]->genotype->saveGenotype());
 	}
+
+	// save lastsaved file
+	stringstream lastsaved;
+	lastsaved << dirlayout->progdir << "/" << "lastsaved";
+	fileH.save( lastsaved.str(), subsavedir );
+	cerr << "saved " << lastsaved.str() << " with " << subsavedir << endl;
+
  	//cerr << endl << "Saved critters to " << subsavedir << endl << endl;
 	stringstream buf2;
 	buf2 << "Saved critters to " << subsavedir;

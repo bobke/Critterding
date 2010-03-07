@@ -108,6 +108,7 @@ class WorldB
 // 		void			positionCritterB(unsigned int cid);
 		void			saveAllCritters();
 		virtual void		loadAllCritters();
+		virtual void		loadAllLastSavedCritters();
 
 		void			removeSelectedCritter();
 		void			removeAllSelectedCritters();

@@ -41,6 +41,7 @@ Settings::Settings()
 	registerCVar("colormode",						0, 0, 1, true, "colors genetically exact critters identically");
 	registerCVar("exit_if_empty",						0, 0, 1, true, "exit simulation if there are no critters");
 	registerCVar("autoload",						0, 0, 1, true, "autoload critters from ~/.critterding/load");
+	registerCVar("autoloadlastsaved",					0, 0, 1, true, "autoload critters from ~/.critterding/lastsaved");
 	registerCVar("fpslimit",						30, 1, 1000, false, "frames per second for the fps limiter");
 
 	registerCVar("critter_insertevery",					0, 0, 1000000, false, "inserts a random critter every n frames");

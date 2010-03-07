@@ -39,6 +39,15 @@ Evolution::Evolution()
 		static_cast<Critterview*>(canvas.children["critterview"])->world = world;
 		cmd->canvas = &canvas;
 	}
+	else
+	{
+		// check if raycastvision is enabled, if not die
+		if ( settings->getCVar("critter_raycastvision") == 0 )
+		{
+			cerr << "headless mode requires critter_raycastvision to be enabled" << endl;
+			exit(1);
+		}
+	}
 
 	pause = false;
 // 	drawCVNeurons = false;
