@@ -10,8 +10,8 @@ Sleeper::Sleeper()
 
 	active		= false;
 	optimal		= Settings::Instance()->getCVarPtr("fpslimit");
-	stepsize	= 500;
-	sleeptime	= 10000;
+	stepsize	= 100;
+	sleeptime	= 0;
 	cps		= *optimal;
 
 	timeSinceLastRender = 1.0f;

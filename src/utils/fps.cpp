@@ -2,6 +2,8 @@
 
 Fps::Fps()
 {
+	t = Timer::Instance();
+
 	dispcounter	= 0;
 	dispevery	= 25;
 	dispsum		= 0.0f;
@@ -10,8 +12,6 @@ Fps::Fps()
 
 void Fps::mark()
 {
-	Timer *t = Timer::Instance();
-
 	if ( t->elapsed > 0.0f )
 	{
 		dispsum += t->bullet_ms;

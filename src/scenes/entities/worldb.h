@@ -2,12 +2,12 @@
 #define WORLDB_H
 
 #include "btBulletDynamicsCommon.h"
-#include "BulletMultiThreaded/SpuCollisionTaskProcess.h"
-#include "BulletMultiThreaded/SpuCollisionTaskProcess.h"
-#include "BulletMultiThreaded/PosixThreadSupport.h"
-#include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h"
-#include "BulletMultiThreaded/SpuGatheringCollisionDispatcher.h"
-#include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuMinkowskiPenetrationDepthSolver.h"
+// #include "BulletMultiThreaded/SpuCollisionTaskProcess.h"
+// #include "BulletMultiThreaded/SpuCollisionTaskProcess.h"
+// #include "BulletMultiThreaded/PosixThreadSupport.h"
+// #include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h"
+// #include "BulletMultiThreaded/SpuGatheringCollisionDispatcher.h"
+// #include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuMinkowskiPenetrationDepthSolver.h"
 
 // #include "LinearMath/btIDebugDraw.h"
 // #include "../../gl/gldebugdrawer.h"

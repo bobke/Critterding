@@ -15,6 +15,7 @@ RandGen* RandGen::Instance ()
 RandGen::RandGen()
 {
 	// random seed
+	unsigned int startseed;
 	if ( Settings::Instance()->getCVar("startseed") == 0 )
 	{
 		Timer::Instance()->mark();
@@ -52,8 +53,7 @@ RandGen::RandGen()
 
 	
 	cerr << "start seed: " << startseed << endl;
-	seed = startseed;
-// 	srand( startseed );
+	srand( startseed );
 	count = 0;
 }
 
@@ -71,50 +71,10 @@ unsigned int RandGen::get(unsigned int minimum, unsigned int maximum)
 			count = 0;
 		}*/
 	
-// 		return ((rand() % (maximum-minimum+1)) + minimum);
-		unsigned int res = ((rand2(maximum-minimum+1)) + minimum);
-// 		cerr << res << endl;
-		return res;
+		return ((rand() % (maximum-minimum+1)) + minimum);
 	}
 	else
 	{
-// 		cerr << minimum << endl;
 		return minimum;
 	}
 }
-
-//
-// returns random integer from 1 to lim
-//
-unsigned int RandGen::rand1(unsigned int lim)
-{
-//         static long a = startseed;
- 
-        seed = (seed * 125) % 2796203;
-        return ((seed % lim));
-}
- 
-//
-// returns random integer from 1 to lim (Gerhard's generator)
-//
-unsigned int RandGen::rand2(unsigned int lim)
-{
-//         static long a = startseed;  // could be made the seed value
- 
-        seed = (seed* 32719 + 3) % 32749;
-        return ((seed % lim));
-}
- 
-//
-// returns random integer from 1 to lim (Bill's generator)
-//
-unsigned int RandGen::rand3(unsigned int lim)
-{
-//         static long a = startseed;
- 
-        seed = (((seed* 214013L + 2531011L) >> 16) & 32767);
- 
-        return ((seed % lim));
-}
- 
-

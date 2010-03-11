@@ -2,7 +2,7 @@
 #define HUD_H
 
 #include <vector>
-#include "panel.h"
+#include "../../gui/panel.h"
 #include "../entities/worldb.h"
 #include "../../utils/critterselection.h"
 

@@ -18,7 +18,7 @@ class Fps
 		float		currentfps;
 
 	private:
-
+		Timer*		t;
 		int		dispcounter;
 		int		dispevery;
 		float		dispsum;

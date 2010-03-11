@@ -5,9 +5,7 @@ INCLUDES = $(all_includes) -I./utils/bullet
 
 # the library search path.
 
-
 SUBDIRS = utils math brainz gl gui scenes
-
 
 critterding_SOURCES = critterding.cpp
 critterding_LDADD =	$(top_builddir)/src/gl/libgl.la \

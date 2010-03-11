@@ -1,45 +1,46 @@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
-noinst_LTLIBRARIES = libbulletmath.la libbulletcollision.la libbulletdynamics.la libbulletsoftbody.la libbulletmultithreaded.la
+noinst_LTLIBRARIES = libbulletmath.la libbulletcollision.la libbulletdynamics.la libbulletsoftbody.la
+# libbulletmultithreaded.la
 noinst_HEADERS = btBulletDynamicsCommon.h Bullet-C-Api.h btBulletCollisionCommon.h $(bullet_headers)
 
 libbulletmath_la_LDFLAGS = -avoid-version -no-undefined
 libbulletcollision_la_LDFLAGS = -avoid-version -no-undefined
 libbulletdynamics_la_LDFLAGS = -avoid-version -no-undefined
 libbulletsoftbody_la_LDFLAGS = -avoid-version -no-undefined
-libbulletmultithreaded_la_LDFLAGS = -avoid-version -no-undefined
+# libbulletmultithreaded_la_LDFLAGS = -avoid-version -no-undefined
 
-libbulletmultithreaded_la_SOURCES = \
-	BulletMultiThreaded/PosixThreadSupport.h \
-	BulletMultiThreaded/vectormath/scalar/cpp/mat_aos.h \
-	BulletMultiThreaded/vectormath/scalar/cpp/vec_aos.h \
-	BulletMultiThreaded/vectormath/scalar/cpp/quat_aos.h \
-	BulletMultiThreaded/vectormath/scalar/cpp/vectormath_aos.h \
-	BulletMultiThreaded/PpuAddressSpace.h \
-	BulletMultiThreaded/PlatformDefinitions.h \
-	BulletMultiThreaded/vectormath2bullet.h \
-	BulletMultiThreaded/btThreadSupportInterface.h \
-	BulletMultiThreaded/Win32ThreadSupport.h \
-	BulletMultiThreaded/SequentialThreadSupport.h \
-	BulletMultiThreaded/btThreadSupportInterface.cpp \
-	BulletMultiThreaded/SequentialThreadSupport.cpp \
-	BulletMultiThreaded/Win32ThreadSupport.cpp \
-	BulletMultiThreaded/PosixThreadSupport.cpp \
-	BulletMultiThreaded/SpuCollisionTaskProcess.h \
-	BulletMultiThreaded/SpuCollisionTaskProcess.cpp \
-	BulletMultiThreaded/SpuFakeDma.h \
-	BulletMultiThreaded/SpuFakeDma.cpp \
-	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuCollisionShapes.h \
-	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuCollisionShapes.cpp \
-	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h \
-	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.cpp \
-	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuContactResult.cpp \
-	BulletMultiThreaded/SpuGatheringCollisionDispatcher.h \
-	BulletMultiThreaded/SpuGatheringCollisionDispatcher.cpp \
-	BulletMultiThreaded/SpuContactManifoldCollisionAlgorithm.h \
-	BulletMultiThreaded/SpuContactManifoldCollisionAlgorithm.cpp \
-	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuMinkowskiPenetrationDepthSolver.h \
-	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuMinkowskiPenetrationDepthSolver.cpp
+# libbulletmultithreaded_la_SOURCES = \
+# 	BulletMultiThreaded/PosixThreadSupport.h \
+# 	BulletMultiThreaded/vectormath/scalar/cpp/mat_aos.h \
+# 	BulletMultiThreaded/vectormath/scalar/cpp/vec_aos.h \
+# 	BulletMultiThreaded/vectormath/scalar/cpp/quat_aos.h \
+# 	BulletMultiThreaded/vectormath/scalar/cpp/vectormath_aos.h \
+# 	BulletMultiThreaded/PpuAddressSpace.h \
+# 	BulletMultiThreaded/PlatformDefinitions.h \
+# 	BulletMultiThreaded/vectormath2bullet.h \
+# 	BulletMultiThreaded/btThreadSupportInterface.h \
+# 	BulletMultiThreaded/Win32ThreadSupport.h \
+# 	BulletMultiThreaded/SequentialThreadSupport.h \
+# 	BulletMultiThreaded/btThreadSupportInterface.cpp \
+# 	BulletMultiThreaded/SequentialThreadSupport.cpp \
+# 	BulletMultiThreaded/Win32ThreadSupport.cpp \
+# 	BulletMultiThreaded/PosixThreadSupport.cpp \
+# 	BulletMultiThreaded/SpuCollisionTaskProcess.h \
+# 	BulletMultiThreaded/SpuCollisionTaskProcess.cpp \
+# 	BulletMultiThreaded/SpuFakeDma.h \
+# 	BulletMultiThreaded/SpuFakeDma.cpp \
+# 	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuCollisionShapes.h \
+# 	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuCollisionShapes.cpp \
+# 	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h \
+# 	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.cpp \
+# 	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuContactResult.cpp \
+# 	BulletMultiThreaded/SpuGatheringCollisionDispatcher.h \
+# 	BulletMultiThreaded/SpuGatheringCollisionDispatcher.cpp \
+# 	BulletMultiThreaded/SpuContactManifoldCollisionAlgorithm.h \
+# 	BulletMultiThreaded/SpuContactManifoldCollisionAlgorithm.cpp \
+# 	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuMinkowskiPenetrationDepthSolver.h \
+# 	BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuMinkowskiPenetrationDepthSolver.cpp
 
 
 libbulletmath_la_SOURCES	= \
