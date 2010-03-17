@@ -60,7 +60,7 @@ Settings::Settings()
 	registerCVar("critter_enableomnivores",					1, 0, 1, true, "enables critters to eat each other");
 	registerCVar("critter_raycastvision",					0, 0, 1, true, "use raycast vision instead of opengl");
 	
-	registerCVar("food_maxlifetime",					10000, 1, 1000000, false, "maximum number of frames a food unit exists");
+	registerCVar("food_maxlifetime",					40000, 1, 1000000, false, "maximum number of frames a food unit exists");
 	registerCVar("food_maxenergy",						1500, 1, 1000000, false, "maximum amount of energy a food unit has");
 	registerCVar("food_size",						200, 1, 1000000, false, "size of a food unit");
 

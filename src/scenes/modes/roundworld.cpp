@@ -42,7 +42,7 @@ void Roundworld::process()
 	if ( critters.size() > biggest )
 		biggest = critters.size();
 	
-#pragma omp parallel for private(j, b, f, bod, bo)
+// #pragma omp parallel for private(j, b, f, bod, bo)
 	for ( j=0; j < biggest; j++ )
 	{
 // 		for( j=0; j < food.size(); j++)

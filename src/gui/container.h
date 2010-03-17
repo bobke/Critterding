@@ -18,10 +18,10 @@ class Container : public Widget
 		bool	mouseOverChild( Widget** fWidget, int x, int y );
 
 		Execcmd		cmd;
+		Widget* addWidgetPanel( const string& name, Widget* nwidget );
 	protected:
 		void	drawChildren();
 
-		Widget* addWidgetPanel( const string& name, Widget* nwidget );
 		Widget* addWidgetText( const string& name, unsigned int posx, unsigned int posy, const string& textstring );
 		Widget* addWidgetText( const string& name, const string& textstring );
 		Widget* addWidgetText( const string& name, unsigned int posx, unsigned int posy, const unsigned int* uintp );

@@ -1,3 +1,8 @@
+1.0-beta12.1
+------------
+catch segfault and warn when using headless without critter_raycastvision
+some fixes and cleanups
+
 1.0-beta12
 ----------
 critter selection and actions (kill, duplicate)
