@@ -2,7 +2,7 @@
 #define CRITTERB_H
 
 #include "btBulletDynamicsCommon.h"
-#include "GL/gl.h"
+// #include "GL/gl.h"
 
 #include "../../utils/parser.h"
 #include "../../brainz/brainz.h"

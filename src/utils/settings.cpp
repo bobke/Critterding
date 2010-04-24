@@ -124,8 +124,8 @@ Settings::Settings()
 	registerCVar("brain_maxfiringthreshold",				10, 1, 1000000, false, "maximum firingthreshold of a neuron");
 	registerCVar("brain_mutate_maxfiringthreshold",				0, 0, 1, true, "mutate this value");
 
-	registerCVar("brain_maxdendridicbranches",				3, 1, 1000000, false, "maximum number of dendrites per neuron");
-	registerCVar("brain_mutate_maxdendridicbranches",			0, 0, 1, true, "mutate this value");
+// 	registerCVar("brain_maxdendridicbranches",				3, 1, 1000000, false, "maximum number of dendrites per neuron");
+// 	registerCVar("brain_mutate_maxdendridicbranches",			0, 0, 1, true, "mutate this value");
 
 	registerCVar("brain_percentchanceconsistentsynapses",			0, 0, 100, false, "percent chance a neurons synapses are all inhibitory or excitatory");
 	registerCVar("brain_mutate_percentchanceconsistentsynapses",		0, 0, 1, true, "mutate this value");
@@ -423,6 +423,11 @@ void Settings::saveProfile()
 	}
 
 	fileH.save(filename.str(), buf.str());
+
+	stringstream msg;
+	msg << "Profile saved to: " << filename.str();
+	Logbuffer::Instance()->add(msg);
+	cerr << msg.str() << endl;
 }
 
 void Settings::doCommandLineOptions(int argc, char *argv[])

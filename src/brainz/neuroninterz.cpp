@@ -37,7 +37,7 @@ void NeuronInterz::process()
 			Synapses[i].weight = Synapses[i].weight * plasticityWeaken;
 
 		if ( *Synapses[i].ref != 0 )
-			potential += (Synapses[i].weight * Synapses[i].dendriteBranch * *Synapses[i].ref);
+			potential += (Synapses[i].weight * *Synapses[i].ref); // Synapses[i].dendriteBranch * 
 	}
 
 	if ( isInhibitory )
@@ -119,12 +119,12 @@ void NeuronInterz::process()
 
 }
 
-void NeuronInterz::connec( float *output, unsigned int dendriteBranch, float synapticWeight )
+void NeuronInterz::connec( float *output, float synapticWeight ) // unsigned int dendriteBranch, 
 //void NeuronInterz::connec( int *output, unsigned int dendriteBranch, float synapticWeight )
 {
 		Synapse s;
 		s.ref = output;
-		s.dendriteBranch = dendriteBranch;
+// 		s.dendriteBranch = dendriteBranch;
 		s.weight = synapticWeight;
 
 		Synapses.push_back( s );

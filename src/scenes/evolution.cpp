@@ -28,9 +28,6 @@ Evolution::Evolution()
 	else
 		world = new WorldB();
 
-	world->mousex = &oldx;
-	world->mousey = &oldy;
-	
 	cmd->world = world;
 	
 	if ( !*world->headless )
@@ -49,96 +46,118 @@ Evolution::Evolution()
 		}
 	}
 
-	pause = false;
 // 	drawCVNeurons = false;
 
 	unsigned int delay = 200;
 	unsigned int speedup = 2;
 
+	// modifiers
+
+	// + 1024 -> buttons pressed
+	// + 1124 -> buttons released
+	// + 1224 -> mouse axis
+
+	events->registerEvent(1024+1,			"critter_select", execcmd.gen("critter_select"), 0, 0, 0 );
+	events->registerEvent(1024+2,			"resetcamera", execcmd.gen("camera_resetposition"), 0, 0, 0 );
+	events->registerEvent(1024+3,			"critter_pick", execcmd.gen("critter_pick"), 0, 0, 0 );
+	events->registerEvent(1124+3,			"critter_unpick", execcmd.gen("critter_unpick"), 0, 0, 0 );
+	events->registerEvent(1024+4,			"keycamera_moveforward", execcmd.gen("camera_moveforward"), 0, 0, 0 );
+	events->registerEvent(1024+5,			"keycamera_movebackward", execcmd.gen("camera_movebackward"), 0, 0, 0 );
+
+	events->registerEvent(1224+0,			"camera_lookhorizontal", execcmd.gen("camera_lookhorizontal"), 0, 0, 0 );
+	events->registerEvent(1224+1,			"camera_lookvertical", execcmd.gen("camera_lookvertical"), 0, 0, 0 );
+
+	events->registerEvent(SDLK_LSHIFT, 1224+0,	"camera_movehorizontal", execcmd.gen("camera_movehorizontal"), 0, 0, 0 );
+	events->registerEvent(SDLK_LSHIFT, 1224+1,	"camera_movevertical", execcmd.gen("camera_movevertical"), 0, 0, 0 );
+	events->registerEvent(SDLK_RSHIFT, 1224+0,	"camera_movehorizontal", execcmd.gen("camera_movehorizontal"), 0, 0, 0 );
+	events->registerEvent(SDLK_RSHIFT, 1224+1,	"camera_movevertical", execcmd.gen("camera_movevertical"), 0, 0, 0 );
+	
 	// events
-	events->registerEvent(SDLK_TAB,		"swapspeciespanel", execcmd.gen("gui_togglepanel", "speciesview"), 0, 0, 0 );
-	events->registerEvent(SDLK_ESCAPE,	"swapexitpanel", execcmd.gen("gui_togglepanel", "exitpanel"), 0, 0, 0 );
-	events->registerEvent(SDLK_F1,		"swaphelpinfo", execcmd.gen("gui_togglepanel", "helpinfo"), 0, 0, 0 );
-	events->registerEvent(SDLK_F2,		"swapinfobar", execcmd.gen("gui_togglepanel", "infobar"), 0, 0, 0 );
-	events->registerEvent(SDLK_F3,		"swapinfostats", execcmd.gen("gui_togglepanel", "infostats"), 0, 0, 0 );
-	events->registerEvent(SDLK_F4,		"swaptextverbosemessage", execcmd.gen("gui_togglepanel", "textverbosemessage"), 0, 0, 0 );
+	events->registerEvent(SDLK_TAB,			"swapspeciespanel", execcmd.gen("gui_togglepanel", "speciesview"), 0, 0, 0 );
+	events->registerEvent(SDLK_ESCAPE,		"swapexitpanel", execcmd.gen("gui_togglepanel", "exitpanel"), 0, 0, 0 );
+	events->registerEvent(SDLK_F1,			"swaphelpinfo", execcmd.gen("gui_togglepanel", "helpinfo"), 0, 0, 0 );
+	events->registerEvent(SDLK_F2,			"swapinfobar", execcmd.gen("gui_togglepanel", "infobar"), 0, 0, 0 );
+	events->registerEvent(SDLK_F3,			"swapinfostats", execcmd.gen("gui_togglepanel", "infostats"), 0, 0, 0 );
+	events->registerEvent(SDLK_F4,			"swaptextverbosemessage", execcmd.gen("gui_togglepanel", "textverbosemessage"), 0, 0, 0 );
 
-	events->registerEvent(SDLK_F5,		"swapstatsgraph", execcmd.gen("gui_togglepanel", "statsgraph"), 0, 0, 0 );
-	events->registerEvent(SDLK_F6,		"swapglobalsettingspanel", execcmd.gen("gui_togglepanel", "globalsettingspanel"), 0, 0, 0 );
-	events->registerEvent(SDLK_F7,		"swapsettingsbrainpanel", execcmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
-	events->registerEvent(SDLK_F8,		"swaphud", execcmd.gen("gui_togglepanel", "hud"), 0, 0, 0 );
+	events->registerEvent(SDLK_F5,			"swapstatsgraph", execcmd.gen("gui_togglepanel", "statsgraph"), 0, 0, 0 );
+	events->registerEvent(SDLK_F6,			"swapglobalsettingspanel", execcmd.gen("gui_togglepanel", "globalsettingspanel"), 0, 0, 0 );
+	events->registerEvent(SDLK_F7,			"swapsettingsbrainpanel", execcmd.gen("gui_togglepanel", "settingsbrainpanel"), 0, 0, 0 );
+	events->registerEvent(SDLK_F8,			"swaphud", execcmd.gen("gui_togglepanel", "hud"), 0, 0, 0 );
 	
-	events->registerEvent(SDLK_r,		"toggle_drawscene", execcmd.gen("settings_increase", "drawscene"), 0, 0, 0 );
-	events->registerEvent(SDLK_h,		"swapcanvas", execcmd.gen("gui_toggle"), 0, 0, 0 );
+	events->registerEvent(SDLK_r,			"toggle_drawscene", execcmd.gen("settings_increase", "drawscene"), 0, 0, 0 );
+	events->registerEvent(SDLK_p,			"toggle_pause", execcmd.gen("toggle_pause"), 0, 0, 0 );
+	events->registerEvent(SDLK_l,			"toggle_sleeper", execcmd.gen("toggle_sleeper"), 0, 0, 0 );
+	events->registerEvent(SDLK_m,			"toggle_mouselook", execcmd.gen("toggle_mouselook"), 0, 0, 0 );
+	events->registerEvent(SDLK_s,			"settings_saveprofile", execcmd.gen("settings_saveprofile"), 0, 0, 0 );
 
-// 	events->registerEvent(SDLK_F5,		"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
-// 	events->registerEvent(SDLK_F6,		"inc_critters", execcmd.gen("settings_increase", "mincritters"), delay, 0, speedup );
-// 	events->registerEvent(SDLK_F7,		"dec_killhalftrigger", execcmd.gen("settings_decrease", "critter_killhalfat"), delay, 0, speedup );
-// 	events->registerEvent(SDLK_F8,		"inc_killhalftrigger", execcmd.gen("settings_increase", "critter_killhalfat"), delay, 0, speedup );
-	events->registerEvent(SDLK_KP_DIVIDE,	"dec_camerasensitivity", execcmd.gen("settings_decrease", "camerasensitivity"), delay, 0, speedup );
-	events->registerEvent(SDLK_KP_MULTIPLY,	"inc_camerasensitivity", execcmd.gen("settings_increase", "camerasensitivity"), delay, 0, speedup );
-	events->registerEvent(SDLK_c,		"inc_colormode", execcmd.gen("settings_increase", "colormode"), 0, 0, 0 );
+	events->registerEvent(SDLK_h,			"swapcanvas", execcmd.gen("gui_toggle"), 0, 0, 0 );
 
-	events->registerEvent(SDLK_F9,		"dec_body_mutationrate", execcmd.gen("settings_decrease", "body_mutationrate"), delay, 0, speedup );
-	events->registerEvent(SDLK_F10,		"inc_body_mutationrate", execcmd.gen("settings_increase", "body_mutationrate"), delay, 0, speedup );
-	events->registerEvent(SDLK_F11,		"dec_brain_mutationrate", execcmd.gen("settings_decrease", "brain_mutationrate"), delay, 0, speedup );
-	events->registerEvent(SDLK_F12,		"inc_brain_mutationrate", execcmd.gen("settings_increase", "brain_mutationrate"), delay, 0, speedup );
+// 	events->registerEvent(SDLK_F5,			"dec_critters", execcmd.gen("settings_decrease", "mincritters"), delay, 0, speedup );
+// 	events->registerEvent(SDLK_F6,			"inc_critters", execcmd.gen("settings_increase", "mincritters"), delay, 0, speedup );
+// 	events->registerEvent(SDLK_F7,			"dec_killhalftrigger", execcmd.gen("settings_decrease", "critter_killhalfat"), delay, 0, speedup );
+// 	events->registerEvent(SDLK_F8,			"inc_killhalftrigger", execcmd.gen("settings_increase", "critter_killhalfat"), delay, 0, speedup );
+	events->registerEvent(SDLK_KP_DIVIDE,		"dec_camerasensitivity", execcmd.gen("settings_decrease", "camerasensitivity"), delay, 0, speedup );
+	events->registerEvent(SDLK_KP_MULTIPLY,		"inc_camerasensitivity", execcmd.gen("settings_increase", "camerasensitivity"), delay, 0, speedup );
+	events->registerEvent(SDLK_c,			"inc_colormode", execcmd.gen("settings_increase", "colormode"), 0, 0, 0 );
+
+	events->registerEvent(SDLK_F9,			"dec_body_mutationrate", execcmd.gen("settings_decrease", "body_mutationrate"), delay, 0, speedup );
+	events->registerEvent(SDLK_F10,			"inc_body_mutationrate", execcmd.gen("settings_increase", "body_mutationrate"), delay, 0, speedup );
+	events->registerEvent(SDLK_LSHIFT, SDLK_F9,	"dec_body_maxmutations", execcmd.gen("settings_decrease", "body_maxmutations"), delay, 0, speedup );
+	events->registerEvent(SDLK_LSHIFT, SDLK_F10,	"inc_body_maxmutations", execcmd.gen("settings_increase", "body_maxmutations"), delay, 0, speedup );
+	events->registerEvent(SDLK_RSHIFT, SDLK_F9,	"dec_body_maxmutations", execcmd.gen("settings_decrease", "body_maxmutations"), delay, 0, speedup );
+	events->registerEvent(SDLK_RSHIFT, SDLK_F10,	"inc_body_maxmutations", execcmd.gen("settings_increase", "body_maxmutations"), delay, 0, speedup );
 	
-	events->registerEvent(SDLK_BACKSPACE,	"resetcamera", execcmd.gen("camera_resetposition"), 0, 0, 0 );
+	events->registerEvent(SDLK_F11,			"dec_brain_mutationrate", execcmd.gen("settings_decrease", "brain_mutationrate"), delay, 0, speedup );
+	events->registerEvent(SDLK_F12,			"inc_brain_mutationrate", execcmd.gen("settings_increase", "brain_mutationrate"), delay, 0, speedup );
+	events->registerEvent(SDLK_LSHIFT, SDLK_F11,	"dec_brain_maxmutations", execcmd.gen("settings_decrease", "brain_maxmutations"), delay, 0, speedup );
+	events->registerEvent(SDLK_LSHIFT, SDLK_F12,	"inc_brain_maxmutations", execcmd.gen("settings_increase", "brain_maxmutations"), delay, 0, speedup );
+	events->registerEvent(SDLK_RSHIFT, SDLK_F11,	"dec_brain_maxmutations", execcmd.gen("settings_decrease", "brain_maxmutations"), delay, 0, speedup );
+	events->registerEvent(SDLK_RSHIFT, SDLK_F12,	"inc_brain_maxmutations", execcmd.gen("settings_increase", "brain_maxmutations"), delay, 0, speedup );
+	
+	events->registerEvent(SDLK_BACKSPACE,		"resetcamera", execcmd.gen("camera_resetposition"), 0, 0, 0 );
 
-	events->registerEvent(SDLK_PAGEUP,	"keyloadAllCritters", execcmd.gen("loadallcritters"), 0, 0, 0 );
-	events->registerEvent(SDLK_PAGEDOWN,	"keysaveAllCritters", execcmd.gen("saveallcritters"), 0, 0, 0 );
-	events->registerEvent(SDLK_i,		"keyinsertCritter", execcmd.gen("insertcritter"), 0, 0, 0 );
-	events->registerEvent(SDLK_k,		"keykillhalfOfcritters", execcmd.gen("killhalfofcritters"), 0, 0, 0 );
+	events->registerEvent(SDLK_PAGEUP,		"keyloadAllCritters", execcmd.gen("loadallcritters"), 0, 0, 0 );
+	events->registerEvent(SDLK_PAGEDOWN,		"keysaveAllCritters", execcmd.gen("saveallcritters"), 0, 0, 0 );
+	events->registerEvent(SDLK_i,			"keyinsertCritter", execcmd.gen("insertcritter"), 0, 0, 0 );
+	events->registerEvent(SDLK_k,			"keykillhalfOfcritters", execcmd.gen("killhalfofcritters"), 0, 0, 0 );
 
-	events->registerEvent(SDLK_MINUS,	"keydecreaseenergy", execcmd.gen("decreaseenergy"), delay, 0, speedup );
-	events->registerEvent(SDLK_PLUS,	"keyincreaseenergy", execcmd.gen("increaseenergy"), delay, 0, speedup );
-	events->registerEvent(SDLK_KP_MINUS,	"keydecreaseenergykp", execcmd.gen("decreaseenergy"), delay, 0, speedup );
-	events->registerEvent(SDLK_KP_PLUS,	"keyincreaseenergykp", execcmd.gen("increaseenergy"), delay, 0, speedup );
+	events->registerEvent(SDLK_MINUS,		"keydecreaseenergy", execcmd.gen("decreaseenergy"), delay, 0, speedup );
+	events->registerEvent(SDLK_PLUS,		"keyincreaseenergy", execcmd.gen("increaseenergy"), delay, 0, speedup );
+	events->registerEvent(SDLK_KP_MINUS,		"keydecreaseenergykp", execcmd.gen("decreaseenergy"), delay, 0, speedup );
+	events->registerEvent(SDLK_KP_PLUS,		"keyincreaseenergykp", execcmd.gen("increaseenergy"), delay, 0, speedup );
 
 	sharedTimer* t = events->registerSharedtimer( 20 );
 	
-	events->registerEvent(SDLK_HOME,	"keycamera_moveup", execcmd.gen("camera_moveup"), t );
-	events->registerEvent(SDLK_END,		"keycamera_movedown", execcmd.gen("camera_movedown"), t );
-	events->registerEvent(SDLK_UP,		"keycamera_moveforward", execcmd.gen("camera_moveforward"), t );
-	events->registerEvent(SDLK_DOWN,	"keycamera_movebackward", execcmd.gen("camera_movebackward"), t );
-	events->registerEvent(SDLK_LEFT,	"keycamera_moveleft", execcmd.gen("camera_moveleft"), t );
-	events->registerEvent(SDLK_RIGHT,	"keycamera_moveright", execcmd.gen("camera_moveright"), t );
+	events->registerEvent(SDLK_HOME,		"keycamera_moveup", execcmd.gen("camera_moveup"), t );
+	events->registerEvent(SDLK_END,			"keycamera_movedown", execcmd.gen("camera_movedown"), t );
+	events->registerEvent(SDLK_UP,			"keycamera_moveforward", execcmd.gen("camera_moveforward"), t );
+	events->registerEvent(SDLK_DOWN,		"keycamera_movebackward", execcmd.gen("camera_movebackward"), t );
+	events->registerEvent(SDLK_LEFT,		"keycamera_moveleft", execcmd.gen("camera_moveleft"), t );
+	events->registerEvent(SDLK_RIGHT,		"keycamera_moveright", execcmd.gen("camera_moveright"), t );
 
-	events->registerEvent(SDLK_KP2,		"keycamera_lookup", execcmd.gen("camera_lookup"), t );
-	events->registerEvent(SDLK_KP8,		"keycamera_lookdown", execcmd.gen("camera_lookdown"), t );
-	events->registerEvent(SDLK_KP4,		"keycamera_lookleft", execcmd.gen("camera_lookleft"), t );
-	events->registerEvent(SDLK_KP6,		"keycamera_lookright", execcmd.gen("camera_lookright"), t );
+	events->registerEvent(SDLK_KP2,			"keycamera_lookup", execcmd.gen("camera_lookup"), t );
+	events->registerEvent(SDLK_KP8,			"keycamera_lookdown", execcmd.gen("camera_lookdown"), t );
+	events->registerEvent(SDLK_KP4,			"keycamera_lookleft", execcmd.gen("camera_lookleft"), t );
+	events->registerEvent(SDLK_KP6,			"keycamera_lookright", execcmd.gen("camera_lookright"), t );
 
-	events->registerEvent(SDLK_KP1,		"keycamera_rollleft", execcmd.gen("camera_rollleft"), t );
-	events->registerEvent(SDLK_KP3,		"keycamera_rollright", execcmd.gen("camera_rollright"), t );
+	events->registerEvent(SDLK_KP1,			"keycamera_rollleft", execcmd.gen("camera_rollleft"), t );
+	events->registerEvent(SDLK_KP3,			"keycamera_rollright", execcmd.gen("camera_rollright"), t );
 
-	events->registerEvent(SDLK_f,		"inc_fullscreen", execcmd.gen("settings_increase", "fullscreen"), 0, 0, 0 );
-
-	mouselook = false;
-
-	oldx = -100;
-	oldy = -100;
+	events->registerEvent(SDLK_f,			"inc_fullscreen", execcmd.gen("settings_increase", "fullscreen"), 0, 0, 0 );
 
 	frameCounter = 0;
 
 	world->init();
 
-// 	lightwaveFrame = 0;
 }
 
 void Evolution::draw()
 {
-	if ( pause )
-	{
-		usleep(20000);
-		return;
-	}
-
 	frameCounter++;
 
 	Timer::Instance()->mark();
-	sleeper.mark();
+	world->sleeper.mark();
 
 	if ( *benchmark == 1 )
 	{
@@ -153,7 +172,8 @@ void Evolution::draw()
 	
 	if ( !*world->headless )
 	{
-		handleEvents();
+		events->handlecommands();
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// 3D
@@ -162,11 +182,6 @@ void Evolution::draw()
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 // 		GLfloat lightColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
-/*		lightwaveFrame+=0.001f;
-		if (lightwaveFrame >=3.1415 )
-			lightwaveFrame = 0;
-		float lightwaveFrameSine = sin(lightwaveFrame)  * 0.2f;
-		GLfloat lightColor[] = { lightwaveFrameSine, lightwaveFrameSine, lightwaveFrameSine, 0.0f };*/
 		GLfloat lightColor[] = { 0.04f, 0.04f, 0.04f, 0.0f };
 
 		GLfloat lightPos[] = { 0.5f * *world->worldsizeX, 50.0f, 0.5f * *world->worldsizeY, 1.0f };
@@ -183,6 +198,7 @@ void Evolution::draw()
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
+		
 // 		glEnable(GL_LIGHT1);
 // 		glEnable(GL_CULL_FACE);
 // 		glCullFace(GL_BACK);
@@ -199,7 +215,6 @@ void Evolution::draw()
 	}
 
 	world->process();
-	world->getGeneralStats();
 
 	if ( !*world->headless )
 	{
@@ -279,7 +294,7 @@ void Evolution::draw()
 			if ( *drawscene == 1 )
 			{
 				world->mouseRayHit = false;
-				if (!mouselook && !canvas.mouseFocus )
+				if (!world->mouselook && !canvas.mouseFocus )
 					world->castMouseRay();
 
 				// hover test
@@ -291,17 +306,17 @@ void Evolution::draw()
 					glColor3f(1.0f, 1.0f, 1.0f);
 					if ( world->mouseRayHitEntity->type == 1 )
 					{
-						Textprinter::Instance()->print( oldx+margin, oldy,    "food");
-						Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
-						Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", static_cast<const Food*>(world->mouseRayHitEntity)->energyLevel);
+						Textprinter::Instance()->print( world->mousex+margin, world->mousey,    "food");
+						Textprinter::Instance()->print( world->mousex+margin, world->mousey+vspacer, "energy");
+						Textprinter::Instance()->print(world->mousex+rmargindistance, world->mousey+vspacer, "%1.1f", static_cast<const Food*>(world->mouseRayHitEntity)->energyLevel);
 					}
 					else if ( world->mouseRayHitEntity->type == 0 )
 					{
 						CritterB* c = static_cast<const CritterB*>(world->mouseRayHitEntity);
-						Textprinter::Instance()->print( oldx+margin, oldy,    "critter");
-						Textprinter::Instance()->print(oldx+rmargindistance, oldy, "%1i", c->critterID);
-						Textprinter::Instance()->print( oldx+margin, oldy+vspacer, "energy");
-						Textprinter::Instance()->print(oldx+rmargindistance, oldy+vspacer, "%1.1f", c->energyLevel);
+						Textprinter::Instance()->print( world->mousex+margin, world->mousey,    "critter");
+						Textprinter::Instance()->print(world->mousex+rmargindistance, world->mousey, "%1i", c->critterID);
+						Textprinter::Instance()->print( world->mousex+margin, world->mousey+vspacer, "energy");
+						Textprinter::Instance()->print(world->mousex+rmargindistance, world->mousey+vspacer, "%1.1f", c->energyLevel);
 					}
 				}
 			}
@@ -320,56 +335,11 @@ void Evolution::draw()
 
 void Evolution::handlekeyPressed(const SDLKey& key)
 {
-	if ( pause && key != SDLK_p )
-		return;
-
 	switch (key)
 	{
-		case SDLK_m:
-		{
-			mouselook = !mouselook;
-			if ( mouselook )
-			{
-#ifdef _WIN32
-				SDL_WarpMouse(0,0);
-#endif
-				SDL_WM_GrabInput(SDL_GRAB_ON);
-				SDL_ShowCursor(SDL_DISABLE);
-				// clear remaining poll events
-				{ SDL_Event e; while (SDL_PollEvent(&e)) {} };
-				
-				// release picked objects
-				world->mousepicker->detach();
-			}
-			else
-			{
-				SDL_ShowCursor(SDL_ENABLE);
-				SDL_WM_GrabInput(SDL_GRAB_OFF);
-			}
-		}
-			break;
-
-		case SDLK_p:
-			pause = !pause;
-			break;
-
-		case SDLK_s: // FIXME make use of savedir (declared in world)
-		{
-			settings->saveProfile();
-			stringstream buf;
-			buf << "Profile saved to: " << world->dirlayout->savedir << "/" << settings->profileName << "/" << settings->profileName << ".pro";
-			Logbuffer::Instance()->add(buf);
-			cerr << buf.str() << endl;
-		}
-		break;
-
-		case SDLK_l:
-			sleeper.swap();
-			break;
-
 		default:
 			events->activateEvent(key);
-			events->handlecommands();
+// 			events->handlecommands();
 			break;
 	}
 }
@@ -379,41 +349,28 @@ void Evolution::handlekeyReleased(const SDLKey& key)
 	events->deactivateEvent(key);
 }
 
-void Evolution::handlemousebuttonPressed(int x, int y, const int& button)
+void Evolution::handlemousebuttonPressed(const int& button)
 {
-// 	cerr << "button " << button << " clicked at " << x << "x" << y << endl;
-	if ( !mouselook )
-	{
+// 	if ( !world->mouselook )
+// 	{
+		events->activateEvent(button+1024);
 		canvas.buttonPress(button);
-		if ( button == 1 )
-			world->selectBody( x, y );
-		else if ( button == 2 )
-			world->resetCamera();
-		else if ( button == 3 )
-			world->pickBody( x, y );
-		else if ( button == 4 )
-			world->moveInMouseDirection(true);
-		else if ( button == 5 )
-			world->moveInMouseDirection(false);
-	}
+// 	}
 }
 
-void Evolution::handlemousebuttonReleased(int x, int y, const int& button)
+void Evolution::handlemousebuttonReleased(const int& button)
 {
-// 	cerr << "button " << button << " released at " << x << "x" << y << endl;
+	events->deactivateEvent(button+1024);
+	events->activateEvent(button+1124);
 	canvas.buttonRelease(button);
-	if ( button == 1 )
-		;
-	else if ( button == 3 )
-		world->mousepicker->detach();
 }
 
 void Evolution::handleMouseMotionAbs(int x, int y)
 {
-	if ( !mouselook )
+	if ( !world->mouselook )
 	{
-		oldx = x;
-		oldy = y;
+		world->mousex = x;
+		world->mousey = y;
 		
 		// gui mouse dynamics
 		canvas.moveMouse(x, y);
@@ -426,24 +383,13 @@ void Evolution::handleMouseMotionAbs(int x, int y)
 
 void Evolution::handleMouseMotionRel(int x, int y)
 {
-	if ( mouselook )
+	if ( world->mouselook )
 	{
-		if ( x > 0 )
-			world->camera.lookRight( (float)x/3000 );
-		else if ( x != 0 )
-			world->camera.lookLeft( (float)x/-3000 );
-
-		if ( y > 0 )
-			world->camera.lookDown( (float)y/3000 );
-		else if ( y != 0 )
-			world->camera.lookUp( (float)y/-3000 );
+		world->relx = x;
+		world->rely = y;
+		events->activateEvent(1224+0);
+		events->activateEvent(1224+1);
 	}
-}
-
-void Evolution::handleEvents()
-{
-	events->processSharedTimers();
-	events->handlecommands();
 }
 
 Evolution::~Evolution()

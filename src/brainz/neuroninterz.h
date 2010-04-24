@@ -28,7 +28,7 @@ class NeuronInterz
 		unsigned int		motorFunc;
 
 		void			process();
-		void			connec( float *output, unsigned int dendriteBranch, float synapticWeight );
+		void			connec( float *output, float synapticWeight ); // unsigned int dendriteBranch, 
 
 		vector<Synapse>		Synapses;
 

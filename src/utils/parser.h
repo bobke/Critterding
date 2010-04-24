@@ -18,6 +18,7 @@ class Parser
 		bool		beginMatchesStrip(string stop, string &line);
 
 		bool		endMatches(string stop, string &line);
+		bool		endMatchesStrip(string stop, string &line);
 		bool		contains(string stop, string &line);
 
 	protected:

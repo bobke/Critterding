@@ -16,7 +16,7 @@ class ArchSynapse
 			unsigned int	neurontargetlayer;
 	
 		// dendridic weight according
-			unsigned int	dendriteBranch;
+// 			unsigned int	dendriteBranch;
 
 		// it's "weight"
 			float		weight;

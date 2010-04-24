@@ -12,7 +12,7 @@ class Synapse
 		float *ref;
 
 		// dendridic branch synapse is located on
-		float dendriteBranch;
+// 		float dendriteBranch;
 
 		// it's synaptic weight -1.0f <-> +1.0f
 		float weight;

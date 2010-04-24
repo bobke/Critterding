@@ -57,6 +57,17 @@ bool Parser::endMatches(string stop, string &line)
 	return false;
 }
 
+bool Parser::endMatchesStrip(string stop, string &line)
+{
+	if ( line.substr( line.size()-stop.size(), stop.size() ) == stop )
+	{
+		line = line.substr( 0, line.size()-stop.size() );
+		return true;
+	}
+
+	return false;
+}
+
 bool Parser::contains(string stop, string &line)
 {
 	size_t pos = line.find_first_of( stop, 0 );

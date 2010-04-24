@@ -254,10 +254,10 @@ void Brainview::draw()
 						if ( as->isSensorNeuron && as->realneuronID == j )
 							nrlinks++;
 					}
-					float xD=sensors[j].position.x - neurons[i].position.x;
-					float yD=sensors[j].position.y - neurons[i].position.y;
-					float dist = sqrt((xD*xD)+(yD*yD));
-					float oneoverdistancesquared = 1.0f/(dist*dist*dist);
+					xD=sensors[j].position.x - neurons[i].position.x;
+					yD=sensors[j].position.y - neurons[i].position.y;
+					dist = sqrt((xD*xD)+(yD*yD));
+					oneoverdistancesquared = 1.0f/(dist*dist*dist);
 /*					if ( oneoverdistancesquared > 1.0f )
 						oneoverdistancesquared = 1.0f;*/
 					if ( oneoverdistancesquared > 0.001f )

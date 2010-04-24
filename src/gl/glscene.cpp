@@ -21,11 +21,11 @@ void GLScene::handlekeyReleased(const SDLKey& key)
 {
 }
 
-void GLScene::handlemousebuttonPressed(int x, int y, const int&)
+void GLScene::handlemousebuttonPressed(const int&)
 {
 }
 
-void GLScene::handlemousebuttonReleased(int x, int y, const int&)
+void GLScene::handlemousebuttonReleased(const int&)
 {
 }
 

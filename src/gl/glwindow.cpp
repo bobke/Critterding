@@ -148,14 +148,14 @@ void GLWindow::runGLScene(GLScene* glscene)
 
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
 			{
-				SDL_GetMouseState(&mousex, &mousex);
-				glscene->handlemousebuttonPressed( mousex, mousex, event.button.button );
+// 				SDL_GetMouseState(&mousex, &mousex);
+				glscene->handlemousebuttonPressed( event.button.button );
 			}
 
 			else if (event.type == SDL_MOUSEBUTTONUP)
 			{
-				SDL_GetMouseState(&mousex, &mousex);
-				glscene->handlemousebuttonReleased( mousex, mousex, event.button.button );
+// 				SDL_GetMouseState(&mousex, &mousex);
+				glscene->handlemousebuttonReleased( event.button.button );
 			}
 
 			else if(event.type == SDL_MOUSEMOTION)

@@ -22,6 +22,7 @@ class Commands
 		void (Commands::*commandsMember)();
 		void (Maincanvas::*canvasMember)();
 		void (Maincanvas::*canvasMember_string)(const string&);
+		void (Settings::*settingsMember)();
 		void (Settings::*settingsMember_string)(const string&);
 		void (Critterselection::*critterselectionMember)();
 		void (Critterselection::*critterselectionMember_uint)(const unsigned int&);
@@ -53,6 +54,7 @@ class Commands
 		void registerCmd(string name, void (WorldB::*pt2Func)());
 		void registerCmd(string name, void (Maincanvas::*pt2Func)());
 		void registerCmd(string name, void (Maincanvas::*pt2Func)(const string&));
+		void registerCmd(string name, void (Settings::*pt2Func)());
 		void registerCmd(string name, void (Settings::*pt2Func)(const string&));
 		void registerCmd(string name, void (Critterselection::*pt2Func)());
 		void registerCmd(string name, void (Critterselection::*pt2Func)(const unsigned int&));
@@ -67,6 +69,23 @@ class Commands
 		void inc_worldsizey();
 		void selectCritterAll();
 
+		void 			camera_moveup();
+		void 			camera_movedown();
+		void 			camera_moveforward();
+		void 			camera_movebackward();
+		void 			camera_moveleft();
+		void 			camera_moveright();
+		void 			camera_lookup();
+		void 			camera_lookdown();
+		void 			camera_lookleft();
+		void 			camera_lookright();
+		void 			camera_rollleft();
+		void 			camera_rollright();
+		void			camera_lookhorizontal();
+		void			camera_lookvertical();
+		void			camera_movehorizontal();
+		void			camera_movevertical();
+		
 		map<string, cmd*> cmdlist;
 		typedef map <string, cmd*>::const_iterator cmdlist_iterator;
 		cmdlist_iterator cmdit;

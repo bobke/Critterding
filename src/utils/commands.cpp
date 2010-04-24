@@ -27,22 +27,34 @@ Commands::Commands()
 	registerCmd("insertcritter", &WorldB::insertCritter);
 	registerCmd("killhalfofcritters", &WorldB::killHalfOfCritters);
 	registerCmd("camera_resetposition", &WorldB::resetCamera);
+	registerCmd("toggle_pause", &WorldB::togglePause);
+	registerCmd("toggle_sleeper", &WorldB::toggleSleeper);
+	registerCmd("toggle_mouselook", &WorldB::toggleMouselook);
 
-	registerCmd("camera_moveup", &WorldB::camera_moveup);
-	registerCmd("camera_movedown", &WorldB::camera_movedown);
-	registerCmd("camera_moveforward", &WorldB::camera_moveforward);
-	registerCmd("camera_movebackward", &WorldB::camera_movebackward);
-	registerCmd("camera_moveleft", &WorldB::camera_moveleft);
-	registerCmd("camera_moveright", &WorldB::camera_moveright);
-	registerCmd("camera_lookup", &WorldB::camera_lookup);
-	registerCmd("camera_lookdown", &WorldB::camera_lookdown);
-	registerCmd("camera_lookleft", &WorldB::camera_lookleft);
-	registerCmd("camera_lookright", &WorldB::camera_lookright);
-	registerCmd("camera_rollleft", &WorldB::camera_rollleft);
-	registerCmd("camera_rollright", &WorldB::camera_rollright);
+	registerCmd("critter_select", &WorldB::selectBody);
+	registerCmd("critter_pick", &WorldB::pickBody);
+	registerCmd("critter_unpick", &WorldB::unpickBody);
+	
+	registerCmd("camera_moveup", &Commands::camera_moveup);
+	registerCmd("camera_movedown", &Commands::camera_movedown);
+	registerCmd("camera_moveforward", &Commands::camera_moveforward);
+	registerCmd("camera_movebackward", &Commands::camera_movebackward);
+	registerCmd("camera_moveleft", &Commands::camera_moveleft);
+	registerCmd("camera_moveright", &Commands::camera_moveright);
+	registerCmd("camera_lookup", &Commands::camera_lookup);
+	registerCmd("camera_lookdown", &Commands::camera_lookdown);
+	registerCmd("camera_lookleft", &Commands::camera_lookleft);
+	registerCmd("camera_lookright", &Commands::camera_lookright);
+	registerCmd("camera_rollleft", &Commands::camera_rollleft);
+	registerCmd("camera_rollright", &Commands::camera_rollright);
+	registerCmd("camera_lookhorizontal", &Commands::camera_lookhorizontal);
+	registerCmd("camera_lookvertical", &Commands::camera_lookvertical);
+	registerCmd("camera_movehorizontal", &Commands::camera_movehorizontal);
+	registerCmd("camera_movevertical", &Commands::camera_movevertical);
 
 	registerCmd("gui_togglepanel", &Maincanvas::swapChild);
 	registerCmd("gui_toggle", &Maincanvas::swap);
+	registerCmd("settings_saveprofile", &Settings::saveProfile);
 	registerCmd("settings_increase", &Settings::increaseCVar);
 	registerCmd("settings_decrease", &Settings::decreaseCVar);
 
@@ -103,6 +115,15 @@ void Commands::registerCmd(string name, void (Maincanvas::*pt2Func)(const string
 	cmdlist[name]		= c;
 }
 
+void Commands::registerCmd(string name, void (Settings::*pt2Func)())
+{
+	cmd* c = new cmd();
+	c->commandtype		= T_SETTINGS;
+	c->argtype		= A_NOARG;
+	c->settingsMember	= pt2Func;
+	cmdlist[name]		= c;
+}
+
 void Commands::registerCmd(string name, void (Settings::*pt2Func)(const string&))
 {
 	cmd* c = new cmd();
@@ -141,6 +162,8 @@ void Commands::execCmd(const string& name)
 		(critterselection->*cmdlist[name]->critterselectionMember)();
 	else if ( cmdlist[name]->commandtype == T_CANVAS )
 		(canvas->*cmdlist[name]->canvasMember)();
+	else if ( cmdlist[name]->commandtype == T_SETTINGS )
+		(settings->*cmdlist[name]->settingsMember)();
 }
 
 void Commands::execCmd(const string& name, const string& str)
@@ -235,6 +258,27 @@ void Commands::dec_worldsizex() { settings->decreaseCVar("worldsizeX"); world->m
 void Commands::inc_worldsizex() { settings->increaseCVar("worldsizeX"); world->makeFloor(); }
 void Commands::dec_worldsizey() { settings->decreaseCVar("worldsizeY"); world->makeFloor(); }
 void Commands::inc_worldsizey() { settings->increaseCVar("worldsizeY"); world->makeFloor(); }
+
+// camera ops
+void Commands::camera_moveup() { world->camera.moveUp(0.01f); world->movePickedBodyFrom(); }
+void Commands::camera_movedown() { world->camera.moveDown(0.01f); world->movePickedBodyFrom(); }
+void Commands::camera_moveforward() { world->camera.moveForward(0.01f); world->movePickedBodyFrom(); }
+void Commands::camera_movebackward() { world->camera.moveBackward(0.01f); world->movePickedBodyFrom(); }
+void Commands::camera_moveleft() { world->camera.moveLeft(0.01f); world->movePickedBodyFrom(); }
+void Commands::camera_moveright() { world->camera.moveRight(0.01f); world->movePickedBodyFrom(); }
+
+void Commands::camera_lookup() { world->camera.lookUp(0.001f); world->calcMouseDirection(); world->movePickedBodyTo(); }
+void Commands::camera_lookdown() { world->camera.lookDown(0.001f); world->calcMouseDirection(); world->movePickedBodyTo(); }
+void Commands::camera_lookleft() { world->camera.lookLeft(0.001f); world->calcMouseDirection(); world->movePickedBodyTo(); }
+void Commands::camera_lookright() { world->camera.lookRight(0.001f); world->calcMouseDirection(); world->movePickedBodyTo(); }
+void Commands::camera_rollleft() { world->camera.rollLeft(0.001f); world->calcMouseDirection(); world->movePickedBodyTo(); }
+void Commands::camera_rollright() { world->camera.rollRight(0.001f); world->calcMouseDirection(); world->movePickedBodyTo(); }
+
+void Commands::camera_lookhorizontal() { world->camera.lookRight((float)world->relx/3000); world->calcMouseDirection(); world->movePickedBodyTo(); }
+void Commands::camera_lookvertical() { world->camera.lookDown((float)world->rely/3000); world->calcMouseDirection(); world->movePickedBodyTo(); }
+
+void Commands::camera_movehorizontal() { world->camera.moveRight((float)world->relx/300); world->movePickedBodyFrom(); }
+void Commands::camera_movevertical() { world->camera.moveDown((float)world->rely/300); world->movePickedBodyFrom(); }
 
 Commands::~Commands()
 {

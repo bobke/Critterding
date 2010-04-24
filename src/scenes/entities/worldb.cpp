@@ -50,6 +50,11 @@ WorldB::WorldB()
 	autosaveCounter		= 0.0f;
 	autoexchangeCounter	= 0.0f;
 	insertHight		= 1.0f;
+	pause = false;
+	mouselook = false;
+	mousex = -100;
+	mousey = -100;
+
 	
 	// vision retina allocation
 	items = 4 * 800 * 600;
@@ -152,7 +157,7 @@ void WorldB::castMouseRay()
 void WorldB::calcMouseDirection()
 {
 // 	cerr << "updating mouserayto" << endl;
-	mouseRayTo = camera.getScreenDirection(*mousex, *mousey);
+	mouseRayTo = camera.getScreenDirection(mousex, mousey);
 }
 
 void WorldB::moveInMouseDirection(bool towards)
@@ -164,7 +169,12 @@ void WorldB::moveInMouseDirection(bool towards)
 		camera.moveAwayFrom(mouseRayTo.normalized());
 }
 
-void WorldB::pickBody(const int& x, const int& y)
+void WorldB::unpickBody()
+{
+	mousepicker->detach();
+}
+
+void WorldB::pickBody()
 {
 	if ( mouseRayHit )
 	{
@@ -184,11 +194,12 @@ void WorldB::pickBody(const int& x, const int& y)
 			mousepicker->attach( b, mouseRay.hitPosition, camera.position.getOrigin(), mouseRayTo );
 			mousepicker->pickedBool = &mouseRayHitEntity->isPicked;
 			*mousepicker->pickedBool = true;
+// 			cerr << "picked body" << endl;
 		}
 	}
 }
 
-void WorldB::selectBody(const int& x, const int& y)
+void WorldB::selectBody()
 {
 	if ( mouseRayHit )
 		if ( mouseRayHitEntity->type == 0 )
@@ -209,82 +220,88 @@ void WorldB::movePickedBodyFrom()
 
 void WorldB::process()
 {
-	// kill half?
-		killHalf();
-
-	// Remove food
-		expireFood();
-
-	// Autoinsert Food
-		autoinsertFood();
-
-	// remove all dead critters
-		expireCritters();
-
-	// Autosave Critters?
-		autosaveCritters();
-
-	// Autoexchange Critters?
-		autoexchangeCritters();
-
-	// Autoinsert Critters?
-		autoinsertCritters();
-
-	  if ( *critter_raycastvision == 0 )
-	  {
-		  renderVision();
-		  grabVision();
-	  }
-
-	// do a bullet step
-		m_dynamicsWorld->stepSimulation(0.016667f, 0, 0.016667f);
-// 		m_dynamicsWorld->stepSimulation(0.016667f);
-// 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
-// cerr << Timer::Instance()->bullet_ms << " : " << Timer::Instance()->bullet_ms / 1000.f << endl;
-
-	// process all critters
-	int lmax = (int)critters.size();
-// 	int i;
-	CritterB* c;
-	float freeEnergyc = 0.0f;
-
-	omp_set_num_threads( *threads );
-	#pragma omp parallel for ordered shared(freeEnergyc, lmax) private(c) // ordered 
-	for( int i=0; i < lmax; i++)
+  
+	if ( !pause )
 	{
-// 			omp_set_lock(&my_lock1);
-				c = critters[i];
-// 			omp_unset_lock(&my_lock1);
-			
-			omp_set_lock(&my_lock1);
-// 			#pragma omp critical
-				checkCollisions(  c );
-			omp_unset_lock(&my_lock1);
+		// kill half?
+			killHalf();
 
-			// process
-// 			omp_set_lock(&my_lock1);
-				c->process();
-// 			omp_unset_lock(&my_lock1);
+		// Remove food
+			expireFood();
 
-			// record critter used energy
-// 			omp_set_lock(&my_lock1);
-				freeEnergyc += c->energyUsed;
-// 			omp_unset_lock(&my_lock1);
+		// Autoinsert Food
+			autoinsertFood();
 
-			// process Output Neurons
-// 			omp_set_lock(&my_lock1);
-				eat(c);
-// 			omp_unset_lock(&my_lock1);
+		// remove all dead critters
+			expireCritters();
 
-			// procreation if procreation energy trigger is hit
-			omp_set_lock(&my_lock1);
-// 			#pragma omp critical
-				procreate(c);
-			omp_unset_lock(&my_lock1);
-// 		}
+		// Autosave Critters?
+			autosaveCritters();
+
+		// Autoexchange Critters?
+			autoexchangeCritters();
+
+		// Autoinsert Critters?
+			autoinsertCritters();
+
+		if ( *critter_raycastvision == 0 )
+		{
+			renderVision();
+			grabVision();
+		}
+
+		// do a bullet step
+			m_dynamicsWorld->stepSimulation(0.016667f, 0, 0.016667f);
+	// 		m_dynamicsWorld->stepSimulation(0.016667f);
+	// 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
+	// cerr << Timer::Instance()->bullet_ms << " : " << Timer::Instance()->bullet_ms / 1000.f << endl;
+
+		// process all critters
+		int lmax = (int)critters.size();
+	// 	int i;
+		CritterB* c;
+		float freeEnergyc = 0.0f;
+
+		omp_set_num_threads( *threads );
+		#pragma omp parallel for ordered shared(freeEnergyc, lmax) private(c) // ordered 
+		for( int i=0; i < lmax; i++)
+		{
+	// 			omp_set_lock(&my_lock1);
+					c = critters[i];
+	// 			omp_unset_lock(&my_lock1);
+				
+				omp_set_lock(&my_lock1);
+	// 			#pragma omp critical
+					checkCollisions(  c );
+				omp_unset_lock(&my_lock1);
+
+				// process
+	// 			omp_set_lock(&my_lock1);
+					c->process();
+	// 			omp_unset_lock(&my_lock1);
+
+				// record critter used energy
+	// 			omp_set_lock(&my_lock1);
+					freeEnergyc += c->energyUsed;
+	// 			omp_unset_lock(&my_lock1);
+
+				// process Output Neurons
+	// 			omp_set_lock(&my_lock1);
+					eat(c);
+	// 			omp_unset_lock(&my_lock1);
+
+				// procreation if procreation energy trigger is hit
+				omp_set_lock(&my_lock1);
+	// 			#pragma omp critical
+					procreate(c);
+				omp_unset_lock(&my_lock1);
+	// 		}
+		}
+
+		freeEnergy += freeEnergyc;
+
+		getGeneralStats();
 	}
-
-	freeEnergy += freeEnergyc;
 }
 
 void WorldB::childPositionOffset(btVector3* v)
@@ -1426,21 +1443,36 @@ void WorldB::makeDefaultFloor()
 	}
 }
 
-// camera ops
-void WorldB::camera_moveup() { camera.moveUp(0.01f); movePickedBodyFrom(); }
-void WorldB::camera_movedown() { camera.moveDown(0.01f); movePickedBodyFrom(); }
-void WorldB::camera_moveforward() { camera.moveForward(0.01f); movePickedBodyFrom(); }
-void WorldB::camera_movebackward() { camera.moveBackward(0.01f); movePickedBodyFrom(); }
-void WorldB::camera_moveleft() { camera.moveLeft(0.01f); movePickedBodyFrom(); }
-void WorldB::camera_moveright() { camera.moveRight(0.01f); movePickedBodyFrom(); }
-
-void WorldB::camera_lookup() { camera.lookUp(0.001f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_lookdown() { camera.lookDown(0.001f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_lookleft() { camera.lookLeft(0.001f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_lookright() { camera.lookRight(0.001f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_rollleft() { camera.rollLeft(0.001f); calcMouseDirection(); movePickedBodyTo(); }
-void WorldB::camera_rollright() { camera.rollRight(0.001f); calcMouseDirection(); movePickedBodyTo(); }
-
+void WorldB::togglePause()
+{
+	pause = !pause;
+}
+void WorldB::toggleSleeper()
+{
+	sleeper.swap();
+}
+void WorldB::toggleMouselook()
+{
+	mouselook = !mouselook;
+	if ( mouselook )
+	{
+#ifdef _WIN32
+		SDL_WarpMouse(0,0);
+#endif
+		SDL_WM_GrabInput(SDL_GRAB_ON);
+		SDL_ShowCursor(SDL_DISABLE);
+		// clear remaining poll events
+		{ SDL_Event e; while (SDL_PollEvent(&e)) {} };
+		
+		// release picked objects
+		mousepicker->detach();
+	}
+	else
+	{
+		SDL_ShowCursor(SDL_ENABLE);
+		SDL_WM_GrabInput(SDL_GRAB_OFF);
+	}
+}
 
 WorldB::~WorldB()
 {

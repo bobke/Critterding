@@ -2,7 +2,7 @@
 #define BRAINVIEW_H
 
 #include "../../gui/settingspanel.h"
-#include "../entities/worldb.h"
+// #include "../entities/worldb.h"
 #include "../../utils/critterselection.h"
 #include "../../math/vector2f.h"
 #include "../entities/critterb.h"
@@ -28,12 +28,12 @@ class Brainview : public Settingspanel
 		~Brainview();
 
 		void draw();
-		WorldB*		world;
+// 		WorldB*		world;
 	private:
 		Critterselection* critterselection;
 		Widget* viewbutton;
 		Widget* brainview;
-		btScalar viewposition[16];
+// 		btScalar viewposition[16];
 		CritterB* currentCritter;
 		
 		// drawing helpers

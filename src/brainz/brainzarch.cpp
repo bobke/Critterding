@@ -55,8 +55,8 @@ BrainzArch::BrainzArch()
 		maxFiringThreshold				= 100;
 			mutate_maxFiringThreshold		= false;
 
-		maxDendridicBranches				= 20;
-			mutate_maxDendridicBranches		= false;
+// 		maxDendridicBranches				= 20;
+// 			mutate_maxDendridicBranches		= false;
 
 		percentMutation					= 1;
 			mutate_percentMutation			= false;
@@ -203,8 +203,8 @@ BrainzArch::BrainzArch()
 			else an.firingThreshold = randgen->Instance()->get( minFiringThreshold, maxFiringThreshold );
 
 		// determine dendritic branches
-			if ( an.isMotor ) an.dendridicBranches = maxDendridicBranches;
-			else an.dendridicBranches = randgen->Instance()->get( 1, maxDendridicBranches );
+// 			if ( an.isMotor ) an.dendridicBranches = maxDendridicBranches;
+// 			else an.dendridicBranches = randgen->Instance()->get( 1, maxDendridicBranches );
 			
 
 		// push it on the vector
@@ -234,7 +234,7 @@ BrainzArch::BrainzArch()
 	 		}
 	
 		// dendrite branch number
-			as.dendriteBranch = randgen->Instance()->get( 1, ArchNeurons[parentneuron].dendridicBranches );
+// 			as.dendriteBranch = randgen->Instance()->get( 1, ArchNeurons[parentneuron].dendridicBranches );
 
 		// synaptic weight
 			if ( ArchNeurons[parentneuron].hasConsistentSynapses )
@@ -379,7 +379,7 @@ BrainzArch::BrainzArch()
 						unsigned int nid = randgen->Instance()->get( 0, ArchNeurons.size()-1 );
 
 					// decide what to alter
-						unsigned int jmode = randgen->Instance()->get(1,6);
+						unsigned int jmode = randgen->Instance()->get(1,5);
 
 					// inhibitory function
 						if ( jmode == 1 )
@@ -490,17 +490,17 @@ BrainzArch::BrainzArch()
 							if ( old == ArchNeurons[nid].firingThreshold ) runs++;
 						}
 
-					// dendritic branches
-						else if ( jmode == 6 )
-						{
-							// backup old
-							unsigned int old = ArchNeurons[nid].dendridicBranches;
-
-							ArchNeurons[nid].dendridicBranches = randgen->Instance()->get( 1, maxDendridicBranches );
-
-							// make sure we mutate
-							if ( old == ArchNeurons[nid].dendridicBranches ) runs++;
-						}
+// 					// dendritic branches
+// 						else if ( jmode == 6 )
+// 						{
+// 							// backup old
+// 							unsigned int old = ArchNeurons[nid].dendridicBranches;
+// 
+// 							ArchNeurons[nid].dendridicBranches = randgen->Instance()->get( 1, maxDendridicBranches );
+// 
+// 							// make sure we mutate
+// 							if ( old == ArchNeurons[nid].dendridicBranches ) runs++;
+// 						}
 
 				}
 				else
@@ -559,7 +559,7 @@ BrainzArch::BrainzArch()
 			modesum += percentMutateEffectAlterMutable;
 			if ( mode <= modesum )
 			{
-				unsigned int imode = randgen->Instance()->get(1,12);
+				unsigned int imode = randgen->Instance()->get(1,11);
 
 				if ( imode == 1 && mutate_percentChanceInhibitoryNeuron )
 				{
@@ -633,16 +633,16 @@ BrainzArch::BrainzArch()
 					else if ( maxFiringThreshold > minFiringThreshold+factor )	maxFiringThreshold-=factor; // !!! > minFiringThreshold
 				}
 
-				else if ( imode == 9 && mutate_maxDendridicBranches )
-				{
-					unsigned int jmode = randgen->Instance()->get(1,2);
-					unsigned int factor = randgen->Instance()->get(1,5);
+// 				else if ( imode == 9 && mutate_maxDendridicBranches )
+// 				{
+// 					unsigned int jmode = randgen->Instance()->get(1,2);
+// 					unsigned int factor = randgen->Instance()->get(1,5);
+// 
+// 					if ( jmode == 1 && maxDendridicBranches < 100-factor )	maxDendridicBranches+=factor;
+// 					else if ( maxDendridicBranches > 1+factor )		maxDendridicBranches-=factor; // !!! > 1
+// 				}
 
-					if ( jmode == 1 && maxDendridicBranches < 100-factor )	maxDendridicBranches+=factor;
-					else if ( maxDendridicBranches > 1+factor )		maxDendridicBranches-=factor; // !!! > 1
-				}
-
-				else if ( imode == 10 && mutate_percentMutation )
+				else if ( imode == 9 && mutate_percentMutation )
 				{
 					unsigned int jmode = randgen->Instance()->get(1,2);
 					unsigned int factor = randgen->Instance()->get(1,5);
@@ -651,7 +651,7 @@ BrainzArch::BrainzArch()
 					else if ( percentMutation > 1+factor )			percentMutation-=factor; // !!! > 1 or no more mutation at all
 				}
 
-				else if ( imode == 11 && mutate_MutateEffects )
+				else if ( imode == 10 && mutate_MutateEffects )
 				{
 					// up or down
 					unsigned int jmode = randgen->Instance()->get(1,2);
@@ -679,7 +679,7 @@ BrainzArch::BrainzArch()
 					}
 				}
 
-				else if ( imode == 12 && mutate_PlasticityFactors )
+				else if ( imode == 11 && mutate_PlasticityFactors )
 				{
 					// up or down
 					unsigned int jmode = randgen->Instance()->get(1,2);
@@ -737,8 +737,8 @@ BrainzArch::BrainzArch()
 		mutate_minFiringThreshold		= otherBrain->mutate_minFiringThreshold;
 		maxFiringThreshold			= otherBrain->maxFiringThreshold;
 		mutate_maxFiringThreshold		= otherBrain->mutate_maxFiringThreshold;
-		maxDendridicBranches			= otherBrain->maxDendridicBranches;
-		mutate_maxDendridicBranches		= otherBrain->mutate_maxDendridicBranches;
+// 		maxDendridicBranches			= otherBrain->maxDendridicBranches;
+// 		mutate_maxDendridicBranches		= otherBrain->mutate_maxDendridicBranches;
 		percentChanceConsistentSynapses		= otherBrain->percentChanceConsistentSynapses;
 		mutate_percentChanceConsistentSynapses	= otherBrain->mutate_percentChanceConsistentSynapses;
 		percentChanceInhibitorySynapses		= otherBrain->percentChanceInhibitorySynapses;
@@ -763,7 +763,7 @@ BrainzArch::BrainzArch()
 			an.hasConsistentSynapses = oan->hasConsistentSynapses;
 			an.hasInhibitorySynapses = oan->hasInhibitorySynapses;
 			an.firingThreshold = oan->firingThreshold;
-			an.dendridicBranches = oan->dendridicBranches;
+// 			an.dendridicBranches = oan->dendridicBranches;
 
 			an.isMotor = oan->isMotor;
 			an.motorID = oan->motorID;
@@ -780,7 +780,7 @@ BrainzArch::BrainzArch()
 
 				as.isSensorNeuron	= oas->isSensorNeuron;
 				as.neuronID		= oas->neuronID;
-				as.dendriteBranch	= oas->dendriteBranch;
+// 				as.dendriteBranch	= oas->dendriteBranch;
 				as.weight		= oas->weight;
 				an.ArchSynapses.push_back( as );
 			}
@@ -810,8 +810,8 @@ BrainzArch::BrainzArch()
 		mutate_minFiringThreshold		= otherBrain1->mutate_minFiringThreshold;
 		maxFiringThreshold			= otherBrain1->maxFiringThreshold;
 		mutate_maxFiringThreshold		= otherBrain1->mutate_maxFiringThreshold;
-		maxDendridicBranches			= otherBrain1->maxDendridicBranches;
-		mutate_maxDendridicBranches		= otherBrain1->mutate_maxDendridicBranches;
+// 		maxDendridicBranches			= otherBrain1->maxDendridicBranches;
+// 		mutate_maxDendridicBranches		= otherBrain1->mutate_maxDendridicBranches;
 		percentChanceConsistentSynapses		= otherBrain1->percentChanceConsistentSynapses;
 		mutate_percentChanceConsistentSynapses	= otherBrain1->mutate_percentChanceConsistentSynapses;
 		percentChanceInhibitorySynapses		= otherBrain1->percentChanceInhibitorySynapses;
@@ -849,7 +849,7 @@ BrainzArch::BrainzArch()
 			an.hasConsistentSynapses = oan->hasConsistentSynapses;
 			an.hasInhibitorySynapses = oan->hasInhibitorySynapses;
 			an.firingThreshold = oan->firingThreshold;
-			an.dendridicBranches = oan->dendridicBranches;
+// 			an.dendridicBranches = oan->dendridicBranches;
 
 			an.isMotor = oan->isMotor;
 			an.motorID = oan->motorID;
@@ -866,7 +866,7 @@ BrainzArch::BrainzArch()
 
 				as.isSensorNeuron	= oas->isSensorNeuron;
 				as.neuronID		= oas->neuronID;
-				as.dendriteBranch	= oas->dendriteBranch;
+// 				as.dendriteBranch	= oas->dendriteBranch;
 				as.weight		= oas->weight;
 				an.ArchSynapses.push_back( as );
 			}
@@ -923,12 +923,12 @@ BrainzArch::BrainzArch()
 					if(EOF == sscanf(FT.c_str(), "%d", &an.firingThreshold))		cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
-				if ( parseH->Instance()->beginMatchesStrip( "d=", line ) )
-				{
-					string DB = parseH->Instance()->returnUntillStrip( "|", line );
-					//cerr << "IWR: " << IWR  << endl;
-					if(EOF == sscanf(DB.c_str(), "%d", &an.dendridicBranches))		cerr << "ERROR INSERTING CRITTER" << endl;
-				}
+// 				if ( parseH->Instance()->beginMatchesStrip( "d=", line ) )
+// 				{
+// 					string DB = parseH->Instance()->returnUntillStrip( "|", line );
+// 					//cerr << "IWR: " << IWR  << endl;
+// 					if(EOF == sscanf(DB.c_str(), "%d", &an.dendridicBranches))		cerr << "ERROR INSERTING CRITTER" << endl;
+// 				}
 	
 				if ( parseH->Instance()->beginMatchesStrip( "m=", line ) )
 				{
@@ -954,7 +954,7 @@ BrainzArch::BrainzArch()
 						string SY = parseH->Instance()->returnUntillStrip( "|", line );
 						string isSensorNeuron	= parseH->Instance()->returnUntillStrip( ",", SY );
 						string neuronID		= parseH->Instance()->returnUntillStrip( ",", SY );
-						string dendriteBranch	= parseH->Instance()->returnUntillStrip( ",", SY );
+// 						string dendriteBranch	= parseH->Instance()->returnUntillStrip( ",", SY );
 						string weight	= SY;
 
 						int isIt;
@@ -962,7 +962,7 @@ BrainzArch::BrainzArch()
 						if ( isIt == 1 ) as.isSensorNeuron = true;
 	
 						if(EOF == sscanf(neuronID.c_str(), "%d", &as.neuronID))			cerr << "ERROR INSERTING CRITTER" << endl;
-						if(EOF == sscanf(dendriteBranch.c_str(), "%d", &as.dendriteBranch))	cerr << "ERROR INSERTING CRITTER" << endl;
+// 						if(EOF == sscanf(dendriteBranch.c_str(), "%d", &as.dendriteBranch))	cerr << "ERROR INSERTING CRITTER" << endl;
 						if(EOF == sscanf(weight.c_str(), "%f", &as.weight))			cerr << "ERROR INSERTING CRITTER" << endl;
 						an.ArchSynapses.push_back( as );
 				}
@@ -1112,19 +1112,19 @@ BrainzArch::BrainzArch()
 					else			mutate_maxFiringThreshold = false;
 				}
 
-			else if ( parseH->Instance()->beginMatchesStrip( "maxDendridicBranches=", line ) )
-			{
-				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-				if(EOF == sscanf(Holder.c_str(), "%d", &maxDendridicBranches))				cerr << "ERROR INSERTING CRITTER" << endl;
-			}
-				else if ( parseH->Instance()->beginMatchesStrip( "mutate_maxDendridicBranches=", line ) )
-				{
-					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
-					int result;
-					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
-					if ( result == 1 )	mutate_maxDendridicBranches = true;
-					else			mutate_maxDendridicBranches = false;
-				}
+// 			else if ( parseH->Instance()->beginMatchesStrip( "maxDendridicBranches=", line ) )
+// 			{
+// 				string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 				if(EOF == sscanf(Holder.c_str(), "%d", &maxDendridicBranches))				cerr << "ERROR INSERTING CRITTER" << endl;
+// 			}
+// 				else if ( parseH->Instance()->beginMatchesStrip( "mutate_maxDendridicBranches=", line ) )
+// 				{
+// 					string Holder = parseH->Instance()->returnUntillStrip( ";", line );
+// 					int result;
+// 					if(EOF == sscanf(Holder.c_str(), "%d", &result))			cerr << "ERROR INSERTING CRITTER" << endl;
+// 					if ( result == 1 )	mutate_maxDendridicBranches = true;
+// 					else			mutate_maxDendridicBranches = false;
+// 				}
 
 // 			else if ( parseH->Instance()->beginMatchesStrip( "percentMutation=", line ) )
 // 			{
@@ -1244,8 +1244,8 @@ BrainzArch::BrainzArch()
 				buf << "mutate_minFiringThreshold="		<< mutate_minFiringThreshold << ";" << endl;
 			buf << "maxFiringThreshold="			<< maxFiringThreshold << ";" << endl;
 				buf << "mutate_maxFiringThreshold="		<< mutate_maxFiringThreshold << ";" << endl;
-			buf << "maxDendridicBranches="			<< maxDendridicBranches << ";" << endl;
-				buf << "mutate_maxDendridicBranches="		<< mutate_maxDendridicBranches << ";" << endl;
+// 			buf << "maxDendridicBranches="			<< maxDendridicBranches << ";" << endl;
+// 				buf << "mutate_maxDendridicBranches="		<< mutate_maxDendridicBranches << ";" << endl;
 	
 			buf << "percentChanceConsistentSynapses="	<< percentChanceConsistentSynapses << ";" << endl;
 				buf << "mutate_percentChanceConsistentSynapses="<< mutate_percentChanceConsistentSynapses << ";" << endl;
@@ -1287,7 +1287,7 @@ BrainzArch::BrainzArch()
 					buf << "cs=0|";
 	
 				buf << "f=" << ArchNeurons[i].firingThreshold << "|";
-				buf << "d=" << ArchNeurons[i].dendridicBranches << "|";
+// 				buf << "d=" << ArchNeurons[i].dendridicBranches << "|";
 				if ( ArchNeurons[i].isMotor ) buf << "m=" << ArchNeurons[i].motorID << "|";
 				if ( ArchNeurons[i].isPlastic ) buf << "p=" << ArchNeurons[i].plasticityStrengthen << "," << ArchNeurons[i].plasticityWeaken << "|";
 		
@@ -1301,7 +1301,7 @@ BrainzArch::BrainzArch()
 						else
 							buf << "0";
 						buf << "," << ArchNeurons[i].ArchSynapses[j].neuronID;
-						buf << "," << ArchNeurons[i].ArchSynapses[j].dendriteBranch;
+// 						buf << "," << ArchNeurons[i].ArchSynapses[j].dendriteBranch;
 						buf << "," << ArchNeurons[i].ArchSynapses[j].weight;
 					buf << "|";
 				}

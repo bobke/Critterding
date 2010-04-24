@@ -70,11 +70,13 @@ Brainz::Brainz()
 					{
 						brainzArch->ArchNeurons[i].ArchSynapses[j].realneuronID = brainzArch->findSensorNeuron(brainzArch->ArchNeurons[i].ArchSynapses[j].neuronID);
 						Neurons[i].connec( &Inputs[ brainzArch->ArchNeurons[i].ArchSynapses[j].realneuronID ].output, 
-							brainzArch->ArchNeurons[i].ArchSynapses[j].dendriteBranch, brainzArch->ArchNeurons[i].ArchSynapses[j].weight );
+// 							brainzArch->ArchNeurons[i].ArchSynapses[j].dendriteBranch,
+							brainzArch->ArchNeurons[i].ArchSynapses[j].weight );
 					}
 					else
 						Neurons[i].connec( &Neurons[ brainzArch->ArchNeurons[i].ArchSynapses[j].neuronID ].output, 
-							brainzArch->ArchNeurons[i].ArchSynapses[j].dendriteBranch, brainzArch->ArchNeurons[i].ArchSynapses[j].weight );
+// 							brainzArch->ArchNeurons[i].ArchSynapses[j].dendriteBranch,
+							brainzArch->ArchNeurons[i].ArchSynapses[j].weight );
 				}
 			}
 			//cerr << "total neurons: " << totalNeurons << "total synapses: " << totalSynapses << endl;

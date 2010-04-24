@@ -16,6 +16,8 @@ void WorldRace::init()
 	// autoload critters
 	if ( settings->getCVar("autoload") )
 		loadAllCritters();
+	if ( settings->getCVar("autoloadlastsaved") )
+		loadAllLastSavedCritters();
 
 	// insert first batch of critters
 		for ( unsigned int i=critters.size(); i < settings->getCVar("mincritters"); i++  )
@@ -33,187 +35,191 @@ void WorldRace::init()
 
 void WorldRace::process()
 {
-	autosaveCritters();
-
-	// do a bullet step
-		m_dynamicsWorld->stepSimulation(0.016667f, 0, 0.016667f);
-// 		m_dynamicsWorld->stepSimulation(0.016667f);
-// 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
-
-	// render critter vision, optimized for this sim
-		renderVision();
-	// Read pixels into retina
-		grabVision();
-
-	// process all critters
-	for( unsigned int i=0; i < critters.size(); i++)
+	if ( !pause )
 	{
-		CritterB *c = critters[i];
+		autosaveCritters();
 
-		// TOUCH inputs and references -> find overlappings
-			checkCollisions(  c );
+		// do a bullet step
+			m_dynamicsWorld->stepSimulation(0.016667f, 0, 0.016667f);
+	// 		m_dynamicsWorld->stepSimulation(0.016667f);
+	// 		m_dynamicsWorld->stepSimulation(Timer::Instance()->bullet_ms / 1000.f);
 
-		// process
-			c->process();
+		// render critter vision, optimized for this sim
+			renderVision();
+		// Read pixels into retina
+			grabVision();
 
-		// process Output Neurons
-			if ( c->eat && c->touchingFood )
-			{
-				Food* f = static_cast<Food*>(c->touchedEntity);
-				float eaten = *critter_maxenergy / 100.0f;
-				if ( c->energyLevel + eaten > *critter_maxenergy )
-					eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
-				if ( f->energyLevel - eaten < 0 )
-					eaten = f->energyLevel;
+		// process all critters
+		for( unsigned int i=0; i < critters.size(); i++)
+		{
+			CritterB *c = critters[i];
 
-				c->energyLevel += eaten;
-				f->energyLevel -= eaten;
-				
-				// if a food unit has no more energy left, we have a winner, the race is over
-				if ( f->energyLevel  == 0.0f )
-					haveWinner = true;
-			}
-	}
+			// TOUCH inputs and references -> find overlappings
+				checkCollisions(  c );
 
-	framecounter++;
-	if ( (haveWinner || framecounter >= settings->getCVar("critter_maxlifetime")) )
-	{
-		if ( haveWinner )
-			cerr << "we have a WINNER after " << framecounter << " frames" << endl;
+			// process
+				c->process();
 
-		cerr << "Evaluating..." << endl;
-
-			// measure their distances from their respective food targets
-				for ( unsigned int i=0; i < critters.size(); i++  )
+			// process Output Neurons
+				if ( c->eat && c->touchingFood )
 				{
-					// fitness function 1: distance to food cube
-						btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)critters[i]->body.mouths[0]->body->getMotionState();
-						btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
+					Food* f = static_cast<Food*>(c->touchedEntity);
+					float eaten = *critter_maxenergy / 100.0f;
+					if ( c->energyLevel + eaten > *critter_maxenergy )
+						eaten -= (c->energyLevel + eaten) - *critter_maxenergy;
+					if ( f->energyLevel - eaten < 0 )
+						eaten = f->energyLevel;
 
-						btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
-						btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
-
-						critters[i]->fitness_index =  1.0f /(cposi.distance(fposi) + 0.0000001); 
+					c->energyLevel += eaten;
+					f->energyLevel -= eaten;
 					
-					// fitness function 2: energy of food consumed
-						critters[i]->fitness_index += ( (float)settings->getCVar("food_maxenergy") /(food[i]->energyLevel + 0.0000001));
-
+					// if a food unit has no more energy left, we have a winner, the race is over
+					if ( f->energyLevel  == 0.0f )
+						haveWinner = true;
 				}
+		}
 
-			// initialize sort indices
-				vector<int> indices ( critters.size(), 0 );
-				for ( unsigned int i = 0; i < critters.size(); i++ )
-					indices[i] = i;
-	
-			// sort results
-				for ( int i = critters.size(); i>0; i--  )
-					for ( int j = 0; j < i-1; j++  )
-						if ( critters[indices[j]]->fitness_index < critters[indices[j+1]]->fitness_index )
-						{
-							unsigned keepI	= indices[j];
-							indices[j]	= indices[j+1];
-							indices[j+1]	= keepI;
-						}
+		framecounter++;
+		if ( (haveWinner || framecounter >= settings->getCVar("critter_maxlifetime")) )
+		{
+			if ( haveWinner )
+				cerr << "we have a WINNER after " << framecounter << " frames" << endl;
 
-			// display results
-				for ( unsigned int i=0; i < critters.size(); i++  )
-					cerr << "c " << indices[i] << " : " << critters[indices[i]]->fitness_index << endl;
+			cerr << "Evaluating..." << endl;
 
-		cerr << endl << "Initializing run " << ++testcounter << " ... " << endl;
-
-			// backup the 50% best critters
-				vector<CritterB*> best;
-				unsigned int bestNum = critters.size()/2;
-				if ( critters.size() == 1 )
-					bestNum = 1;
-				for ( unsigned int i=0; i < bestNum; i++  )
-					best.push_back( new CritterB(*critters[indices[i]], critters[indices[i]]->critterID, btVector3( 0.0f, 0.0f, 0.0f ), false, false) );
-			// remove critters and food
-				for ( unsigned int i=0; i < critters.size(); i++ )
-				{
-					stringstream buf;
-					buf << setw(4) << critters[i]->critterID << " old";
-					Textverbosemessage::Instance()->addDeath(buf);
-
-					if ( critters[i]->isPicked )
-						mousepicker->detach();
-// FIXME on windows, we segfault here 1/10 after the first run
-					critterselection->unregisterCritterID(critters[i]->critterID);
-					critterselection->deselectCritter(critters[i]->critterID);
-					delete critters[i];
-// FIXME
-				}
-				critters.clear();
-
-				for ( unsigned int i=0; i < food.size(); i++ )
-				{
-					if ( food[i]->isPicked )
-						mousepicker->detach();
-					delete food[i];
-				}
-				food.clear();
-
-			// clear floor and remake it
-				makeFloor();
-
-			// reinsert the best critters
-				for ( unsigned int i=0; i < best.size() && i < settings->getCVar("mincritters"); i++  )
-					insMutatedCritter( *best[i], critters.size(), best[i]->critterID, false, false );
-
-			// insert the mutants
-				unsigned int count = 0;
-				while ( critters.size() < settings->getCVar("mincritters") )
-				{
-					if ( best.size() > 0 )
+				// measure their distances from their respective food targets
+					for ( unsigned int i=0; i < critters.size(); i++  )
 					{
-						bool brainmutant = false;
-						bool bodymutant = false;
-						if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
-							brainmutant = true;
+						// fitness function 1: distance to food cube
+							btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)critters[i]->body.mouths[0]->body->getMotionState();
+							btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
 
-						if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
-							bodymutant = true;
+							btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
+							btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
 
-						insMutatedCritter( *best[count], critters.size(), currentCritterID++, brainmutant, bodymutant );
+							critters[i]->fitness_index =  1.0f /(cposi.distance(fposi) + 0.0000001); 
+						
+						// fitness function 2: energy of food consumed
+							critters[i]->fitness_index += ( (float)settings->getCVar("food_maxenergy") /(food[i]->energyLevel + 0.0000001));
 
-						CritterB* c = best[count];
-						CritterB* nc = critters[critters.size()-1];
-						stringstream buf;
-						buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
-						buf << " ad: " << setw(4) << nc->genotype->adamdist;
-						buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
-
-						count++;
-						if ( count == best.size() && count > 0 )
-							count = 0;
-
-						if ( brainmutant || bodymutant )
-						{
-							buf << " ";
-							if ( brainmutant ) buf << "brain";
-							if ( brainmutant && bodymutant ) buf << "+";
-							if ( bodymutant ) buf << "body";
-							buf << " mutant";
-						}
-
-						Textverbosemessage::Instance()->addBirth(buf);
 					}
-					else
-						insRandomCritter( critters.size() );
-				}
 
-			// remove best again
-				for ( unsigned int i=0; i < best.size(); i++  )
-					delete best[i];
+				// initialize sort indices
+					vector<int> indices ( critters.size(), 0 );
+					for ( unsigned int i = 0; i < critters.size(); i++ )
+						indices[i] = i;
+		
+				// sort results
+					for ( int i = critters.size(); i>0; i--  )
+						for ( int j = 0; j < i-1; j++  )
+							if ( critters[indices[j]]->fitness_index < critters[indices[j+1]]->fitness_index )
+							{
+								unsigned keepI	= indices[j];
+								indices[j]	= indices[j+1];
+								indices[j+1]	= keepI;
+							}
 
-			// reinsert respective food units
-				for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
-					insFood( i );
+				// display results
+					for ( unsigned int i=0; i < critters.size(); i++  )
+						cerr << "c " << indices[i] << " : " << critters[indices[i]]->fitness_index << endl;
 
-			framecounter = 0;
-			haveWinner = false;
+			cerr << endl << "Initializing run " << ++testcounter << " ... " << endl;
 
-			cerr << "Running... " << endl;
+				// backup the 50% best critters
+					vector<CritterB*> best;
+					unsigned int bestNum = critters.size()/2;
+					if ( critters.size() == 1 )
+						bestNum = 1;
+					for ( unsigned int i=0; i < bestNum; i++  )
+						best.push_back( new CritterB(*critters[indices[i]], critters[indices[i]]->critterID, btVector3( 0.0f, 0.0f, 0.0f ), false, false) );
+				// remove critters and food
+					for ( unsigned int i=0; i < critters.size(); i++ )
+					{
+						stringstream buf;
+						buf << setw(4) << critters[i]->critterID << " old";
+						Textverbosemessage::Instance()->addDeath(buf);
+
+						if ( critters[i]->isPicked )
+							mousepicker->detach();
+	// FIXME on windows, we segfault here 1/10 after the first run
+						critterselection->unregisterCritterID(critters[i]->critterID);
+						critterselection->deselectCritter(critters[i]->critterID);
+						delete critters[i];
+	// FIXME
+					}
+					critters.clear();
+
+					for ( unsigned int i=0; i < food.size(); i++ )
+					{
+						if ( food[i]->isPicked )
+							mousepicker->detach();
+						delete food[i];
+					}
+					food.clear();
+
+				// clear floor and remake it
+					makeFloor();
+
+				// reinsert the best critters
+					for ( unsigned int i=0; i < best.size() && i < settings->getCVar("mincritters"); i++  )
+						insMutatedCritter( *best[i], critters.size(), best[i]->critterID, false, false );
+
+				// insert the mutants
+					unsigned int count = 0;
+					while ( critters.size() < settings->getCVar("mincritters") )
+					{
+						if ( best.size() > 0 )
+						{
+							bool brainmutant = false;
+							bool bodymutant = false;
+							if ( randgen->Instance()->get(1,100) <= settings->getCVar("brain_mutationrate") )
+								brainmutant = true;
+
+							if ( randgen->Instance()->get(1,100) <= settings->getCVar("body_mutationrate") )
+								bodymutant = true;
+
+							insMutatedCritter( *best[count], critters.size(), currentCritterID++, brainmutant, bodymutant );
+
+							CritterB* c = best[count];
+							CritterB* nc = critters[critters.size()-1];
+							stringstream buf;
+							buf << setw(4) << c->critterID << " : " << setw(4) << nc->critterID;
+							buf << " ad: " << setw(4) << nc->genotype->adamdist;
+							buf << " n: " << setw(4) << nc->brain.totalNeurons << " s: " << setw(5) << nc->brain.totalSynapses;
+
+							count++;
+							if ( count == best.size() && count > 0 )
+								count = 0;
+
+							if ( brainmutant || bodymutant )
+							{
+								buf << " ";
+								if ( brainmutant ) buf << "brain";
+								if ( brainmutant && bodymutant ) buf << "+";
+								if ( bodymutant ) buf << "body";
+								buf << " mutant";
+							}
+
+							Textverbosemessage::Instance()->addBirth(buf);
+						}
+						else
+							insRandomCritter( critters.size() );
+					}
+
+				// remove best again
+					for ( unsigned int i=0; i < best.size(); i++  )
+						delete best[i];
+
+				// reinsert respective food units
+					for ( unsigned int i=0; i < settings->getCVar("mincritters"); i++  )
+						insFood( i );
+
+				framecounter = 0;
+				haveWinner = false;
+
+				cerr << "Running... " << endl;
+		}
+		getGeneralStats();
 	}
 }
 

@@ -54,8 +54,8 @@ Genotype* Genotypes::newg( Settings* settings )
 	gt->brainzArch->maxFiringThreshold				= settings->getCVar("brain_maxfiringthreshold");
 		gt->brainzArch->mutate_maxFiringThreshold				= settings->getCVar("brain_mutate_maxfiringthreshold");
 
-	gt->brainzArch->maxDendridicBranches				= settings->getCVar("brain_maxdendridicbranches");
-		gt->brainzArch->mutate_maxDendridicBranches		= settings->getCVar("brain_mutate_maxdendridicbranches");
+// 	gt->brainzArch->maxDendridicBranches				= settings->getCVar("brain_maxdendridicbranches");
+// 		gt->brainzArch->mutate_maxDendridicBranches		= settings->getCVar("brain_mutate_maxdendridicbranches");
 
 	gt->brainzArch->percentChanceConsistentSynapses			= settings->getCVar("brain_percentchanceconsistentsynapses");
 		gt->brainzArch->mutate_percentChanceConsistentSynapses		= settings->getCVar("brain_mutate_percentchanceconsistentsynapses");

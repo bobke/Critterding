@@ -17,7 +17,6 @@
 // #include <vector>
 // #include <string>
 // #include <cstring> 
-#include "../../utils/timer.h"
 #include "../../utils/dir.h"
 #include "../../utils/file.h"
 #include "../../utils/parser.h"
@@ -29,6 +28,7 @@
 #include "../../utils/logbuffer.h"
 #include "../../utils/dirlayout.h"
 #include "../../utils/randgen.h"
+#include "../../utils/sleeper.h"
 
 #include "../gui/textverbosemessage.h"
 
@@ -50,7 +50,10 @@ class WorldB
 		virtual void		init();
 		virtual void		process();
 		virtual btVector3	findPosition();
-		virtual		void makeFloor();
+		virtual			void makeFloor();
+		bool 			pause;
+		bool			mouselook;
+
 		float			insertHight;
 		void			getGeneralStats();
 		void			killHalf();
@@ -109,6 +112,7 @@ class WorldB
 		void			saveAllCritters();
 		virtual void		loadAllCritters();
 		virtual void		loadAllLastSavedCritters();
+		Sleeper			sleeper;
 
 		void			removeSelectedCritter();
 		void			removeAllSelectedCritters();
@@ -127,9 +131,13 @@ class WorldB
 		void			spawnBrainBodyMutantAllSelectedCritters();
 
 		void			killHalfOfCritters();
+		void			togglePause();
+		void			toggleSleeper();
+		void			toggleMouselook();
 
-		void			pickBody(const int& x, const int& y);
-		void			selectBody(const int& x, const int& y);
+		void			pickBody();
+		void			unpickBody();
+		void			selectBody();
 		void			castMouseRay();
 		void			movePickedBodyTo();
 		void			movePickedBodyFrom();
@@ -165,23 +173,14 @@ class WorldB
 		bool			mouseRayHit;
 		Entity*			mouseRayHitEntity;
 
-		// camera operations (needed for commands)
-		void 			camera_moveup();
-		void 			camera_movedown();
-		void 			camera_moveforward();
-		void 			camera_movebackward();
-		void 			camera_moveleft();
-		void 			camera_moveright();
-		void 			camera_lookup();
-		void 			camera_lookdown();
-		void 			camera_lookleft();
-		void 			camera_lookright();
-		void 			camera_rollleft();
-		void 			camera_rollright();
-
 		// pointers to parents (evolution) mousepos
-		int* mousex;
-		int* mousey;
+		int mousex;
+		int mousey;
+		int relx;
+		int rely;
+		
+// 		int mouseclickX;
+// 		int mouseclickY;
 
 		// threading
 		omp_lock_t my_lock1;

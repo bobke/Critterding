@@ -39,8 +39,8 @@ Settingsbrainpanel::Settingsbrainpanel()
 	vspace += vint; addSettingmutator("brain_mutate_minfiringthreshold", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_maxfiringthreshold", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_mutate_maxfiringthreshold", hspace, vspace);
-	vspace += vint; addSettingmutator("brain_maxdendridicbranches", hspace, vspace);
-	vspace += vint; addSettingmutator("brain_mutate_maxdendridicbranches", hspace, vspace);
+// 	vspace += vint; addSettingmutator("brain_maxdendridicbranches", hspace, vspace);
+// 	vspace += vint; addSettingmutator("brain_mutate_maxdendridicbranches", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_percentchanceconsistentsynapses", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_mutate_percentchanceconsistentsynapses", hspace, vspace);
 	vspace += vint; addSettingmutator("brain_percentchanceinhibitorysynapses", hspace, vspace);

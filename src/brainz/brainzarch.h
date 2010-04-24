@@ -86,8 +86,8 @@ class BrainzArch
 				bool			mutate_maxFiringThreshold;
 
 		// max dendritic branches in a new neuron
-			unsigned int		maxDendridicBranches;
-				bool			mutate_maxDendridicBranches;
+// 			unsigned int		maxDendridicBranches;
+// 				bool			mutate_maxDendridicBranches;
 
 		// percent chance that a new synapse is connected to a sensor neuron
 			unsigned int		percentChanceSensorySynapse;
