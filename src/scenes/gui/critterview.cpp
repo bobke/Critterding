@@ -76,12 +76,7 @@ Critterview::Critterview()
 
 void Critterview::draw()
 {
-	if ( critterselection->cv_activate )
-	{
-		active = true;
-		critterselection->cv_activate = false;
-	}
-	
+	// deactive when selected critter goes missing
 	if ( critterselection->selectedCritter == 0 )
 	{
 		active = false;

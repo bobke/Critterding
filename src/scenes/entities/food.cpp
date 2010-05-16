@@ -11,22 +11,33 @@ Food::Food()
 	color.r 	= 0.0f;
 	color.g		= 0.5f;
 	color.b		= 0.0f;
-	color.a		= 1.0f;
+	color.a		= 0.0f;
 
-	type = 1;
+	type = FOOD;
 	isPicked = false;
 }
 
 void Food::draw()
 {
+	glColor4f( color.r, color.g, color.b, color.a );
 	myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
-/*	btVector3 pos = myMotionState->m_graphicsWorldTrans.getOrigin();
-	cerr << pos.getY() */
-	
 	glPushMatrix(); 
 	glMultMatrixf(position);
 
-			glColor4f( color.r, color.g, color.b, color.a );
+			glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
+			Displaylists::Instance()->call(1);
+
+	glPopMatrix();
+}
+
+void Food::drawDimmed(float dim)
+{
+// 	glColor4f( color.r, color.g, color.b, color.a );
+	glColor4f( color.r*dim, color.g*dim, color.b*dim, color.a );
+	myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(position);
+	glPushMatrix(); 
+	glMultMatrixf(position);
+
 			glScaled(halfExtent[0], halfExtent[1], halfExtent[2]);
 			Displaylists::Instance()->call(1);
 

@@ -53,7 +53,6 @@ void GLWindow::create(const char* title, int width, int height)
 
 	w_width = width;
 	w_height = height;
-
 	n_width = width;
 	n_height = height;
 

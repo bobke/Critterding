@@ -4,6 +4,7 @@ Panel::Panel()
 {
 	isTouchable = true;
 	isTransparant = true;
+	isAlwaysOnTop = false;
 	zaxis = 0;
 }
 

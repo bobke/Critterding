@@ -9,6 +9,7 @@
 #include "entities/worldb.h"
 #include "modes/race.h"
 #include "modes/roundworld.h"
+#include "modes/concavefloor.h"
 
 // #include <sstream>
 // #include <stdio.h>

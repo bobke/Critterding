@@ -14,6 +14,7 @@ Settings::Settings()
 	registerCVar("threads",							1, 1, 16, false, "threads to use");
 	registerCVar("headless",						0, 0, 1, true, "do not open gl context");
 	registerCVar("drawscene",						1, 0, 1, true, "draw the scene");
+	registerCVar("drawshadows",						1, 0, 1, true, "draw shadows");
 	registerCVar("fsX",							800, 1, 1000000, false, "fullscreen resolution X");
 	registerCVar("fsY",							600, 1, 1000000, false, "fullscreen resolution Y");
 	registerCVar("startseed",						0, 0, 4000000000, true, "enable fullscreen mode");
@@ -21,10 +22,12 @@ Settings::Settings()
 
 	registerCVar("race",							0, 0, 1, false, "enable race simulation");
 	registerCVar("roundworld",						0, 0, 1, false, "enable round planet");
+	registerCVar("concavefloor",						0, 0, 1, false, "enable concave floor");
 	registerCVar("testworld",						0, 0, 1, false, "a world for test purposes");
 
-	registerCVar("worldsizeX",						23, 1, 5000, false, "size of the world along axis X");
-	registerCVar("worldsizeY",						13, 1, 5000, false, "size of the world along axis Y");
+	registerCVar("worldsizeX",						20, 1, 5000, false, "size of the world along axis X");
+	registerCVar("worldsizeY",						12, 1, 5000, false, "size of the world along axis Y");
+	registerCVar("worldsizeZ",						10, 0, 5000, false, "height of hills using concave floor");
 	registerCVar("worldwalls",						1, 0, 1, false, "enable walls around the world");
 
 	registerCVar("killhalf_decrenergypct",					1, 0, 100, false, "decrease energy by n percent when killhalfat triggers");
@@ -45,7 +48,7 @@ Settings::Settings()
 	registerCVar("fpslimit",						30, 1, 1000, false, "frames per second for the fps limiter");
 
 	registerCVar("critter_insertevery",					0, 0, 1000000, false, "inserts a random critter every n frames");
-	registerCVar("critter_maxlifetime",					40000, 1, 1000000, false, "maximum number of frames a critter lives");
+	registerCVar("critter_maxlifetime",					10000, 1, 1000000, false, "maximum number of frames a critter lives");
 	registerCVar("critter_maxenergy",					5000, 1, 1000000, false, "maximum amount of energy a critter has");
 
 	registerCVar("critter_startenergy",					3000, 1, 1000000, false, "energy a new critter (adam) starts with");
@@ -60,7 +63,7 @@ Settings::Settings()
 	registerCVar("critter_enableomnivores",					1, 0, 1, true, "enables critters to eat each other");
 	registerCVar("critter_raycastvision",					0, 0, 1, true, "use raycast vision instead of opengl");
 	
-	registerCVar("food_maxlifetime",					40000, 1, 1000000, false, "maximum number of frames a food unit exists");
+	registerCVar("food_maxlifetime",					10000, 1, 1000000, false, "maximum number of frames a food unit exists");
 	registerCVar("food_maxenergy",						1500, 1, 1000000, false, "maximum amount of energy a food unit has");
 	registerCVar("food_size",						200, 1, 1000000, false, "size of a food unit");
 
@@ -96,17 +99,17 @@ Settings::Settings()
 
 	registerCVar("brain_maxneurons",					1000, 1, 1000000, false, "maximum neurons per critter");
 	registerCVar("brain_minsynapses",					1, 1, 1000000, false, "minimum synapses per neuron");
-	registerCVar("brain_maxsynapses",					100, 1, 1000000, false, "maximum synapses per neuron");
+	registerCVar("brain_maxsynapses",					1000, 1, 1000000, false, "maximum synapses per neuron");
 	registerCVar("brain_minneuronsatbuildtime",				50, 1, 1000000, false, "minimum neurons for a new critter");
 	registerCVar("brain_maxneuronsatbuildtime",				200, 1, 1000000, false, "maximum neurons for a new critter");
 
 	registerCVar("brain_minsynapsesatbuildtime",				1, 1, 1000000, false, "minimum synapses for a new neuron");
-	registerCVar("brain_maxsynapsesatbuildtime",				40, 1, 1000000, false, "maximum synapses for a new neuron of a new critter");
+	registerCVar("brain_maxsynapsesatbuildtime",				80, 1, 1000000, false, "maximum synapses for a new neuron of a new critter");
 
 	registerCVar("brain_percentchanceinhibitoryneuron",			50, 0, 100, false, "percent chance a neuron is inhibotory");
 	registerCVar("brain_mutate_percentchanceinhibitoryneuron",		0, 0, 1, true, "mutate this value");
 
-	registerCVar("brain_percentchancemotorneuron",				50, 0, 100, false, "percent chance a neuron is a motor neuron");
+	registerCVar("brain_percentchancemotorneuron",				100, 0, 100, false, "percent chance a neuron is a motor neuron");
 	registerCVar("brain_mutate_percentchancemotorneuron",			0, 0, 1, true, "mutate this value");
 
 	registerCVar("brain_percentchanceplasticneuron",			20, 0, 100, false, "percent chance a neuron has plastic synapses");

@@ -17,6 +17,14 @@
 // #include <vector>
 // #include <string>
 // #include <cstring> 
+
+#include "../../../config.h"
+
+#ifdef HAVE_OPENCL
+// 	#include "clnbody.h"
+// 	#include "../../cl/clcontext.h"
+#endif
+
 #include "../../utils/dir.h"
 #include "../../utils/file.h"
 #include "../../utils/parser.h"
@@ -75,6 +83,7 @@ class WorldB
 		Dirlayout*		dirlayout;
 		Camera camera;
 		void resetCamera();
+		unsigned int		findEntityIndex( unsigned int number, entityType et );
 
 		//SpuGatheringCollisionDispatcher*	m_dispatcher;
 		btCollisionDispatcher*	m_dispatcher;
@@ -86,8 +95,9 @@ class WorldB
 		btAlignedObjectArray<btCollisionShape*>	m_collisionShapes;
 
 		vector<CritterB*>	critters;
-		vector<Food*>		food;
-		vector<Wall*>		walls;
+// 		vector<Food*>		food;
+// 		vector<Wall*>		walls;
+		vector<Entity*>		entities;
 
 		unsigned long		currentCritterID;
 
@@ -96,6 +106,7 @@ class WorldB
 
 		virtual void		drawWithGrid();
 		virtual void		drawWithoutFaces();
+ 		void			drawShadow(btScalar* m,const btVector3& extrusion,const btCollisionShape* shape, Bodypart* bp,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax);
 		
 		void			drawWithinCritterSight(CritterB *c);
 		void			drawWithinCritterSight(unsigned int cid);
@@ -138,6 +149,7 @@ class WorldB
 		void			pickBody();
 		void			unpickBody();
 		void			selectBody();
+		void			deselectBody();
 		void			castMouseRay();
 		void			movePickedBodyTo();
 		void			movePickedBodyFrom();
@@ -156,6 +168,7 @@ class WorldB
 		const unsigned int*	worldsizeY;
 		const unsigned int*	headless;
 		const unsigned int*	threads;
+		const unsigned int*	drawshadows;
 
 		void			checkCollisions( CritterB* c );
 
@@ -185,13 +198,20 @@ class WorldB
 		// threading
 		omp_lock_t my_lock1;
 // 		omp_lock_t my_lock2;
+
+// 		ShapeCache*		cache(btConvexShape*);
+// 		btAlignedObjectArray<ShapeCache*>	m_shapecaches;
+
 	private:
 		Raycast*		raycast;
+
+#ifdef HAVE_OPENCL
+// 		CLNBody nbody;
+#endif
 
 		castResult		mouseRay;
 		btVector3		mouseRayTo;
 		
- 		void drawShadow(btScalar* m,const btVector3& extrusion,const btCollisionShape* shape,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax);
 		
 		unsigned int		insertCritterCounter;
 // 		GLDebugDrawer debugDrawer;
@@ -234,6 +254,28 @@ class WorldB
 
 		int			findSelectedCritterID();
 		int			findCritterID(unsigned int cid);
+
+		//other fbo stuff
+		PFNGLISRENDERBUFFEREXTPROC glIsRenderbufferEXT;
+		PFNGLBINDRENDERBUFFEREXTPROC    glBindRenderbufferEXT;
+		PFNGLDELETERENDERBUFFERSEXTPROC    glDeleteRenderbuffersEXT;
+		PFNGLGENRENDERBUFFERSEXTPROC    glGenRenderbuffersEXT;
+		PFNGLRENDERBUFFERSTORAGEEXTPROC    glRenderbufferStorageEXT;
+		PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC    glGetRenderbufferParameterivEXT;
+		PFNGLISFRAMEBUFFEREXTPROC    glIsFramebufferEXT;
+		PFNGLBINDFRAMEBUFFEREXTPROC   glBindFramebufferEXT;
+		PFNGLDELETEFRAMEBUFFERSEXTPROC    glDeleteFramebuffersEXT;
+		PFNGLGENFRAMEBUFFERSEXTPROC    glGenFramebuffersEXT;
+		PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC    glCheckFramebufferStatusEXT;
+		PFNGLFRAMEBUFFERTEXTURE1DEXTPROC    glFramebufferTexture1DEXT;
+		PFNGLFRAMEBUFFERTEXTURE2DEXTPROC    glFramebufferTexture2DEXT;
+		PFNGLFRAMEBUFFERTEXTURE3DEXTPROC    glFramebufferTexture3DEXT;
+		PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC    glFramebufferRenderbufferEXT;
+		PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC    glGetFramebufferAttachmentParameterivEXT;
+		PFNGLGENERATEMIPMAPEXTPROC   glGenerateMipmapEXT;
+		unsigned int fb;
+		unsigned int color_tex;
+		unsigned int depth_rb;
 
 };
 

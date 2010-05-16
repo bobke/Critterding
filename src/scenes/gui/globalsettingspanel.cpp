@@ -19,6 +19,7 @@ Globalsettingspanel::Globalsettingspanel()
 	vspace += vint; addMutator("energy", cmd.gen("decreaseenergy"), cmd.gen("increaseenergy"), hspace, vspace);
 	vspace += vint; addMutator("worldsizeX", cmd.gen("dec_worldsizex"), cmd.gen("inc_worldsizex"), hspace, vspace);
 	vspace += vint; addMutator("worldsizeY", cmd.gen("dec_worldsizey"), cmd.gen("inc_worldsizey"), hspace, vspace);
+	vspace += vint; addMutator("worldsizeZ", cmd.gen("dec_worldsizez"), cmd.gen("inc_worldsizez"), hspace, vspace);
 
 // 	vspace += vint; 
 	vspace += vint; addSettingmutator("fsX", hspace, vspace);
@@ -29,6 +30,7 @@ Globalsettingspanel::Globalsettingspanel()
 	vspace += vint; addSettingmutator("fpslimit", hspace, vspace);
 	vspace += vint; addSettingmutator("threads", hspace, vspace);
 	vspace += vint; addSettingmutator("drawscene", hspace, vspace);
+	vspace += vint; addSettingmutator("drawshadows", hspace, vspace);
 
 // 	vspace += vint; 
 	vspace += vint; addSettingmutator("critter_insertevery", hspace, vspace);

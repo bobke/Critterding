@@ -47,6 +47,7 @@ Brainz::Brainz()
 
 				ni.isInhibitory		= brainzArch->ArchNeurons[i].isInhibitory;
 				ni.firingThreshold	= brainzArch->ArchNeurons[i].firingThreshold;
+				ni.potentialDecay	= (float)brainzArch->ArchNeurons[i].potentialDecay/1000;
 
 				ni.isMotor		= brainzArch->ArchNeurons[i].isMotor;
 				if (ni.isMotor)

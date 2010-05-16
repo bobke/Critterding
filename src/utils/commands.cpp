@@ -21,6 +21,8 @@ Commands::Commands()
 	registerCmd("inc_worldsizex", &Commands::inc_worldsizex);
 	registerCmd("dec_worldsizey", &Commands::dec_worldsizey);
 	registerCmd("inc_worldsizey", &Commands::inc_worldsizey);
+	registerCmd("dec_worldsizez", &Commands::dec_worldsizez);
+	registerCmd("inc_worldsizez", &Commands::inc_worldsizez);
 
 	registerCmd("loadallcritters", &WorldB::loadAllCritters);
 	registerCmd("saveallcritters", &WorldB::saveAllCritters);
@@ -32,6 +34,7 @@ Commands::Commands()
 	registerCmd("toggle_mouselook", &WorldB::toggleMouselook);
 
 	registerCmd("critter_select", &WorldB::selectBody);
+	registerCmd("critter_deselect", &WorldB::deselectBody);
 	registerCmd("critter_pick", &WorldB::pickBody);
 	registerCmd("critter_unpick", &WorldB::unpickBody);
 	
@@ -59,7 +62,8 @@ Commands::Commands()
 	registerCmd("settings_decrease", &Settings::decreaseCVar);
 
 	registerCmd("cs_unregister", &Critterselection::unregisterCritterVID);
-	registerCmd("cs_select", &Critterselection::selectCritterVID);
+// 	registerCmd("cs_select", &Critterselection::selectCritterVID);
+	registerCmd("cs_select", &Commands::selectCritter);
 	registerCmd("cs_selectall", &Commands::selectCritterAll);
 	registerCmd("cs_clear", &Critterselection::clear);
 	registerCmd("cs_kill", &WorldB::removeSelectedCritter);
@@ -85,6 +89,15 @@ void Commands::registerCmd(string name, void (Commands::*pt2Func)())
 	c->commandtype		= T_COMMAND;
 	c->argtype		= A_NOARG;
 	c->commandsMember	= pt2Func;
+	cmdlist[name]		= c;
+}
+
+void Commands::registerCmd(string name, void (Commands::*pt2Func)(const unsigned int&))
+{
+	cmd* c = new cmd();
+	c->commandtype		= T_COMMAND;
+	c->argtype		= A_UINT;
+	c->commandsMember_uint	= pt2Func;
 	cmdlist[name]		= c;
 }
 
@@ -178,6 +191,8 @@ void Commands::execCmd(const string& name, const unsigned int& ui)
 {
 	if ( cmdlist[name]->commandtype == T_CS )
 		(critterselection->*cmdlist[name]->critterselectionMember_uint)(ui);
+	else if ( cmdlist[name]->commandtype == T_COMMAND )
+		(this->*cmdlist[name]->commandsMember_uint)(ui);
 }
 
 // fixme public
@@ -214,6 +229,12 @@ void Commands::selectCritterAll()
 	critterselection->clear();
 	for ( unsigned int i=0; i < world->critters.size(); i++ )
 		critterselection->registerCritter(world->critters[i]);
+}
+
+void Commands::selectCritter(const unsigned int& c)
+{
+	canvas->swapChild("critterview");
+	critterselection->selectCritterVID(c);
 }
 
 void Commands::decreaseenergy()
@@ -258,6 +279,8 @@ void Commands::dec_worldsizex() { settings->decreaseCVar("worldsizeX"); world->m
 void Commands::inc_worldsizex() { settings->increaseCVar("worldsizeX"); world->makeFloor(); }
 void Commands::dec_worldsizey() { settings->decreaseCVar("worldsizeY"); world->makeFloor(); }
 void Commands::inc_worldsizey() { settings->increaseCVar("worldsizeY"); world->makeFloor(); }
+void Commands::dec_worldsizez() { settings->decreaseCVar("worldsizeZ"); world->makeFloor(); }
+void Commands::inc_worldsizez() { settings->increaseCVar("worldsizeZ"); world->makeFloor(); }
 
 // camera ops
 void Commands::camera_moveup() { world->camera.moveUp(0.01f); world->movePickedBodyFrom(); }

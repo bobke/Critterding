@@ -26,26 +26,32 @@ Wall::Wall(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dyn
 
 	fixedGround->getWorldTransform().getOpenGLMatrix(nposition);
 	
-	type = 2;
+	type = WALL;
 	isPicked = false;
 }
 
 void Wall::draw()
 {
-// 	fixedGround->getWorldTransform().getOpenGLMatrix(m);
+	glColor4f( color.r, color.g, color.b, color.a );
 	glPushMatrix(); 
 	glMultMatrixf(nposition);
 
-		glColor4f( color.r, color.g, color.b, color.a );
-
-/*		const btBoxShape* boxShape = static_cast<const btBoxShape*>(groundShape);
-		btVector3 halfExtent = boxShape->getHalfExtentsWithMargin();*/
 		glScaled(halfX, halfY, halfZ);
-
 		Displaylists::Instance()->call(1);
 
 	glPopMatrix(); 
+}
 
+void Wall::drawDimmed(float dim)
+{
+	glColor4f( color.r*0.3f, color.g*0.3f, color.b*0.3f, color.a );
+	glPushMatrix(); 
+	glMultMatrixf(nposition);
+
+		glScaled(halfX, halfY, halfZ);
+		Displaylists::Instance()->call(1);
+
+	glPopMatrix(); 
 }
 
 Wall::~Wall()

@@ -94,13 +94,20 @@ void WorldRace::process()
 							btDefaultMotionState* cmyMotionState = (btDefaultMotionState*)critters[i]->body.mouths[0]->body->getMotionState();
 							btVector3 cposi = cmyMotionState->m_graphicsWorldTrans.getOrigin();
 
-							btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
+// 							btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)food[i]->body.bodyparts[0]->body->getMotionState();
+// 							btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
+
+							// find food cube number i
+							unsigned int foodN = findEntityIndex( i+1, FOOD );
+							
+							Food* f = static_cast<Food*>( entities[foodN] );
+							btDefaultMotionState* fmyMotionState = (btDefaultMotionState*)f->body.bodyparts[0]->body->getMotionState();
 							btVector3 fposi = fmyMotionState->m_graphicsWorldTrans.getOrigin();
 
 							critters[i]->fitness_index =  1.0f /(cposi.distance(fposi) + 0.0000001); 
 						
 						// fitness function 2: energy of food consumed
-							critters[i]->fitness_index += ( (float)settings->getCVar("food_maxenergy") /(food[i]->energyLevel + 0.0000001));
+							critters[i]->fitness_index += ( (float)settings->getCVar("food_maxenergy") /(f->energyLevel + 0.0000001));
 
 					}
 
@@ -149,13 +156,26 @@ void WorldRace::process()
 					}
 					critters.clear();
 
-					for ( unsigned int i=0; i < food.size(); i++ )
+// 					for ( unsigned int i=0; i < food.size(); i++ )
+// 					{
+// 						if ( food[i]->isPicked )
+// 							mousepicker->detach();
+// 						delete food[i];
+// 					}
+// 					food.clear();
+					for ( unsigned int i=0; i < entities.size(); i++ )
 					{
-						if ( food[i]->isPicked )
-							mousepicker->detach();
-						delete food[i];
+						if ( entities[i]->type == FOOD )
+						{
+							Food* f = static_cast<Food*>( entities[i] );
+							if ( f->isPicked )
+								mousepicker->detach();
+							delete f;
+							entities.erase(entities.begin()+i);
+							i--;
+						}
 					}
-					food.clear();
+// 					food.clear();
 
 				// clear floor and remake it
 					makeFloor();
@@ -225,9 +245,18 @@ void WorldRace::process()
 
 void WorldRace::makeFloor()
 {
-	for ( unsigned int i=0; i < walls.size(); i++ )	
-		delete walls[i];
-	walls.clear();
+// 	for ( unsigned int i=0; i < walls.size(); i++ )	
+// 		delete walls[i];
+// 	walls.clear();
+	for ( int i=0; i < entities.size(); i++ )
+	{
+		if ( entities[i]->type == WALL )
+		{
+			delete entities[i];
+			entities.erase(entities.begin()+i);
+			i--;
+		}
+	}
 
 	critterspacing = (float)settings->getCVar("worldsizeX") / settings->getCVar("mincritters");
 
@@ -244,7 +273,7 @@ void WorldRace::makeFloor()
 			btVector3 position = btVector3 ( 0.0f-WallHalfWidth + (critterspacing*i), WallHalfHeight-WallWidth, settings->getCVar("worldsizeY")/2.0f );
 			Wall* w = new Wall( WallWidth, WallHeight, settings->getCVar("worldsizeY"), position, m_dynamicsWorld );
 			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
-			walls.push_back(w);
+			entities.push_back(w);
 		}
 }
 
@@ -269,7 +298,7 @@ void WorldRace::insFood(int nr)
 	Food *f = new Food;
 	f->energyLevel = settings->getCVar("food_maxenergy");
 	f->createBody( m_dynamicsWorld, btVector3( (critterspacing/2)+(critterspacing*nr), 1.0f, 2.0f ) );
-	food.push_back( f );
+	entities.push_back( f );
 }
 
 void WorldRace::insertCritter()

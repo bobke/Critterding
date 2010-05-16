@@ -70,6 +70,8 @@ libbulletmath_la_SOURCES	= \
 		LinearMath/btDefaultMotionState.h \
 		LinearMath/btIDebugDraw.h \
 		LinearMath/btRandom.h \
+		LinearMath/btSerializer.h \
+		LinearMath/btSerializer.cpp \
 		$(NULL)
 
 libbulletcollision_la_SOURCES = \
@@ -184,9 +186,7 @@ libbulletcollision_la_SOURCES = \
 		BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h \
 		BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.h \
 		BulletCollision/CollisionDispatch/btCollisionConfiguration.h \
-		BulletCollision/CollisionShapes/btConvexShape.h \
 		BulletCollision/CollisionShapes/btTriangleCallback.h \
-		BulletCollision/CollisionShapes/btPolyhedralConvexShape.h \
 		BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.h \
 		BulletCollision/CollisionShapes/btCompoundShape.h \
 		BulletCollision/CollisionShapes/btBoxShape.h \

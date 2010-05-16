@@ -25,6 +25,8 @@ Evolution::Evolution()
 		world = new WorldRace();
 	else if ( settings->getCVar("roundworld") == 1 )
 		world = new Roundworld();
+	else if ( settings->getCVar("concavefloor") == 1 )
+		world = new Concavefloor();
 	else
 		world = new WorldB();
 
@@ -58,6 +60,9 @@ Evolution::Evolution()
 	// + 1224 -> mouse axis
 
 	events->registerEvent(1024+1,			"critter_select", execcmd.gen("critter_select"), 0, 0, 0 );
+	events->registerEvent(SDLK_LSHIFT, 1024+1,	"critter_deselect", execcmd.gen("critter_deselect"), 0, 0, 0 );
+	events->registerEvent(SDLK_RSHIFT, 1024+1,	"critter_deselect", execcmd.gen("critter_deselect"), 0, 0, 0 );
+
 	events->registerEvent(1024+2,			"resetcamera", execcmd.gen("camera_resetposition"), 0, 0, 0 );
 	events->registerEvent(1024+3,			"critter_pick", execcmd.gen("critter_pick"), 0, 0, 0 );
 	events->registerEvent(1124+3,			"critter_unpick", execcmd.gen("critter_unpick"), 0, 0, 0 );
@@ -161,7 +166,7 @@ void Evolution::draw()
 
 	if ( *benchmark == 1 )
 	{
-		if ( frameCounter == 10000 )
+		if ( frameCounter == 1000 )
 		{
 			float ms = Timer::Instance()->sdl_lasttime - Timer::Instance()->sdl_firsttime;
 			cerr << "benchmark: ran " << frameCounter << " frames in " << ms/1000 << " sec, avg: " << (float)frameCounter / ms * 1000 << endl;
@@ -173,7 +178,7 @@ void Evolution::draw()
 	if ( !*world->headless )
 	{
 		events->handlecommands();
-
+	}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// 3D
@@ -212,7 +217,7 @@ void Evolution::draw()
 
 		glDisable(GL_DITHER);
 		glDisable(GL_POLYGON_SMOOTH);
-	}
+// 	}
 
 	world->process();
 
@@ -223,13 +228,21 @@ void Evolution::draw()
 // 			{
 // 				world->camera.follow( (btDefaultMotionState*)world->critters[0]->body.mouths[0]->body->getMotionState() );
 // 				world->drawWithoutFaces();
-// // 				world->critters[0]->printVision();
+// 				world->critters[0]->printVision();
 // 			}
 
 		world->camera.place();
 
 		if ( *drawscene == 1 )
 		{
+// 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+// 		glHint(GL_FOG_HINT, GL_FASTEST);
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+// 		glShadeModel(GL_FLAT);
+		glShadeModel(GL_SMOOTH);
+
+
 			world->drawWithGrid();
 
 			// draw selected info
@@ -274,20 +287,20 @@ void Evolution::draw()
 	// 2D
 		if ( canvas.active )
 		{
-		glDisable(GL_DEPTH_TEST);
-		glDisable (GL_LIGHTING);
-		glDisable(GL_LIGHT0);
-// 		glDisable(GL_LIGHT1);
-		glDisable(GL_COLOR_MATERIAL);
-// 		glDisable(GL_DITHER);
-// 		glDisable(GL_CULL_FACE);
+			glDisable(GL_DEPTH_TEST);
+			glDisable (GL_LIGHTING);
+			glDisable(GL_LIGHT0);
+	// 		glDisable(GL_LIGHT1);
+			glDisable(GL_COLOR_MATERIAL);
+	// 		glDisable(GL_DITHER);
+	// 		glDisable(GL_CULL_FACE);
 
-		glPushMatrix();
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, *Settings::Instance()->winWidth, *Settings::Instance()->winHeight, 0, 0, 1);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
+			glPushMatrix();
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(0, *Settings::Instance()->winWidth, *Settings::Instance()->winHeight, 0, 0, 1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
 
 			canvas.draw();
 
@@ -320,9 +333,8 @@ void Evolution::draw()
 					}
 				}
 			}
-		glPopMatrix();
+			glPopMatrix();
 		}
-
 		SDL_GL_SwapBuffers();		
 	}
 

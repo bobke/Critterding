@@ -23,7 +23,7 @@ void TestWorld1::init()
 		btVector3 position( (float)settings->getCVar("worldsizeX")/2.0f, (i*WallWidth)+WallHalfWidth, (float)settings->getCVar("worldsizeY")/2.0f );
 		Wall* w = new Wall( (float)settings->getCVar("worldsizeX")/(decSizeFactor*(i+2)), WallWidth, (float)settings->getCVar("worldsizeY")/(decSizeFactor*(i+2)), position, m_dynamicsWorld );
 		w->color.r = 0.34f+(0.005f*i); w->color.g = 0.25f+(0.005f*i); w->color.b = 0.11f+(0.005f*i);
-		walls.push_back(w);
+		entities.push_back(w);
 	}
 }
 

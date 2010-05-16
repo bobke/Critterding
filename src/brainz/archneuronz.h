@@ -26,6 +26,9 @@ class ArchNeuronz
 		// neuron firing potential
 			unsigned int			firingThreshold;
 
+		// neuron firing potential
+			unsigned int			potentialDecay;
+
 		// dendridic branches
 			unsigned int			dendridicBranches;
 

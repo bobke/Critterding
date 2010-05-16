@@ -21,6 +21,7 @@ class Food : public Entity
 		void			createBody(btDynamicsWorld* m_dynamicsWorld, const btVector3& startOffset);
 
 		void			draw();
+		void			drawDimmed(float dim);
 		
 		btScalar		position[16];
 

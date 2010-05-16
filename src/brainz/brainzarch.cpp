@@ -199,13 +199,14 @@ BrainzArch::BrainzArch()
 			}
 
 		// determine firing threshold
-			if ( an.isMotor ) an.firingThreshold = maxFiringThreshold;
-			else an.firingThreshold = randgen->Instance()->get( minFiringThreshold, maxFiringThreshold );
+			/*if ( an.isMotor ) an.firingThreshold = maxFiringThreshold;
+			else*/ an.firingThreshold = randgen->Instance()->get( minFiringThreshold, maxFiringThreshold );
 
 		// determine dendritic branches
 // 			if ( an.isMotor ) an.dendridicBranches = maxDendridicBranches;
 // 			else an.dendridicBranches = randgen->Instance()->get( 1, maxDendridicBranches );
 			
+			an.potentialDecay = randgen->Instance()->get( 666, 1000 );
 
 		// push it on the vector
 			ArchNeurons.push_back( an );
@@ -379,7 +380,7 @@ BrainzArch::BrainzArch()
 						unsigned int nid = randgen->Instance()->get( 0, ArchNeurons.size()-1 );
 
 					// decide what to alter
-						unsigned int jmode = randgen->Instance()->get(1,5);
+						unsigned int jmode = randgen->Instance()->get(1,6);
 
 					// inhibitory function
 						if ( jmode == 1 )
@@ -490,6 +491,11 @@ BrainzArch::BrainzArch()
 							if ( old == ArchNeurons[nid].firingThreshold ) runs++;
 						}
 
+					// potential decay
+						else if ( jmode == 6 )
+						{
+							ArchNeurons[nid].potentialDecay = randgen->Instance()->get( 666, 1000 );
+						}
 // 					// dendritic branches
 // 						else if ( jmode == 6 )
 // 						{
@@ -763,6 +769,7 @@ BrainzArch::BrainzArch()
 			an.hasConsistentSynapses = oan->hasConsistentSynapses;
 			an.hasInhibitorySynapses = oan->hasInhibitorySynapses;
 			an.firingThreshold = oan->firingThreshold;
+			an.potentialDecay = oan->potentialDecay;
 // 			an.dendridicBranches = oan->dendridicBranches;
 
 			an.isMotor = oan->isMotor;
@@ -849,6 +856,7 @@ BrainzArch::BrainzArch()
 			an.hasConsistentSynapses = oan->hasConsistentSynapses;
 			an.hasInhibitorySynapses = oan->hasInhibitorySynapses;
 			an.firingThreshold = oan->firingThreshold;
+			an.potentialDecay = oan->potentialDecay;
 // 			an.dendridicBranches = oan->dendridicBranches;
 
 			an.isMotor = oan->isMotor;
@@ -921,6 +929,13 @@ BrainzArch::BrainzArch()
 					string FT = parseH->Instance()->returnUntillStrip( "|", line );
 					//cerr << "FT: " << FT  << endl;
 					if(EOF == sscanf(FT.c_str(), "%d", &an.firingThreshold))		cerr << "ERROR INSERTING CRITTER" << endl;
+				}
+	
+				if ( parseH->Instance()->beginMatchesStrip( "pd=", line ) )
+				{
+					string PD = parseH->Instance()->returnUntillStrip( "|", line );
+					//cerr << "FT: " << FT  << endl;
+					if(EOF == sscanf(PD.c_str(), "%d", &an.potentialDecay))		cerr << "ERROR INSERTING CRITTER" << endl;
 				}
 	
 // 				if ( parseH->Instance()->beginMatchesStrip( "d=", line ) )
@@ -1287,6 +1302,7 @@ BrainzArch::BrainzArch()
 					buf << "cs=0|";
 	
 				buf << "f=" << ArchNeurons[i].firingThreshold << "|";
+				buf << "pd=" << ArchNeurons[i].potentialDecay << "|";
 // 				buf << "d=" << ArchNeurons[i].dendridicBranches << "|";
 				if ( ArchNeurons[i].isMotor ) buf << "m=" << ArchNeurons[i].motorID << "|";
 				if ( ArchNeurons[i].isPlastic ) buf << "p=" << ArchNeurons[i].plasticityStrengthen << "," << ArchNeurons[i].plasticityWeaken << "|";

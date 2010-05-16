@@ -28,7 +28,8 @@ class Statsbuffer
 // 		Statsbuffer();
 // 		~Statsbuffer();
 
-		void add( const vector<CritterB*>& critters, const vector<Food*>& food );
+// 		void add( const vector<CritterB*>& critters, const vector<Food*>& food );
+		void add( const vector<CritterB*>& critters, const vector<Entity*>& entities );
 
 		vector<statsSnapshot> snapshots;
 		statsSnapshot current;

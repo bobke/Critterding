@@ -20,7 +20,7 @@ public:
 	Vector3f rotation;
 
 	void place();
-	void follow(btDefaultMotionState* myMotionState) const;
+	void follow(btDefaultMotionState* myMotionState);
 
 	void lookRight(const float& factor);
 	void lookLeft(const float& factor);
@@ -45,6 +45,9 @@ public:
 private:
 	Settings *settings;
 	const unsigned int* camerasensitivity;
+
+	//  a buffer for reversed position
+	btScalar positionr[16];
 };
 
 #endif

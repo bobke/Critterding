@@ -20,6 +20,7 @@ class Commands
 		cmdargtype argtype;
 		void (WorldB::*worldMember)();
 		void (Commands::*commandsMember)();
+		void (Commands::*commandsMember_uint)(const unsigned int&);
 		void (Maincanvas::*canvasMember)();
 		void (Maincanvas::*canvasMember_string)(const string&);
 		void (Settings::*settingsMember)();
@@ -51,6 +52,7 @@ class Commands
 		void execCmd(const string& name, const unsigned int& ui);
 
 		void registerCmd(string name, void (Commands::*pt2Func)());
+		void registerCmd(string name, void (Commands::*pt2Func)(const unsigned int&));
 		void registerCmd(string name, void (WorldB::*pt2Func)());
 		void registerCmd(string name, void (Maincanvas::*pt2Func)());
 		void registerCmd(string name, void (Maincanvas::*pt2Func)(const string&));
@@ -67,24 +69,27 @@ class Commands
 		void inc_worldsizex();
 		void dec_worldsizey();
 		void inc_worldsizey();
+		void dec_worldsizez();
+		void inc_worldsizez();
 		void selectCritterAll();
+		void selectCritter(const unsigned int& c);
 
-		void 			camera_moveup();
-		void 			camera_movedown();
-		void 			camera_moveforward();
-		void 			camera_movebackward();
-		void 			camera_moveleft();
-		void 			camera_moveright();
-		void 			camera_lookup();
-		void 			camera_lookdown();
-		void 			camera_lookleft();
-		void 			camera_lookright();
-		void 			camera_rollleft();
-		void 			camera_rollright();
-		void			camera_lookhorizontal();
-		void			camera_lookvertical();
-		void			camera_movehorizontal();
-		void			camera_movevertical();
+		void camera_moveup();
+		void camera_movedown();
+		void camera_moveforward();
+		void camera_movebackward();
+		void camera_moveleft();
+		void camera_moveright();
+		void camera_lookup();
+		void camera_lookdown();
+		void camera_lookleft();
+		void camera_lookright();
+		void camera_rollleft();
+		void camera_rollright();
+		void camera_lookhorizontal();
+		void camera_lookvertical();
+		void camera_movehorizontal();
+		void camera_movevertical();
 		
 		map<string, cmd*> cmdlist;
 		typedef map <string, cmd*>::const_iterator cmdlist_iterator;

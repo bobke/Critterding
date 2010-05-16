@@ -13,6 +13,7 @@ class Critterselection
 		~Critterselection();
 
 		void registerCritter(CritterB* critter);
+		void unregisterCritter(CritterB* critter);
 		void unregisterCritterID(const unsigned long& critterID);
 		void unregisterCritterVID(const unsigned int& vectorID);
 		void selectCritter(CritterB* critter);

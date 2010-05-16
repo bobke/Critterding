@@ -17,6 +17,7 @@ class Wall : public Entity
 		~Wall();
 
 		void			draw();
+		void			drawDimmed(float dim);
 		void			create(float X, float Y, float Z, btVector3 position, btDynamicsWorld* m_dynamicsWorld);
 
 // 		float			color[4];

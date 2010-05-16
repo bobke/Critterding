@@ -1,3 +1,14 @@
+//         //update shape sizes
+//         for (unsigned i = 0; i < numNeurons; i++) {
+//             btCollisionShape* bt = neuronShape[i];
+//             float s = neuronSize;
+//             float w = s * (1.0 + (fabs(brain->neurons[i]->getOutput())));
+//             float h = s * (1.0 + sqrt(fabs(brain->neurons[i]->potential)));
+//             bt->setLocalScaling(btVector3(w, h, (w + h) / 2.0));
+//         }
+
+// FIXME benchmark NOT checking distance for every bodypart.
+
 /*#ifdef _WIN32
 	#include <windows.h>
 	#include <shlobj.h>
@@ -37,6 +48,7 @@ WorldB::WorldB()
 		insertcritterevery = settings->getCVarPtr("critter_insertevery");
 		worldsizeX = settings->getCVarPtr("worldsizeX");
 		worldsizeY = settings->getCVarPtr("worldsizeY");
+		drawshadows = settings->getCVarPtr("drawshadows");
 
 	statsBuffer = Statsbuffer::Instance();
 	critterselection = Critterselection::Instance();
@@ -122,6 +134,72 @@ WorldB::WorldB()
 	// threading locks
 	omp_init_lock(&my_lock1);
 // 	omp_init_lock(&my_lock2);
+
+
+	// texturebuffer to render vision to
+	// FBO extentions
+	glIsRenderbufferEXT    = NULL;
+	glBindRenderbufferEXT     = NULL;
+	glDeleteRenderbuffersEXT    = NULL;
+	glGenRenderbuffersEXT    = NULL;
+	glRenderbufferStorageEXT    = NULL;
+	glGetRenderbufferParameterivEXT    = NULL;
+	glIsFramebufferEXT    = NULL;
+	glBindFramebufferEXT    = NULL;
+	glDeleteFramebuffersEXT    = NULL;
+	glGenFramebuffersEXT    = NULL;
+	glCheckFramebufferStatusEXT    = NULL;
+	glFramebufferTexture1DEXT    = NULL;
+	glFramebufferTexture2DEXT    = NULL;
+	glFramebufferTexture3DEXT    = NULL;
+	glFramebufferRenderbufferEXT    = NULL;
+	glGetFramebufferAttachmentParameterivEXT    = NULL;
+	glGenerateMipmapEXT     = NULL;
+
+	// create the needed ext bundings for fbos
+	if ( !*headless )
+	{
+		glIsRenderbufferEXT    = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
+		glBindRenderbufferEXT    = (PFNGLBINDRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindRenderbufferEXT");
+		glDeleteRenderbuffersEXT    = (PFNGLDELETERENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteRenderbuffersEXT");
+		glGenRenderbuffersEXT    = (PFNGLGENRENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenRenderbuffersEXT");
+		glRenderbufferStorageEXT    = (PFNGLRENDERBUFFERSTORAGEEXTPROC)SDL_GL_GetProcAddress("glRenderbufferStorageEXT");
+		glGetRenderbufferParameterivEXT    = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetRenderbufferParameterivEXT");
+		glIsFramebufferEXT    = (PFNGLISFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsFramebufferEXT");
+		glBindFramebufferEXT    = (PFNGLBINDFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindFramebufferEXT");
+		glDeleteFramebuffersEXT    = (PFNGLDELETEFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
+		glGenFramebuffersEXT    = (PFNGLGENFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenFramebuffersEXT");
+		glCheckFramebufferStatusEXT    = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
+		glFramebufferTexture1DEXT    = (PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture1DEXT");
+		glFramebufferTexture2DEXT    = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
+		glFramebufferTexture3DEXT    = (PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture3DEXT");
+		glFramebufferRenderbufferEXT    = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glFramebufferRenderbufferEXT");
+		glGetFramebufferAttachmentParameterivEXT    = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameterivEXT");
+		glGenerateMipmapEXT     = (PFNGLGENERATEMIPMAPEXTPROC)SDL_GL_GetProcAddress("glGenerateMipmapEXT");
+
+	// generate namespace for the frame buffer, colorbuffer and depthbuffer
+		glGenFramebuffersEXT(1, &fb);
+		glGenTextures(1, &color_tex); 
+		glGenRenderbuffersEXT(1, &depth_rb);
+
+		//switch to our fbo so we can bind stuff to it
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+		//create the colorbuffer texture and attach it to the frame buffer
+		glBindTexture(GL_TEXTURE_2D, color_tex);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 2048, 2048, 0, GL_RGBA, GL_INT, NULL);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, color_tex, 0); 
+		
+		// create a render buffer as our depthbuffer and attach it
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depth_rb);
+		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, 2048, 2048);
+		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depth_rb);
+		
+		// Go back to regular frame buffer rendering
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	}
+	
+
 }
 
 void WorldB::init()
@@ -138,19 +216,18 @@ void WorldB::castMouseRay()
 {
 // 	cerr << "casting" << endl;
 	mouseRay = raycast->cast( camera.position.getOrigin(), mouseRayTo );
-
 	mouseRayHit = false;
 	if ( mouseRay.hit )
 	{
-// 		if ( !( mouseRay.hitBody->isStaticObject() || mouseRay.hitBody->isKinematicObject() ) )
-// 		{
+		if ( !( mouseRay.hitBody->isStaticObject() || mouseRay.hitBody->isKinematicObject() ) )
+		{
 			Entity* e = static_cast<Entity*>(mouseRay.hitBody->getUserPointer());
-			if ( e->type == 1 || e->type == 0 )
+			if ( e->type == FOOD || e->type == CRITTER )
 			{
 				mouseRayHit = true;
 				mouseRayHitEntity = e;
 			}
-// 		}
+		}
 	}
 }
 
@@ -178,12 +255,12 @@ void WorldB::pickBody()
 {
 	if ( mouseRayHit )
 	{
-		if ( mouseRayHitEntity->type == 0 || mouseRayHitEntity->type == 1 )
+		if ( mouseRayHitEntity->type == FOOD || mouseRayHitEntity->type == CRITTER )
 		{
 			btRigidBody* b = static_cast<btRigidBody*>(mouseRay.hitBody);
 
 			// if critter, and it's the head's ghostobject we touch, overwrite with head's body
-			if ( mouseRayHitEntity->type == 0 )
+			if ( mouseRayHitEntity->type == CRITTER )
 			{
 				btCollisionObject* co = static_cast<btCollisionObject*>(mouseRay.hitBody);
 				CritterB* c = static_cast<CritterB*>(mouseRayHitEntity);
@@ -202,8 +279,15 @@ void WorldB::pickBody()
 void WorldB::selectBody()
 {
 	if ( mouseRayHit )
-		if ( mouseRayHitEntity->type == 0 )
+		if ( mouseRayHitEntity->type == CRITTER )
 			critterselection->registerCritter(static_cast<CritterB*>(mouseRayHitEntity));
+}
+
+void WorldB::deselectBody()
+{
+	if ( mouseRayHit )
+		if ( mouseRayHitEntity->type == CRITTER )
+			critterselection->unregisterCritter(static_cast<CritterB*>(mouseRayHitEntity));
 }
 
 void WorldB::movePickedBodyTo()
@@ -220,9 +304,12 @@ void WorldB::movePickedBodyFrom()
 
 void WorldB::process()
 {
-  
 	if ( !pause )
 	{
+		#ifdef HAVE_OPENCL
+// 			nbody.process();
+		#endif
+	
 		// kill half?
 			killHalf();
 
@@ -604,12 +691,12 @@ void WorldB::expireCritters()
 			removeCritter(i);
 			i--;
 		}
-		// die if y < 100
+		// die if y < 200
 		else
 		{
 			btVector3 pos = critters[i]->body.bodyparts[0]->myMotionState->m_graphicsWorldTrans.getOrigin();
 			
-			if ( pos.getY() < -100.0f )
+			if ( pos.getY() < -200.0f )
 			{
 				stringstream buf;
 				buf << setw(4) << critters[i]->critterID << " fell in the pit";
@@ -626,43 +713,48 @@ void WorldB::expireCritters()
 
 void WorldB::expireFood()
 {
-	for( unsigned int i=0; i < food.size(); i++)
+// 	for( unsigned int i=0; i < food.size(); i++)
+	for( unsigned int i=0; i < entities.size(); i++)
 	{
-		// food was eaten
-		if ( food[i]->energyLevel <= 0 )
+		if ( entities[i]->type == FOOD )
 		{
-			freeEnergy += food[i]->energyLevel;
-			if ( food[i]->isPicked )
-				mousepicker->detach();
-			delete food[i];
-			food.erase(food.begin()+i);
-			i--;
-		}
-		// old food, this should remove stuff from corners
-		else if ( ++food[i]->totalFrames >= *food_maxlifetime )
-		{
-			freeEnergy += food[i]->energyLevel;
-			if ( food[i]->isPicked )
-				mousepicker->detach();
-			delete food[i];
-			food.erase(food.begin()+i);
-			i--;
-		}
-/*		// die if y < 100
-		else
-		{
-			btVector3 pos = food[i]->body.bodyparts[0]->myMotionState->m_graphicsWorldTrans.getOrigin();
-
-			if ( pos.getY() < -100.0f )
+			Food* f = static_cast<Food*>(entities[i]);
+			// food was eaten
+			if ( f->energyLevel <= 0 )
 			{
-				freeEnergy += food[i]->energyLevel;
-				if ( food[i]->isPicked )
+				freeEnergy += f->energyLevel;
+				if ( f->isPicked )
 					mousepicker->detach();
-				delete food[i];
-				food.erase(food.begin()+i);
+				delete f;
+				entities.erase(entities.begin()+i);
 				i--;
 			}
-		}*/
+			// old food, this should remove stuff from corners
+			else if ( ++f->totalFrames >= *food_maxlifetime )
+			{
+				freeEnergy += f->energyLevel;
+				if ( f->isPicked )
+					mousepicker->detach();
+				delete f;
+				entities.erase(entities.begin()+i);
+				i--;
+			}
+			// die if y < 200
+			else
+			{
+				btVector3 pos = f->body.bodyparts[0]->myMotionState->m_graphicsWorldTrans.getOrigin();
+
+				if ( pos.getY() < -200.0f )
+				{
+					freeEnergy += f->energyLevel;
+					if ( f->isPicked )
+						mousepicker->detach();
+					delete f;
+					entities.erase(entities.begin()+i);
+					i--;
+				}
+			}
+		}
 	}
 }
 
@@ -701,7 +793,7 @@ void WorldB::getGeneralStats()
 // 	settings->info_totalBodyparts		+= info_totalBodyparts;
 // 	settings->info_totalWeight		+= info_totalWeight;
 
-	statsBuffer->add( critters, food );
+	statsBuffer->add( critters, entities );
 }
 
 void WorldB::checkCollisions( CritterB* c )
@@ -754,7 +846,7 @@ void WorldB::checkCollisions( CritterB* c )
 
 						// Touching Food
 						Entity* e = static_cast<Entity*>(Collidingobject);
-						if ( e->type == 1 )
+						if ( e->type == FOOD )
 						{
 // 							cerr << "touches food" << endl;
 							c->touchingFood = true;
@@ -762,7 +854,7 @@ void WorldB::checkCollisions( CritterB* c )
 							return;
 						}
 						// Touching Critter
-						else if ( e->type == 0 )
+						else if ( e->type == CRITTER )
 						{
 // 							cerr << "touches critter" << endl;
 							c->touchingCritter = true;
@@ -808,7 +900,7 @@ void WorldB::insertRandomFood(int amount, float energy)
 		//f->resize();
 		f->createBody( m_dynamicsWorld, findPosition() );
 		
-		food.push_back( f );
+		entities.push_back( f );
 	}
 }
 
@@ -864,6 +956,11 @@ void WorldB::killHalfOfCritters()
 
 void WorldB::renderVision()
 {
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb); 
+	glClearColor (0.0f, 0.0f, 0.0f, 0.0f);
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	// render critter vision
 	if ( !*critter_raycastvision )
 		for( unsigned int i=0; i < critters.size(); i++)
@@ -872,6 +969,7 @@ void WorldB::renderVision()
 				critters[i]->place();
 // 				drawWithinCritterSight(critters[i]);
 				drawWithinCritterSight( i );
+// 				critters[i]->releaseFBO();
 			}
 }
 
@@ -892,6 +990,9 @@ void WorldB::grabVision()
 		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 		glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 	}
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
+	glBindTexture(GL_TEXTURE_2D, color_tex);
 }
 
 void WorldB::drawWithoutFaces()
@@ -901,31 +1002,118 @@ void WorldB::drawWithoutFaces()
 	for( unsigned int i=0; i < critters.size(); i++)
 		critters[i]->draw(false);
 
-	for( unsigned int i=0; i < food.size(); i++)
-		food[i]->draw();
+// 	for( unsigned int i=0; i < food.size(); i++)
+// 		food[i]->draw();
+	for( unsigned int i=0; i < entities.size(); i++)
+		entities[i]->draw();
 }
 
 
 void WorldB::drawWithGrid()
 {
-	drawfloor();
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	for( unsigned int i=0; i < critters.size(); i++)
 		critters[i]->draw(true);
 
-	for( unsigned int i=0; i < food.size(); i++)
-		food[i]->draw();
+	for( unsigned int i=0; i < entities.size(); i++)
+		entities[i]->draw();
+
+	if ( *drawshadows )
+	{
+		btVector3 aabbMin,aabbMax;
+		m_dynamicsWorld->getBroadphase()->getBroadphaseAabb(aabbMin,aabbMax);
+		aabbMin-=btVector3(BT_LARGE_FLOAT,BT_LARGE_FLOAT,BT_LARGE_FLOAT);
+		aabbMax+=btVector3(BT_LARGE_FLOAT,BT_LARGE_FLOAT,BT_LARGE_FLOAT);
+		btScalar mmatrix[16];
+		btVector3 sundir = btVector3(0.3f, -1.0f, 0.3f);
+
+
+		glDisable(GL_LIGHTING);
+		glDepthMask(GL_FALSE);
+		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_STENCIL_TEST);
+		glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+		glStencilFunc(GL_ALWAYS,1,0xFFFFFFFFL);
+		glFrontFace(GL_CCW);
+		glStencilOp(GL_KEEP,GL_KEEP,GL_INCR);
+
+		for( unsigned int i=0; i < critters.size(); i++)
+		{
+			for ( unsigned int bp = 0; bp < critters[i]->body.bodyparts.size(); bp++ )
+			{
+				critters[i]->body.bodyparts[bp]->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(mmatrix);
+				drawShadow(mmatrix, sundir * critters[i]->body.bodyparts[bp]->myMotionState->m_graphicsWorldTrans.getBasis() ,critters[i]->body.bodyparts[bp]->shape, critters[i]->body.bodyparts[bp], aabbMin,aabbMax);
+			}
+		}
+		for( unsigned int i=0; i < entities.size(); i++)
+		{
+			if ( entities[i]->type == FOOD )
+			{
+				Food* f = static_cast<Food*>(entities[i]);
+				f->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(mmatrix);
+				drawShadow(mmatrix,sundir * f->myMotionState->m_graphicsWorldTrans.getBasis(),f->body.bodyparts[0]->shape, f->body.bodyparts[0], aabbMin, aabbMax);
+
+			}
+		}
+
+		glFrontFace(GL_CW);
+		glStencilOp(GL_KEEP,GL_KEEP,GL_DECR);
+
+		for( unsigned int i=0; i < critters.size(); i++)
+		{
+			for ( unsigned int bp = 0; bp < critters[i]->body.bodyparts.size(); bp++ )
+			{
+				critters[i]->body.bodyparts[bp]->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(mmatrix);
+				drawShadow(mmatrix, sundir * critters[i]->body.bodyparts[bp]->myMotionState->m_graphicsWorldTrans.getBasis() ,critters[i]->body.bodyparts[bp]->shape, critters[i]->body.bodyparts[bp], aabbMin,aabbMax);
+			}
+		}
+		for( unsigned int i=0; i < entities.size(); i++)
+		{
+			if ( entities[i]->type == FOOD )
+			{
+				Food* f = static_cast<Food*>(entities[i]);
+				f->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(mmatrix);
+				drawShadow(mmatrix,sundir * f->myMotionState->m_graphicsWorldTrans.getBasis(),f->body.bodyparts[0]->shape, f->body.bodyparts[0], aabbMin, aabbMax);
+
+			}
+		}
+
+		glDepthMask(GL_TRUE);
+		glFrontFace(GL_CCW);
+		glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+		glDepthFunc(GL_LEQUAL);
+		glStencilFunc( GL_NOTEQUAL, 0, 0xFFFFFFFFL );
+		glStencilOp( GL_KEEP, GL_KEEP, GL_KEEP );
+		glDisable(GL_LIGHTING);
+
+		for( unsigned int i=0; i < critters.size(); i++)
+			critters[i]->drawDimmed(0.6f);
+
+		for( unsigned int i=0; i < entities.size(); i++)
+			entities[i]->drawDimmed(0.6f);
+
+	}
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_CULL_FACE);
+
+
+	#ifdef HAVE_OPENCL
+// 	nbody.draw();
+	#endif
 
 // 	m_dynamicsWorld->debugDrawWorld();
 }
 
 void WorldB::drawfloor()
 {
-	for( unsigned int i=0; i < walls.size(); i++)
-		walls[i]->draw();
+// 	for( unsigned int i=0; i < walls.size(); i++)
+// 		walls[i]->draw();
 }
 
-void WorldB::drawShadow(btScalar* m,const btVector3& extrusion,const btCollisionShape* shape,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax)
+void WorldB::drawShadow(btScalar* m,const btVector3& extrusion,const btCollisionShape* shape, Bodypart* bp,const btVector3& worldBoundsMin,const btVector3& worldBoundsMax)
 {
 	glPushMatrix(); 
 	glMultMatrixf(m);
@@ -934,11 +1122,8 @@ void WorldB::drawShadow(btScalar* m,const btVector3& extrusion,const btCollision
 		const btUniformScalingShape* scalingShape = static_cast<const btUniformScalingShape*>(shape);
 		const btConvexShape* convexShape = scalingShape->getChildShape();
 		float	scalingFactor = (float)scalingShape->getUniformScalingFactor();
-		btScalar tmpScaling[4][4]={	{scalingFactor,0,0,0},
-		{0,scalingFactor,0,0},
-		{0,0,scalingFactor,0},
-		{0,0,0,1}};
-		drawShadow((btScalar*)tmpScaling,extrusion,convexShape,worldBoundsMin,worldBoundsMax);
+		btScalar tmpScaling[4][4]={ {scalingFactor,0,0,0}, {0,scalingFactor,0,0}, {0,0,scalingFactor,0}, {0,0,0,1} };
+		drawShadow((btScalar*)tmpScaling,extrusion,convexShape,bp,worldBoundsMin,worldBoundsMax);
 		glPopMatrix();
 		return;
 	}
@@ -951,10 +1136,35 @@ void WorldB::drawShadow(btScalar* m,const btVector3& extrusion,const btCollision
 			const btCollisionShape* colShape = compoundShape->getChildShape(i);
 			btScalar childMat[16];
 			childTrans.getOpenGLMatrix(childMat);
-			drawShadow(childMat,extrusion*childTrans.getBasis(),colShape,worldBoundsMin,worldBoundsMax);
+			drawShadow(childMat,extrusion*childTrans.getBasis(),colShape,bp,worldBoundsMin,worldBoundsMax);
 		}
 	}
+	else
+	{
+	//	bool useWireframeFallback = true;
+		if (shape->isConvex())
+		{
+			ShapeCache* sc = bp->cache((btConvexShape*)shape);
+			btShapeHull* hull =&sc->m_shapehull;
+			glBegin(GL_QUADS);
+			for(int i=0;i<sc->m_edges.size();++i)
+			{			
+				const btScalar		d=btDot(sc->m_edges[i].n[0],extrusion);
+				if((d*btDot(sc->m_edges[i].n[1],extrusion))<0)
+				{
+					const int		q=	d<0?1:0;
+					const btVector3&	a=	hull->getVertexPointer()[sc->m_edges[i].v[q]];
+					const btVector3&	b=	hull->getVertexPointer()[sc->m_edges[i].v[1-q]];
+					glVertex3f(a[0],a[1],a[2]);
+					glVertex3f(b[0],b[1],b[2]);
+					glVertex3f(b[0]+extrusion[0],b[1]+extrusion[1],b[2]+extrusion[2]);
+					glVertex3f(a[0]+extrusion[0],a[1]+extrusion[1],a[2]+extrusion[2]);
+				}
+			}
+			glEnd();
+		}
 
+	}
 	glPopMatrix();
 
 }
@@ -970,11 +1180,20 @@ void WorldB::drawWithinCritterSight(CritterB *c)
 
 		drawfloor();
 
-		for( unsigned int i=0; i < food.size(); i++)
+// 		for( unsigned int i=0; i < food.size(); i++)
+// 		{
+// 			Food *f = food[i];
+// 			if ( cposi.distance( f->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
+// 				f->draw();
+// 		}
+		for( unsigned int i=0; i < entities.size(); i++)
 		{
-			Food *f = food[i];
-			if ( cposi.distance( f->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
-				f->draw();
+			if ( entities[i]->type == FOOD )
+			{
+				Food* f = static_cast<Food*>(entities[i]);
+				if ( cposi.distance( f->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
+					f->draw();
+			}
 		}
 
 		for( unsigned int j=0; j < critters.size(); j++)
@@ -1039,11 +1258,20 @@ void WorldB::drawWithinCritterSight(unsigned int cid)
 
 		drawfloor();
 
-		for( unsigned int i=0; i < food.size(); i++)
+// 		for( unsigned int i=0; i < food.size(); i++)
+// 		{
+// 			Food *f = food[i];
+// 			if ( cposi.distance( f->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
+// 				f->draw();
+// 		}
+		for( unsigned int i=0; i < entities.size(); i++)
 		{
-			Food *f = food[i];
-			if ( cposi.distance( f->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
-				f->draw();
+			if ( entities[i]->type == FOOD )
+			{
+				Food* f = static_cast<Food*>(entities[i]);
+				if ( cposi.distance( f->myMotionState->m_graphicsWorldTrans.getOrigin() ) < sightrange )
+					f->draw();
+			}
 		}
 // 		cerr << "prerecorded " << c->crittersWithinRange.size() <<  endl;
 
@@ -1402,9 +1630,18 @@ void WorldB::makeFloor()
 
 void WorldB::makeDefaultFloor()
 {
-	for ( unsigned int i=0; i < walls.size(); i++ )	
-		delete walls[i];
-	walls.clear();
+// 	for ( unsigned int i=0; i < walls.size(); i++ )
+// 		delete walls[i];
+// 	walls.clear();
+	for ( int i=0; i < entities.size(); i++ )
+	{
+		if ( entities[i]->type == WALL )
+		{
+			delete entities[i];
+			entities.erase(entities.begin()+i);
+			i--;
+		}
+	}
 
 	// Wall Constants
 		float WallWidth = 0.5f;
@@ -1416,7 +1653,7 @@ void WorldB::makeDefaultFloor()
 		btVector3 position( *worldsizeX/2.0f, -WallHalfWidth, *worldsizeY/2.0f );
 		Wall* w = new Wall( *worldsizeX, WallWidth, *worldsizeY, position, m_dynamicsWorld );
 		w->color.r = 0.30f; w->color.g = 0.20f; w->color.b = 0.10f;
-		walls.push_back(w);
+		entities.push_back(w);
 	
 	if ( settings->getCVar("worldwalls") )
 	{
@@ -1424,23 +1661,43 @@ void WorldB::makeDefaultFloor()
 			position = btVector3 ( 0.0f-WallHalfWidth, WallHalfHeight-WallWidth, *worldsizeY/2.0f );
 			w = new Wall( WallWidth, WallHeight, *worldsizeY, position, m_dynamicsWorld );
 			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
-			walls.push_back(w);
+			entities.push_back(w);
 		// Right Wall
 			position = btVector3 ( *worldsizeX+WallHalfWidth, WallHalfHeight-WallWidth, *worldsizeY/2.0f );
 			w = new Wall( WallWidth, WallHeight, *worldsizeY, position, m_dynamicsWorld );
 			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
-			walls.push_back(w);
+			entities.push_back(w);
 		// Top Wall
 			position = btVector3 ( *worldsizeX/2.0f, WallHalfHeight-WallWidth, 0.0f-WallHalfWidth );
 			w = new Wall( *worldsizeX+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
 			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
-			walls.push_back(w);
+			entities.push_back(w);
 		// Bottom Wall
 			position = btVector3 ( *worldsizeX/2.0f, WallHalfHeight-WallWidth, *worldsizeY+WallHalfWidth );
 			w = new Wall( *worldsizeX+(WallWidth*2), WallHeight, WallWidth, position, m_dynamicsWorld );
 			w->color.r = 0.34f; w->color.g = 0.25f; w->color.b = 0.11f;
-			walls.push_back(w);
+			entities.push_back(w);
 	}
+}
+
+unsigned int WorldB::findEntityIndex( unsigned int number, entityType et )
+{
+  
+	unsigned int found = 0;
+	
+	for ( unsigned int currentIndex = 0; currentIndex < entities.size(); currentIndex++ )
+	{
+		if ( entities[currentIndex]->type == et )
+		{
+			found ++;
+			if ( found == number )
+				return currentIndex;
+		}
+	}
+
+	cerr << "findEntityIndex: number too high" << endl;
+	exit(1);
+
 }
 
 void WorldB::togglePause()
@@ -1476,9 +1733,10 @@ void WorldB::toggleMouselook()
 
 WorldB::~WorldB()
 {
-	for ( unsigned int i=0; i < food.size(); i++ )		delete food[i];
+// 	for ( unsigned int i=0; i < food.size(); i++ )		delete food[i];
+	for ( unsigned int i=0; i < entities.size(); i++ )	delete entities[i];
 	for ( unsigned int i=0; i < critters.size(); i++ )	delete critters[i];
-	for ( unsigned int i=0; i < walls.size(); i++ )		delete walls[i];
+// 	for ( unsigned int i=0; i < walls.size(); i++ )		delete walls[i];
 
 	free(retina);
 

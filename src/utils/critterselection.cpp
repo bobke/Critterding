@@ -45,6 +45,16 @@ void Critterselection::registerCritter(CritterB* critter)
 	clist.push_back(critter);
 }
 
+void Critterselection::unregisterCritter(CritterB* critter)
+{
+	for ( unsigned int i = 0; i < clist.size(); i++ )
+		if ( clist[i]->critterID == critter->critterID )
+		{
+			clist.erase(clist.begin()+i);
+			return;
+		}
+}
+
 void Critterselection::deselectCritter(CritterB* critter)
 {
 	if ( selectedCritter && selectedCritter == critter )

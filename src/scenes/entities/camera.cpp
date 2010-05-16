@@ -9,12 +9,7 @@ Camera::Camera()
 	settings = Settings::Instance();
 	camerasensitivity = settings->getCVarPtr("camerasensitivity");
 
-// 	position	= btVector3( 0.0f, 0.0f, 0.0f);
-// 	rotation	= Vector3f( 90.0f,  0.0f, 0.0f);
 	position.setIdentity();
-// 	position.setOrigin( btVector3(-5.0f, 10.0f, 0.0f) );
-// 	position.getBasis().setEulerZYX( 75.0f*.18f, 0.0f, 0.0f );
-// 	position.setOrigin( btVector3(0.0f, 0.0f, 0.0f) );
 }
 
 void Camera::place()
@@ -27,12 +22,12 @@ void Camera::place()
 	float nheight = 0.05f * ((float)(*settings->winHeight) / *settings->winWidth);
 	glFrustum(-0.05f,0.05f,-nheight,nheight,0.1f,10000.0f);
 
-// 	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
-// 	glRotatef(rotation.y, 0.0f, 1.0f, 0.0f);
-// 	glRotatef(rotation.z, 0.0f, 0.0f, 1.0f);
-//  	glTranslatef(position.getOrigin().getX(), position.getOrigin().getY(), position.getOrigin().getZ());
+// 	btVector3 loc = position.getOrigin();
+// 	glRotatef(x*57.2957795131, 1.0f, 0.0f, 0.0f);
+// 	glRotatef(y*57.2957795131, 0.0f, 1.0f, 0.0f);
+// 	glRotatef(z*57.2957795131, 0.0f, 0.0f, 1.0f);
+//  	glTranslatef(-position.getOrigin().getX(), -position.getOrigin().getY(), -position.getOrigin().getZ());
 
-	btScalar positionr[16];
 	position.inverse().getOpenGLMatrix(positionr);
 	glMultMatrixf(positionr);
 
@@ -40,7 +35,7 @@ void Camera::place()
 	glLoadIdentity();
 }
 
-void Camera::follow(btDefaultMotionState* myMotionState) const
+void Camera::follow(btDefaultMotionState* myMotionState)
 {
 	glViewport(
 		*settings->winWidth - *settings->winWidth/8,
@@ -54,9 +49,9 @@ void Camera::follow(btDefaultMotionState* myMotionState) const
 	float nheight = 0.05f * ((float)(*settings->winHeight) / *settings->winWidth);
 	glFrustum( -0.05f, 0.05f,-nheight,nheight, 0.1f, 10000.0f);
 
-	btScalar position[16];
-	myMotionState->m_graphicsWorldTrans.inverse().getOpenGLMatrix(position);
-	glMultMatrixf(position);
+// 	btScalar positionr[16];
+	myMotionState->m_graphicsWorldTrans.inverse().getOpenGLMatrix(positionr);
+	glMultMatrixf(positionr);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -66,75 +61,67 @@ void Camera::follow(btDefaultMotionState* myMotionState) const
 
 void Camera::moveForward(const float& factor)
 {
-// 	position.getOrigin() += position.getBasis()[2] * factor;
 	btTransform tr;
 	tr.setIdentity();
-	tr.setOrigin( btVector3(0.0f, 0.0f, -factor * *camerasensitivity) ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.setOrigin( btVector3(0.0f, 0.0f, -factor * *camerasensitivity) );
 	position *= tr;
 }
 
 void Camera::moveBackward(const float& factor)
 {
-// 	position.getOrigin() -= position.getBasis()[2] * factor;
 	btTransform tr;
 	tr.setIdentity();
-	tr.setOrigin( btVector3(0.0f, 0.0f, factor * *camerasensitivity) ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.setOrigin( btVector3(0.0f, 0.0f, factor * *camerasensitivity) );
 	position *= tr;
 }
 
 void Camera::moveRight(const float& factor)
 {
-// 	position.getOrigin() += position.getBasis()[0] * factor;
 	btTransform tr;
 	tr.setIdentity();
-	tr.setOrigin( btVector3(factor * *camerasensitivity, 0.0f, 0.0f) ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.setOrigin( btVector3(factor * *camerasensitivity, 0.0f, 0.0f) );
 	position *= tr;
 }
 
 void Camera::moveLeft(const float& factor)
 {
-// 	position.getOrigin() -= position.getBasis()[0] * factor;
 	btTransform tr;
 	tr.setIdentity();
-	tr.setOrigin( btVector3(-factor * *camerasensitivity, 0.0f, 0.0f) ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.setOrigin( btVector3(-factor * *camerasensitivity, 0.0f, 0.0f) );
 	position *= tr;
 }
 
 void Camera::moveUp(const float& factor)
 {
-// 	position.getOrigin() -= position.getBasis()[1] * factor;
 	btTransform tr;
 	tr.setIdentity();
-	tr.setOrigin( btVector3(0.0f, factor * *camerasensitivity, 0.0f) ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.setOrigin( btVector3(0.0f, factor * *camerasensitivity, 0.0f) );
 	position *= tr;
 }
 
 void Camera::moveDown(const float& factor)
 {
-// 	position.getOrigin() += position.getBasis()[1] * factor;
 	btTransform tr;
 	tr.setIdentity();
-	tr.setOrigin( btVector3(0.0f, -factor * *camerasensitivity, 0.0f) ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.setOrigin( btVector3(0.0f, -factor * *camerasensitivity, 0.0f) );
 	position *= tr;
 }
 
 void Camera::rollLeft(const float& factor)
 {
-// 	rotation.z += factor * *camerasensitivity;
 	btTransform tr;
 	tr.setIdentity();
 	tr.setOrigin(btVector3(0,0,0));
-	tr.getBasis().setEulerZYX( 0.0f, 0.0f, factor * *camerasensitivity ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.getBasis().setEulerZYX( 0.0f, 0.0f, factor * *camerasensitivity );
 	position.getBasis() *= tr.getBasis();
 }
 
 void Camera::rollRight(const float& factor)
 {
-// 	rotation.z -= factor * *camerasensitivity;
 	btTransform tr;
 	tr.setIdentity();
 	tr.setOrigin(btVector3(0,0,0));
-	tr.getBasis().setEulerZYX( 0.0f, 0.0f, -factor * *camerasensitivity ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.getBasis().setEulerZYX( 0.0f, 0.0f, -factor * *camerasensitivity );
 	position.getBasis() *= tr.getBasis();
 }
 
@@ -142,47 +129,37 @@ void Camera::rollRight(const float& factor)
 
 void Camera::lookRight(const float& factor)
 {
-//         rotation.y += factor * *camerasensitivity;
-// 	if ( rotation.y > 360.0f ) rotation.y -= 360.0f;
 	btTransform tr;
 	tr.setIdentity();
 	tr.setOrigin(btVector3(0,0,0));
-	tr.getBasis().setEulerZYX( 0.0f, -factor * *camerasensitivity, 0.0f ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.getBasis().setEulerZYX( 0.0f, -factor * *camerasensitivity, 0.0f );
 	position.getBasis() *= tr.getBasis();
 }
 
 void Camera::lookLeft(const float& factor)
 {
-//         rotation.y -= factor * *camerasensitivity;
-// 	if ( rotation.y < 0.0f ) rotation.y += 360.0f;
 	btTransform tr;
 	tr.setIdentity();
 	tr.setOrigin(btVector3(0,0,0));
-	tr.getBasis().setEulerZYX( 0.0f, factor * *camerasensitivity, 0.0f ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.getBasis().setEulerZYX( 0.0f, factor * *camerasensitivity, 0.0f );
 	position *= tr;
 }
 
 void Camera::lookUp(const float& factor)
 {
-//         rotation.x -= factor * *camerasensitivity;
-// 	if ( rotation.x < 0.0f ) rotation.x += 360.0f;
-
 	btTransform tr;
 	tr.setIdentity();
 	tr.setOrigin(btVector3(0,0,0));
-	tr.getBasis().setEulerZYX( factor * *camerasensitivity, 0.0f, 0.0f ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.getBasis().setEulerZYX( factor * *camerasensitivity, 0.0f, 0.0f );
 	position *= tr;
 }
 
 void Camera::lookDown(const float& factor)
 {
-//         rotation.x += factor * *camerasensitivity;
-// 	if ( rotation.x > 360.0f ) rotation.x -= 360.0f;
-
 	btTransform tr;
 	tr.setIdentity();
 	tr.setOrigin(btVector3(0,0,0));
-	tr.getBasis().setEulerZYX( -factor * *camerasensitivity, 0.0f, 0.0f ); // 1.5707f  (float)settings->getCVar("energy")/10
+	tr.getBasis().setEulerZYX( -factor * *camerasensitivity, 0.0f, 0.0f );
 	position *= tr;
 }
 

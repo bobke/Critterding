@@ -106,6 +106,26 @@ AC_SUBST(SDLMAIN)
 		fi
 	fi
 
+	AC_SUBST(OPENCL_LOCALDIR)
+	AC_SUBST(OPENCL_LA)
+	OPENCL_LOCALDIR=""
+	OPENCL_LA=""
+
+	# have_opencl
+	AC_CHECK_HEADER([CL/cl.hpp],
+	    [AC_CHECK_LIB([OpenCL], [clGetDeviceIDs], [OPENCL_LIBS=-lOpenCL], [OPENCL_LIBS=])], [OPENCL_LIBS=])
+# 	AS_IF([test -z "$OPENCL_LIBS"],
+# 	    [AC_MSG_ERROR(['libOpenCL' not found])])
+	AS_IF([test "x$OPENCL_LIBS" != "x"],
+	    [AC_DEFINE([HAVE_OPENCL], [1],[Define if you have opencl])])
+	if test "$OPENCL_LIBS" = "-lOpenCL"; then
+		HOST_LIBS="$HOST_LIBS $OPENCL_LIBS"
+		OPENCL_LOCALDIR="cl"
+		OPENCL_LA="\$(top_builddir)/src/cl/libcl.la"
+	fi
+	AC_SUBST([OPENCL_LIBS], [${OPENCL_LIBS}])
+
+
 AC_OUTPUT(Makefile src/Makefile src/brainz/Makefile \
 				src/math/Makefile \
 				src/gl/Makefile \
@@ -116,5 +136,6 @@ AC_OUTPUT(Makefile src/Makefile src/brainz/Makefile \
 				src/utils/ftgl/Makefile \
 				src/utils/bullet/Makefile \
 				src/gui/Makefile \
-				src/scenes/gui/Makefile
+				src/scenes/gui/Makefile \
+				src/cl/Makefile
 )

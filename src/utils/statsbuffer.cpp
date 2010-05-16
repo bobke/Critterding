@@ -15,7 +15,8 @@ Statsbuffer::Statsbuffer()
 	maxSnapshots = 3000;
 }
 
-void Statsbuffer::add( const vector<CritterB*>& critters, const vector<Food*>& food )
+// void Statsbuffer::add( const vector<CritterB*>& critters, const vector<Food*>& food )
+void Statsbuffer::add( const vector<CritterB*>& critters, const vector<Entity*>& entities )
 {
 	// get stats of this frame
 	current.neurons	= 0;
@@ -34,7 +35,8 @@ void Statsbuffer::add( const vector<CritterB*>& critters, const vector<Food*>& f
 		current.weight		+= c->body.totalWeight;
 	}
 	current.critters		= critters.size();
-	current.food			= food.size();
+// 	current.food			= food.size();
+	current.food			= entities.size(); // FIXME INTO FOODCOUNT loop
 
 	if ( ++framecounter == recordInterval )
 	{

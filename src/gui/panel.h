@@ -12,6 +12,7 @@ class Panel : public Container
 		~Panel();
 		void		draw();
 		unsigned int	zaxis;
+		bool		isAlwaysOnTop;
 
 	protected:
 		virtual void	drawBackground();

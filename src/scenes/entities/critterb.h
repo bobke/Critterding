@@ -29,6 +29,7 @@ class CritterB : public Entity
 		Genotype*		genotype;
 		inline void		registerBrainInputOutputs();
 		void			draw(bool drawFaces);
+		void			drawDimmed(float dim);
 		void			move();
 		
 		bool			eaten;
@@ -67,6 +68,7 @@ class CritterB : public Entity
 		unsigned char		*retina;
 		unsigned int		items;
 		void			place();
+// 		void			releaseFBO();
 		void			calcFramePos(unsigned int pos);
 		void			printVision();
 		
@@ -91,9 +93,6 @@ class CritterB : public Entity
 		inline void		procInputNeurons();
 		inline void		createInputOutputNeurons();
 
-		inline void		mutateBody();
-		inline void		mutateBrain();
-
 		// Vision
 			unsigned int		framePosX;
 			unsigned int		framePosY;
@@ -116,6 +115,8 @@ class CritterB : public Entity
 			const unsigned int*	brain_costfiringmotorneuron;
 			const unsigned int*	brain_costhavingsynapse;
 			const unsigned int*	colormode;
+
+
 };
 
 #endif

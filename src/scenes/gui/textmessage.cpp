@@ -3,6 +3,7 @@
 Textmessage::Textmessage()
 {
 	isMovable = true;
+	isAlwaysOnTop = true;
 	
 	vpadding = 10;
 	hpadding = 10;

@@ -123,8 +123,20 @@ void Maincanvas::draw()
 
 void Maincanvas::drawChildren()
 {
+	// draw the ordered panels
 	for( unsigned int i=0; i < sortedindices.size(); i++ )
-		children[sortedindices[i]]->draw();
+	{
+		Panel* p = static_cast<Panel*>(children[sortedindices[i]]);
+		if ( !p->isAlwaysOnTop )
+			p->draw();
+	}
+	// draw the ordered panels
+	for( unsigned int i=0; i < sortedindices.size(); i++ )
+	{
+		Panel* p = static_cast<Panel*>(children[sortedindices[i]]);
+		if ( p->isAlwaysOnTop )
+			p->draw();
+	}
 }
 
 bool Maincanvas::mouseOverChild(Widget** fWidget, int x, int y)

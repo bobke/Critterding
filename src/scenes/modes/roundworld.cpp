@@ -42,41 +42,34 @@ void Roundworld::process()
 		CritterB* bod;
 		btRigidBody* bo;
 		
-		unsigned int biggest = food.size();
-		if ( critters.size() > biggest )
-			biggest = critters.size();
-		
-	// #pragma omp parallel for private(j, b, f, bod, bo)
-		for ( j=0; j < biggest; j++ )
-		{
-	// 		for( j=0; j < food.size(); j++)
-			if( j < food.size() )
+		for( j=0; j < entities.size(); j++)
+		{	
+			if ( entities[j]->type == FOOD )
 			{
-				f = food[j];
+// 				f = food[j];
+				Food* f = static_cast<Food*>( entities[j] );
 				for( b=0; b < f->body.bodyparts.size(); b++)
 				{
 					bo = f->body.bodyparts[b]->body;
 					bo->setGravity( -(bo->getCenterOfMassPosition().normalized()*10) );
 				}
 			}
-	// 		#pragma omp parallel for private(j, b)
-	// 		for( j=0; j < critters.size(); j++)
-			if( j < critters.size() )
+		}
+		for( j=0; j < critters.size(); j++)
+		{
+			bod = critters[j];
+			for( b=0; b < bod->body.bodyparts.size(); b++)
 			{
-				bod = critters[j];
-				for( b=0; b < bod->body.bodyparts.size(); b++)
-				{
-					bo = bod->body.bodyparts[b]->body;
-					bo->setGravity( -(bo->getCenterOfMassPosition().normalized()*10) );
-				}
+				bo = bod->body.bodyparts[b]->body;
+				bo->setGravity( -(bo->getCenterOfMassPosition().normalized()*10) );
 			}
 		}
 		
-		  if ( *critter_raycastvision == 0 )
-		  {
-			  renderVision();
-			  grabVision();
-		  }
+		if ( *critter_raycastvision == 0 )
+		{
+			renderVision();
+			grabVision();
+		}
 
 		// do a bullet step
 			m_dynamicsWorld->stepSimulation(0.016667f, 0, 0.016667f);
@@ -136,7 +129,10 @@ void Roundworld::makeFloor()
 
 void Roundworld::drawWithGrid()
 {
-// 	drawfloor();
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
 	glPushMatrix(); 
 		glTranslatef(0,0,0);
 		glColor4f( 0.3f, 0.2f, 0.1f, 1.0f );
@@ -146,13 +142,98 @@ void Roundworld::drawWithGrid()
 			(12.56637* *worldsizeX / 3)
 		);
 	glPopMatrix(); 
-
 	for( unsigned int i=0; i < critters.size(); i++)
 		critters[i]->draw(true);
 
-	for( unsigned int i=0; i < food.size(); i++)
-		food[i]->draw();
-}
+	for( unsigned int i=0; i < entities.size(); i++)
+		entities[i]->draw();
+
+	if ( *drawshadows )
+	{
+		btVector3 aabbMin,aabbMax;
+		m_dynamicsWorld->getBroadphase()->getBroadphaseAabb(aabbMin,aabbMax);
+		aabbMin-=btVector3(BT_LARGE_FLOAT,BT_LARGE_FLOAT,BT_LARGE_FLOAT);
+		aabbMax+=btVector3(BT_LARGE_FLOAT,BT_LARGE_FLOAT,BT_LARGE_FLOAT);
+		btScalar mmatrix[16];
+		btVector3 sundir = btVector3(0.3f, -1.0f, 0.3f);
+
+
+		glDisable(GL_LIGHTING);
+		glDepthMask(GL_FALSE);
+		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_STENCIL_TEST);
+		glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+		glStencilFunc(GL_ALWAYS,1,0xFFFFFFFFL);
+		glFrontFace(GL_CCW);
+		glStencilOp(GL_KEEP,GL_KEEP,GL_INCR);
+
+		for( unsigned int i=0; i < critters.size(); i++)
+		{
+			for ( unsigned int bp = 0; bp < critters[i]->body.bodyparts.size(); bp++ )
+			{
+				critters[i]->body.bodyparts[bp]->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(mmatrix);
+				drawShadow(mmatrix, sundir * critters[i]->body.bodyparts[bp]->myMotionState->m_graphicsWorldTrans.getBasis() ,critters[i]->body.bodyparts[bp]->shape, critters[i]->body.bodyparts[bp], aabbMin,aabbMax);
+			}
+		}
+		for( unsigned int i=0; i < entities.size(); i++)
+		{
+			if ( entities[i]->type == FOOD )
+			{
+				Food* f = static_cast<Food*>(entities[i]);
+				f->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(mmatrix);
+				drawShadow(mmatrix,sundir * f->myMotionState->m_graphicsWorldTrans.getBasis(),f->body.bodyparts[0]->shape, f->body.bodyparts[0], aabbMin, aabbMax);
+
+			}
+		}
+
+		glFrontFace(GL_CW);
+		glStencilOp(GL_KEEP,GL_KEEP,GL_DECR);
+
+		for( unsigned int i=0; i < critters.size(); i++)
+		{
+			for ( unsigned int bp = 0; bp < critters[i]->body.bodyparts.size(); bp++ )
+			{
+				critters[i]->body.bodyparts[bp]->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(mmatrix);
+				drawShadow(mmatrix, sundir * critters[i]->body.bodyparts[bp]->myMotionState->m_graphicsWorldTrans.getBasis() ,critters[i]->body.bodyparts[bp]->shape, critters[i]->body.bodyparts[bp], aabbMin,aabbMax);
+			}
+		}
+		for( unsigned int i=0; i < entities.size(); i++)
+		{
+			if ( entities[i]->type == FOOD )
+			{
+				Food* f = static_cast<Food*>(entities[i]);
+				f->myMotionState->m_graphicsWorldTrans.getOpenGLMatrix(mmatrix);
+				drawShadow(mmatrix,sundir * f->myMotionState->m_graphicsWorldTrans.getBasis(),f->body.bodyparts[0]->shape, f->body.bodyparts[0], aabbMin, aabbMax);
+
+			}
+		}
+
+		glDepthMask(GL_TRUE);
+		glFrontFace(GL_CCW);
+		glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+		glDepthFunc(GL_LEQUAL);
+		glStencilFunc( GL_NOTEQUAL, 0, 0xFFFFFFFFL );
+		glStencilOp( GL_KEEP, GL_KEEP, GL_KEEP );
+		glDisable(GL_LIGHTING);
+
+		for( unsigned int i=0; i < critters.size(); i++)
+			critters[i]->drawDimmed(0.6f);
+
+		for( unsigned int i=0; i < entities.size(); i++)
+			entities[i]->drawDimmed(0.6f);
+		glPushMatrix(); 
+			glTranslatef(0,0,0);
+			glColor4f( 0.3f * 0.6f, 0.2f * 0.6f, 0.1f * 0.6f, 1.0f );
+			drawSphere(
+				*worldsizeX,
+				(12.56637* *worldsizeX / 6),
+				(12.56637* *worldsizeX / 3)
+			);
+		glPopMatrix(); 
+
+	}
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_CULL_FACE);}
 
 void Roundworld::childPositionOffset(btVector3* v)
 {
